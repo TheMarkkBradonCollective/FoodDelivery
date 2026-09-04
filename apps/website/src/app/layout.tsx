@@ -3,8 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "@/store";
 import { AuthProvider } from "@/components/AuthProvider";
-import { SiteHeader } from "@/components/SiteHeader";
-import { SiteFooter } from "@/components/SiteFooter";
+import { SiteChrome } from "@/components/SiteChrome";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,9 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          <SiteHeader />
-          <main>{children}</main>
-          <SiteFooter />
+          <SiteChrome>{children}</SiteChrome>
         </AuthProvider>
       </body>
     </html>
