@@ -1,34 +1,24 @@
 {
-  "name": "runr",
+  "name": "runr-platform",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "clsx": "^2.1.1",
-    "leaflet": "^1.9.4",
-    "lucide-react": "^0.487.0",
-    "next": "^15.2.4",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-leaflet": "^5.0.0",
-    "tailwind-merge": "^3.0.2",
-    "zustand": "^5.0.3"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
-    "@types/leaflet": "^1.9.16",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "^15.2.4",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "dev:porter": "npm run dev -w @runr/porter",
+    "dev:runr": "npm run dev -w @runr/runr-app",
+    "dev:vendr": "npm run dev -w @runr/vendr",
+    "build:porter": "npm run build -w @runr/porter",
+    "build:runr": "npm run build -w @runr/runr-app",
+    "build:vendr": "npm run build -w @runr/vendr",
+    "build:all": "npm run build:porter && npm run build:runr && npm run build:vendr",
+    "cap:sync:porter": "npm run cap:sync -w @runr/porter",
+    "cap:sync:runr": "npm run cap:sync -w @runr/runr-app",
+    "cap:sync:vendr": "npm run cap:sync -w @runr/vendr",
+    "android:porter": "npm run android:build -w @runr/porter",
+    "android:runr": "npm run android:build -w @runr/runr-app",
+    "android:vendr": "npm run android:build -w @runr/vendr"
   }
 }

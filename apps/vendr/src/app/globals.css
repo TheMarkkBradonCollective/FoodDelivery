@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@import "@runr/shared/styles/globals.css";
+
+/* VENDR — Business app brand */
+:root {
+  --color-runr-primary: #059669;
+  --color-runr-primary-hover: #047857;
+  --color-runr-primary-muted: #ecfdf5;
+}

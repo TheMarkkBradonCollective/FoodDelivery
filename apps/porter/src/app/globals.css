@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@import "@runr/shared/styles/globals.css";
+
+/* PORTER — Customer app brand */
+:root {
+  --color-runr-primary: #2563eb;
+  --color-runr-primary-hover: #1d4ed8;
+  --color-runr-primary-muted: #eff6ff;
+}

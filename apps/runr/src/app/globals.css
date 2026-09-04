@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@import "@runr/shared/styles/globals.css";
+
+/* RUNR — Delivery app brand */
+:root {
+  --color-runr-primary: #ff4f00;
+  --color-runr-primary-hover: #e64600;
+  --color-runr-primary-muted: #fff4ef;
+}

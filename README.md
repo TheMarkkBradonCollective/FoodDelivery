@@ -1,77 +1,101 @@
-# RUNR
+# RUNR Platform — 3-App Ecosystem
 
-**Pick Your Place. Run Your Time.**
+Three separate Android apps connected to one marketplace network.
 
-RUNR is a restaurant-based delivery workforce marketplace. Unlike traditional order-driven platforms, RUNR is **coverage-driven**:
+| App | Role | Tagline | Core Flow |
+|-----|------|---------|-----------|
+| **PORTER** | Customer | Get what you need. | Discover → Order → Track → Receive |
+| **RUNR** | Delivery | Pick it up. Run it there. | Choose → RUN → Deliver → Earn |
+| **VENDR** | Business | Sell. Manage. Grow. | Sell → Prepare → Dispatch → Fulfill → Grow |
 
-- **Businesses** define how many RUNRs they need per time period
-- **RUNRs** choose where and when to work (custom start/end times)
-- **RUNR** matches coverage and dispatches eligible deliveries
+> **PORTER** creates the demand. **VENDR** fulfills the business side. **RUNR** moves it.
 
-## Tech Stack
+## Monorepo Structure
 
-- **Next.js 15** (App Router)
-- **TypeScript**
-- **Tailwind CSS 4** (design tokens)
-- **Leaflet / React-Leaflet** (map-first UI)
-- **Zustand** (client state)
+```
+apps/
+  porter/     # Customer APK  (com.runr.porter)
+  runr/       # Delivery APK  (com.runr.runr)
+  vendr/      # Business APK  (com.runr.vendr)
+packages/
+  shared/     # Marketplace logic, UI, coverage engine, mock data
+```
+
+Each app is a **Next.js + Capacitor** mobile shell with its own branding, navigation, and APK build. All three share `@runr/shared` — the same marketplace types, coverage engine, and business data.
 
 ## Getting Started
 
 ```bash
 npm install
-npm run dev
+
+# Run each app (separate ports)
+npm run dev:porter   # http://localhost:3001
+npm run dev:runr     # http://localhost:3002
+npm run dev:vendr    # http://localhost:3003
 ```
 
-Open [http://localhost:3000](http://localhost:3000) and choose a role:
+## Build Android APKs
 
-| Role | Path | Experience |
-|------|------|------------|
-| Customer | `/customer` | Discovery, menus, cart, order tracking |
-| RUNR | `/runr` | Map-first work discovery, RUN scheduling, deliveries, earnings |
-| Business | `/business` | Live operations map, orders, coverage management |
+Requires Android SDK + Java. Each app builds independently:
 
-## Architecture
-
-```
-src/
-├── app/              # Routes by role (customer, runr, business)
-├── components/
-│   ├── map/          # MapView abstraction (provider-agnostic)
-│   └── ui/           # Design system (BottomSheet, CoverageBadge, etc.)
-├── data/             # Mock data for MVP
-├── lib/
-│   ├── coverage-engine.ts  # Core coverage calculation
-│   └── utils.ts
-├── store/            # Zustand app state
-└── types/            # Domain entities
+```bash
+npm run android:porter   # Debug APK → apps/porter/android/
+npm run android:runr
+npm run android:vendr
 ```
 
-## Coverage Engine
+Release APKs:
 
-The coverage engine evaluates RUN availability minute-by-minute (30-min intervals):
+```bash
+npm run android:release -w @runr/porter
+```
 
-- Compares **scheduled RUNRs** vs **maximum desired RUNRs**
-- Supports overlapping custom RUN times (e.g. 5:37 PM–8:12 PM)
-- Returns status: `FULL`, `LOW`, `GAP`, `OVER_CAPACITY`
+APK output: `apps/<app>/android/app/build/outputs/apk/`
 
-## Design System
+### App IDs
 
-- **Primary brand:** `#FF4F00` (RUNR Orange)
-- **Status:** Green (full), Orange (low), Red (gap)
-- Light + dark mode
-- Map-first, bottom sheets, responsive layouts (mobile / tablet / desktop)
+| App | Package ID | Capacitor App Name |
+|-----|------------|-------------------|
+| PORTER | `com.runr.porter` | PORTER |
+| RUNR | `com.runr.runr` | RUNR |
+| VENDR | `com.runr.vendr` | VENDR |
 
-## MVP Scope (Phase 1–3)
+## How They Connect
 
-- [x] Design system + tokens
-- [x] Role-based auth (demo login)
-- [x] Map infrastructure
-- [x] RUNR map + business bottom sheets
-- [x] Custom RUN scheduling + coverage check
-- [x] Customer discovery, menus, cart, tracking
-- [x] Business live operations + coverage editor
-- [ ] Real auth, payments, push notifications (future phases)
+All three apps use the same `@runr/shared` marketplace layer:
+
+- **Shared businesses, orders, RUNs, coverage rules**
+- **Coverage engine** — businesses set max RUNRs per period; RUNRs fill gaps
+- **Order flow** — PORTER places orders → VENDR receives → RUNR delivers
+
+In production, each APK talks to the same backend API. The MVP uses shared local state (`runr-platform-marketplace`) for demo connectivity.
+
+## Ecosystem Flow
+
+```
+         PLATFORM
+             │
+    ┌────────┼────────┐
+    │        │        │
+ PORTER    VENDR     RUNR
+Customer  Business  Delivery
+    │        │        │
+    │ ORDER  │        │
+    ├───────►│        │
+    │        │DISPATCH│
+    │        ├───────►│
+    │        │        │ PICK UP
+    │◄────────────────┤
+    │     DELIVERY    │
+```
+
+## Tech Stack
+
+- Next.js 15 (static export for Capacitor)
+- Capacitor 7 (Android APK)
+- TypeScript + Tailwind CSS 4
+- Leaflet maps + Zustand state
+- Shared coverage-driven dispatch model
 
 ## License
 

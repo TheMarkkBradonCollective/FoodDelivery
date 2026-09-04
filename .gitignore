@@ -14,6 +14,13 @@
 # next.js
 /.next/
 /out/
+apps/*/.next/
+apps/*/out/
+
+# android build outputs (keep android/ project source)
+apps/*/android/.gradle/
+apps/*/android/app/build/
+apps/*/android/build/
 
 # production
 /build

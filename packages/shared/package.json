@@ -1,0 +1,34 @@
+{
+  "name": "@runr/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./styles/globals.css": "./src/styles/globals.css",
+    "./types": "./src/types/index.ts",
+    "./lib/*": "./src/lib/*",
+    "./data/*": "./src/data/*",
+    "./store/*": "./src/store/*",
+    "./components/ui/*": "./src/components/ui/*",
+    "./components/map": "./src/components/map/index.tsx",
+    "./components/map/*": "./src/components/map/*",
+    "./components/layout/*": "./src/components/layout/*",
+    "./components/providers/*": "./src/components/providers/*"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.487.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-leaflet": "^5.0.0",
+    "tailwind-merge": "^3.0.2",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.16",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  }
+}
