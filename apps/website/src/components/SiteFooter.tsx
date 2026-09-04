@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function SiteFooter() {
   return (
     <footer className="border-t border-[var(--border)] bg-[var(--surface)]">
@@ -37,6 +39,9 @@ export function SiteFooter() {
               <li><a href="#how-it-works">How We Operate</a></li>
               <li><a href="#ecosystem">The Ecosystem</a></li>
               <li><a href="#company">About</a></li>
+              <li><Link href="/login" className="hover:text-[#ff4f00]">Sign In</Link></li>
+              <li><Link href="/account" className="hover:text-[#ff4f00]">My Account</Link></li>
+              <li><Link href="/staff" className="hover:text-[#ff4f00]">Staff Portal</Link></li>
               <li>
                 <a href="mailto:themarkkbrandoncollective@gmail.com">Contact</a>
               </li>

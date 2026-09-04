@@ -1,4 +1,4 @@
-export type UserRole = "customer" | "runr" | "business";
+export type UserRole = "customer" | "runr" | "business" | "staff";
 
 export type CoverageStatus = "full" | "low" | "gap" | "over_capacity";
 

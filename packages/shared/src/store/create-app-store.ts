@@ -91,6 +91,17 @@ function buildStore(
 
     setUser: (user: User | null) => set({ user }),
     loginAs: (role: UserRole) => {
+      if (role === "staff") {
+        set({
+          user: {
+            id: "user-staff-1",
+            name: "Platform Admin",
+            email: "staff@runr.com",
+            role: "staff",
+          },
+        });
+        return;
+      }
       const user = mockUsers.find((u) => u.role === role) ?? null;
       set({ user });
     },
