@@ -1,102 +1,57 @@
-# RUNR Platform — 3-App Ecosystem
+# RUNR Platform
 
-Three separate Android apps connected to one marketplace network.
+**Pick Your Place. Run Your Time.**
 
-| App | Role | Tagline | Core Flow |
-|-----|------|---------|-----------|
-| **PORTER** | Customer | Get what you need. | Discover → Order → Track → Receive |
-| **RUNR** | Delivery | Pick it up. Run it there. | Choose → RUN → Deliver → Earn |
-| **VENDR** | Business | Sell. Manage. Grow. | Sell → Prepare → Dispatch → Fulfill → Grow |
+Monorepo for the RUNR coverage-driven delivery marketplace.
 
-> **PORTER** creates the demand. **VENDR** fulfills the business side. **RUNR** moves it.
+## What's in this repo
 
-## Monorepo Structure
+| Path | Purpose |
+|------|---------|
+| **`apps/website`** | **Main company website** — downloads, company info, how we operate |
+| `apps/porter` | PORTER customer Android app |
+| `apps/runr` | RUNR delivery Android app |
+| `apps/vendr` | VENDR business Android app |
+| `packages/shared` | Shared marketplace logic, UI, coverage engine |
 
-```
-apps/
-  porter/     # Customer APK  (com.runr.porter)
-  runr/       # Delivery APK  (com.runr.runr)
-  vendr/      # Business APK  (com.runr.vendr)
-packages/
-  shared/     # Marketplace logic, UI, coverage engine, mock data
-```
-
-Each app is a **Next.js + Capacitor** mobile shell with its own branding, navigation, and APK build. All three share `@runr/shared` — the same marketplace types, coverage engine, and business data.
-
-## Getting Started
+## Quick start — Company website
 
 ```bash
 npm install
-
-# Run each app (separate ports)
-npm run dev:porter   # http://localhost:3001
-npm run dev:runr     # http://localhost:3002
-npm run dev:vendr    # http://localhost:3003
+npm run dev          # http://localhost:3000
+npm run build:website
 ```
 
-## Build Android APKs
+The marketing site includes APK download links, ecosystem overview, and company information.
 
-Requires Android SDK + Java. Each app builds independently:
+## The 3-App Ecosystem
+
+| App | Role | Tagline |
+|-----|------|---------|
+| **PORTER** | Customer | Get what you need. |
+| **RUNR** | Delivery | Pick it up. Run it there. |
+| **VENDR** | Business | Sell. Manage. Grow. |
+
+> PORTER creates the demand. VENDR fulfills the business side. RUNR moves it.
+
+## Build & distribute APKs
 
 ```bash
-npm run android:porter   # Debug APK → apps/porter/android/
-npm run android:runr
-npm run android:vendr
+npm run android:all   # Build all 3 APKs + copy to website
 ```
 
-Release APKs:
+APKs are served from `apps/website/public/downloads/` for the main website.
+
+## Deploy the website
+
+Build static export:
 
 ```bash
-npm run android:release -w @runr/porter
+npm run build:website
 ```
 
-APK output: `apps/<app>/android/app/build/outputs/apk/`
-
-### App IDs
-
-| App | Package ID | Capacitor App Name |
-|-----|------------|-------------------|
-| PORTER | `com.runr.porter` | PORTER |
-| RUNR | `com.runr.runr` | RUNR |
-| VENDR | `com.runr.vendr` | VENDR |
-
-## How They Connect
-
-All three apps use the same `@runr/shared` marketplace layer:
-
-- **Shared businesses, orders, RUNs, coverage rules**
-- **Coverage engine** — businesses set max RUNRs per period; RUNRs fill gaps
-- **Order flow** — PORTER places orders → VENDR receives → RUNR delivers
-
-In production, each APK talks to the same backend API. The MVP uses shared local state (`runr-platform-marketplace`) for demo connectivity.
-
-## Ecosystem Flow
-
-```
-         PLATFORM
-             │
-    ┌────────┼────────┐
-    │        │        │
- PORTER    VENDR     RUNR
-Customer  Business  Delivery
-    │        │        │
-    │ ORDER  │        │
-    ├───────►│        │
-    │        │DISPATCH│
-    │        ├───────►│
-    │        │        │ PICK UP
-    │◄────────────────┤
-    │     DELIVERY    │
-```
-
-## Tech Stack
-
-- Next.js 15 (static export for Capacitor)
-- Capacitor 7 (Android APK)
-- TypeScript + Tailwind CSS 4
-- Leaflet maps + Zustand state
-- Shared coverage-driven dispatch model
+Output: `apps/website/out/` — deploy to Vercel, Netlify, GitHub Pages, or any static host.
 
 ## License
 
-Private — TheMarkkBradonCollective
+Private — The Markk Brandon Collective
