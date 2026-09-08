@@ -1,41 +1,41 @@
 {
   "name": "RUNR Platform",
   "app": "RUNR",
-  "version": "0.1.0",
-  "updatedAt": "2026-09-08T01:22:15.009Z",
+  "version": "0.2.0",
+  "updatedAt": "2026-09-08T04:22:20.981Z",
   "apk": {
     "ready": true,
     "packageId": "com.runr.runr",
     "name": "RUNR",
-    "label": "RUNR v0.1.0",
-    "version": "0.1.0",
-    "versionCode": 100,
-    "url": "release/runr-v0.1.0.apk",
-    "downloadName": "runr-v0.1.0.apk",
-    "fileSize": 4695485,
-    "sha256": "63f340a4e479b5124ffd3460fece963c57a2158519c6c1890f2c8518e0bb0ff0",
-    "releaseNotes": "RUNR v0.1.0 — Pick it up. Run it there. Coverage-driven delivery marketplace app.",
+    "label": "RUNR v0.2.0",
+    "version": "0.2.0",
+    "versionCode": 200,
+    "url": "https://github.com/TheMarkkBradonCollective/Runr/releases/download/v0.2.0-runr/runr-v0.2.0.apk",
+    "downloadName": "runr-v0.2.0.apk",
+    "fileSize": 3738778,
+    "sha256": "119c9baa9a537ee9fb3b7e58c72b5b9d131a18e953589713fca098bdceff5bc3",
+    "releaseNotes": "RUNR v0.2.0 — Pick it up. Run it there. Full Capacitor build with embedded web shell.",
     "archives": [
       {
         "label": "PORTER",
-        "version": "0.1.0",
-        "versionCode": 100,
-        "url": "release/porter-v0.1.0.apk",
-        "downloadName": "porter-v0.1.0.apk",
-        "fileSize": 4731229,
-        "sha256": "f20d62d3f1e60deed4953957fc7e4158d6660c80bc924a83973f3d7b9b70849a",
-        "releaseNotes": "PORTER v0.1.0 — Get what you need. Coverage-driven delivery marketplace app.",
+        "version": "0.2.0",
+        "versionCode": 200,
+        "url": "https://github.com/TheMarkkBradonCollective/Runr/releases/download/v0.2.0-porter/porter-v0.2.0.apk",
+        "downloadName": "porter-v0.2.0.apk",
+        "fileSize": 3772569,
+        "sha256": "f7630f0da70ff21ccbbd0ab864495553e7f0f898001728c1da77c92026f40faf",
+        "releaseNotes": "PORTER v0.2.0 — Get what you need. Full Capacitor build with embedded web shell.",
         "packageId": "com.runr.porter"
       },
       {
         "label": "VENDR",
-        "version": "0.1.0",
-        "versionCode": 100,
-        "url": "release/vendr-v0.1.0.apk",
-        "downloadName": "vendr-v0.1.0.apk",
-        "fileSize": 4691355,
-        "sha256": "da13f1883c17f4d22d68d0016069cc02776d226fded408c3a28dcc009078392d",
-        "releaseNotes": "VENDR v0.1.0 — Sell. Manage. Grow. Coverage-driven delivery marketplace app.",
+        "version": "0.2.0",
+        "versionCode": 200,
+        "url": "https://github.com/TheMarkkBradonCollective/Runr/releases/download/v0.2.0-vendr/vendr-v0.2.0.apk",
+        "downloadName": "vendr-v0.2.0.apk",
+        "fileSize": 3735134,
+        "sha256": "13706bd3e4b3af02ef4ef7467d12e7608d6b93fc2c30d5178f1074ed976d65c3",
+        "releaseNotes": "VENDR v0.2.0 — Sell. Manage. Grow. Full Capacitor build with embedded web shell.",
         "packageId": "com.runr.vendr"
       }
     ]
@@ -45,31 +45,31 @@
       "id": "porter",
       "name": "PORTER",
       "packageId": "com.runr.porter",
-      "version": "0.1.0",
-      "url": "release/porter-v0.1.0.apk",
-      "downloadName": "porter-v0.1.0.apk",
-      "fileSize": 4731229,
-      "sha256": "f20d62d3f1e60deed4953957fc7e4158d6660c80bc924a83973f3d7b9b70849a"
+      "version": "0.2.0",
+      "url": "https://github.com/TheMarkkBradonCollective/Runr/releases/download/v0.2.0-porter/porter-v0.2.0.apk",
+      "downloadName": "porter-v0.2.0.apk",
+      "fileSize": 3772569,
+      "sha256": "f7630f0da70ff21ccbbd0ab864495553e7f0f898001728c1da77c92026f40faf"
     },
     {
       "id": "runr",
       "name": "RUNR",
       "packageId": "com.runr.runr",
-      "version": "0.1.0",
-      "url": "release/runr-v0.1.0.apk",
-      "downloadName": "runr-v0.1.0.apk",
-      "fileSize": 4695485,
-      "sha256": "63f340a4e479b5124ffd3460fece963c57a2158519c6c1890f2c8518e0bb0ff0"
+      "version": "0.2.0",
+      "url": "https://github.com/TheMarkkBradonCollective/Runr/releases/download/v0.2.0-runr/runr-v0.2.0.apk",
+      "downloadName": "runr-v0.2.0.apk",
+      "fileSize": 3738778,
+      "sha256": "119c9baa9a537ee9fb3b7e58c72b5b9d131a18e953589713fca098bdceff5bc3"
     },
     {
       "id": "vendr",
       "name": "VENDR",
       "packageId": "com.runr.vendr",
-      "version": "0.1.0",
-      "url": "release/vendr-v0.1.0.apk",
-      "downloadName": "vendr-v0.1.0.apk",
-      "fileSize": 4691355,
-      "sha256": "da13f1883c17f4d22d68d0016069cc02776d226fded408c3a28dcc009078392d"
+      "version": "0.2.0",
+      "url": "https://github.com/TheMarkkBradonCollective/Runr/releases/download/v0.2.0-vendr/vendr-v0.2.0.apk",
+      "downloadName": "vendr-v0.2.0.apk",
+      "fileSize": 3735134,
+      "sha256": "13706bd3e4b3af02ef4ef7467d12e7608d6b93fc2c30d5178f1074ed976d65c3"
     }
   ]
 }

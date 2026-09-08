@@ -53,13 +53,15 @@ One account works across the mobile app and website.
 
 ## Build & distribute APKs
 
+All three apps ship as **signed Capacitor APKs** with the Next.js UI bundled inside the APK (`assetPrefix: './'`). No Vercel or external website is required to run the apps.
+
 ```bash
-npm run build:apks       # Build all 3 Android APKs
+npm run build:apks       # Build signed release APKs
 npm run publish:apk      # Copy to release/ + write version.json
-npm run publish:release  # Publish GitHub Releases
+npm run release:apk      # Build, publish, and create GitHub Releases
 ```
 
-APKs live in `release/` and are listed in the **MBC App Store** (not the marketing website):
+APKs live in `release/` and are listed in the **MBC App Store**:
 
 - [PORTER](https://themarkkbradoncollective.github.io/main/download/#download-porter)
 - [RUNR](https://themarkkbradoncollective.github.io/main/download/#download-runr)

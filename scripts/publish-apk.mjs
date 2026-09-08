@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * Publish built APKs to release/ and write version.json for MBC App Store sync.
+ * Publish signed release APKs to release/ and write version.json for MBC App Store sync.
  *
  * Usage:
- *   node scripts/publish-apk.mjs
- *   node scripts/publish-apk.mjs --app runr
+ *   npm run publish:apk
+ *   npm run publish:apk -- --app runr
  */
 import { createHash } from 'node:crypto';
 import { copyFileSync, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
@@ -13,6 +13,7 @@ import { join } from 'node:path';
 const root = join(import.meta.dirname, '..');
 const releaseDir = join(root, 'release');
 const args = process.argv.slice(2);
+const GITHUB_REPO = 'TheMarkkBradonCollective/Runr';
 
 const apps = [
   {
@@ -20,21 +21,18 @@ const apps = [
     name: 'PORTER',
     packageId: 'com.runr.porter',
     tagline: 'Get what you need.',
-    color: '#2563eb',
   },
   {
     id: 'runr',
     name: 'RUNR',
     packageId: 'com.runr.runr',
     tagline: 'Pick it up. Run it there.',
-    color: '#ff4f00',
   },
   {
     id: 'vendr',
     name: 'VENDR',
     packageId: 'com.runr.vendr',
     tagline: 'Sell. Manage. Grow.',
-    color: '#059669',
   },
 ];
 
@@ -55,14 +53,18 @@ function versionCodeFromSemver(version) {
   return major * 10000 + minor * 100 + patch;
 }
 
+function githubReleaseUrl(appId, version) {
+  return `https://github.com/${GITHUB_REPO}/releases/download/v${version}-${appId}/${appId}-v${version}.apk`;
+}
+
 function resolveApkSrc(appId) {
   const idx = args.indexOf('--apk');
   if (idx >= 0 && args[idx + 1]) return args[idx + 1];
   const candidates = [
     join(releaseDir, `${appId}-v${readVersion(appId)}.apk`),
-    join(root, 'apps', appId, 'android/app/build/outputs/apk/debug/app-debug.apk'),
     join(root, 'apps', appId, 'android/app/build/outputs/apk/release/app-release.apk'),
     join(root, 'apps', appId, 'android/app/build/outputs/apk/release/app-release-unsigned.apk'),
+    join(root, 'apps', appId, 'android/app/build/outputs/apk/debug/app-debug.apk'),
   ];
   return candidates.find((p) => existsSync(p));
 }
@@ -88,21 +90,22 @@ function publishOne(app) {
     process.exit(1);
   }
 
+  const downloadUrl = githubReleaseUrl(app.id, version);
+
   return {
     id: app.id,
     name: app.name,
     packageId: app.packageId,
     tagline: app.tagline,
-    color: app.color,
     version,
     versionCode,
     releaseName,
     releasePath,
     fileSize,
     sha256,
-    url: `release/${releaseName}`,
+    url: downloadUrl,
     downloadName: releaseName,
-    releaseNotes: `${app.name} v${version} — ${app.tagline} Coverage-driven delivery marketplace app.`,
+    releaseNotes: `${app.name} v${version} — ${app.tagline} Full Capacitor build with embedded web shell.`,
   };
 }
 
@@ -161,6 +164,7 @@ writeFileSync(join(root, 'version.json'), `${JSON.stringify(versionJson, null, 2
 
 for (const app of published) {
   console.log(`Published ${app.releaseName} (${app.fileSize} bytes)`);
+  console.log(`  url=${app.url}`);
   console.log(`  sha256=${app.sha256}`);
 }
 console.log(`\nversion.json apk.ready=true (primary: ${primary.name} v${primary.version})`);
