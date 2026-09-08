@@ -1,19 +1,19 @@
 # RUNR App Icons
 
-Brand icons for PORTER, VENDR, and RUNR.
+Official branding for PORTER, VENDR, and RUNR.
 
-| App | Letter | Clip art | File |
-|-----|--------|----------|------|
-| **PORTER** | Italic **P** | Fork (negative space) | `porter-icon.png` |
-| **VENDR** | Italic **V** | Shopping bag + speed lines | `vendr-icon.png` |
-| **RUNR** | Italic **R** | Red delivery bike bag | `runr-icon.png` |
+| App | Design | File |
+|-----|--------|------|
+| **PORTER** | Blue background, white delivery rider + speed lines, "Porter" label | `porter-icon.png` |
+| **VENDR** | Blue background, white storefront + packages, "VENDR" label | `vendr-icon.png` |
+| **RUNR** | Blue background, white delivery rider + speed lines, "RUNR" label | `runr-icon.png` |
 
-All icons use purple background `#7B2FD6`.
+Brand color: `#0066FF`
+
+`porter-icon-mark.png` is the rider-only mark (no wordmark) for tight layouts.
 
 ## Regenerate Android mipmaps
 
 ```bash
 npm run icons:generate
 ```
-
-This writes `ic_launcher.png`, `ic_launcher_round.png`, and `ic_launcher_foreground.png` into each app's `android/app/src/main/res/mipmap-*` folders.
