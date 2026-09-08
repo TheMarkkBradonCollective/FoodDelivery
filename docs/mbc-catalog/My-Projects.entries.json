@@ -1,0 +1,194 @@
+[
+  {
+    "slug": "porter",
+    "theme": "porter",
+    "name": "PORTER",
+    "tagline": "Get what you need.",
+    "url": "https://raw.githubusercontent.com/TheMarkkBradonCollective/Runr/main",
+    "section": "marketplace",
+    "listing": "Listing #009",
+    "status": "live",
+    "statusLabel": "Active \u00b7 Free",
+    "heroLine": "Discover. Order. Track. Receive.",
+    "description": "Customer app for the RUNR marketplace \u2014 discover businesses, order, pay, and track deliveries live on the map.",
+    "features": [
+      {
+        "title": "Map-first marketplace",
+        "blurb": "Live map for orders, coverage, and deliveries.",
+        "shot": 0
+      },
+      {
+        "title": "Role-specific app",
+        "blurb": "Built for customer orders on the RUNR network.",
+        "shot": 1
+      },
+      {
+        "title": "MBC App Store",
+        "blurb": "Install and update from the Collective catalog.",
+        "shot": 2
+      }
+    ],
+    "steps": [
+      {
+        "title": "Get PORTER",
+        "blurb": "Download from the MBC App Store."
+      },
+      {
+        "title": "Install APK",
+        "blurb": "Enable installs from unknown sources if prompted."
+      },
+      {
+        "title": "Sign in",
+        "blurb": "Use your RUNR platform account."
+      }
+    ],
+    "github": "https://github.com/TheMarkkBradonCollective/Runr",
+    "githubPrivate": false,
+    "iconSources": [
+      "https://raw.githubusercontent.com/TheMarkkBradonCollective/Runr/main/apps/porter/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "/icons/apps/porter.png"
+    ],
+    "screenshots": [],
+    "platforms": [
+      "phone"
+    ],
+    "readDetails": [
+      "PORTER is part of the RUNR coverage-driven delivery marketplace \u2014 Get what you need.",
+      "PORTER creates demand, VENDR fulfills the business side, and RUNR moves it.",
+      "Install from The MBC App Store. Updates ship through the same catalog as every other Collective app."
+    ],
+    "highlights": [
+      "Coverage-driven delivery",
+      "Map-first experience",
+      "MBC App Store distribution"
+    ]
+  },
+  {
+    "slug": "runr",
+    "theme": "runr",
+    "name": "RUNR",
+    "tagline": "Pick it up. Run it there.",
+    "url": "https://raw.githubusercontent.com/TheMarkkBradonCollective/Runr/main",
+    "section": "marketplace",
+    "listing": "Listing #010",
+    "status": "live",
+    "statusLabel": "Active \u00b7 Free",
+    "heroLine": "Choose your RUN. Deliver. Earn.",
+    "description": "Delivery worker app \u2014 choose where and when to RUN, accept dispatches, and earn per completed delivery.",
+    "features": [
+      {
+        "title": "Map-first marketplace",
+        "blurb": "Live map for orders, coverage, and deliveries.",
+        "shot": 0
+      },
+      {
+        "title": "Role-specific app",
+        "blurb": "Built for RUNRs on the RUNR network.",
+        "shot": 1
+      },
+      {
+        "title": "MBC App Store",
+        "blurb": "Install and update from the Collective catalog.",
+        "shot": 2
+      }
+    ],
+    "steps": [
+      {
+        "title": "Get RUNR",
+        "blurb": "Download from the MBC App Store."
+      },
+      {
+        "title": "Install APK",
+        "blurb": "Enable installs from unknown sources if prompted."
+      },
+      {
+        "title": "Sign in",
+        "blurb": "Use your RUNR platform account."
+      }
+    ],
+    "github": "https://github.com/TheMarkkBradonCollective/Runr",
+    "githubPrivate": false,
+    "iconSources": [
+      "https://raw.githubusercontent.com/TheMarkkBradonCollective/Runr/main/apps/runr/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "/icons/apps/runr.png"
+    ],
+    "screenshots": [],
+    "platforms": [
+      "phone"
+    ],
+    "readDetails": [
+      "RUNR is part of the RUNR coverage-driven delivery marketplace \u2014 Pick it up. Run it there.",
+      "PORTER creates demand, VENDR fulfills the business side, and RUNR moves it.",
+      "Install from The MBC App Store. Updates ship through the same catalog as every other Collective app."
+    ],
+    "highlights": [
+      "Coverage-driven delivery",
+      "Map-first experience",
+      "MBC App Store distribution"
+    ]
+  },
+  {
+    "slug": "vendr",
+    "theme": "vendr",
+    "name": "VENDR",
+    "tagline": "Sell. Manage. Grow.",
+    "url": "https://raw.githubusercontent.com/TheMarkkBradonCollective/Runr/main",
+    "section": "marketplace",
+    "listing": "Listing #011",
+    "status": "live",
+    "statusLabel": "Active \u00b7 Free",
+    "heroLine": "Sell. Prepare. Dispatch. Grow.",
+    "description": "Business app for merchants on the PORTER marketplace \u2014 manage orders, set RUNR coverage, and monitor live deliveries.",
+    "features": [
+      {
+        "title": "Map-first marketplace",
+        "blurb": "Live map for orders, coverage, and deliveries.",
+        "shot": 0
+      },
+      {
+        "title": "Role-specific app",
+        "blurb": "Built for merchants on the RUNR network.",
+        "shot": 1
+      },
+      {
+        "title": "MBC App Store",
+        "blurb": "Install and update from the Collective catalog.",
+        "shot": 2
+      }
+    ],
+    "steps": [
+      {
+        "title": "Get VENDR",
+        "blurb": "Download from the MBC App Store."
+      },
+      {
+        "title": "Install APK",
+        "blurb": "Enable installs from unknown sources if prompted."
+      },
+      {
+        "title": "Sign in",
+        "blurb": "Use your RUNR platform account."
+      }
+    ],
+    "github": "https://github.com/TheMarkkBradonCollective/Runr",
+    "githubPrivate": false,
+    "iconSources": [
+      "https://raw.githubusercontent.com/TheMarkkBradonCollective/Runr/main/apps/vendr/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "/icons/apps/vendr.png"
+    ],
+    "screenshots": [],
+    "platforms": [
+      "phone"
+    ],
+    "readDetails": [
+      "VENDR is part of the RUNR coverage-driven delivery marketplace \u2014 Sell. Manage. Grow.",
+      "PORTER creates demand, VENDR fulfills the business side, and RUNR moves it.",
+      "Install from The MBC App Store. Updates ship through the same catalog as every other Collective app."
+    ],
+    "highlights": [
+      "Coverage-driven delivery",
+      "Map-first experience",
+      "MBC App Store distribution"
+    ]
+  }
+]
