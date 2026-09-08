@@ -1,0 +1,75 @@
+{
+  "name": "RUNR Platform",
+  "app": "RUNR",
+  "version": "0.1.0",
+  "updatedAt": "2026-09-08T01:22:15.009Z",
+  "apk": {
+    "ready": true,
+    "packageId": "com.runr.runr",
+    "name": "RUNR",
+    "label": "RUNR v0.1.0",
+    "version": "0.1.0",
+    "versionCode": 100,
+    "url": "release/runr-v0.1.0.apk",
+    "downloadName": "runr-v0.1.0.apk",
+    "fileSize": 4695485,
+    "sha256": "63f340a4e479b5124ffd3460fece963c57a2158519c6c1890f2c8518e0bb0ff0",
+    "releaseNotes": "RUNR v0.1.0 — Pick it up. Run it there. Coverage-driven delivery marketplace app.",
+    "archives": [
+      {
+        "label": "PORTER",
+        "version": "0.1.0",
+        "versionCode": 100,
+        "url": "release/porter-v0.1.0.apk",
+        "downloadName": "porter-v0.1.0.apk",
+        "fileSize": 4731229,
+        "sha256": "f20d62d3f1e60deed4953957fc7e4158d6660c80bc924a83973f3d7b9b70849a",
+        "releaseNotes": "PORTER v0.1.0 — Get what you need. Coverage-driven delivery marketplace app.",
+        "packageId": "com.runr.porter"
+      },
+      {
+        "label": "VENDR",
+        "version": "0.1.0",
+        "versionCode": 100,
+        "url": "release/vendr-v0.1.0.apk",
+        "downloadName": "vendr-v0.1.0.apk",
+        "fileSize": 4691355,
+        "sha256": "da13f1883c17f4d22d68d0016069cc02776d226fded408c3a28dcc009078392d",
+        "releaseNotes": "VENDR v0.1.0 — Sell. Manage. Grow. Coverage-driven delivery marketplace app.",
+        "packageId": "com.runr.vendr"
+      }
+    ]
+  },
+  "apps": [
+    {
+      "id": "porter",
+      "name": "PORTER",
+      "packageId": "com.runr.porter",
+      "version": "0.1.0",
+      "url": "release/porter-v0.1.0.apk",
+      "downloadName": "porter-v0.1.0.apk",
+      "fileSize": 4731229,
+      "sha256": "f20d62d3f1e60deed4953957fc7e4158d6660c80bc924a83973f3d7b9b70849a"
+    },
+    {
+      "id": "runr",
+      "name": "RUNR",
+      "packageId": "com.runr.runr",
+      "version": "0.1.0",
+      "url": "release/runr-v0.1.0.apk",
+      "downloadName": "runr-v0.1.0.apk",
+      "fileSize": 4695485,
+      "sha256": "63f340a4e479b5124ffd3460fece963c57a2158519c6c1890f2c8518e0bb0ff0"
+    },
+    {
+      "id": "vendr",
+      "name": "VENDR",
+      "packageId": "com.runr.vendr",
+      "version": "0.1.0",
+      "url": "release/vendr-v0.1.0.apk",
+      "downloadName": "vendr-v0.1.0.apk",
+      "fileSize": 4691355,
+      "sha256": "da13f1883c17f4d22d68d0016069cc02776d226fded408c3a28dcc009078392d"
+    }
+  ]
+}

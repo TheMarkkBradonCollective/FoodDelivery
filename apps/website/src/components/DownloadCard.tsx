@@ -34,16 +34,23 @@ export function DownloadCard({ app }: { app: AppDownload }) {
       </div>
 
       <a
-        href={app.apkFile}
-        download
+        href={app.storeUrl}
         className={`mt-5 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 ${app.colorClass}`}
       >
         <Download className="h-4 w-4" />
-        Download Android APK
+        Get on MBC App Store
+      </a>
+
+      <a
+        href={app.apkUrl}
+        download
+        className="mt-2 inline-flex items-center justify-center gap-2 text-xs font-medium text-[var(--muted)] hover:text-[var(--foreground)]"
+      >
+        Direct APK download
       </a>
 
       <p className="mt-2 text-center text-[10px] text-[var(--muted)]">
-        Android only · Requires sideload or internal distribution
+        Android only · Install from the MBC App Store or sideload the APK
       </p>
     </div>
   );

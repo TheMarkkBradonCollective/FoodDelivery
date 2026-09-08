@@ -8,9 +8,15 @@ export interface AppDownload {
   packageId: string;
   color: string;
   colorClass: string;
-  apkFile: string;
+  /** MBC App Store deep link (primary install path). */
+  storeUrl: string;
+  /** GitHub Release fallback for direct APK download. */
+  apkUrl: string;
   version: string;
 }
+
+const MBC_STORE = "https://themarkkbradoncollective.github.io/main/download";
+const GITHUB_RELEASES = "https://github.com/TheMarkkBradonCollective/Runr/releases/download";
 
 export const apps: AppDownload[] = [
   {
@@ -24,7 +30,8 @@ export const apps: AppDownload[] = [
     packageId: "com.runr.porter",
     color: "#2563eb",
     colorClass: "bg-blue-600",
-    apkFile: "/downloads/porter.apk",
+    storeUrl: `${MBC_STORE}/#download-porter`,
+    apkUrl: `${GITHUB_RELEASES}/v0.1.0-porter/porter-v0.1.0.apk`,
     version: "0.1.0",
   },
   {
@@ -38,7 +45,8 @@ export const apps: AppDownload[] = [
     packageId: "com.runr.runr",
     color: "#ff4f00",
     colorClass: "bg-[#ff4f00]",
-    apkFile: "/downloads/runr.apk",
+    storeUrl: `${MBC_STORE}/#download-runr`,
+    apkUrl: `${GITHUB_RELEASES}/v0.1.0-runr/runr-v0.1.0.apk`,
     version: "0.1.0",
   },
   {
@@ -52,7 +60,8 @@ export const apps: AppDownload[] = [
     packageId: "com.runr.vendr",
     color: "#059669",
     colorClass: "bg-emerald-600",
-    apkFile: "/downloads/vendr.apk",
+    storeUrl: `${MBC_STORE}/#download-vendr`,
+    apkUrl: `${GITHUB_RELEASES}/v0.1.0-vendr/vendr-v0.1.0.apk`,
     version: "0.1.0",
   },
 ];
