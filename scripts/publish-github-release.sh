@@ -42,7 +42,7 @@ publish_app() {
   gh release create "$tag" \
     --repo "$REPO" \
     --title "$title" \
-    --notes "${title} — Android APK for the RUNR coverage-driven delivery marketplace." \
+    --notes "${title} — Full Capacitor build with embedded web shell. No external website required." \
     "$apk#${app}-v${version}.apk"
 
   echo "Published $tag → https://github.com/$REPO/releases/tag/$tag"
@@ -64,7 +64,7 @@ fi
 gh release create "$platform_tag" \
   --repo "$REPO" \
   --title "RUNR Platform v${platform_version}" \
-  --notes "RUNR Platform v${platform_version} — PORTER, RUNR, and VENDR Android APKs." \
+  --notes "RUNR Platform v${platform_version} — signed Capacitor APKs with bundled UI for PORTER, RUNR, and VENDR." \
   release/porter-v"${platform_version}".apk#porter-v"${platform_version}".apk \
   release/runr-v"${platform_version}".apk#runr-v"${platform_version}".apk \
   release/vendr-v"${platform_version}".apk#vendr-v"${platform_version}".apk

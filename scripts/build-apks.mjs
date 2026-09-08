@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /**
- * Build PORTER, RUNR, and VENDR Android APKs (Capacitor + Gradle).
+ * Build signed release APKs for PORTER, RUNR, and VENDR.
+ * Bundles the Next.js static export inside the Capacitor shell (no remote URL).
  */
 import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { mkdir, readFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createWriteStream } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -96,30 +97,84 @@ function versionCodeFromSemver(version) {
   return major * 10000 + minor * 100 + patch;
 }
 
+async function ensureSigning(appId) {
+  const androidRoot = path.join(root, 'apps', appId, 'android');
+  const keystore = path.join(androidRoot, `${appId}-release.keystore`);
+  const buildGradle = path.join(androidRoot, 'app/build.gradle');
+
+  if (!existsSync(keystore)) {
+    run('keytool', [
+      '-genkeypair',
+      '-v',
+      '-keystore',
+      keystore,
+      '-alias',
+      appId,
+      '-keyalg',
+      'RSA',
+      '-keysize',
+      '2048',
+      '-validity',
+      '10000',
+      '-storepass',
+      `mbc${appId}`,
+      '-keypass',
+      `mbc${appId}`,
+      '-dname',
+      `CN=${appId}, OU=MBC, O=The Markk Brandon Collective, L=Sacramento, ST=CA, C=US`,
+    ]);
+  }
+
+  let gradle = await readFile(buildGradle, 'utf8');
+  if (!gradle.includes('signingConfigs')) {
+    gradle = gradle.replace(
+      'android {',
+      `android {
+    signingConfigs {
+        release {
+            storeFile file('../${appId}-release.keystore')
+            storePassword 'mbc${appId}'
+            keyAlias '${appId}'
+            keyPassword 'mbc${appId}'
+        }
+    }`
+    );
+    gradle = gradle.replace(
+      /buildTypes \{\s*release \{/,
+      `buildTypes {
+        release {
+            signingConfig signingConfigs.release`
+    );
+  }
+
+  await writeFile(buildGradle, gradle);
+}
+
 async function patchVersion(appId, version) {
   const buildGradle = path.join(root, 'apps', appId, 'android/app/build.gradle');
   let gradle = await readFile(buildGradle, 'utf8');
   const versionCode = versionCodeFromSemver(version);
   gradle = gradle.replace(/versionCode\s+\d+/, `versionCode ${versionCode}`);
   gradle = gradle.replace(/versionName\s+"[^"]*"/, `versionName "${version}"`);
-  await import('node:fs/promises').then((fs) => fs.writeFile(buildGradle, gradle));
+  await writeFile(buildGradle, gradle);
 }
 
 async function buildApp(app) {
   const version = await versionForApp(app.id);
   await patchVersion(app.id, version);
+  await ensureSigning(app.id);
   run('npm', ['run', 'cap:sync', '-w', app.workspace], { cwd: root });
-  const gradlew = path.join(root, 'apps', app.id, 'android/gradlew');
-  run(gradlew, ['assembleDebug'], { cwd: path.join(root, 'apps', app.id, 'android') });
 
-  const apkSrc = path.join(
-    root,
-    'apps',
-    app.id,
-    'android/app/build/outputs/apk/debug/app-debug.apk'
-  );
-  if (!existsSync(apkSrc)) {
-    throw new Error(`APK not found after build: ${apkSrc}`);
+  const gradlew = path.join(root, 'apps', app.id, 'android/gradlew');
+  run(gradlew, ['assembleRelease'], { cwd: path.join(root, 'apps', app.id, 'android') });
+
+  const candidates = [
+    path.join(root, 'apps', app.id, 'android/app/build/outputs/apk/release/app-release.apk'),
+    path.join(root, 'apps', app.id, 'android/app/build/outputs/apk/release/app-release-unsigned.apk'),
+  ];
+  const apkSrc = candidates.find((candidate) => existsSync(candidate));
+  if (!apkSrc) {
+    throw new Error(`Release APK not found after build for ${app.id}`);
   }
   return { ...app, version, apkSrc };
 }
@@ -127,11 +182,11 @@ async function buildApp(app) {
 await ensureSdk();
 const built = [];
 for (const app of apps) {
-  console.log(`\n=== Building ${app.name} ===`);
+  console.log(`\n=== Building ${app.name} (signed release) ===`);
   built.push(await buildApp(app));
 }
 
-console.log('\nBuilt APKs:');
+console.log('\nBuilt release APKs:');
 for (const app of built) {
   console.log(`  ${app.id}: ${app.apkSrc}`);
 }

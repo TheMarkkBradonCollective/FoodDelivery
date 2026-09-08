@@ -43,11 +43,7 @@ jobs:
       - name: Build and publish APKs
         run: |
           npm ci
-          node scripts/build-apks.mjs
-          node scripts/publish-apk.mjs
-          git add release/ version.json
-          git diff --staged --quiet || git commit -m "chore: publish APKs for release"
-          bash scripts/publish-github-release.sh
+          npm run release:apk
 
       - name: Upload APK artifacts
         uses: actions/upload-artifact@v4

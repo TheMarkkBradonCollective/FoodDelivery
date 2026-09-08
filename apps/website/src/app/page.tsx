@@ -74,9 +74,8 @@ export default function HomePage() {
           </div>
 
           <div className="mx-auto mt-10 max-w-2xl rounded-xl border border-amber-200 bg-amber-50 p-4 text-center text-sm text-amber-900">
-            <strong>Android APKs</strong> — Install by downloading the APK and enabling
-            &quot;Install from unknown sources&quot; on your device. iOS versions coming
-            soon.
+            <strong>Android APKs</strong> — Install from the MBC App Store. Each app bundles its
+            full UI inside the APK; no website or Vercel deploy required.
           </div>
         </div>
       </section>
