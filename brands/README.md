@@ -5,8 +5,8 @@ Unified **Porter** branding across all three apps. Same rider logo; RUNR and VEN
 | App | File | Wordmark |
 |-----|------|----------|
 | **PORTER** | `porter-icon.png` | Porter |
-| **RUNR** | `runr-icon.png` | Porter + small `runr` |
-| **VENDR** | `vendr-icon.png` | Porter + small `vendor` |
+| **RUNR** | `runr-icon.png` | Porter + small `Runner` |
+| **VENDR** | `vendr-icon.png` | Porter + small `Vendor` |
 
 Brand color: `#0066FF`
 
