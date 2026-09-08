@@ -22,11 +22,11 @@ export function BottomNavigation({ items, className }: BottomNavigationProps) {
   return (
     <nav
       className={cn(
-        "fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border)] bg-[var(--surface)]/95 backdrop-blur-md",
+        "fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border)] bg-[var(--surface)]/95 backdrop-blur-md pb-[env(safe-area-inset-bottom)]",
         className
       )}
     >
-      <div className="mx-auto flex max-w-lg items-stretch justify-around px-2 pb-[env(safe-area-inset-bottom)]">
+      <div className="mx-auto flex max-w-lg items-stretch justify-around px-2">
         {items.map(({ href, label, icon: Icon }) => {
           const active = pathname?.startsWith(href) ?? false;
           return (

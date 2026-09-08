@@ -24,8 +24,8 @@ export function VendrLayoutClient({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <div className="flex min-h-screen bg-[var(--background)]">
-      <aside className="hidden w-56 shrink-0 border-r border-[var(--border)] bg-[var(--surface)] p-4 lg:block">
+    <div className="flex min-h-[100dvh] bg-[var(--background)]">
+      <aside className="hidden w-56 shrink-0 border-r border-[var(--border)] bg-[var(--surface)] p-4 pt-[calc(1rem+var(--safe-top))] lg:block">
         <AppBrandHeader
           name="VENDR"
           tagline="Sell. Manage. Grow."
@@ -52,10 +52,10 @@ export function VendrLayoutClient({ children }: { children: React.ReactNode }) {
         </nav>
       </aside>
 
-      <main className="min-w-0 flex-1 pb-20 lg:pb-0">{children}</main>
+      <main className="app-screen min-w-0 flex-1 lg:pb-0 lg:pt-[var(--safe-top)]">{children}</main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border)] bg-[var(--surface)] lg:hidden">
-        <div className="flex justify-around px-2 pb-[env(safe-area-inset-bottom)]">
+      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border)] bg-[var(--surface)] pb-[env(safe-area-inset-bottom)] lg:hidden">
+        <div className="flex justify-around px-2">
           {vendrNav.slice(0, 4).map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
