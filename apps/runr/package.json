@@ -1,6 +1,6 @@
 {
   "name": "@runr/runr-app",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3002",
@@ -14,6 +14,7 @@
   "dependencies": {
     "@capacitor/android": "^7.2.0",
     "@capacitor/core": "^7.2.0",
+    "@capacitor/status-bar": "^7.0.6",
     "@runr/shared": "*",
     "next": "^15.2.4",
     "react": "^19.0.0",

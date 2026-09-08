@@ -1,6 +1,7 @@
 "use client";
 
 import { ThemeProvider } from "../providers/ThemeProvider";
+import { NativeSafeArea } from "../providers/NativeSafeArea";
 import { useAppStore } from "../../store/create-app-store";
 import { useEffect } from "react";
 
@@ -42,7 +43,9 @@ export function AppShell({
 }) {
   return (
     <ThemeProvider>
-      <AuthGuard role={role}>{children}</AuthGuard>
+      <NativeSafeArea>
+        <AuthGuard role={role}>{children}</AuthGuard>
+      </NativeSafeArea>
     </ThemeProvider>
   );
 }

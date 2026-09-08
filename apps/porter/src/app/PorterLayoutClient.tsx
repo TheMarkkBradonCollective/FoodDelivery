@@ -13,7 +13,7 @@ export const porterNav = [
 
 export function PorterLayoutClient({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative min-h-screen bg-[var(--background)] pb-20">
+    <div className="app-screen relative bg-[var(--background)]">
       {children}
       <BottomNavigation items={porterNav} />
     </div>
