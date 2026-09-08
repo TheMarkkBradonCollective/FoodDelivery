@@ -46,8 +46,8 @@ export const apps: AppDownload[] = [
     color: "#ff4f00",
     colorClass: "bg-[#ff4f00]",
     storeUrl: `${MBC_STORE}/#download-runr`,
-    apkUrl: `${GITHUB_RELEASES}/v0.2.1-runr/runr-v0.2.1.apk`,
-    version: "0.2.1",
+    apkUrl: `${GITHUB_RELEASES}/v0.2.2-runr/runr-v0.2.2.apk`,
+    version: "0.2.2",
   },
   {
     id: "vendr",
@@ -61,8 +61,8 @@ export const apps: AppDownload[] = [
     color: "#059669",
     colorClass: "bg-emerald-600",
     storeUrl: `${MBC_STORE}/#download-vendr`,
-    apkUrl: `${GITHUB_RELEASES}/v0.2.1-vendr/vendr-v0.2.1.apk`,
-    version: "0.2.1",
+    apkUrl: `${GITHUB_RELEASES}/v0.2.2-vendr/vendr-v0.2.2.apk`,
+    version: "0.2.2",
   },
 ];
 

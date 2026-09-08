@@ -2,6 +2,7 @@
 
 import { ThemeProvider } from "../providers/ThemeProvider";
 import { NativeSafeArea } from "../providers/NativeSafeArea";
+import { SupabaseAuthSync } from "../providers/SupabaseAuthSync";
 import { useAppStore } from "../../store/create-app-store";
 import { SignInPrompt } from "./SignInPrompt";
 
@@ -31,6 +32,7 @@ export function AppShell({
   return (
     <ThemeProvider>
       <NativeSafeArea>
+        <SupabaseAuthSync role={role} />
         <AuthGuard role={role}>{children}</AuthGuard>
       </NativeSafeArea>
     </ThemeProvider>

@@ -30,7 +30,7 @@ The marketing site includes APK download links, ecosystem overview, company info
 | `/account` | Your account dashboard (orders, RUNs, business ops) |
 | `/staff` | Staff portal — manage apps, users, businesses, orders |
 
-Sign-in will connect to Supabase. Demo accounts have been removed.
+Sign-in uses Supabase. Set `role` in user metadata (`customer`, `runr`, `business`, or `staff`) when creating accounts. See `docs/supabase/schema.sql` for an optional `profiles` table.
 
 ## The 3-App Ecosystem
 

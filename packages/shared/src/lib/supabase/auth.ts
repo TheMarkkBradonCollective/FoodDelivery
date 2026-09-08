@@ -1,0 +1,59 @@
+import type { Session } from "@supabase/supabase-js";
+import type { AuthSession } from "../auth";
+import { getSupabaseClient } from "./client";
+import { isSupabaseConfigured } from "./config";
+import { resolveAppUser } from "./user";
+
+export async function sessionToAuthSession(session: Session): Promise<AuthSession> {
+  const user = await resolveAppUser(session.user);
+  return {
+    user,
+    token: session.access_token,
+    loggedInAt: new Date().toISOString(),
+  };
+}
+
+export async function signInWithEmail(
+  email: string,
+  password: string
+): Promise<{ success: true; session: AuthSession } | { success: false; error: string }> {
+  if (!isSupabaseConfigured()) {
+    return {
+      success: false,
+      error: "Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY.",
+    };
+  }
+
+  const supabase = getSupabaseClient();
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: email.trim(),
+    password,
+  });
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  if (!data.session) {
+    return { success: false, error: "Sign-in failed. No session was returned." };
+  }
+
+  return {
+    success: true,
+    session: await sessionToAuthSession(data.session),
+  };
+}
+
+export async function signOut(): Promise<void> {
+  if (!isSupabaseConfigured()) return;
+  await getSupabaseClient().auth.signOut();
+}
+
+export async function getCurrentAuthSession(): Promise<AuthSession | null> {
+  if (!isSupabaseConfigured()) return null;
+
+  const { data, error } = await getSupabaseClient().auth.getSession();
+  if (error || !data.session) return null;
+
+  return sessionToAuthSession(data.session);
+}

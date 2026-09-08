@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
+import { getCurrentAuthSession, signOut } from "@runr/shared/lib/supabase/auth";
 import { LogIn, Shield, Smartphone } from "lucide-react";
 
 export default function LoginPage() {
@@ -39,6 +40,17 @@ export default function LoginPage() {
       setError(result.error);
       return;
     }
+
+    const expectedRole = mode === "staff" ? "staff" : undefined;
+    if (expectedRole) {
+      const authSession = await getCurrentAuthSession();
+      if (authSession?.user.role !== "staff") {
+        await signOut();
+        setError("This account does not have staff access.");
+        return;
+      }
+    }
+
     router.push(mode === "staff" ? "/staff/" : "/account/");
   }
 
@@ -124,12 +136,6 @@ export default function LoginPage() {
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
-
-        <div className="mt-6 rounded-xl border border-dashed border-[var(--border)] bg-white p-4 text-center">
-          <p className="text-sm text-[var(--muted)]">
-            Supabase authentication is coming soon. Demo accounts have been removed.
-          </p>
-        </div>
 
         <p className="mt-6 text-center text-sm text-[var(--muted)]">
           <Link href="/" className="hover:text-[#ff4f00]">

@@ -156,34 +156,9 @@ function StaffPortal() {
 
           {tab === "users" && (
             <Panel title="Marketplace Users">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead>
-                    <tr className="border-b border-zinc-800 text-zinc-500">
-                      <th className="pb-3 pr-4">Name</th>
-                      <th className="pb-3 pr-4">Email</th>
-                      <th className="pb-3 pr-4">App</th>
-                      <th className="pb-3">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[
-                      { name: "Alex Rivera", email: "alex@example.com", app: "PORTER", status: "Active" },
-                      { name: "James Chen", email: "james@example.com", app: "RUNR", status: "Active" },
-                      { name: "Tony Russo", email: "tony@tonyspizza.com", app: "VENDR", status: "Active" },
-                    ].map((u) => (
-                      <tr key={u.email} className="border-b border-zinc-800/50">
-                        <td className="py-3 pr-4">{u.name}</td>
-                        <td className="py-3 pr-4 text-zinc-400">{u.email}</td>
-                        <td className="py-3 pr-4">{u.app}</td>
-                        <td className="py-3">
-                          <span className="text-green-400">{u.status}</span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <p className="text-sm text-zinc-500">
+                User management will load from Supabase profiles once connected.
+              </p>
             </Panel>
           )}
 

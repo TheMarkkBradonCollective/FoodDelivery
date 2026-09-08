@@ -14,6 +14,7 @@ import type {
 } from "../types/index";
 import { canScheduleRun } from "../lib/coverage-engine";
 import { DEFAULT_LOCATION } from "../data/constants";
+import { signOut } from "../lib/supabase/auth";
 
 export interface AppState {
   user: User | null;
@@ -80,7 +81,10 @@ function buildStore(
     mapFilter: "all" as const,
 
     setUser: (user: User | null) => set({ user }),
-    logout: () => set({ user: null }),
+    logout: () => {
+      void signOut();
+      set({ user: null });
+    },
     toggleTheme: () =>
       set((s) => ({ theme: s.theme === "light" ? "dark" : "light" })),
     setLocation: (location: { lat: number; lng: number }) => set({ location }),

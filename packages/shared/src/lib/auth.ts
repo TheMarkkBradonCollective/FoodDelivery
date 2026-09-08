@@ -1,4 +1,5 @@
 import type { User, UserRole } from "../types/index";
+import { signInWithEmail as supabaseSignIn } from "./supabase/auth";
 
 export interface AuthSession {
   user: User;
@@ -6,14 +7,11 @@ export interface AuthSession {
   loggedInAt: string;
 }
 
-export function authenticate(
-  _email: string,
-  _password: string
-): { success: true; session: AuthSession } | { success: false; error: string } {
-  return {
-    success: false,
-    error: "Sign-in is not configured yet. Supabase auth will be connected soon.",
-  };
+export async function authenticate(
+  email: string,
+  password: string
+): Promise<{ success: true; session: AuthSession } | { success: false; error: string }> {
+  return supabaseSignIn(email, password);
 }
 
 export function getRoleLabel(role: UserRole): string {
