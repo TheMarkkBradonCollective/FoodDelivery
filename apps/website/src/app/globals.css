@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #ff4f00;
-  --color-brand-hover: #e64600;
-  --color-porter: #2563eb;
-  --color-runr: #ff4f00;
-  --color-vendr: #059669;
+  --color-brand: #0066ff;
+  --color-brand-hover: #0052cc;
+  --color-porter: #0066ff;
+  --color-runr: #0066ff;
+  --color-vendr: #0066ff;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -30,7 +30,7 @@ body {
 
 .gradient-mesh {
   background:
-    radial-gradient(ellipse 80% 60% at 50% -10%, rgb(255 79 0 / 0.12), transparent),
-    radial-gradient(ellipse 60% 50% at 100% 0%, rgb(37 99 235 / 0.08), transparent),
-    radial-gradient(ellipse 50% 40% at 0% 100%, rgb(5 150 105 / 0.08), transparent);
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgb(0 102 255 / 0.14), transparent),
+    radial-gradient(ellipse 60% 50% at 100% 0%, rgb(0 102 255 / 0.08), transparent),
+    radial-gradient(ellipse 50% 40% at 0% 100%, rgb(0 102 255 / 0.08), transparent);
 }

@@ -25,7 +25,7 @@ export default function LoginPage() {
   if (session) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#ff4f00] border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#0066FF] border-t-transparent" />
       </div>
     );
   }
@@ -69,7 +69,7 @@ export default function LoginPage() {
             type="button"
             onClick={() => setMode("app")}
             className={`flex flex-1 items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-semibold transition-colors ${
-              mode === "app" ? "bg-[#ff4f00] text-white" : "text-[var(--muted)]"
+              mode === "app" ? "bg-[#0066FF] text-white" : "text-[var(--muted)]"
             }`}
           >
             <Smartphone className="h-4 w-4" />
@@ -103,7 +103,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm outline-none focus:border-[#ff4f00]"
+              className="w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm outline-none focus:border-[#0066FF]"
               placeholder={mode === "staff" ? "staff@runr.com" : "you@example.com"}
             />
           </div>
@@ -117,7 +117,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm outline-none focus:border-[#ff4f00]"
+              className="w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm outline-none focus:border-[#0066FF]"
             />
           </div>
 
@@ -129,7 +129,7 @@ export default function LoginPage() {
             type="submit"
             disabled={loading}
             className={`flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-white disabled:opacity-50 ${
-              mode === "staff" ? "bg-[#0a0a0a] hover:bg-zinc-800" : "bg-[#ff4f00] hover:bg-[#e64600]"
+              mode === "staff" ? "bg-[#0a0a0a] hover:bg-zinc-800" : "bg-[#0066FF] hover:bg-[#0052cc]"
             }`}
           >
             <LogIn className="h-4 w-4" />
@@ -138,7 +138,7 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-6 text-center text-sm text-[var(--muted)]">
-          <Link href="/" className="hover:text-[#ff4f00]">
+          <Link href="/" className="hover:text-[#0066FF]">
             ← Back to home
           </Link>
         </p>

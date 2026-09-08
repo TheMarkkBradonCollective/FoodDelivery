@@ -41,7 +41,7 @@ export default function BusinessOperationsPage() {
         {
           id: "business",
           position: business.location,
-          color: "#FF4F00",
+          color: "#0066FF",
           title: business.name,
           subtitle: "Your restaurant",
         },
@@ -62,7 +62,7 @@ export default function BusinessOperationsPage() {
   return (
     <div className="flex h-screen flex-col lg:flex-row">
       <div className="border-b border-[var(--border)] bg-[var(--surface)] px-4 py-3 lg:hidden">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-600">VENDR Business</p>
+        <p className="text-[10px] font-bold uppercase tracking-wider text-runr-primary">VENDR Business</p>
         <p className="text-sm font-semibold">Sell → Prepare → Dispatch → Fulfill → Grow</p>
         <p className="text-xs text-[var(--muted)]">PORTER orders flow in · RUNRs fill coverage gaps</p>
       </div>

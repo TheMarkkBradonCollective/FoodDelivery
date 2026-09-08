@@ -50,7 +50,7 @@ function StaffPortal() {
       <div className="border-b border-zinc-800 bg-zinc-900">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#ff4f00]">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#0066FF]">
               Staff Portal
             </p>
             <h1 className="text-lg font-bold">Platform Management</h1>
@@ -84,7 +84,7 @@ function StaffPortal() {
               onClick={() => setTab(id)}
               className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                 tab === id
-                  ? "bg-[#ff4f00] text-white"
+                  ? "bg-[#0066FF] text-white"
                   : "bg-zinc-900 text-zinc-400 hover:text-white"
               }`}
             >
@@ -121,7 +121,7 @@ function StaffPortal() {
                 {[
                   { name: "PORTER", pkg: "com.runr.porter", color: "border-blue-500/30", status: "Live" },
                   { name: "RUNR", pkg: "com.runr.runr", color: "border-orange-500/30", status: "Live" },
-                  { name: "VENDR", pkg: "com.runr.vendr", color: "border-emerald-500/30", status: "Live" },
+                  { name: "VENDR", pkg: "com.runr.vendr", color: "border-[#0066FF]/30", status: "Live" },
                 ].map((app) => (
                   <div
                     key={app.name}
@@ -241,7 +241,7 @@ function AdminStat({
   return (
     <div
       className={`rounded-xl border p-4 ${
-        alert ? "border-orange-500/30 bg-orange-500/10" : "border-zinc-800 bg-zinc-900"
+        alert ? "border-orange-500/30 bg-blue-500/10" : "border-zinc-800 bg-zinc-900"
       }`}
     >
       <p className="text-xs text-zinc-500">{label}</p>

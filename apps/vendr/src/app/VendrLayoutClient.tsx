@@ -40,7 +40,7 @@ export function VendrLayoutClient({ children }: { children: React.ReactNode }) {
               className={cn(
                 "flex items-center gap-3 rounded-runr-md px-3 py-2.5 text-sm font-medium transition-colors",
                 pathname === href
-                  ? "bg-emerald-500/10 text-emerald-600"
+                  ? "bg-runr-primary/10 text-runr-primary"
                   : "text-[var(--muted)] hover:bg-runr-neutral-100 dark:hover:bg-runr-neutral-800"
               )}
             >
@@ -61,7 +61,7 @@ export function VendrLayoutClient({ children }: { children: React.ReactNode }) {
               href={href}
               className={cn(
                 "flex flex-1 flex-col items-center gap-1 py-2 text-[10px] font-medium",
-                pathname === href ? "text-emerald-600" : "text-[var(--muted)]"
+                pathname === href ? "text-runr-primary" : "text-[var(--muted)]"
               )}
             >
               <Icon className="h-5 w-5" />

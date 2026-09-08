@@ -35,7 +35,7 @@ function AccountContent() {
       <div className="mx-auto max-w-4xl px-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#ff4f00]">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#0066FF]">
               {getAppForRole(user.role)} Account
             </p>
             <h1 className="text-2xl font-bold">{user.name}</h1>
@@ -73,7 +73,7 @@ function AccountContent() {
           </p>
           <Link
             href="/#apps"
-            className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#ff4f00] hover:underline"
+            className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#0066FF] hover:underline"
           >
             <Download className="h-4 w-4" />
             Get the app
