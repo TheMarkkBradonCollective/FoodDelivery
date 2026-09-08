@@ -54,12 +54,20 @@ One account works across the mobile app and website.
 ## Build & distribute APKs
 
 ```bash
-npm run android:all   # Build all 3 APKs + copy to website
+npm run build:apks       # Build all 3 Android APKs
+npm run publish:apk      # Copy to release/ + write version.json
+npm run publish:release  # Publish GitHub Releases
 ```
 
-APKs are served from `apps/website/public/downloads/` for the main website.
+APKs live in `release/` and are listed in the **MBC App Store** (not the marketing website):
 
-## Deploy the website
+- [PORTER](https://themarkkbradoncollective.github.io/main/download/#download-porter)
+- [RUNR](https://themarkkbradoncollective.github.io/main/download/#download-runr)
+- [VENDR](https://themarkkbradoncollective.github.io/main/download/#download-vendr)
+
+The company website (`apps/website`) links to the MBC App Store for installs. GitHub Releases provide direct APK downloads as a fallback.
+
+## Deploy the website (optional marketing site)
 
 Build static export:
 
@@ -67,7 +75,7 @@ Build static export:
 npm run build:website
 ```
 
-Output: `apps/website/out/` — deploy to Vercel, Netlify, GitHub Pages, or any static host.
+Output: `apps/website/out/` — deploy to any static host for company info and login. **APK installs are handled by the MBC App Store**, not the website.
 
 ## License
 

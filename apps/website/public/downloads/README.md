@@ -1,28 +1,21 @@
 # APK Downloads
 
-Place built Android APK files here for the marketing website to serve:
+APKs are distributed through the **MBC App Store** and GitHub Releases — not from this folder.
 
-- `porter.apk` — PORTER customer app (`com.runr.porter`)
-- `runr.apk` — RUNR delivery app (`com.runr.runr`)
-- `vendr.apk` — VENDR business app (`com.runr.vendr`)
-
-## Build APKs
+## Build & publish
 
 From the repo root (requires Android SDK + Java):
 
 ```bash
-npm run android:porter
-npm run android:runr
-npm run android:vendr
+npm run build:apks      # Build all 3 Android APKs
+npm run publish:apk     # Copy to release/ + update version.json
+npm run publish:release # Create GitHub Releases
 ```
 
-Then copy the debug APKs:
+Release artifacts:
 
-```bash
-npm run copy-apks
-```
+- `release/porter-v0.1.0.apk` — PORTER customer app (`com.runr.porter`)
+- `release/runr-v0.1.0.apk` — RUNR delivery app (`com.runr.runr`)
+- `release/vendr-v0.1.0.apk` — VENDR business app (`com.runr.vendr`)
 
-APK build output locations:
-- `apps/porter/android/app/build/outputs/apk/debug/app-debug.apk`
-- `apps/runr/android/app/build/outputs/apk/debug/app-debug.apk`
-- `apps/vendr/android/app/build/outputs/apk/debug/app-debug.apk`
+Install from the MBC App Store: https://themarkkbradoncollective.github.io/main/download/
