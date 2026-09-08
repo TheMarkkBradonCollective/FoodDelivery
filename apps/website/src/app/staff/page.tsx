@@ -119,8 +119,8 @@ function StaffPortal() {
               </p>
               <div className="grid gap-4 md:grid-cols-3">
                 {[
-                  { name: "PORTER", pkg: "com.runr.porter", color: "border-blue-500/30", status: "Live" },
-                  { name: "RUNR", pkg: "com.runr.runr", color: "border-orange-500/30", status: "Live" },
+                  { name: "PORTER", pkg: "com.runr.porter", color: "border-[#0066FF]/30", status: "Live" },
+                  { name: "RUNR", pkg: "com.runr.runr", color: "border-[#0066FF]/30", status: "Live" },
                   { name: "VENDR", pkg: "com.runr.vendr", color: "border-[#0066FF]/30", status: "Live" },
                 ].map((app) => (
                   <div
