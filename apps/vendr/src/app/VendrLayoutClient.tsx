@@ -29,8 +29,7 @@ export function VendrLayoutClient({ children }: { children: React.ReactNode }) {
         <AppBrandHeader
           name="VENDR"
           tagline="Sell. Manage. Grow."
-          emoji="🏪"
-          accentClass="bg-emerald-600"
+          iconUrl="/icons/app-icon.png"
           className="mb-8"
         />
         <nav className="space-y-1">
