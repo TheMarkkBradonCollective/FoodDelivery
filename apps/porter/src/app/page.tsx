@@ -49,8 +49,7 @@ export default function PorterDiscoverPage() {
         <AppBrandHeader
           name="PORTER"
           tagline="Get what you need."
-          emoji="🛍️"
-          accentClass="bg-blue-600"
+          iconUrl="/icons/app-icon.png"
           compact
         />
         <FlowBadge label="Discover → Order → Track → Receive" className="mt-3" />

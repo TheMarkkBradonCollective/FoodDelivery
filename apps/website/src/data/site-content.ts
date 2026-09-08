@@ -1,7 +1,7 @@
 export interface AppDownload {
   id: "porter" | "runr" | "vendr";
   name: string;
-  emoji: string;
+  iconUrl: string;
   tagline: string;
   description: string;
   flow: string;
@@ -22,7 +22,7 @@ export const apps: AppDownload[] = [
   {
     id: "porter",
     name: "PORTER",
-    emoji: "🛍️",
+    iconUrl: "/icons/apps/porter.png",
     tagline: "Get what you need.",
     description:
       "Discover nearby businesses, order food and products, track deliveries live, and see your RUNR on the map.",
@@ -37,7 +37,7 @@ export const apps: AppDownload[] = [
   {
     id: "runr",
     name: "RUNR",
-    emoji: "🚗",
+    iconUrl: "/icons/apps/runr.png",
     tagline: "Pick it up. Run it there.",
     description:
       "Choose where and when to deliver. Select a business, set your RUN window, and earn per delivery — not hourly.",
@@ -52,7 +52,7 @@ export const apps: AppDownload[] = [
   {
     id: "vendr",
     name: "VENDR",
-    emoji: "🏪",
+    iconUrl: "/icons/apps/vendr.png",
     tagline: "Sell. Manage. Grow.",
     description:
       "Run your business on the PORTER marketplace. Manage orders, set RUNR coverage, and monitor live deliveries.",
