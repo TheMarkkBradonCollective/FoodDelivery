@@ -31,8 +31,8 @@ export const apps: AppDownload[] = [
     color: "#2563eb",
     colorClass: "bg-blue-600",
     storeUrl: `${MBC_STORE}/#download-porter`,
-    apkUrl: `${GITHUB_RELEASES}/v0.2.1-porter/porter-v0.2.1.apk`,
-    version: "0.2.1",
+    apkUrl: `${GITHUB_RELEASES}/v0.2.2-porter/porter-v0.2.2.apk`,
+    version: "0.2.2",
   },
   {
     id: "runr",

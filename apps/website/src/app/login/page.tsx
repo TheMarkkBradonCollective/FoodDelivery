@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
-import { getDemoAccounts } from "@runr/shared/lib/auth";
 import { LogIn, Shield, Smartphone } from "lucide-react";
 
 export default function LoginPage() {
@@ -40,25 +39,8 @@ export default function LoginPage() {
       setError(result.error);
       return;
     }
-    const cred = getDemoAccounts().find((a) => a.email === email.trim().toLowerCase());
-    if (cred?.role === "Staff" || email.trim().toLowerCase() === "staff@runr.com") {
-      router.push("/staff/");
-    } else {
-      router.push("/account/");
-    }
+    router.push(mode === "staff" ? "/staff/" : "/account/");
   }
-
-  function fillDemo(account: (typeof demoAccounts)[0]) {
-    setEmail(account.email);
-    setPassword(account.password);
-    if (account.role === "Staff") setMode("staff");
-  }
-
-  const demoAccounts = getDemoAccounts();
-  const filteredDemos =
-    mode === "staff"
-      ? demoAccounts.filter((a) => a.role === "Staff")
-      : demoAccounts.filter((a) => a.role !== "Staff");
 
   return (
     <div className="min-h-[80vh] bg-[var(--surface)] py-16">
@@ -143,26 +125,10 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-6 rounded-xl border border-dashed border-[var(--border)] bg-white p-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
-            Demo accounts
+        <div className="mt-6 rounded-xl border border-dashed border-[var(--border)] bg-white p-4 text-center">
+          <p className="text-sm text-[var(--muted)]">
+            Supabase authentication is coming soon. Demo accounts have been removed.
           </p>
-          <div className="mt-3 space-y-2">
-            {filteredDemos.map((account) => (
-              <button
-                key={account.email}
-                type="button"
-                onClick={() => fillDemo(account)}
-                className="flex w-full items-center justify-between rounded-lg border border-[var(--border)] px-3 py-2 text-left text-sm hover:bg-[var(--surface)]"
-              >
-                <span>
-                  <strong>{account.app}</strong>
-                  <span className="ml-2 text-[var(--muted)]">{account.email}</span>
-                </span>
-                <span className="text-xs text-[var(--muted)]">Use</span>
-              </button>
-            ))}
-          </div>
         </div>
 
         <p className="mt-6 text-center text-sm text-[var(--muted)]">

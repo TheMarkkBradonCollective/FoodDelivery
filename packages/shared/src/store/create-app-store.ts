@@ -6,23 +6,14 @@ import type {
   Business,
   CartItem,
   Delivery,
+  EarningRecord,
+  Notification,
   Order,
   Run,
   User,
-  UserRole,
 } from "../types/index";
 import { canScheduleRun } from "../lib/coverage-engine";
-import {
-  DEFAULT_LOCATION,
-  mockBusinesses,
-  mockDeliveries,
-  mockEarnings,
-  mockNotifications,
-  mockOrders,
-  mockRunHistory,
-  mockRunrProfile,
-  mockUsers,
-} from "../data/mock-data";
+import { DEFAULT_LOCATION } from "../data/constants";
 
 export interface AppState {
   user: User | null;
@@ -38,13 +29,12 @@ export interface AppState {
   cart: CartItem[];
   cartBusinessId: string | null;
   favoriteBusinessIds: string[];
-  notifications: typeof mockNotifications;
-  earnings: typeof mockEarnings;
+  notifications: Notification[];
+  earnings: EarningRecord[];
   searchQuery: string;
   mapFilter: "all" | "open" | "gap" | "high_demand";
 
   setUser: (user: User | null) => void;
-  loginAs: (role: UserRole) => void;
   logout: () => void;
   toggleTheme: () => void;
   setLocation: (location: { lat: number; lng: number }) => void;
@@ -74,37 +64,22 @@ function buildStore(
     user: null,
     theme: "light" as const,
     location: DEFAULT_LOCATION,
-    businesses: mockBusinesses,
+    businesses: [] as Business[],
     activeRun: null,
     scheduledRuns: [] as Run[],
-    runHistory: mockRunHistory,
+    runHistory: [] as Run[],
     activeDelivery: null,
-    pendingDelivery: mockDeliveries[0] ?? null,
-    orders: mockOrders,
+    pendingDelivery: null,
+    orders: [] as Order[],
     cart: [] as CartItem[],
     cartBusinessId: null,
-    favoriteBusinessIds: mockRunrProfile.favoriteBusinessIds,
-    notifications: mockNotifications,
-    earnings: mockEarnings,
+    favoriteBusinessIds: [] as string[],
+    notifications: [] as Notification[],
+    earnings: [] as EarningRecord[],
     searchQuery: "",
     mapFilter: "all" as const,
 
     setUser: (user: User | null) => set({ user }),
-    loginAs: (role: UserRole) => {
-      if (role === "staff") {
-        set({
-          user: {
-            id: "user-staff-1",
-            name: "Platform Admin",
-            email: "staff@runr.com",
-            role: "staff",
-          },
-        });
-        return;
-      }
-      const user = mockUsers.find((u) => u.role === role) ?? null;
-      set({ user });
-    },
     logout: () => set({ user: null }),
     toggleTheme: () =>
       set((s) => ({ theme: s.theme === "light" ? "dark" : "light" })),

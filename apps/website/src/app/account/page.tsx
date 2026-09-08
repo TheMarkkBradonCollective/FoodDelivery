@@ -7,7 +7,6 @@ import { useAppStore } from "@/store";
 import { getAppForRole, getRoleLabel } from "@runr/shared/lib/auth";
 import { formatCurrency, formatTimeRange } from "@runr/shared/lib/utils";
 import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
-import { mockRunrProfile } from "@runr/shared/data/mock-data";
 import {
   Download,
   Heart,
@@ -134,7 +133,7 @@ function RunrDashboard() {
       <div className="grid gap-4 sm:grid-cols-3">
         <StatCard label="Total earnings" value={formatCurrency(totalEarnings)} />
         <StatCard label="Deliveries" value={String(earnings.length)} />
-        <StatCard label="Rating" value={String(mockRunrProfile.rating)} />
+        <StatCard label="Rating" value="—" />
       </div>
 
       {activeRun && (
@@ -180,6 +179,17 @@ function RunrDashboard() {
 function BusinessDashboard() {
   const { businesses, orders } = useAppStore();
   const business = businesses[0];
+
+  if (!business) {
+    return (
+      <div className="mt-8 rounded-xl border border-[var(--border)] bg-white p-6">
+        <p className="text-sm text-[var(--muted)]">
+          No business linked yet. Connect your VENDR account via Supabase to see operations here.
+        </p>
+      </div>
+    );
+  }
+
   const coverage = getBusinessCoverageSummary(
     business.coverageRules,
     business.scheduledRuns

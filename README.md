@@ -30,16 +30,7 @@ The marketing site includes APK download links, ecosystem overview, company info
 | `/account` | Your account dashboard (orders, RUNs, business ops) |
 | `/staff` | Staff portal — manage apps, users, businesses, orders |
 
-**Demo logins:**
-
-| Email | Password | Role |
-|-------|----------|------|
-| alex@example.com | porter123 | PORTER customer |
-| james@example.com | runr123 | RUNR delivery |
-| tony@tonyspizza.com | vendr123 | VENDR business |
-| staff@runr.com | staff123 | Platform staff |
-
-One account works across the mobile app and website.
+Sign-in will connect to Supabase. Demo accounts have been removed.
 
 ## The 3-App Ecosystem
 

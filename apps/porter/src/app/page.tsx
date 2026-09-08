@@ -7,7 +7,8 @@ import { SearchBar } from "@runr/shared/components/ui/SearchBar";
 import { BusinessCard } from "@runr/shared/components/ui/BusinessCard";
 import { AppBrandHeader, FlowBadge } from "@runr/shared/components/layout/AppBrandHeader";
 import { useAppStore } from "@/store";
-import { cuisineCategories } from "@runr/shared/data/mock-data";
+import { cuisineCategories } from "@runr/shared/data/constants";
+import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 import { getBusinessCoverageSummary, getMarkerColor } from "@runr/shared/lib/coverage-engine";
 
 export default function PorterDiscoverPage() {
@@ -105,11 +106,18 @@ export default function PorterDiscoverPage() {
           Order from businesses fulfilled by RUNRs in your area
         </p>
         <div className="mt-3 space-y-3">
-          {filtered.map((b) => (
-            <Link key={b.id} href={`/restaurant/${b.id}`}>
-              <BusinessCard business={b} userLocation={location} />
-            </Link>
-          ))}
+          {filtered.length === 0 ? (
+            <EmptyState
+              title="No businesses yet"
+              description="Marketplace listings will appear here once your account is connected to Supabase."
+            />
+          ) : (
+            filtered.map((b) => (
+              <Link key={b.id} href={`/restaurant/${b.id}`}>
+                <BusinessCard business={b} userLocation={location} />
+              </Link>
+            ))
+          )}
         </div>
       </div>
     </div>

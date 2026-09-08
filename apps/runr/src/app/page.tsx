@@ -22,8 +22,8 @@ import {
   getCoverageStatusLabel,
   getDemandLabel,
 } from "@runr/shared/lib/utils";
-import { demandSchedule } from "@runr/shared/data/mock-data";
 import { Flame, Star } from "lucide-react";
+import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 
 export default function RunrMapPage() {
   const {
@@ -247,6 +247,15 @@ export default function RunrMapPage() {
         </div>
       )}
 
+      {businesses.length === 0 && (
+        <div className="absolute inset-x-4 bottom-24 z-[1000]">
+          <EmptyState
+            title="No RUN opportunities yet"
+            description="Business coverage will appear on the map once marketplace data is connected."
+          />
+        </div>
+      )}
+
       {/* Business bottom sheet */}
       <BottomSheet
         open={!!selectedBusiness && !showRunConfirm}
@@ -379,7 +388,6 @@ function BusinessSheetContent({
   onWorkHere: () => void;
 }) {
   const distance = calculateDistanceMiles(userLocation, business.location);
-  const demand = demandSchedule[business.id];
 
   return (
     <div className="space-y-5">
@@ -435,19 +443,6 @@ function BusinessSheetContent({
         <p className="text-lg font-bold uppercase text-runr-primary">
           {getDemandLabel(business.demandLevel)}
         </p>
-        {demand && (
-          <div className="mt-3 space-y-1">
-            {demand.map((d) => (
-              <div
-                key={d.period}
-                className="flex justify-between text-sm text-[var(--muted)]"
-              >
-                <span>{d.period}</span>
-                <span className="font-medium uppercase">{getDemandLabel(d.level)}</span>
-              </div>
-            ))}
-          </div>
-        )}
         <p className="mt-2 text-xs text-[var(--muted)]">
           Historical estimates — not guaranteed earnings
         </p>
