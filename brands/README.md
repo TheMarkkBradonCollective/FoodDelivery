@@ -1,16 +1,14 @@
 # RUNR App Icons
 
-Official branding for PORTER, VENDR, and RUNR.
+Unified **Porter** branding across all three apps. Same rider logo; RUNR and VENDR add a small subtitle under the right side of "Porter".
 
-| App | Design | File |
-|-----|--------|------|
-| **PORTER** | Blue background, white delivery rider + speed lines, "Porter" label | `porter-icon.png` |
-| **VENDR** | Blue background, white storefront + packages, "VENDR" label | `vendr-icon.png` |
-| **RUNR** | Blue background, white delivery rider + speed lines, "RUNR" label | `runr-icon.png` |
+| App | File | Wordmark |
+|-----|------|----------|
+| **PORTER** | `porter-icon.png` | Porter |
+| **RUNR** | `runr-icon.png` | Porter + small `runr` |
+| **VENDR** | `vendr-icon.png` | Porter + small `vendor` |
 
 Brand color: `#0066FF`
-
-`porter-icon-mark.png` is the rider-only mark (no wordmark) for tight layouts.
 
 ## Regenerate Android mipmaps
 
