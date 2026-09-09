@@ -29,7 +29,8 @@ export function CoverageTimeline({
               {formatTimeRange(interval.startTime, interval.endTime)}
             </p>
             <p className="text-xs text-[var(--muted)]">
-              {interval.scheduledRunrs} / {interval.maxRunrs} RUNRs
+              Needed {interval.maxRunrs} · Covered {interval.scheduledRunrs}
+              {interval.gap > 0 ? ` · Gap ${interval.gap}` : " · Full"}
             </p>
           </div>
           <CoverageBadge status={interval.status} gap={interval.gap} size="sm" />

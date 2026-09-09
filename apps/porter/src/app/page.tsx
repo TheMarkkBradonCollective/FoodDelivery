@@ -16,7 +16,8 @@ import { LoadingState, SkeletonCard } from "@runr/shared/components/ui/ScreenSta
 import { IconButton } from "@runr/shared/components/ui/IconButton";
 import { useAppStore } from "@/store";
 import { cuisineCategories } from "@runr/shared/data/constants";
-import { displayFirstName } from "@runr/shared/lib/apps";
+import { JobLoop } from "@runr/shared/components/ui/JobLoop";
+import { APP_COPY, displayFirstName } from "@runr/shared/lib/apps";
 import { getBusinessCoverageSummary, getMarkerColor } from "@runr/shared/lib/coverage-engine";
 import type { MenuItem } from "@runr/shared/types";
 
@@ -113,7 +114,7 @@ export default function PorterDiscoverPage() {
           <SkeletonCard className="h-48" />
           <SkeletonCard className="h-48" />
         </div>
-        <LoadingState label="Finding kitchens nearby…" />
+        <LoadingState label="Finding businesses nearby…" />
       </div>
     );
   }
@@ -127,9 +128,10 @@ export default function PorterDiscoverPage() {
             <span className="truncate">{deliveryAddress}</span>
           </p>
           <h1 className="mt-1 font-display text-[1.55rem] font-extrabold leading-tight tracking-tight text-[var(--foreground)]">
-            Hungry? Get what you need.
+            {APP_COPY.porter.tagline}
           </h1>
-          <p className="mt-1 text-sm text-[var(--muted)]">Hey {firstName} — kitchens around you are ready.</p>
+          <JobLoop app="porter" className="mt-1" />
+          <p className="mt-1 text-sm text-[var(--muted)]">Hey {firstName} — nearby businesses are ready to order.</p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <IconButton href="/activity" label="Notifications">
@@ -152,7 +154,7 @@ export default function PorterDiscoverPage() {
         <SearchBar
           value={searchQuery}
           onChange={setSearchQuery}
-          placeholder="Search kitchens and dishes"
+          placeholder="Search businesses and products"
           trailing={
             <button
               type="button"
@@ -192,7 +194,7 @@ export default function PorterDiscoverPage() {
           <div className="flex items-end justify-between">
             <div>
               <h2 className="text-lg font-extrabold text-[var(--foreground)]">Popular dishes</h2>
-              <p className="text-sm text-[var(--muted)]">Tap + to add, or open a kitchen for the full menu</p>
+              <p className="text-sm text-[var(--muted)]">Tap + to add, or open a business for the full catalog</p>
             </div>
           </div>
 
@@ -200,7 +202,7 @@ export default function PorterDiscoverPage() {
             <div className="mt-4">
               <EmptyState
                 title="No dishes match"
-                description="Try another search or category. Nearby kitchens appear after you sign in."
+                description="Try another search or category. Nearby businesses appear after you sign in."
               />
             </div>
           ) : (
@@ -245,14 +247,14 @@ export default function PorterDiscoverPage() {
 
       <div className="mt-6 flex items-end justify-between">
         <div>
-          <h2 className="text-lg font-extrabold text-[var(--foreground)]">Nearby kitchens</h2>
-          <p className="text-sm text-[var(--muted)]">Fulfilled by RUNRs in your area</p>
+          <h2 className="text-lg font-extrabold text-[var(--foreground)]">Nearby businesses</h2>
+          <p className="text-sm text-[var(--muted)]">Fulfilled by VENDR · moved by RUNRs</p>
         </div>
       </div>
       <div className="mt-3 space-y-3">
         {filtered.length === 0 ? (
           <EmptyState
-            title="No kitchens yet"
+            title="No businesses yet"
             description="No listings match your search. Clear filters to see everything nearby."
             action={
               <button
@@ -296,7 +298,7 @@ export default function PorterDiscoverPage() {
       )}
 
       <BottomSheet open={filtersOpen} onClose={() => setFiltersOpen(false)} title="Filters">
-        <p className="text-sm text-[var(--muted)]">Show kitchens by cuisine. This updates Discover immediately.</p>
+        <p className="text-sm text-[var(--muted)]">Show businesses by cuisine. This updates Discover immediately.</p>
         <div className="mt-4 flex flex-wrap gap-2">
           {categories.map((cat) => {
             const active = cat === "All" ? !selectedCategory : selectedCategory === cat;

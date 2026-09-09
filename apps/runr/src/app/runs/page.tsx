@@ -40,7 +40,10 @@ export default function RunrRunsPage() {
       <div className="px-5 pt-5">
         <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">RUNR</p>
         <h1 className="mt-1 text-2xl font-extrabold text-[var(--foreground)]">RUNs</h1>
-        <p className="mt-1 text-sm text-[var(--muted)]">Pick a kitchen. Run your window. Earn per drop.</p>
+        <p className="mt-1 text-sm text-[var(--muted)]">Choose → RUN → Deliver → Earn</p>
+        <p className="mt-1 text-sm text-[var(--muted)]">
+          Cover a VENDR from a time you pick. PORTER orders match to that window.
+        </p>
       </div>
       <div className="px-4 pt-2">
         <CatalogPreviewBanner className="mb-3" />
@@ -51,7 +54,7 @@ export default function RunrRunsPage() {
           {available.length === 0 ? (
             <EmptyState
               title="No open RUNs right now"
-              description="Kitchens with coverage gaps show up here. Check the map to schedule a window."
+              description="Businesses with coverage gaps show up here. Check the map to schedule a window."
             />
           ) : (
             <div className="space-y-3">

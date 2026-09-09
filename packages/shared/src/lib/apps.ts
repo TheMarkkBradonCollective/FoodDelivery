@@ -4,27 +4,46 @@ export type AppId = "porter" | "runr" | "vendr" | "staff";
 
 export const APP_COPY: Record<
   AppId,
-  { shortName: string; tagline: string; greeting: string }
+  {
+    shortName: string;
+    role: string;
+    tagline: string;
+    greeting: string;
+    flow: string[];
+    job: string;
+  }
 > = {
   porter: {
     shortName: "PORTER",
+    role: "Customer",
     tagline: "Get what you need.",
-    greeting: "Hungry? Order and eat.",
+    greeting: "Discover nearby businesses, order, and track your RUNR.",
+    flow: ["Discover", "Order", "Track", "Receive"],
+    job: "PORTER creates the demand.",
   },
   runr: {
     shortName: "RUNR",
-    tagline: "Run your time.",
-    greeting: "Pick your place. Run it.",
+    role: "Delivery",
+    tagline: "Pick it up. Run it there.",
+    greeting: "Choose a business and a window. The marketplace matches the rest.",
+    flow: ["Choose", "RUN", "Deliver", "Earn"],
+    job: "RUNR moves it.",
   },
   vendr: {
     shortName: "VENDR",
+    role: "Business",
     tagline: "Sell. Manage. Grow.",
-    greeting: "Live kitchen operations.",
+    greeting: "Sell on PORTER. Set how many RUNRs you need.",
+    flow: ["Sell", "Prepare", "Dispatch", "Fulfill", "Grow"],
+    job: "VENDR fulfills the business side.",
   },
   staff: {
     shortName: "STAFF",
+    role: "Ops",
     tagline: "Status and chat.",
     greeting: "Marketplace at a glance.",
+    flow: ["Status", "Chat", "Alerts", "Desktop"],
+    job: "STAFF watches the network.",
   },
 };
 

@@ -15,10 +15,10 @@ export default function CustomerActivityPage() {
         {notifications.length === 0 ? (
           <EmptyState
             title="No activity yet"
-            description="Place an order and kitchen or RUNR updates will show up here."
+            description="Place an order and VENDR or RUNR updates will show up here."
             action={
               <Link href="/" className="inline-flex h-11 items-center rounded-full bg-purple px-5 text-sm font-bold text-white">
-                Browse kitchens
+                Discover businesses
               </Link>
             }
           />

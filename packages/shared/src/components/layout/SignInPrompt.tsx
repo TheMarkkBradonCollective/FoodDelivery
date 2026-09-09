@@ -7,6 +7,7 @@ import { authenticate, getAppForRole, registerAccount, sendPasswordReset } from 
 import { signOut } from "../../lib/supabase/auth";
 import { isSupabaseConfigured } from "../../lib/supabase/config";
 import { useAppStore } from "../../store/create-app-store";
+import { APP_COPY } from "../../lib/apps";
 import { BrandMark } from "../ui/BrandMark";
 
 const WELCOME: Record<
@@ -22,52 +23,31 @@ const WELCOME: Record<
   }
 > = {
   customer: {
-    brand: "PORTER",
+    brand: APP_COPY.porter.shortName,
     line: "Get what you",
     highlight: "need.",
-    pills: [
-      { label: "Discover", lime: true },
-      { label: "Track", lime: true },
-      { label: "Order", lime: false },
-      { label: "Receive", lime: false },
-    ],
+    pills: APP_COPY.porter.flow.map((label, i) => ({ label, lime: i % 2 === 0 })),
     grid: true,
     showMark: true,
   },
   runr: {
-    brand: "RUNR",
-    line: "Run your",
-    stack: ["Pick your place."],
-    highlight: "time.",
-    pills: [
-      { label: "Choose", lime: true },
-      { label: "RUN", lime: false },
-      { label: "Deliver", lime: true },
-      { label: "Eat", lime: false },
-    ],
+    brand: APP_COPY.runr.shortName,
+    line: "Pick it up.",
+    highlight: "Run it there.",
+    pills: APP_COPY.runr.flow.map((label, i) => ({ label, lime: i % 2 === 0 })),
     showMark: true,
   },
   business: {
-    brand: "VENDR",
+    brand: APP_COPY.vendr.shortName,
     line: "Sell. Manage.",
-    highlight: "grow.",
-    pills: [
-      { label: "Sell", lime: true },
-      { label: "Dispatch", lime: false },
-      { label: "Fulfill", lime: true },
-      { label: "Grow", lime: false },
-    ],
+    highlight: "Grow.",
+    pills: APP_COPY.vendr.flow.slice(0, 4).map((label, i) => ({ label, lime: i % 2 === 0 })),
   },
   staff: {
     brand: "STAFF PORTAL",
     line: "Quick status. Shared",
     highlight: "chat.",
-    pills: [
-      { label: "Status", lime: true },
-      { label: "Chat", lime: false },
-      { label: "Alerts", lime: true },
-      { label: "Desktop", lime: false },
-    ],
+    pills: APP_COPY.staff.flow.map((label, i) => ({ label, lime: i % 2 === 0 })),
   },
 };
 

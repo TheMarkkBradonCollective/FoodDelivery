@@ -2,58 +2,59 @@
 
 import { useState } from "react";
 import { BrandLockup } from "../ui/BrandMark";
+import { JobLoop } from "../ui/JobLoop";
 import { APP_COPY, type AppId } from "../../lib/apps";
 
 const STEPS: Record<AppId, { title: string; body: string; visual: string }[]> = {
   porter: [
     {
-      title: "Build your order, step by step",
-      body: "Browse kitchens nearby, stack dishes your way, and check out in one tap.",
-      visual: "🍔",
+      title: "Get what you need.",
+      body: "Find nearby restaurants, stores, and more. Browse catalogs, save favorites, and check out in one place.",
+      visual: "🛍️",
     },
     {
-      title: "Hungry? Order and eat.",
-      body: "Track your RUN from kitchen to door with live status and a mapped courier.",
-      visual: "🛵",
+      title: "Order, then track.",
+      body: "Request delivery or pick it up. Watch your RUNR on the map from the business to your door.",
+      visual: "📍",
     },
     {
-      title: "Favorites, tips, and promos",
-      body: "Save kitchens you love, add a tip, and apply RUNR5 or PORTER10 at checkout.",
-      visual: "💚",
+      title: "Receive on the PORTER marketplace.",
+      body: "Tip, rate, keep receipts, and reorder. VENDR prepares it. RUNR moves it.",
+      visual: "📦",
     },
   ],
   runr: [
     {
-      title: "See nearby RUNs",
-      body: "Available jobs appear on the map with payout, distance, and pickup kitchen.",
+      title: "Choose where you work.",
+      body: "RUNRs don’t sit and wait for random pings. Pick a business that needs coverage.",
       visual: "🗺️",
     },
     {
-      title: "Accept, pick up, deliver",
-      body: "Two-step flow: confirm pickup at the kitchen, then complete at the door.",
-      visual: "📦",
+      title: "Cover a window.",
+      body: "Say “I’m covering this business from 5:30–8:00.” Check in, then the marketplace assigns pickups.",
+      visual: "⏱️",
     },
     {
-      title: "Earnings that add up",
-      body: "Track tonight’s payouts, tips, and completed RUNs in one place.",
+      title: "Deliver. Earn.",
+      body: "Navigate, confirm pickup, complete the drop. Pay is per delivery — base, distance, and tips.",
       visual: "💵",
     },
   ],
   vendr: [
     {
-      title: "Live kitchen operations",
-      body: "Incoming, preparing, and ready orders stay on one cream ops board.",
-      visual: "👩‍🍳",
+      title: "Sell on PORTER.",
+      body: "Your catalog, hours, and location are what customers discover. Orders land here to accept and prepare.",
+      visual: "🏪",
     },
     {
-      title: "Set your coverage",
-      body: "Turn availability on, pick a radius, and only receive nearby RUNs.",
+      title: "Set how many RUNRs you need.",
+      body: "Don’t ask for “a driver.” Set Needed vs Covered by time. Gaps show so RUNRs can fill them.",
       visual: "📡",
     },
     {
-      title: "Menu and hours",
-      body: "Keep dishes, hours, and kitchen details current for Porters.",
-      visual: "📋",
+      title: "Dispatch stays on the network.",
+      body: "Mark orders ready. Matching goes to RUNRs covering your window — then you grow from sales and ratings.",
+      visual: "🚚",
     },
   ],
   staff: [
@@ -103,6 +104,7 @@ export function Onboarding({ app, onDone }: { app: AppId; onDone: () => void }) 
         style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)" }}
       >
         <BrandLockup app={app} />
+        <JobLoop app={app} className="mt-3" />
         <div className="surface-card mt-8 flex flex-1 flex-col items-center justify-center rounded-[36px] p-8">
           <span className="text-7xl" aria-hidden>
             {step.visual}

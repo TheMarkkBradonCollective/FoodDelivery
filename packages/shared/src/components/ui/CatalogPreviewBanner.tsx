@@ -38,8 +38,8 @@ export function CatalogPreviewBanner({ className }: { className?: string }) {
       )}
     >
       <p className="min-w-0 flex-1 leading-5">
-        <span className="font-extrabold">Preview kitchens. </span>
-        Live marketplace tables are empty — sample kitchens are loaded for testing.
+        <span className="font-extrabold">Preview marketplace. </span>
+        Live tables are empty — sample businesses are loaded so you can test the network.
       </p>
       <button
         type="button"

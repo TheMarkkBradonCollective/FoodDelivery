@@ -96,10 +96,18 @@ export interface AppState {
   removeFromCart: (menuItemId: string) => void;
   updateCartQuantity: (menuItemId: string, quantity: number) => void;
   clearCart: () => void;
-  placeOrder: (options?: { tip?: number; address?: string; discount?: number }) => Order | null;
+  placeOrder: (options?: {
+    tip?: number;
+    address?: string;
+    discount?: number;
+    fulfillment?: "delivery" | "pickup";
+    scheduledFor?: string;
+  }) => Order | null;
   updateOrderStatus: (orderId: string, status: Order["status"]) => void;
   hydrateMarketplace: (snapshot: MarketplaceSnapshot, preview?: boolean) => void;
   updateBusinessCapacity: (businessId: string, ruleId: string, maxRunrs: number) => void;
+  updateMenuItem: (businessId: string, itemId: string, patch: { price?: number; name?: string }) => void;
+  updateBusinessHours: (businessId: string, hours: string) => void;
   markNotificationRead: (id: string) => void;
   sendStaffMessage: (body: string) => void;
   setAuthReady: (ready: boolean) => void;
@@ -370,13 +378,20 @@ function buildStore(
 
     clearCart: () => set({ cart: [], cartBusinessId: null }),
 
-    placeOrder: (options?: { tip?: number; address?: string; discount?: number }) => {
+    placeOrder: (options?: {
+      tip?: number;
+      address?: string;
+      discount?: number;
+      fulfillment?: "delivery" | "pickup";
+      scheduledFor?: string;
+    }) => {
       const { cart, cartBusinessId, user, businesses } = get();
       if (!cart.length || !cartBusinessId || !user) return null;
 
       const kitchen = businesses.find((b) => b.id === cartBusinessId);
+      const fulfillment = options?.fulfillment ?? "delivery";
       const subtotal = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
-      const deliveryFee = kitchen?.deliveryFee ?? 2.99;
+      const deliveryFee = fulfillment === "pickup" ? 0 : kitchen?.deliveryFee ?? 2.99;
       const serviceFee = 1.5;
       const tax = subtotal * 0.0875;
       const tip = options?.tip ?? 5.0;
@@ -396,7 +411,9 @@ function buildStore(
         total,
         status: "new",
         createdAt: new Date().toISOString(),
-        deliveryAddress: options?.address,
+        deliveryAddress: fulfillment === "pickup" ? kitchen?.address : options?.address,
+        fulfillment,
+        scheduledFor: options?.scheduledFor,
       };
 
       const note: Notification = {
@@ -418,10 +435,10 @@ function buildStore(
       if (!get().catalogPreview) {
         void persistOrder(order);
         void persistNotification(user.id, note);
-        if (kitchen) {
+        if (kitchen && fulfillment === "delivery") {
           void offerDeliveryForOrder(order, kitchen, user.name);
         }
-      } else if (kitchen && !get().pendingDelivery && !get().activeDelivery) {
+      } else if (kitchen && fulfillment === "delivery" && !get().pendingDelivery && !get().activeDelivery) {
         set({ pendingDelivery: previewOfferForOrder(order, kitchen, user.name) });
       }
 
@@ -440,7 +457,12 @@ function buildStore(
       }));
       if (!get().catalogPreview) {
         void persistOrderStatus(orderId, status, order?.runrId);
-        if (order && business && (status === "ready" || status === "runr_assigned")) {
+        if (
+          order &&
+          business &&
+          order.fulfillment !== "pickup" &&
+          (status === "ready" || status === "runr_assigned")
+        ) {
           const already =
             get().pendingDelivery?.orderId === order.id || get().activeDelivery?.orderId === order.id;
           if (!already) {
@@ -456,6 +478,7 @@ function buildStore(
       } else if (
         order &&
         business &&
+        order.fulfillment !== "pickup" &&
         (status === "ready" || status === "runr_assigned") &&
         !get().pendingDelivery &&
         !get().activeDelivery
@@ -510,6 +533,25 @@ function buildStore(
         ),
       }));
       if (!get().catalogPreview) void persistCoverage(ruleId, maxRunrs);
+    },
+
+    updateMenuItem: (businessId: string, itemId: string, patch: { price?: number; name?: string }) => {
+      set((s) => ({
+        businesses: s.businesses.map((b) =>
+          b.id === businessId
+            ? {
+                ...b,
+                menu: (b.menu ?? []).map((item) => (item.id === itemId ? { ...item, ...patch } : item)),
+              }
+            : b
+        ),
+      }));
+    },
+
+    updateBusinessHours: (businessId: string, hours: string) => {
+      set((s) => ({
+        businesses: s.businesses.map((b) => (b.id === businessId ? { ...b, operatingHours: hours } : b)),
+      }));
     },
 
     markNotificationRead: (id: string) => {

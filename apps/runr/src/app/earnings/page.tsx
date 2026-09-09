@@ -17,7 +17,7 @@ export default function RunrEarningsPage() {
       <div className="px-5 pt-5">
         <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">RUNR</p>
         <h1 className="mt-1 text-2xl font-extrabold text-[var(--foreground)]">Earnings</h1>
-        <p className="mt-1 text-sm text-[var(--muted)]">Per-delivery pay — not hourly</p>
+        <p className="mt-1 text-sm text-[var(--muted)]">Per-delivery pay — base, distance, and tips. Not hourly.</p>
       </div>
       <div className="px-4 pt-2">
       <section>

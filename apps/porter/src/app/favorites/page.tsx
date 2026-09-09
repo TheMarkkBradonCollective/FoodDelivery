@@ -13,15 +13,15 @@ export default function CustomerFavoritesPage() {
 
   return (
     <div>
-      <ScreenHeader title="Favorites" subtitle="Kitchens you saved" eyebrow="PORTER" />
+      <ScreenHeader title="Favorites" subtitle="Businesses you saved" eyebrow="PORTER" />
       <div className="px-5 pb-8 lg:px-8">
         {saved.length === 0 ? (
           <EmptyState
             title="No favorites yet"
-            description="Tap the heart on a kitchen to save it here for quicker reordering."
+            description="Tap the heart on a business to save it here for quicker reordering."
             action={
               <Link href="/" className="inline-flex h-11 items-center rounded-full bg-purple px-5 text-sm font-bold text-white">
-                Discover kitchens
+                Discover businesses
               </Link>
             }
           />

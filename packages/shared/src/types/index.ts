@@ -131,6 +131,8 @@ export interface Order {
   runrId?: string;
   createdAt: string;
   deliveryAddress?: string;
+  fulfillment?: "delivery" | "pickup";
+  scheduledFor?: string;
 }
 
 export interface Delivery {

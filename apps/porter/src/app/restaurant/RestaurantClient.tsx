@@ -49,7 +49,7 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
     return (
       <div className="px-5 py-8">
         <EmptyState
-          title="Kitchen not found"
+          title="Business not found"
           description="This listing is not available. It may have been removed or is still loading."
           action={
             <Link href="/" className="inline-flex h-11 items-center rounded-full bg-purple px-5 text-sm font-bold text-white">

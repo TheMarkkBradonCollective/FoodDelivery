@@ -178,7 +178,7 @@ export default function RunrMapPage() {
       {!activeDelivery && !pendingDelivery && (
         <div className="absolute inset-x-0 top-0 z-[1000] space-y-2 p-3">
           <div className="rounded-full bg-[var(--surface)]/95 px-4 py-2 shadow-runr-card backdrop-blur-md">
-            <p className="text-sm font-extrabold tracking-tight">Pick a kitchen. Run it there.</p>
+            <p className="text-sm font-extrabold tracking-tight">Pick a business. Cover a window.</p>
           </div>
           <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Search businesses" />
           <CatalogPreviewBanner />
@@ -319,7 +319,7 @@ export default function RunrMapPage() {
         stickyAction={
           coverageAvailable === true ? (
             <PrimaryButton className="w-full" onClick={handleConfirmRun}>
-              Confirm RUN
+              Confirm this window
             </PrimaryButton>
           ) : (
             <PrimaryButton
@@ -335,9 +335,9 @@ export default function RunrMapPage() {
         {selectedBusiness && (
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-semibold">{selectedBusiness.name}</h3>
+              <h3 className="text-lg font-semibold">I&apos;m covering {selectedBusiness.name}</h3>
               <p className="text-sm text-[var(--muted)]">
-                Select your custom start and end time
+                Choose your window. The marketplace matches PORTER orders to this RUN — you don&apos;t wait on random pings.
               </p>
             </div>
 

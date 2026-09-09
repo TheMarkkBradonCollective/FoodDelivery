@@ -28,11 +28,14 @@ export default function CartPage() {
   const [promoInput, setPromoInput] = useState("");
   const [promoCode, setPromoCode] = useState<string | null>(null);
   const [promoError, setPromoError] = useState("");
+  const [fulfillment, setFulfillment] = useState<"delivery" | "pickup">("delivery");
+  const [when, setWhen] = useState<"now" | "schedule">("now");
+  const [scheduledFor, setScheduledFor] = useState("18:00");
   const [placing, setPlacing] = useState(false);
 
   const business = businesses.find((b) => b.id === cartBusinessId);
   const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-  const deliveryFee = business?.deliveryFee ?? 2.99;
+  const deliveryFee = fulfillment === "pickup" ? 0 : business?.deliveryFee ?? 2.99;
   const serviceFee = 1.5;
   const tax = subtotal * 0.0875;
   const promo = promoCode ? PROMO_CODES[promoCode] : null;
@@ -55,9 +58,15 @@ export default function CartPage() {
   }
 
   function handlePlaceOrder() {
-    if (!deliveryAddress.trim()) return;
+    if (fulfillment === "delivery" && !deliveryAddress.trim()) return;
     setPlacing(true);
-    const order = placeOrder({ tip, address: deliveryAddress.trim(), discount });
+    const order = placeOrder({
+      tip,
+      address: fulfillment === "delivery" ? deliveryAddress.trim() : undefined,
+      discount,
+      fulfillment,
+      scheduledFor: when === "schedule" ? scheduledFor : undefined,
+    });
     setPlacing(false);
     if (order) router.push(`/track/?id=${order.id}`);
   }
@@ -67,10 +76,10 @@ export default function CartPage() {
       <div className="px-5 py-10">
         <EmptyState
           title="Your cart is empty"
-          description="Add dishes from Discover, then come back to add a tip, promo, and address."
+          description="Add items from Discover, then come back to choose delivery or pickup."
           action={
             <Link href="/" className="inline-flex h-11 items-center rounded-full bg-purple px-5 text-sm font-bold text-white">
-              Browse kitchens
+              Discover businesses
             </Link>
           }
         />
@@ -90,7 +99,7 @@ export default function CartPage() {
         </div>
       </div>
 
-      <p className="mt-2 text-sm text-[var(--muted)]">{business?.name ?? "Kitchen"}</p>
+      <p className="mt-2 text-sm text-[var(--muted)]">{business?.name ?? "Business"}</p>
 
       <div className="mt-6 space-y-3">
         {cart.map((item) => (
@@ -108,17 +117,76 @@ export default function CartPage() {
       </div>
 
       <div className="mt-6 rounded-[28px] bg-[var(--surface-elevated)] p-5 shadow-sm ring-1 ring-[var(--border)]">
-        <label className="field-label" htmlFor="delivery-address">
-          Deliver to
-        </label>
-        <input
-          id="delivery-address"
-          value={deliveryAddress}
-          onChange={(e) => setDeliveryAddress(e.target.value)}
-          className="input-brand"
-          placeholder="Street address"
-          autoComplete="street-address"
-        />
+        <p className="field-label">How you get it</p>
+        <div className="flex gap-2">
+          {(
+            [
+              ["delivery", "Delivery"],
+              ["pickup", "Pickup"],
+            ] as const
+          ).map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setFulfillment(key)}
+              className={`h-11 flex-1 rounded-full text-xs font-bold ${
+                fulfillment === key ? "bg-purple text-white" : "bg-[var(--background)] text-[var(--foreground)]"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <p className="mt-2 text-xs text-[var(--muted)]">
+          {fulfillment === "delivery"
+            ? "A RUNR covering this VENDR brings it to you."
+            : `Collect at ${business?.address ?? "the business"}. No RUNR needed.`}
+        </p>
+
+        <p className="field-label mt-5">When</p>
+        <div className="flex gap-2">
+          {(
+            [
+              ["now", "Now"],
+              ["schedule", "Schedule"],
+            ] as const
+          ).map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setWhen(key)}
+              className={`h-11 flex-1 rounded-full text-xs font-bold ${
+                when === key ? "bg-purple text-white" : "bg-[var(--background)] text-[var(--foreground)]"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        {when === "schedule" ? (
+          <input
+            type="time"
+            value={scheduledFor}
+            onChange={(e) => setScheduledFor(e.target.value)}
+            className="input-brand mt-3"
+          />
+        ) : null}
+
+        {fulfillment === "delivery" ? (
+          <>
+            <label className="field-label mt-5" htmlFor="delivery-address">
+              Deliver to
+            </label>
+            <input
+              id="delivery-address"
+              value={deliveryAddress}
+              onChange={(e) => setDeliveryAddress(e.target.value)}
+              className="input-brand"
+              placeholder="Street address"
+              autoComplete="street-address"
+            />
+          </>
+        ) : null}
 
         <p className="field-label mt-5">Promo code</p>
         <div className="flex gap-2">
@@ -176,7 +244,7 @@ export default function CartPage() {
       <button
         type="button"
         onClick={handlePlaceOrder}
-        disabled={placing || !deliveryAddress.trim()}
+        disabled={placing || (fulfillment === "delivery" && !deliveryAddress.trim())}
         className="sticky-cta tap-target h-14 w-full rounded-full bg-purple text-base font-extrabold text-white disabled:opacity-50"
       >
         {placing ? "Placing order…" : `Place order · ${formatCurrency(total)}`}

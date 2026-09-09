@@ -9,14 +9,22 @@ import { IconButton } from "@runr/shared/components/ui/IconButton";
 import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 import { ArrowLeft } from "lucide-react";
 
-const statusSteps = [
+const deliverySteps = [
   { key: "new", label: "Order placed" },
-  { key: "accepted", label: "Kitchen accepted" },
+  { key: "accepted", label: "Business accepted" },
   { key: "preparing", label: "Preparing" },
   { key: "ready", label: "Ready for RUNR" },
   { key: "runr_assigned", label: "RUNR assigned" },
   { key: "picked_up", label: "Picked up" },
   { key: "delivering", label: "On the way" },
+  { key: "delivered", label: "Received" },
+];
+
+const pickupSteps = [
+  { key: "new", label: "Order placed" },
+  { key: "accepted", label: "Business accepted" },
+  { key: "preparing", label: "Preparing" },
+  { key: "ready", label: "Ready for pickup" },
   { key: "delivered", label: "Received" },
 ];
 
@@ -42,8 +50,12 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
     );
   }
 
+  const statusSteps = order.fulfillment === "pickup" ? pickupSteps : deliverySteps;
   const currentStep = Math.max(0, statusSteps.findIndex((s) => s.key === order.status));
-  const canConfirmReceive = order.status === "delivering" || order.status === "picked_up";
+  const canConfirmReceive =
+    order.fulfillment === "pickup"
+      ? order.status === "ready"
+      : order.status === "delivering" || order.status === "picked_up";
 
   return (
     <div>
@@ -56,13 +68,13 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
               position: business.location,
               color: "#7048F8",
               title: business.name,
-              subtitle: "Kitchen",
+              subtitle: "VENDR",
             },
             {
               id: "customer",
               position: location,
               color: "#A0F878",
-              title: "Drop-off",
+              title: order.fulfillment === "pickup" ? "Pickup" : "Your RUNR drop-off",
             },
           ]}
           dark={theme === "dark"}
@@ -83,8 +95,13 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
               <p className="mt-1 text-sm text-[var(--muted)]">
                 Order #{order.id.slice(-4)} · {formatCurrency(order.total)}
               </p>
-              {order.deliveryAddress ? (
+              {order.fulfillment === "pickup" ? (
+                <p className="mt-1 text-sm text-[var(--muted)]">Pickup at {business.address}</p>
+              ) : order.deliveryAddress ? (
                 <p className="mt-1 text-sm text-[var(--muted)]">Deliver to {order.deliveryAddress}</p>
+              ) : null}
+              {order.scheduledFor ? (
+                <p className="mt-1 text-sm text-[var(--muted)]">Scheduled for {order.scheduledFor}</p>
               ) : null}
             </div>
             <StatusBadge label={order.status.replace(/_/g, " ")} variant="primary" />
@@ -101,7 +118,11 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
             ))}
           </div>
 
-          <p className="mt-5 text-sm text-[var(--muted)]">Estimated arrival {business.etaMinutes} minutes after pickup.</p>
+          <p className="mt-5 text-sm text-[var(--muted)]">
+            {order.fulfillment === "pickup"
+              ? `Collect at the business. Estimated ready in ${business.etaMinutes} minutes.`
+              : `Watch your RUNR on the map. Estimated ${business.etaMinutes} minutes after pickup.`}
+          </p>
 
           {canConfirmReceive ? (
             <button

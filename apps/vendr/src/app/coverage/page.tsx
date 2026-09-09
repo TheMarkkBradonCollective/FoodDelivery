@@ -36,7 +36,7 @@ export default function BusinessCoveragePage() {
       <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">VENDR</p>
       <h1 className="mt-1 text-2xl font-extrabold">Coverage Schedule</h1>
       <p className="mt-1 text-sm text-[var(--muted)]">
-        Define maximum RUNRs needed per time period
+        Tell the network how many RUNRs you need. Don&apos;t ask for a driver — set Needed, watch Covered, fill the Gap.
       </p>
 
       <section className="mt-6">
@@ -59,7 +59,7 @@ export default function BusinessCoveragePage() {
                   </p>
                   {editingRuleId === rule.id ? (
                     <div className="mt-2 flex items-center gap-2">
-                      <label className="text-sm text-[var(--muted)]">Max RUNRs:</label>
+                      <label className="text-sm text-[var(--muted)]">Needed:</label>
                       <input
                         type="number"
                         min={0}
@@ -71,7 +71,7 @@ export default function BusinessCoveragePage() {
                     </div>
                   ) : (
                     <p className="text-sm text-[var(--muted)]">
-                      Maximum RUNRs: {rule.maxRunrs}
+                      Needed: {rule.maxRunrs} RUNRs
                     </p>
                   )}
                 </div>

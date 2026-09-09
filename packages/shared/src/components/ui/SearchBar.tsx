@@ -15,7 +15,7 @@ interface SearchBarProps {
 export function SearchBar({
   value,
   onChange,
-  placeholder = "Search kitchens, dishes, cuisine…",
+  placeholder = "Search businesses and products",
   className,
   trailing,
 }: SearchBarProps) {

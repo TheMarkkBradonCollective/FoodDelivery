@@ -22,7 +22,7 @@ export default function BusinessRunrsPage() {
       <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">VENDR</p>
       <h1 className="mt-1 text-2xl font-extrabold">Active RUNRs</h1>
       <p className="mt-1 text-sm text-[var(--muted)]">
-        RUNRs currently scheduled at {business.name}
+        RUNRs covering {business.name} right now — not drivers you ping one order at a time.
       </p>
 
       <div className="mt-6 space-y-3">

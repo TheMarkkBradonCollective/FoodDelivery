@@ -7,6 +7,7 @@ import { CoverageBadge } from "@runr/shared/components/ui/CoverageBadge";
 import { CoverageRing } from "@runr/shared/components/ui/CoverageRing";
 import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 import { CatalogPreviewBanner } from "@runr/shared/components/ui/CatalogPreviewBanner";
+import { JobLoop, MarketplaceJob } from "@runr/shared/components/ui/JobLoop";
 import { useAppStore } from "@/store";
 import {
   calculateCoverageTimeline,
@@ -61,7 +62,11 @@ export default function BusinessOperationsPage() {
         <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-[var(--foreground)]">
           {business.name}
         </h1>
-        <p className="mt-1 text-sm text-[var(--muted)]">Live Operations</p>
+        <JobLoop app="vendr" className="mt-1" />
+        <MarketplaceJob app="vendr" className="mt-1" />
+        <p className="mt-1 text-sm text-[var(--muted)]">
+          Set how many RUNRs you need. PORTER orders come in. The network fills the gaps.
+        </p>
       </div>
 
       <div className="mt-4 px-4">
@@ -77,7 +82,8 @@ export default function BusinessOperationsPage() {
                 Coverage
               </p>
               <p className="text-lg font-extrabold text-[var(--foreground)]">
-                {coverage.scheduledRunrs}/{coverage.maxRunrs} RUNRs
+                Needed {coverage.maxRunrs} · Covered {coverage.scheduledRunrs}
+                {coverage.gap > 0 ? ` · Gap ${coverage.gap}` : " · Full"}
               </p>
               <Link
                 href="/coverage"
