@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useAppStore } from "@/store";
 import { formatCurrency } from "@runr/shared/lib/utils";
 import { StatusBadge } from "@runr/shared/components/ui/StatusBadge";
+import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 import { ScreenHeader } from "@runr/shared/components/layout/ScreenHeader";
 
 export default function CustomerOrdersPage() {
@@ -15,7 +16,7 @@ export default function CustomerOrdersPage() {
 
       <div className="space-y-3 px-4 pt-2">
         {orders.length === 0 ? (
-          <p className="text-sm text-[var(--muted)]">No orders yet. Add items from Discover.</p>
+          <EmptyState title="No orders yet" description="Add items from Discover, then track them here." />
         ) : (
           orders.map((order) => {
           const business = businesses.find((b) => b.id === order.businessId);

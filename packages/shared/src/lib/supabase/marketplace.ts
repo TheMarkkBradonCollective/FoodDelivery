@@ -402,6 +402,13 @@ export async function persistNotification(userId: string, note: Notification) {
   });
 }
 
+export async function persistNotificationRead(id: string) {
+  if (!isSupabaseConfigured()) return;
+  const supabase = getSupabaseClient();
+  const { error } = await supabase.from("notifications").update({ read: true }).eq("id", id);
+  if (error) console.warn("notifications read", error.message);
+}
+
 export async function offerDeliveryForOrder(order: Order, business: Business, customerName: string) {
   const delivery: Delivery = {
     id: crypto.randomUUID(),

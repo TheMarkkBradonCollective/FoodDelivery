@@ -1,8 +1,23 @@
 @import "tailwindcss";
 @import "@runr/shared/styles/globals.css";
+@source "../../../packages/shared/src/**/*.{ts,tsx}";
 
-/* VENDR — immersive purple operations console */
+/* Sign-in stays cream. Immersive purple only after auth. */
 :root {
+  --color-runr-primary: #7048f8;
+  --color-runr-primary-hover: #5c36e0;
+  --color-runr-primary-muted: #eee8ff;
+  --color-runr-navigation: #7048f8;
+  --on-primary: #ffffff;
+  --background: #f6f1e8;
+  --foreground: #1a1224;
+  --surface: #fffdf9;
+  --surface-elevated: #ffffff;
+  --border: #e8e0d4;
+  --muted: #6f6678;
+}
+
+.vendr-app {
   --color-runr-primary: #a0f878;
   --color-runr-primary-hover: #8eef64;
   --color-runr-primary-muted: #4a28c8;
@@ -14,8 +29,7 @@
   --surface-elevated: #4a28c8;
   --border: #9b86ff;
   --muted: #eee8ff;
-}
-
-body {
+  min-height: 100dvh;
+  background: var(--background);
   color: var(--foreground);
 }

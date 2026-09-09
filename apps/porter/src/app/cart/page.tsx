@@ -1,23 +1,27 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { PrimaryButton } from "@runr/shared/components/ui/PrimaryButton";
+import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 import { useAppStore } from "@/store";
 import { formatCurrency } from "@runr/shared/lib/utils";
 import { ArrowLeft, Minus, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+const TIP_OPTIONS = [0, 3, 5, 8];
+
 export default function CartPage() {
   const { cart, updateCartQuantity, placeOrder, cartBusinessId, businesses } =
     useAppStore();
   const router = useRouter();
+  const [tip, setTip] = useState(5);
 
   const business = businesses.find((b) => b.id === cartBusinessId);
   const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-  const deliveryFee = 2.99;
+  const deliveryFee = business?.deliveryFee ?? 2.99;
   const serviceFee = 1.5;
   const tax = subtotal * 0.0875;
-  const tip = 5.0;
   const total = subtotal + deliveryFee + serviceFee + tax + tip;
 
   function handlePlaceOrder() {
@@ -28,8 +32,8 @@ export default function CartPage() {
   if (!cart.length) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center p-6">
-        <p className="text-[var(--muted)]">Your cart is empty</p>
-        <Link href="/" className="mt-4 text-runr-primary">
+        <EmptyState title="Your cart is empty" description="Add items from a nearby kitchen to check out." />
+        <Link href="/" className="mt-4 text-sm font-semibold text-runr-primary">
           Browse restaurants
         </Link>
       </div>
@@ -82,6 +86,25 @@ export default function CartPage() {
         <Row label="Delivery fee" value={deliveryFee} />
         <Row label="Service fee" value={serviceFee} />
         <Row label="Tax" value={tax} />
+        <div className="pt-2">
+          <p className="mb-2 text-[var(--muted)]">Tip</p>
+          <div className="flex gap-2">
+            {TIP_OPTIONS.map((amount) => (
+              <button
+                key={amount}
+                type="button"
+                onClick={() => setTip(amount)}
+                className={`flex-1 rounded-full px-2 py-2 text-xs font-bold ${
+                  tip === amount
+                    ? "bg-runr-primary text-white"
+                    : "border border-[var(--border)]"
+                }`}
+              >
+                {amount === 0 ? "None" : formatCurrency(amount)}
+              </button>
+            ))}
+          </div>
+        </div>
         <Row label="Tip" value={tip} />
         <div className="border-t border-[var(--border)] pt-2">
           <Row label="Total" value={total} bold />

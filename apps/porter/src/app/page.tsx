@@ -11,7 +11,7 @@ import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 import { getBusinessCoverageSummary, getMarkerColor } from "@runr/shared/lib/coverage-engine";
 
 export default function PorterDiscoverPage() {
-  const { businesses, location, searchQuery, setSearchQuery, theme, user } = useAppStore();
+  const { businesses, location, searchQuery, setSearchQuery, theme, user, favoriteBusinessIds, toggleFavorite, cart } = useAppStore();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
@@ -128,18 +128,37 @@ export default function PorterDiscoverPage() {
             <>
               {featured && (
                 <Link href={`/restaurant/${featured.id}`}>
-                  <BusinessCard business={featured} userLocation={location} featured />
+                  <BusinessCard
+                    business={featured}
+                    userLocation={location}
+                    featured
+                    isFavorite={favoriteBusinessIds.includes(featured.id)}
+                    onFavoriteToggle={() => toggleFavorite(featured.id)}
+                  />
                 </Link>
               )}
               {rest.map((b) => (
                 <Link key={b.id} href={`/restaurant/${b.id}`}>
-                  <BusinessCard business={b} userLocation={location} />
+                  <BusinessCard
+                    business={b}
+                    userLocation={location}
+                    isFavorite={favoriteBusinessIds.includes(b.id)}
+                    onFavoriteToggle={() => toggleFavorite(b.id)}
+                  />
                 </Link>
               ))}
             </>
           )}
         </div>
       </div>
+      {cart.length > 0 && (
+        <Link
+          href="/cart"
+          className="fixed bottom-24 left-4 right-4 z-20 rounded-full bg-runr-primary py-3 text-center text-sm font-extrabold text-white shadow-runr-card"
+        >
+          View cart ({cart.reduce((s, i) => s + i.quantity, 0)})
+        </Link>
+      )}
     </div>
   );
 }

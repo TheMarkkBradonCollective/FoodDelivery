@@ -1,24 +1,79 @@
 "use client";
 
+import Link from "next/link";
 import { RunCard } from "@runr/shared/components/ui/RunCard";
 import { PrimaryButton } from "@runr/shared/components/ui/PrimaryButton";
+import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 import { useAppStore } from "@/store";
+import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
+import { calculateDistanceMiles, formatCurrency } from "@runr/shared/lib/utils";
+import { Bike } from "lucide-react";
 
 export default function RunrRunsPage() {
-  const { scheduledRuns, runHistory, activeRun, businesses, checkInRun, checkOutRun, cancelRun } =
-    useAppStore();
+  const {
+    scheduledRuns,
+    runHistory,
+    activeRun,
+    businesses,
+    location,
+    checkInRun,
+    checkOutRun,
+    cancelRun,
+  } = useAppStore();
+
+  const available = businesses
+    .map((b) => {
+      const coverage = getBusinessCoverageSummary(b.coverageRules, b.scheduledRuns);
+      const miles = calculateDistanceMiles(location, b.location);
+      const payout = b.deliveryFee + 4.5 + miles * 1.25;
+      return { business: b, coverage, miles, payout };
+    })
+    .filter((row) => row.coverage.status !== "full")
+    .sort((a, b) => b.payout - a.payout);
 
   return (
     <div className="min-h-screen">
       <div className="brand-hero brand-hero--flush px-5 pb-10 pt-6">
         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">RUNR</p>
         <h1 className="mt-1 text-2xl font-extrabold text-white">RUNs</h1>
-        <p className="mt-1 text-sm text-white/75">Scheduled, active, and completed</p>
+        <p className="mt-1 text-sm text-white/75">Pick a kitchen. Run your window. Earn per drop.</p>
       </div>
       <div className="px-4 pt-2">
+        <section className="mt-2">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
+            Available RUNs
+          </h2>
+          {available.length === 0 ? (
+            <EmptyState
+              title="No open RUNs right now"
+              description="Kitchens with coverage gaps show up here. Check the map to schedule a window."
+            />
+          ) : (
+            <div className="space-y-3">
+              {available.map(({ business, coverage, miles, payout }) => (
+                <Link
+                  key={business.id}
+                  href="/"
+                  className="flex items-center gap-3 rounded-runr-xl border border-[var(--border)] bg-[var(--surface-elevated)] p-4 shadow-runr-card"
+                >
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#A0F878]">
+                    <Bike className="h-5 w-5 text-[#1A1224]" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-extrabold">{business.name}</p>
+                    <p className="text-xs text-[var(--muted)]">
+                      {miles.toFixed(1)} mi · {coverage.gap} RUNR{coverage.gap === 1 ? "" : "s"} needed
+                    </p>
+                  </div>
+                  <p className="text-sm font-extrabold text-[#6B8F5A]">{formatCurrency(payout)}</p>
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
 
       {activeRun && (
-        <section className="mt-6">
+        <section className="mt-8">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-runr-success">
             Active RUN
           </h2>
@@ -76,15 +131,19 @@ export default function RunrRunsPage() {
           RUN History
         </h2>
         <div className="space-y-3">
-          {runHistory.map((run) => (
-            <RunCard
-              key={run.id}
-              run={run}
-              businessName={
-                businesses.find((b) => b.id === run.businessId)?.name ?? "Business"
-              }
-            />
-          ))}
+          {runHistory.length === 0 ? (
+            <p className="text-sm text-[var(--muted)]">Completed RUNs land here after you check out.</p>
+          ) : (
+            runHistory.map((run) => (
+              <RunCard
+                key={run.id}
+                run={run}
+                businessName={
+                  businesses.find((b) => b.id === run.businessId)?.name ?? "Business"
+                }
+              />
+            ))
+          )}
         </div>
       </section>
       </div>

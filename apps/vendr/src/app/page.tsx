@@ -1,9 +1,11 @@
 "use client";
 
 import { useMemo } from "react";
+import Link from "next/link";
 import { MapView } from "@runr/shared/components/map";
 import { CoverageTimeline } from "@runr/shared/components/ui/CoverageTimeline";
 import { CoverageBadge } from "@runr/shared/components/ui/CoverageBadge";
+import { CoverageRing } from "@runr/shared/components/ui/CoverageRing";
 import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 import { useAppStore } from "@/store";
 import {
@@ -34,6 +36,15 @@ export default function BusinessOperationsPage() {
   const businessOrders = business
     ? orders.filter((o) => o.businessId === business.id)
     : [];
+  const liveOrders = businessOrders.filter((o) => !["delivered", "cancelled"].includes(o.status));
+  const activeDeliveries = businessOrders.filter((o) =>
+    ["runr_assigned", "picked_up", "delivering"].includes(o.status)
+  ).length;
+  const coveragePercent = coverage
+    ? coverage.maxRunrs === 0
+      ? 0
+      : Math.round((coverage.scheduledRunrs / coverage.maxRunrs) * 100)
+    : 0;
 
   const mapCenter = business?.location ?? DEFAULT_LOCATION;
 
@@ -87,6 +98,24 @@ export default function BusinessOperationsPage() {
       <div className="flex-1 overflow-y-auto border-t border-[var(--border)] lg:w-96 lg:shrink-0 lg:border-l lg:border-t-0">
         <div className="space-y-6 p-4 pb-24 lg:pb-4">
           {coverage && (
+            <section className="flex items-center gap-4 rounded-runr-xl border border-[var(--border)] bg-[var(--surface-elevated)] p-4">
+              <CoverageRing percent={coveragePercent} label="Covered" />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+                  Live Operations
+                </p>
+                <p className="text-lg font-extrabold">{business.name}</p>
+                <Link
+                  href="/coverage"
+                  className="mt-3 inline-flex rounded-full bg-[#A0F878] px-4 py-2 text-xs font-extrabold text-[#1A1224]"
+                >
+                  Manage coverage
+                </Link>
+              </div>
+            </section>
+          )}
+
+          {coverage && (
             <section className="grid grid-cols-2 gap-3">
               <StatCard
                 label="RUNRs"
@@ -94,8 +123,8 @@ export default function BusinessOperationsPage() {
                 sub={coverage.gap > 0 ? `${coverage.gap} needed` : "FULL"}
                 alert={coverage.gap > 0}
               />
-              <StatCard label="Active Orders" value={String(businessOrders.length)} />
-              <StatCard label="Active Deliveries" value="0" />
+              <StatCard label="Orders" value={String(liveOrders.length)} />
+              <StatCard label="Deliveries" value={String(activeDeliveries)} />
               <StatCard
                 label="Coverage"
                 value={coverage.status === "full" ? "FULL" : "LOW"}
@@ -122,7 +151,7 @@ export default function BusinessOperationsPage() {
                 description="PORTER orders will appear here when customers place them."
               />
             ) : (
-              businessOrders.map((order) => (
+              liveOrders.slice(0, 6).map((order) => (
                 <div
                   key={order.id}
                   className="rounded-runr-lg border border-[var(--border)] p-4"

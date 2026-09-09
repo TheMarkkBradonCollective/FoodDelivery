@@ -8,8 +8,10 @@ import { StatusBadge } from "@runr/shared/components/ui/StatusBadge";
 import { ArrowLeft } from "lucide-react";
 
 const statusSteps = [
+  "new",
   "accepted",
   "preparing",
+  "ready",
   "runr_assigned",
   "picked_up",
   "delivering",
@@ -26,7 +28,7 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
     return <div className="p-6">Order not found</div>;
   }
 
-  const currentStep = statusSteps.indexOf(order.status);
+  const currentStep = Math.max(0, statusSteps.indexOf(order.status));
 
   return (
     <div className="min-h-screen">
@@ -37,14 +39,14 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
             {
               id: "restaurant",
               position: business.location,
-              color: "#2563EB",
+              color: "#7048F8",
               title: business.name,
               subtitle: "Restaurant",
             },
             {
               id: "customer",
               position: location,
-              color: "#3B82F6",
+              color: "#A0F878",
               title: "Your location",
             },
           ]}

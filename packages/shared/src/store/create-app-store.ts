@@ -28,6 +28,7 @@ import {
   persistOrderStatus,
   persistRun,
   persistStaffMessage,
+  persistNotificationRead,
 } from "../lib/supabase/marketplace";
 
 export interface AppState {
@@ -382,12 +383,14 @@ function buildStore(
       void persistCoverage(ruleId, maxRunrs);
     },
 
-    markNotificationRead: (id: string) =>
+    markNotificationRead: (id: string) => {
       set((s) => ({
         notifications: s.notifications.map((n) =>
           n.id === id ? { ...n, read: true } : n
         ),
-      })),
+      }));
+      void persistNotificationRead(id);
+    },
 
     sendStaffMessage: (body: string) => {
       const user = get().user;

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../**/*.{ts,tsx}";
 
 @theme {
   --color-runr-primary: #7048f8;
@@ -140,12 +141,99 @@ body {
   box-shadow: 0 0 0 4px rgb(112 72 248 / 0.12);
 }
 
+.signin-screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.signin-hero {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: calc(var(--safe-top) + 1.5rem) 1.5rem 1.25rem;
+  color: #fff;
+  position: relative;
+  z-index: 10;
+}
+
+.signin-brand {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #a0f878;
+}
+
+.signin-headline {
+  margin: 1rem 0 0;
+  max-width: 20rem;
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.signin-chip {
+  display: inline-block;
+  margin-left: 0.15em;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #1a1224;
+  padding: 0.05em 0.45em 0.12em;
+}
+
+.signin-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.35rem;
+}
+
+.signin-pill-lime {
+  background: #a0f878;
+  color: #1a1224;
+}
+
+.signin-pill-ghost {
+  background: rgb(255 255 255 / 0.16);
+  color: #ffffff;
+}
+
 .signin-sheet {
+  flex: 0 0 auto;
   position: relative;
   z-index: 10;
   border-radius: 2rem 2rem 0 0;
   background: #f6f1e8;
   color: #1a1224;
+  padding: 1.75rem 1.5rem max(1.75rem, env(safe-area-inset-bottom, 0px));
+  box-shadow: var(--shadow-runr-sheet);
+}
+
+.signin-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.signin-copy {
+  margin: 0.35rem 0 0;
+  font-size: 0.875rem;
+  color: #6f6678;
+}
+
+.signin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.35rem;
 }
 
 .signin-field {
@@ -165,12 +253,31 @@ body {
 }
 
 .signin-cta {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 3.5rem;
+  margin-top: 0.35rem;
+  border: 0;
+  border-radius: 999px !important;
   background: #7048f8 !important;
   color: #ffffff !important;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .signin-cta:hover {
   background: #5c36e0 !important;
+}
+
+.signin-error {
+  border-radius: 1rem;
+  background: #fef2f2;
+  color: #dc2626;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.875rem;
 }
 
 .pill {

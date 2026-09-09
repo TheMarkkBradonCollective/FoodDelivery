@@ -5,29 +5,32 @@ import type { UserRole } from "../../types/index";
 import { authenticate, getAppForRole } from "../../lib/auth";
 import { signOut } from "../../lib/supabase/auth";
 import { isSupabaseConfigured } from "../../lib/supabase/config";
-import { PrimaryButton } from "../ui/PrimaryButton";
 import { useAppStore } from "../../store/create-app-store";
 
-const WELCOME: Record<UserRole, { highlight: string; line: string; pills: string[] }> = {
+const WELCOME: Record<UserRole, { highlight: string; line: string; pills: string[]; account: string }> = {
   customer: {
     highlight: "need.",
     line: "Get what you",
     pills: ["Discover", "Order", "Track", "Receive"],
+    account: "PORTER",
   },
   runr: {
     highlight: "time.",
     line: "Pick your place. Run your",
     pills: ["Choose", "RUN", "Deliver", "Earn"],
+    account: "RUNR",
   },
   business: {
     highlight: "grow.",
     line: "Sell. Manage.",
     pills: ["Sell", "Dispatch", "Fulfill", "Grow"],
+    account: "VENDR",
   },
   staff: {
     highlight: "chat.",
     line: "Quick status. Shared",
     pills: ["Status", "Chat", "Alerts", "Desktop"],
+    account: "STAFF",
   },
 };
 
@@ -63,45 +66,38 @@ export function SignInPrompt({ role }: { role: UserRole }) {
   }
 
   return (
-    <div className="brand-hero relative flex min-h-[100dvh] flex-col overflow-hidden">
-      <div className="brand-blob -left-16 top-10 h-40 w-40 bg-runr-accent/30" />
-      <div className="brand-blob -right-10 top-32 h-28 w-28 bg-runr-accent-bright/25" />
-      <div className="brand-blob bottom-40 left-8 h-16 w-16 bg-white/10" />
+    <div className="brand-hero signin-screen">
+      <div className="brand-blob" style={{ left: "-4rem", top: "2.5rem", width: "10rem", height: "10rem", background: "rgb(107 143 90 / 0.3)" }} />
+      <div className="brand-blob" style={{ right: "-2.5rem", top: "8rem", width: "7rem", height: "7rem", background: "rgb(160 248 120 / 0.25)" }} />
+      <div className="brand-blob" style={{ left: "2rem", bottom: "10rem", width: "4rem", height: "4rem", background: "rgb(255 255 255 / 0.1)" }} />
 
-      <div className="relative z-10 flex flex-1 flex-col justify-end px-6 pb-4 pt-16 text-white">
-        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-runr-accent-bright">
-          {appName}
-        </p>
-        <h1 className="mt-4 max-w-sm text-4xl font-extrabold leading-[1.05] tracking-tight">
-          {copy.line}{" "}
-          <span className="inline-block rounded-xl bg-white px-2 py-0.5 text-runr-ink">{copy.highlight}</span>
+      <div className="signin-hero">
+        <p className="signin-brand">{appName}</p>
+        <h1 className="signin-headline">
+          {copy.line}
+          <span className="signin-chip">{copy.highlight}</span>
         </h1>
-        <div className="mt-6 flex flex-wrap gap-2">
+        <div className="signin-pills">
           {copy.pills.map((pill, i) => (
-            <span
-              key={pill}
-              className={`pill ${
-                i % 2 === 0 ? "bg-runr-accent-bright text-runr-ink" : "bg-white/15 text-white"
-              }`}
-            >
+            <span key={pill} className={`pill ${i % 2 === 0 ? "signin-pill-lime" : "signin-pill-ghost"}`}>
               {pill}
             </span>
           ))}
         </div>
       </div>
 
-      <div className="signin-sheet px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-7">
+      <div className="signin-sheet">
         {!isSupabaseConfigured() ? (
-          <p className="text-sm text-[var(--muted)]">
+          <p className="signin-copy">
             Supabase is not configured for this build. Add your project URL and publishable key.
           </p>
         ) : (
           <>
-            <p className="text-lg font-extrabold tracking-tight">Sign in to continue</p>
-            <p className="mt-1 text-sm text-[#6F6678]">
-              Use your RUNR account. Marketplace data loads after sign-in.
+            <p className="signin-title">Sign in to continue</p>
+            <p className="signin-copy">
+              Use your {copy.account} account. Marketplace data loads after sign-in.
             </p>
-            <form onSubmit={handleSubmit} className="mt-6 space-y-3">
+            <form onSubmit={handleSubmit} className="signin-form">
               <input
                 type="email"
                 value={email}
@@ -120,14 +116,10 @@ export function SignInPrompt({ role }: { role: UserRole }) {
                 placeholder="Password"
                 className="signin-field"
               />
-              {error && (
-                <p className="rounded-runr-md bg-runr-critical-muted px-3 py-2 text-sm text-runr-critical">
-                  {error}
-                </p>
-              )}
-              <PrimaryButton type="submit" className="signin-cta w-full" size="lg" disabled={loading}>
+              {error && <p className="signin-error">{error}</p>}
+              <button type="submit" className="signin-cta" disabled={loading}>
                 {loading ? "Signing in..." : "Get started"}
-              </PrimaryButton>
+              </button>
             </form>
           </>
         )}
