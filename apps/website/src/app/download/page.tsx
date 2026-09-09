@@ -5,7 +5,7 @@ export default function DownloadPage() {
   return (
     <div className="min-h-[80vh] bg-[var(--surface)] py-16">
       <div className="mx-auto max-w-6xl px-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#6B3FA0]">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#7048F8]">
           Official downloads
         </p>
         <h1 className="mt-3 text-4xl font-extrabold tracking-tight">Get the RUNR apps</h1>

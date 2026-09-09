@@ -25,7 +25,7 @@ export default function LoginPage() {
   if (session) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#6B3FA0] border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#7048F8] border-t-transparent" />
       </div>
     );
   }
@@ -70,7 +70,7 @@ export default function LoginPage() {
             type="button"
             onClick={() => setMode("app")}
             className={`flex flex-1 items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-semibold transition-colors ${
-              mode === "app" ? "bg-[#6B3FA0] text-white" : "text-[var(--muted)]"
+              mode === "app" ? "bg-[#7048F8] text-white" : "text-[var(--muted)]"
             }`}
           >
             <Smartphone className="h-4 w-4" />
@@ -80,7 +80,7 @@ export default function LoginPage() {
             type="button"
             onClick={() => setMode("staff")}
             className={`flex flex-1 items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-semibold transition-colors ${
-              mode === "staff" ? "bg-[#3D2458] text-white" : "text-[var(--muted)]"
+              mode === "staff" ? "bg-[#2A1478] text-white" : "text-[var(--muted)]"
             }`}
           >
             <Shield className="h-4 w-4" />
@@ -104,7 +104,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm outline-none focus:border-[#6B3FA0]"
+              className="w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm outline-none focus:border-[#7048F8]"
               placeholder={mode === "staff" ? "staff@runr.com" : "you@example.com"}
             />
           </div>
@@ -118,7 +118,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm outline-none focus:border-[#6B3FA0]"
+              className="w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm outline-none focus:border-[#7048F8]"
             />
           </div>
 
@@ -130,7 +130,7 @@ export default function LoginPage() {
             type="submit"
             disabled={loading}
             className={`flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold text-white disabled:opacity-50 ${
-              mode === "staff" ? "bg-[#3D2458] hover:bg-[#2A1B3D]" : "bg-[#6B3FA0] hover:bg-[#5A3282]"
+              mode === "staff" ? "bg-[#2A1478] hover:bg-[#1A0C4C]" : "bg-[#7048F8] hover:bg-[#5C36E0]"
             }`}
           >
             <LogIn className="h-4 w-4" />
@@ -139,7 +139,7 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-6 text-center text-sm text-[var(--muted)]">
-          <Link href="/" className="hover:text-[#6B3FA0]">
+          <Link href="/" className="hover:text-[#7048F8]">
             ← Back to home
           </Link>
         </p>

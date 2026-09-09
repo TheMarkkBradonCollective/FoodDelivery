@@ -1,13 +1,18 @@
 # RUNR App Icons
 
-Wordless **Porter rider mark** (`porter-icon-mark.png`) — no text on launcher icons.
+Wordless **lime rider** on electric purple (`rider-mark.png`).
 
-| App | Background | Mark color |
-|-----|------------|------------|
-| **PORTER** | White `#FFFFFF` | Porter blue `#0066FF` |
-| **RUNR** | White `#FFFFFF` | Black `#000000` |
-| **VENDR** | Porter blue `#0066FF` | White |
-| **STAFF** | Dark zinc `#18181B` | Porter blue `#0066FF` |
+| Token | Hex |
+|-------|-----|
+| Purple | `#7048F8` |
+| Lime | `#A0F878` |
+
+| App | Treatment |
+|-----|-----------|
+| **PORTER** | Lime rider + "Porter" wordmark |
+| **RUNR** | Lime rider + "Runr" wordmark |
+| **VENDR** | Lime rider + "Vendr" wordmark |
+| **STAFF** | Lime rider, wordless |
 
 ## Regenerate all launcher + in-app icons
 

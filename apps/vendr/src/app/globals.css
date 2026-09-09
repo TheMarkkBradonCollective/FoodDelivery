@@ -3,17 +3,17 @@
 
 /* VENDR — immersive purple operations console */
 :root {
-  --color-runr-primary: #c5e86a;
-  --color-runr-primary-hover: #b6dc55;
-  --color-runr-primary-muted: #4a2868;
-  --color-runr-navigation: #c5e86a;
+  --color-runr-primary: #a0f878;
+  --color-runr-primary-hover: #8eef64;
+  --color-runr-primary-muted: #4a28c8;
+  --color-runr-navigation: #a0f878;
   --on-primary: #1a1224;
-  --background: #6b3fa0;
+  --background: #7048f8;
   --foreground: #fffdf9;
-  --surface: #5a3282;
-  --surface-elevated: #4a2868;
-  --border: #8b6bb8;
-  --muted: #ede4f5;
+  --surface: #5c36e0;
+  --surface-elevated: #4a28c8;
+  --border: #9b86ff;
+  --muted: #eee8ff;
 }
 
 body {

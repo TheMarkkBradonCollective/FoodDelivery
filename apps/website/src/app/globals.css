@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #6b3fa0;
-  --color-brand-hover: #5a3282;
-  --color-brand-muted: #ede4f5;
-  --color-brand-deep: #3d2458;
+  --color-brand: #7048f8;
+  --color-brand-hover: #5c36e0;
+  --color-brand-muted: #eee8ff;
+  --color-brand-deep: #2a1478;
   --color-accent: #6b8f5a;
-  --color-accent-bright: #c5e86a;
-  --color-porter: #6b3fa0;
-  --color-runr: #6b3fa0;
-  --color-vendr: #3d2458;
+  --color-accent-bright: #a0f878;
+  --color-porter: #7048f8;
+  --color-runr: #7048f8;
+  --color-vendr: #2a1478;
   --color-staff: #1a1224;
   --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
 }
@@ -35,7 +35,7 @@ body {
 
 .gradient-mesh {
   background:
-    radial-gradient(ellipse 80% 60% at 50% -10%, rgb(107 63 160 / 0.2), transparent),
-    radial-gradient(ellipse 60% 50% at 100% 0%, rgb(197 232 106 / 0.18), transparent),
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgb(112 72 248 / 0.2), transparent),
+    radial-gradient(ellipse 60% 50% at 100% 0%, rgb(160 248 120 / 0.18), transparent),
     radial-gradient(ellipse 50% 40% at 0% 100%, rgb(107 143 90 / 0.14), transparent);
 }

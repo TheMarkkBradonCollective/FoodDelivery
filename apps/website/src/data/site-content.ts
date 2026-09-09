@@ -18,8 +18,8 @@ export interface AppDownload {
 const MBC_STORE = "https://themarkkbradoncollective.github.io/main/download";
 /** Public MBC mirror — works without GitHub auth (private Runr releases 404). */
 const MBC_APKS = "https://themarkkbradoncollective.github.io/main/apks";
-const BRAND_PURPLE = "#6B3FA0";
-const BRAND_PLUM = "#3D2458";
+const BRAND_PURPLE = "#7048F8";
+const BRAND_PLUM = "#2A1478";
 
 export const apps: AppDownload[] = [
   {

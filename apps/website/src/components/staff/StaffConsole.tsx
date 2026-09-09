@@ -65,7 +65,7 @@ export function StaffConsole() {
       <div className="border-b border-[#3D3550] bg-[#1A1224]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#C5E86A]">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#A0F878]">
               Desktop Staff Console
             </p>
             <h1 className="text-lg font-bold">Manage the marketplace</h1>
@@ -101,7 +101,7 @@ export function StaffConsole() {
               type="button"
               onClick={() => setTab(id)}
               className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                tab === id ? "bg-[#6B3FA0] text-white" : "bg-[#1A1224] text-zinc-400 hover:text-white"
+                tab === id ? "bg-[#7048F8] text-white" : "bg-[#1A1224] text-zinc-400 hover:text-white"
               }`}
             >
               <Icon className="h-4 w-4" />
@@ -126,14 +126,14 @@ export function StaffConsole() {
                   <ul className="space-y-2 text-sm">
                     {gaps.map(({ business, coverage }) => (
                       <li key={business.id}>
-                        <button type="button" className="text-[#C5E86A] hover:underline" onClick={() => setTab("coverage")}>
+                        <button type="button" className="text-[#A0F878] hover:underline" onClick={() => setTab("coverage")}>
                           {business.name} needs {coverage.gap} RUNR{coverage.gap === 1 ? "" : "s"}
                         </button>
                       </li>
                     ))}
                     {liveOrders.slice(0, 6).map((order) => (
                       <li key={order.id}>
-                        <button type="button" className="text-[#C5E86A] hover:underline" onClick={() => setTab("orders")}>
+                        <button type="button" className="text-[#A0F878] hover:underline" onClick={() => setTab("orders")}>
                           Order #{order.id.slice(-6)} · {order.status.replace("_", " ")}
                         </button>
                       </li>
@@ -177,7 +177,7 @@ export function StaffConsole() {
                               <button
                                 type="button"
                                 onClick={() => updateOrderStatus(order.id, next)}
-                                className="rounded-full bg-[#6B3FA0] px-3 py-1.5 text-xs font-semibold text-white"
+                                className="rounded-full bg-[#7048F8] px-3 py-1.5 text-xs font-semibold text-white"
                               >
                                 Mark {next.replace("_", " ")}
                               </button>
@@ -237,7 +237,7 @@ export function StaffConsole() {
                               <span className="w-8 text-center font-bold">{rule.maxRunrs}</span>
                               <button
                                 type="button"
-                                className="h-8 w-8 rounded-full bg-[#6B3FA0]"
+                                className="h-8 w-8 rounded-full bg-[#7048F8]"
                                 onClick={() => updateBusinessCapacity(b.id, rule.id, rule.maxRunrs + 1)}
                               >
                                 +
@@ -271,7 +271,7 @@ export function StaffConsole() {
                         <p className="font-semibold">{u.name}</p>
                         <p className="text-xs text-zinc-500">{u.email}</p>
                       </div>
-                      <span className="rounded-full bg-[#6B3FA0]/30 px-3 py-1 text-xs uppercase text-[#C5E86A]">
+                      <span className="rounded-full bg-[#7048F8]/30 px-3 py-1 text-xs uppercase text-[#A0F878]">
                         {u.role}
                       </span>
                     </div>
@@ -300,13 +300,13 @@ export function StaffConsole() {
                   <div key={app.id} className="rounded-2xl border border-[#3D3550] bg-[#1A1224] p-4">
                     <div className="flex items-center justify-between">
                       <h3 className="font-bold">{app.name}</h3>
-                      <span className="text-xs text-[#C5E86A]">v{app.version}</span>
+                      <span className="text-xs text-[#A0F878]">v{app.version}</span>
                     </div>
                     <p className="mt-1 text-sm text-zinc-400">{app.tagline}</p>
                     <p className="mt-2 font-mono text-xs text-zinc-500">{app.packageId}</p>
                     <Link
                       href="/download"
-                      className="mt-4 inline-flex rounded-full bg-[#6B3FA0] px-3 py-1.5 text-xs font-semibold text-white"
+                      className="mt-4 inline-flex rounded-full bg-[#7048F8] px-3 py-1.5 text-xs font-semibold text-white"
                     >
                       Open download page
                     </Link>
@@ -325,7 +325,7 @@ function Stat({ label, value, alert }: { label: string; value: string; alert?: b
   return (
     <div
       className={`rounded-2xl border p-4 ${
-        alert ? "border-orange-500/30 bg-[#6B3FA0]/20" : "border-[#3D3550] bg-[#1A1224]"
+        alert ? "border-orange-500/30 bg-[#7048F8]/20" : "border-[#3D3550] bg-[#1A1224]"
       }`}
     >
       <p className="text-xs text-zinc-500">{label}</p>

@@ -3,10 +3,10 @@
 
 /* PORTER — cream surfaces, purple brand, lime accents */
 :root {
-  --color-runr-primary: #6b3fa0;
-  --color-runr-primary-hover: #5a3282;
-  --color-runr-primary-muted: #ede4f5;
-  --color-runr-navigation: #6b3fa0;
+  --color-runr-primary: #7048f8;
+  --color-runr-primary-hover: #5c36e0;
+  --color-runr-primary-muted: #eee8ff;
+  --color-runr-navigation: #7048f8;
   --background: #f6f1e8;
   --foreground: #1a1224;
   --surface: #fffdf9;

@@ -3,10 +3,10 @@
 
 /* STAFF — deep plum console with lime highlights */
 :root {
-  --color-runr-primary: #6b3fa0;
-  --color-runr-primary-hover: #7b52b8;
-  --color-runr-primary-muted: #3d2458;
-  --color-runr-navigation: #c5e86a;
+  --color-runr-primary: #7048f8;
+  --color-runr-primary-hover: #8b6bff;
+  --color-runr-primary-muted: #2a1478;
+  --color-runr-navigation: #a0f878;
   --background: #100814;
   --foreground: #f6f1e8;
   --surface: #1a1224;

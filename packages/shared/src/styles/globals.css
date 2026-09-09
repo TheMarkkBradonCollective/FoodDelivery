@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 @theme {
-  --color-runr-primary: #6b3fa0;
-  --color-runr-primary-hover: #5a3282;
-  --color-runr-primary-muted: #ede4f5;
-  --color-runr-primary-deep: #3d2458;
+  --color-runr-primary: #7048f8;
+  --color-runr-primary-hover: #5c36e0;
+  --color-runr-primary-muted: #eee8ff;
+  --color-runr-primary-deep: #2a1478;
   --color-runr-accent: #6b8f5a;
-  --color-runr-accent-bright: #c5e86a;
+  --color-runr-accent-bright: #a0f878;
   --color-runr-accent-muted: #e8f0e4;
   --color-runr-cream: #f6f1e8;
   --color-runr-ink: #1a1224;
@@ -16,7 +16,7 @@
   --color-runr-warning-muted: #fff7ed;
   --color-runr-critical: #dc2626;
   --color-runr-critical-muted: #fef2f2;
-  --color-runr-navigation: #6b3fa0;
+  --color-runr-navigation: #7048f8;
   --color-runr-neutral-50: #faf7f2;
   --color-runr-neutral-100: #f3eee6;
   --color-runr-neutral-200: #e8e0d4;
@@ -104,9 +104,9 @@ body {
   overflow: hidden;
   color: #fff;
   background:
-    radial-gradient(ellipse 80% 80% at 92% -8%, rgb(197 232 106 / 0.32), transparent 52%),
+    radial-gradient(ellipse 80% 80% at 92% -8%, rgb(160 248 120 / 0.32), transparent 52%),
     radial-gradient(ellipse 70% 60% at -4% 108%, rgb(107 143 90 / 0.24), transparent 48%),
-    linear-gradient(165deg, #7b52b8 0%, #6b3fa0 46%, #3d2458 100%);
+    linear-gradient(165deg, #8b6bff 0%, #7048f8 46%, #2a1478 100%);
 }
 
 .brand-hero--flush::after {
@@ -137,7 +137,7 @@ body {
 
 .input-brand:focus {
   border-color: var(--color-runr-primary);
-  box-shadow: 0 0 0 4px rgb(107 63 160 / 0.12);
+  box-shadow: 0 0 0 4px rgb(112 72 248 / 0.12);
 }
 
 .signin-sheet {
@@ -160,17 +160,17 @@ body {
 }
 
 .signin-field:focus {
-  border-color: #6b3fa0;
-  box-shadow: 0 0 0 4px rgb(107 63 160 / 0.12);
+  border-color: #7048f8;
+  box-shadow: 0 0 0 4px rgb(112 72 248 / 0.12);
 }
 
 .signin-cta {
-  background: #6b3fa0 !important;
+  background: #7048f8 !important;
   color: #ffffff !important;
 }
 
 .signin-cta:hover {
-  background: #5a3282 !important;
+  background: #5c36e0 !important;
 }
 
 .pill {

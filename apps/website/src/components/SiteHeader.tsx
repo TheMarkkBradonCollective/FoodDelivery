@@ -19,7 +19,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[#F6F1E8]/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#6B3FA0] text-sm font-black text-white">
+          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#7048F8] text-sm font-black text-white">
             R
           </div>
           <div>
@@ -79,7 +79,7 @@ export function SiteHeader() {
           ) : (
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 rounded-full bg-[#6B3FA0] px-4 py-2 text-sm font-semibold text-white hover:bg-[#5A3282]"
+              className="inline-flex items-center gap-2 rounded-full bg-[#7048F8] px-4 py-2 text-sm font-semibold text-white hover:bg-[#5C36E0]"
             >
               <LogIn className="h-4 w-4" />
               Sign In
