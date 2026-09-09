@@ -68,8 +68,8 @@ export default function HomePage() {
             <h2 className="text-3xl font-bold tracking-tight">Download the Apps</h2>
             <p className="mx-auto mt-3 max-w-xl text-[var(--muted)]">
               This website is the official install page. Download the app for your role —
-              PORTER, RUNR, VENDR, or STAFF. Staff manage the live marketplace from the
-              desktop Staff Portal.
+              PORTER, RUNR, VENDR, or STAFF. Staff work the live marketplace from the STAFF
+              app or this site. Everyone else signs in here for account settings.
             </p>
           </div>
 
@@ -81,7 +81,8 @@ export default function HomePage() {
 
           <div className="mx-auto mt-10 max-w-2xl rounded-xl border border-amber-200 bg-amber-50 p-4 text-center text-sm text-amber-900">
             <strong>Android APKs</strong> — Install from this site or the MBC App Store. Each app
-            bundles its full UI. Staff actions (orders, coverage) stay on the desktop website.
+            bundles its full UI. Staff can advance orders and coverage from the STAFF app
+            or this site. Other accounts use the website for billing and profile only.
           </div>
         </div>
       </section>

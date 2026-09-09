@@ -59,17 +59,17 @@ const STEPS: Record<AppId, { title: string; body: string; visual: string }[]> = 
   ],
   staff: [
     {
-      title: "Founder ops phone",
-      body: "Status, chat, and alerts for the people who run RUNR.",
+      title: "Work from this phone",
+      body: "Advance orders, set coverage, and look up users here — not only on the website.",
       visual: "🛡️",
     },
     {
-      title: "Stay in the loop",
-      body: "Alerts and a shared founder thread — nothing decorative.",
+      title: "Same marketplace",
+      body: "Chat, alerts, and ops write to the live network. Desktop Staff Portal stays in sync.",
       visual: "💬",
     },
     {
-      title: "Signed in as staff",
+      title: "Staff only",
       body: "This app is staff-only. Founder and ops accounts land here.",
       visual: "✅",
     },

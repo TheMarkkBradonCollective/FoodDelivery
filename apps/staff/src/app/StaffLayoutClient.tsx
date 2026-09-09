@@ -4,12 +4,14 @@ import { useState } from "react";
 import { AppFrame } from "@runr/shared/components/layout/AppFrame";
 import { ConfirmDialog } from "@runr/shared/components/ui/ConfirmDialog";
 import { useAppStore } from "@/store";
-import { Bell, LayoutDashboard, LogOut, MessageSquare } from "lucide-react";
+import { Building2, LayoutDashboard, LogOut, MessageSquare, Package, Users } from "lucide-react";
 
 export const staffNav = [
   { href: "/", label: "Status", icon: LayoutDashboard },
+  { href: "/orders", label: "Orders", icon: Package },
+  { href: "/coverage", label: "Coverage", icon: Building2 },
+  { href: "/users", label: "Users", icon: Users },
   { href: "/chat", label: "Chat", icon: MessageSquare },
-  { href: "/alerts", label: "Alerts", icon: Bell },
 ];
 
 export function StaffLayoutClient({ children }: { children: React.ReactNode }) {

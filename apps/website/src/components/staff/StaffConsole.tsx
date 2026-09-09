@@ -4,11 +4,14 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/components/AuthProvider";
 import { useAppStore } from "@/store";
-import { apps } from "@/data/site-content";
 import { StaffChat } from "@runr/shared/components/staff/StaffChat";
+import {
+  StaffAppsPanel,
+  StaffCoveragePanel,
+  StaffOrdersPanel,
+  StaffUsersPanel,
+} from "@runr/shared/components/staff/StaffOpsPanels";
 import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
-import { formatCurrency } from "@runr/shared/lib/utils";
-import type { Order } from "@runr/shared/types";
 import {
   Building2,
   LayoutDashboard,
@@ -21,26 +24,10 @@ import {
 
 type StaffTab = "overview" | "orders" | "coverage" | "users" | "chat" | "apps";
 
-const NEXT_STATUS: Partial<Record<Order["status"], Order["status"]>> = {
-  new: "accepted",
-  accepted: "preparing",
-  preparing: "ready",
-  ready: "runr_assigned",
-  runr_assigned: "picked_up",
-  picked_up: "delivering",
-  delivering: "delivered",
-};
-
 export function StaffConsole() {
   const { session, logout } = useAuth();
   const [tab, setTab] = useState<StaffTab>("overview");
-  const {
-    businesses,
-    orders,
-    marketplaceUsers,
-    updateOrderStatus,
-    updateBusinessCapacity,
-  } = useAppStore();
+  const { businesses, orders } = useAppStore();
 
   const platformRuns = useMemo(
     () => businesses.flatMap((b) => b.scheduledRuns).filter((r) => r.status !== "cancelled"),
@@ -61,12 +48,12 @@ export function StaffConsole() {
   ];
 
   return (
-    <div className="min-h-[100dvh] bg-[#100814] text-[#F6F1E8]">
+    <div className="staff-portal min-h-[100dvh] bg-[#100814] text-[#F6F1E8]">
       <div className="border-b border-[#3D3550] bg-[#1A1224]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-[#A0F878]">
-              Desktop Staff Console
+              Staff Console
             </p>
             <h1 className="text-lg font-bold">Manage the marketplace</h1>
             <p className="text-xs text-zinc-400">{session!.user.email}</p>
@@ -92,7 +79,7 @@ export function StaffConsole() {
 
       <div className="mx-auto max-w-6xl px-6 py-8">
         <p className="mb-4 text-sm text-zinc-400">
-          Use this desktop site for actions. The STAFF phone app is for quick status and chat only.
+          Same tools as the STAFF phone app. Only staff accounts can work here.
         </p>
         <nav className="flex flex-wrap gap-2">
           {tabs.map(({ id, label, icon: Icon }) => (
@@ -134,7 +121,7 @@ export function StaffConsole() {
                     {liveOrders.slice(0, 6).map((order) => (
                       <li key={order.id}>
                         <button type="button" className="text-[#A0F878] hover:underline" onClick={() => setTab("orders")}>
-                          Order #{order.id.slice(-6)} · {order.status.replace("_", " ")}
+                          Order #{order.id.slice(-6)} · {order.status.replace(/_/g, " ")}
                         </button>
                       </li>
                     ))}
@@ -146,173 +133,36 @@ export function StaffConsole() {
 
           {tab === "orders" && (
             <Panel title="Order operations">
-              <p className="mb-4 text-sm text-zinc-400">
-                Advance or cancel marketplace orders from here. Phone STAFF is read-only.
-              </p>
-              {orders.length === 0 ? (
-                <p className="text-sm text-zinc-500">No orders yet.</p>
-              ) : (
-                <div className="space-y-3">
-                  {orders.map((order) => {
-                    const biz = businesses.find((b) => b.id === order.businessId);
-                    const next = NEXT_STATUS[order.status];
-                    const closed = order.status === "delivered" || order.status === "cancelled";
-                    return (
-                      <div
-                        key={order.id}
-                        className="flex flex-col gap-3 rounded-2xl border border-[#3D3550] bg-[#1A1224] p-4 sm:flex-row sm:items-center sm:justify-between"
-                      >
-                        <div>
-                          <p className="font-semibold">
-                            #{order.id.slice(-6)} · {biz?.name ?? "Business"}
-                          </p>
-                          <p className="text-xs text-zinc-500">
-                            {order.items.length} items · {formatCurrency(order.total)} ·{" "}
-                            {order.status.replace("_", " ")}
-                          </p>
-                        </div>
-                        {!closed && (
-                          <div className="flex flex-wrap gap-2">
-                            {next && (
-                              <button
-                                type="button"
-                                onClick={() => updateOrderStatus(order.id, next)}
-                                className="rounded-full bg-[#7048F8] px-3 py-1.5 text-xs font-semibold text-white"
-                              >
-                                Mark {next.replace("_", " ")}
-                              </button>
-                            )}
-                            <button
-                              type="button"
-                              onClick={() => updateOrderStatus(order.id, "cancelled")}
-                              className="rounded-full border border-red-400/40 px-3 py-1.5 text-xs font-semibold text-red-300"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+              <p className="mb-4 text-sm text-zinc-400">Advance or cancel marketplace orders. Same actions as STAFF on phone.</p>
+              <StaffOrdersPanel />
             </Panel>
           )}
 
           {tab === "coverage" && (
             <Panel title="Coverage capacity">
-              <p className="mb-4 text-sm text-zinc-400">
-                Raise or lower RUNR slots per kitchen. This writes to the live marketplace.
-              </p>
-              <div className="space-y-4">
-                {businesses.map((b) => {
-                  const c = getBusinessCoverageSummary(b.coverageRules, b.scheduledRuns);
-                  return (
-                    <div key={b.id} className="rounded-2xl border border-[#3D3550] bg-[#1A1224] p-4">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <div>
-                          <p className="font-semibold">{b.name}</p>
-                          <p className="text-xs text-zinc-500">
-                            {b.city} · {c.scheduledRunrs}/{c.maxRunrs} RUNRs
-                            {c.gap > 0 ? ` · ${c.gap} needed` : " · full"}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="mt-3 space-y-2">
-                        {b.coverageRules.map((rule) => (
-                          <div key={rule.id} className="flex items-center justify-between gap-3 text-sm">
-                            <span className="text-zinc-400">
-                              {rule.startTime}–{rule.endTime}
-                            </span>
-                            <div className="flex items-center gap-2">
-                              <button
-                                type="button"
-                                className="h-8 w-8 rounded-full bg-[#2A1B3D]"
-                                onClick={() =>
-                                  updateBusinessCapacity(b.id, rule.id, Math.max(0, rule.maxRunrs - 1))
-                                }
-                              >
-                                −
-                              </button>
-                              <span className="w-8 text-center font-bold">{rule.maxRunrs}</span>
-                              <button
-                                type="button"
-                                className="h-8 w-8 rounded-full bg-[#7048F8]"
-                                onClick={() => updateBusinessCapacity(b.id, rule.id, rule.maxRunrs + 1)}
-                              >
-                                +
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              <p className="mb-4 text-sm text-zinc-400">Raise or lower RUNR slots per kitchen. Writes to the live marketplace.</p>
+              <StaffCoveragePanel />
             </Panel>
           )}
 
           {tab === "users" && (
             <Panel title="Marketplace users">
-              <p className="mb-4 text-sm text-zinc-400">
-                Directory for support. Role changes stay in Supabase for now.
-              </p>
-              <div className="space-y-3">
-                {marketplaceUsers.length === 0 ? (
-                  <p className="text-sm text-zinc-500">No profiles yet. Run schema.sql in Supabase.</p>
-                ) : (
-                  marketplaceUsers.map((u) => (
-                    <div
-                      key={u.id}
-                      className="flex items-center justify-between rounded-2xl border border-[#3D3550] bg-[#1A1224] px-4 py-3"
-                    >
-                      <div>
-                        <p className="font-semibold">{u.name}</p>
-                        <p className="text-xs text-zinc-500">{u.email}</p>
-                      </div>
-                      <span className="rounded-full bg-[#7048F8]/30 px-3 py-1 text-xs uppercase text-[#A0F878]">
-                        {u.role}
-                      </span>
-                    </div>
-                  ))
-                )}
-              </div>
+              <p className="mb-4 text-sm text-zinc-400">Directory for support. Role changes stay in Supabase for now.</p>
+              <StaffUsersPanel />
             </Panel>
           )}
 
           {tab === "chat" && (
             <Panel title="Staff status chat">
-              <p className="mb-4 text-sm text-zinc-400">
-                Shared with the STAFF phone app. Use it for on-call notes and handoffs.
-              </p>
+              <p className="mb-4 text-sm text-zinc-400">Shared with the STAFF phone app.</p>
               <StaffChat />
             </Panel>
           )}
 
           {tab === "apps" && (
-            <Panel title="App downloads">
-              <p className="mb-4 text-sm text-zinc-400">
-                Users install from the public download page. These are the live packages.
-              </p>
-              <div className="grid gap-4 md:grid-cols-2">
-                {apps.map((app) => (
-                  <div key={app.id} className="rounded-2xl border border-[#3D3550] bg-[#1A1224] p-4">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-bold">{app.name}</h3>
-                      <span className="text-xs text-[#A0F878]">v{app.version}</span>
-                    </div>
-                    <p className="mt-1 text-sm text-zinc-400">{app.tagline}</p>
-                    <p className="mt-2 font-mono text-xs text-zinc-500">{app.packageId}</p>
-                    <Link
-                      href="/download"
-                      className="mt-4 inline-flex rounded-full bg-[#7048F8] px-3 py-1.5 text-xs font-semibold text-white"
-                    >
-                      Open download page
-                    </Link>
-                  </div>
-                ))}
-              </div>
+            <Panel title="App packages">
+              <p className="mb-4 text-sm text-zinc-400">Users install from the public download page.</p>
+              <StaffAppsPanel downloadHref="/download" />
             </Panel>
           )}
         </div>

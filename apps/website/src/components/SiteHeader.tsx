@@ -65,7 +65,7 @@ export function SiteHeader() {
                   className="hidden items-center gap-1.5 rounded-lg border border-[var(--border)] px-3 py-2 text-sm font-medium sm:inline-flex"
                 >
                   <User className="h-4 w-4" />
-                  {getAppForRole(session.user.role)}
+                  {getAppForRole(session.user.role)} Account
                 </Link>
               )}
               <button

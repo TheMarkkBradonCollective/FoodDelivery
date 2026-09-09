@@ -44,17 +44,15 @@ export default function LoginPage() {
       return;
     }
 
-    const expectedRole = mode === "staff" ? "staff" : undefined;
-    if (expectedRole) {
-      const authSession = await getCurrentAuthSession();
-      if (authSession?.user.role !== "staff") {
-        await signOut();
-        setError("This account does not have staff access.");
-        return;
-      }
+    const authSession = await getCurrentAuthSession();
+    const role = authSession?.user.role;
+    if (mode === "staff" && role !== "staff") {
+      await signOut();
+      setError("This account does not have staff access. Sign in as App Users for billing and settings.");
+      return;
     }
 
-    router.push(mode === "staff" ? "/staff/" : "/account/");
+    router.push(role === "staff" ? "/staff/" : "/account/");
   }
 
   return (
@@ -63,8 +61,8 @@ export default function LoginPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold">Sign in to RUNR</h1>
           <p className="mt-2 text-sm text-[var(--muted)]">
-            Customers, RUNRs, and businesses sign in for their account. Staff sign in here to
-            manage the marketplace on desktop.
+            Customers, RUNRs, and businesses sign in for billing, profile, preferences, and
+            ratings. Only staff can work the marketplace from this site — or from the STAFF app.
           </p>
         </div>
 
@@ -94,7 +92,7 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="mt-6 space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] p-6">
           {mode === "staff" && (
             <p className="rounded-lg bg-zinc-100 px-3 py-2 text-xs text-zinc-600">
-              Staff sign in to manage the platform, apps, users, and marketplace operations.
+              Staff sign in to manage orders, coverage, and users here or in the STAFF app.
             </p>
           )}
 

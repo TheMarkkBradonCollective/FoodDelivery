@@ -11,7 +11,7 @@ const font = Plus_Jakarta_Sans({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "RUNR Platform — Pick Your Place. Run Your Time.",
   description:
-    "RUNR is a coverage-driven delivery marketplace. Download PORTER for customers, RUNR for delivery, and VENDR for businesses.",
+    "RUNR is a coverage-driven delivery marketplace. Download PORTER, RUNR, VENDR, or STAFF. Staff work from the STAFF app or this site.",
   openGraph: {
     title: "RUNR Platform",
     description: "Three apps. One marketplace. PORTER · RUNR · VENDR",

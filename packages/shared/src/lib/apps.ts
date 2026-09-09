@@ -40,10 +40,10 @@ export const APP_COPY: Record<
   staff: {
     shortName: "STAFF",
     role: "Ops",
-    tagline: "Status and chat.",
-    greeting: "Marketplace at a glance.",
-    flow: ["Status", "Chat", "Alerts", "Desktop"],
-    job: "STAFF watches the network.",
+    tagline: "Run the marketplace.",
+    greeting: "Advance orders, coverage, and users from this phone — same tools as desktop.",
+    flow: ["Status", "Orders", "Coverage", "Users"],
+    job: "STAFF runs the network.",
   },
 };
 
