@@ -44,9 +44,9 @@ const WELCOME: Record<
     pills: APP_COPY.vendr.flow.slice(0, 4).map((label, i) => ({ label, lime: i % 2 === 0 })),
   },
   staff: {
-    brand: "STAFF PORTAL",
-    line: "Quick status. Shared",
-    highlight: "chat.",
+    brand: "STAFF",
+    line: "Run the",
+    highlight: "marketplace.",
     pills: APP_COPY.staff.flow.map((label, i) => ({ label, lime: i % 2 === 0 })),
   },
 };

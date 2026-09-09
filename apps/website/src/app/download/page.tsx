@@ -11,8 +11,8 @@ export default function DownloadPage() {
         <h1 className="mt-3 text-4xl font-extrabold tracking-tight">Get the RUNR apps</h1>
         <p className="mt-3 max-w-2xl text-[var(--muted)]">
           This website is the place to install PORTER, RUNR, VENDR, and STAFF. Each Android
-          APK includes the full app. Staff manage the marketplace from the desktop Staff Portal —
-          the STAFF phone app is for status and chat.
+          APK includes the full app. Staff work from the STAFF app or this site. Other
+          accounts sign in here for billing, profile, preferences, and ratings.
         </p>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -24,8 +24,8 @@ export default function DownloadPage() {
         <div className="mx-auto mt-10 max-w-2xl rounded-2xl border border-[#E8E0D4] bg-white p-5 text-sm text-[var(--muted)]">
           <p>
             <strong className="text-[var(--foreground)]">Android only.</strong> Uninstall any older
-            build first so the new purple/green launcher icons appear. Staff: sign in on this
-            site to manage orders and coverage.
+            build first so the new purple/green launcher icons appear. Staff work in the STAFF
+            app or Staff Portal. PORTER, RUNR, and VENDR accounts use this site for settings only.
           </p>
         </div>
       </div>

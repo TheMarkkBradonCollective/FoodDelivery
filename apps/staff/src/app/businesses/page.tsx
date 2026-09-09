@@ -1,5 +1,12 @@
-import { DesktopOnlyNotice } from "../DesktopOnlyNotice";
+"use client";
 
-export default function StaffBusinessesPage() {
-  return <DesktopOnlyNotice title="Businesses" />;
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+export default function StaffBusinessesRedirect() {
+  const router = useRouter();
+  useEffect(() => {
+    router.replace("/coverage/");
+  }, [router]);
+  return null;
 }

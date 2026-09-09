@@ -1,36 +1,37 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useAppStore } from "@/store";
 import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
 import { Panel, Stat } from "@/components/StaffUi";
-import { DesktopManageBanner } from "@/components/DesktopManageBanner";
 import { CatalogPreviewBanner } from "@runr/shared/components/ui/CatalogPreviewBanner";
 import { ConfirmDialog } from "@runr/shared/components/ui/ConfirmDialog";
-import { LogOut } from "lucide-react";
+import { Bell, LogOut } from "lucide-react";
 
 export default function StaffStatusPage() {
-  const { businesses, orders, logout } = useAppStore();
+  const { businesses, orders, notifications, logout } = useAppStore();
   const [confirmOut, setConfirmOut] = useState(false);
 
   const liveOrders = orders.filter((o) => !["delivered", "cancelled"].includes(o.status));
   const platformRuns = businesses.flatMap((b) => b.scheduledRuns).filter((r) => r.status !== "cancelled");
   const gaps = businesses
     .map((b) => ({
+      id: b.id,
       name: b.name,
       coverage: getBusinessCoverageSummary(b.coverageRules, b.scheduledRuns),
     }))
     .filter((x) => x.coverage.gap > 0);
+  const unread = notifications.filter((n) => !n.read).length;
 
   return (
     <div className="px-5 pb-8 pt-4 lg:p-8">
       <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">STAFF</p>
       <h1 className="mt-0.5 text-[1.375rem] font-extrabold">Status</h1>
-      <p className="mt-1 text-sm text-[var(--muted)]">Quick read of the marketplace</p>
+      <p className="mt-1 text-sm text-[var(--muted)]">Live marketplace — work from this phone</p>
 
-      <div className="mt-4 space-y-3">
+      <div className="mt-4">
         <CatalogPreviewBanner />
-        <DesktopManageBanner />
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-4">
@@ -40,30 +41,37 @@ export default function StaffStatusPage() {
         <Stat label="Kitchens" value={String(businesses.length)} />
       </div>
 
-      <Panel title="Coverage gaps" className="mt-4">
-        {gaps.length === 0 ? (
-          <p className="text-sm text-[var(--muted)]">All kitchens are covered.</p>
+      {unread > 0 && (
+        <Link
+          href="/alerts"
+          className="mt-4 flex items-center justify-between rounded-2xl bg-purple px-3.5 py-3 text-white"
+        >
+          <span className="flex items-center gap-2 text-sm font-bold">
+            <Bell size={16} /> {unread} unread alert{unread === 1 ? "" : "s"}
+          </span>
+          <span className="text-xs text-lime">Open</span>
+        </Link>
+      )}
+
+      <Panel title="Needs attention" className="mt-4">
+        {gaps.length === 0 && liveOrders.length === 0 ? (
+          <p className="text-sm text-[var(--muted)]">Marketplace is clear.</p>
         ) : (
           <ul className="space-y-2 text-sm">
             {gaps.map((g) => (
-              <li key={g.name} className="flex justify-between">
-                <span>{g.name}</span>
-                <span className="font-semibold text-runr-warning">{g.coverage.gap} needed</span>
+              <li key={g.id}>
+                <Link href="/coverage" className="flex justify-between text-[#A0F878]">
+                  <span>{g.name}</span>
+                  <span className="font-semibold">{g.coverage.gap} needed</span>
+                </Link>
               </li>
             ))}
-          </ul>
-        )}
-      </Panel>
-
-      <Panel title="Live orders" className="mt-4">
-        {liveOrders.length === 0 ? (
-          <p className="text-sm text-[var(--muted)]">No live orders.</p>
-        ) : (
-          <ul className="space-y-2 text-sm">
-            {liveOrders.slice(0, 8).map((order) => (
-              <li key={order.id} className="flex justify-between">
-                <span>#{order.id.slice(-6)}</span>
-                <span className="uppercase text-[var(--muted)]">{order.status.replace("_", " ")}</span>
+            {liveOrders.slice(0, 6).map((order) => (
+              <li key={order.id}>
+                <Link href="/orders" className="flex justify-between text-[#A0F878]">
+                  <span>#{order.id.slice(-6)}</span>
+                  <span className="uppercase">{order.status.replace(/_/g, " ")}</span>
+                </Link>
               </li>
             ))}
           </ul>

@@ -39,3 +39,13 @@ body {
     radial-gradient(ellipse 60% 50% at 100% 0%, rgb(160 248 120 / 0.18), transparent),
     radial-gradient(ellipse 50% 40% at 0% 100%, rgb(107 143 90 / 0.14), transparent);
 }
+
+.staff-portal {
+  --background: #100814;
+  --foreground: #f6f1e8;
+  --surface: #1a1224;
+  --surface-elevated: #2a1b3d;
+  --border: #3d3550;
+  --muted: #c5b6c8;
+  --color-purple: #7048f8;
+}
