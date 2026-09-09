@@ -6,6 +6,10 @@ Run **`schema.sql`** in the Supabase SQL Editor whenever you need to create or r
 
 ## Founder accounts (permanent)
 
+Run **`founders.sql`** to create founder accounts only (self-contained — includes the function).
+
+Or run the full **`schema.sql`** for everything (founders + dev test accounts).
+
 One staff account per founder. **Sign in with your personal Gmail** until `@runr.com` mail is set up. Both emails live on the same profile.
 
 | Name | Login (personal) | Company |
