@@ -1,0 +1,22 @@
+name: Sync MBC catalog
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    if: ${{ secrets.MBC_MAIN_REPO_TOKEN != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Sync APKs to public MBC App Store
+        env:
+          GITHUB_TOKEN: ${{ secrets.MBC_MAIN_REPO_TOKEN }}
+        run: npm run sync:mbc-catalog
