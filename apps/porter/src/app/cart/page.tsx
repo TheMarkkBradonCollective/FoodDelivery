@@ -2,134 +2,192 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { PrimaryButton } from "@runr/shared/components/ui/PrimaryButton";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { EmptyState } from "@runr/shared/components/ui/EmptyState";
+import { QuantityStepper } from "@runr/shared/components/ui/QuantityStepper";
+import { IconButton } from "@runr/shared/components/ui/IconButton";
 import { useAppStore } from "@/store";
 import { formatCurrency } from "@runr/shared/lib/utils";
-import { ArrowLeft, Minus, Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { PROMO_CODES } from "@runr/shared/data/constants";
 
 const TIP_OPTIONS = [0, 3, 5, 8];
 
 export default function CartPage() {
-  const { cart, updateCartQuantity, placeOrder, cartBusinessId, businesses } =
-    useAppStore();
+  const {
+    cart,
+    updateCartQuantity,
+    placeOrder,
+    cartBusinessId,
+    businesses,
+    deliveryAddress,
+    setDeliveryAddress,
+  } = useAppStore();
   const router = useRouter();
   const [tip, setTip] = useState(5);
-  const [address, setAddress] = useState("1 Market St, San Francisco");
+  const [promoInput, setPromoInput] = useState("");
+  const [promoCode, setPromoCode] = useState<string | null>(null);
+  const [promoError, setPromoError] = useState("");
+  const [placing, setPlacing] = useState(false);
 
   const business = businesses.find((b) => b.id === cartBusinessId);
   const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
   const deliveryFee = business?.deliveryFee ?? 2.99;
   const serviceFee = 1.5;
   const tax = subtotal * 0.0875;
-  const total = subtotal + deliveryFee + serviceFee + tax + tip;
+  const promo = promoCode ? PROMO_CODES[promoCode] : null;
+  const discount = promo
+    ? promo.percent
+      ? (subtotal * promo.amount) / 100
+      : promo.amount
+    : 0;
+  const total = Math.max(0, subtotal + deliveryFee + serviceFee + tax + tip - discount);
+
+  function applyPromo() {
+    const code = promoInput.trim().toUpperCase();
+    if (!PROMO_CODES[code]) {
+      setPromoError("That code isn’t valid. Try RUNR5 or PORTER10.");
+      setPromoCode(null);
+      return;
+    }
+    setPromoError("");
+    setPromoCode(code);
+  }
 
   function handlePlaceOrder() {
-    const order = placeOrder({ tip, address });
+    if (!deliveryAddress.trim()) return;
+    setPlacing(true);
+    const order = placeOrder({ tip, address: deliveryAddress.trim(), discount });
+    setPlacing(false);
     if (order) router.push(`/track/?id=${order.id}`);
   }
 
   if (!cart.length) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center p-6">
-        <EmptyState title="Your cart is empty" description="Add items from a nearby kitchen to check out." />
-        <Link href="/" className="mt-4 text-sm font-semibold text-runr-primary">
-          Browse restaurants
-        </Link>
+      <div className="px-5 py-10">
+        <EmptyState
+          title="Your cart is empty"
+          description="Add dishes from Discover, then come back to add a tip, promo, and address."
+          action={
+            <Link href="/" className="inline-flex h-11 items-center rounded-full bg-purple px-5 text-sm font-bold text-white">
+              Browse kitchens
+            </Link>
+          }
+        />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen px-4 py-6">
-      <Link href={`/restaurant/?id=${cartBusinessId}`} className="flex items-center gap-2 text-sm font-semibold text-runr-primary">
-        <ArrowLeft className="h-4 w-4" /> Back to {business?.name}
-      </Link>
+    <div className="px-5 pb-8 pt-4 lg:mx-auto lg:max-w-2xl lg:px-8">
+      <div className="flex items-center gap-3">
+        <IconButton href={cartBusinessId ? `/restaurant/?id=${cartBusinessId}` : "/"} label="Back">
+          <ArrowLeft size={18} />
+        </IconButton>
+        <div>
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">PORTER</p>
+          <h1 className="text-2xl font-extrabold text-ink">Cart</h1>
+        </div>
+      </div>
 
-      <h1 className="mt-4 text-2xl font-bold">Cart</h1>
+      <p className="mt-2 text-sm text-ink/55">{business?.name ?? "Kitchen"}</p>
 
-      <div className="mt-6 space-y-4">
+      <div className="mt-6 space-y-3">
         {cart.map((item) => (
-          <div
-            key={item.menuItemId}
-            className="flex items-center justify-between rounded-runr-lg border border-[var(--border)] p-4"
-          >
-            <div>
-              <p className="font-medium">{item.name}</p>
-              <p className="text-sm text-[var(--muted)]">
-                {formatCurrency(item.price)}
-              </p>
+          <div key={item.menuItemId} className="flex items-center justify-between gap-3 rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-ink/8">
+            <div className="min-w-0">
+              <p className="truncate font-bold text-ink">{item.name}</p>
+              <p className="text-sm text-ink/50">{formatCurrency(item.price)}</p>
             </div>
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => updateCartQuantity(item.menuItemId, item.quantity - 1)}
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border)]"
-              >
-                <Minus className="h-3 w-3" />
-              </button>
-              <span className="w-4 text-center font-medium">{item.quantity}</span>
-              <button
-                type="button"
-                onClick={() => updateCartQuantity(item.menuItemId, item.quantity + 1)}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-runr-primary text-white"
-              >
-                <Plus className="h-3 w-3" />
-              </button>
-            </div>
+            <QuantityStepper
+              value={item.quantity}
+              onChange={(next) => updateCartQuantity(item.menuItemId, next)}
+            />
           </div>
         ))}
       </div>
 
-      <div className="mt-8 space-y-2 rounded-runr-lg border border-[var(--border)] p-4 text-sm">
-        <label className="block text-[var(--muted)]">Deliver to</label>
+      <div className="mt-6 rounded-[28px] bg-white p-5 shadow-sm ring-1 ring-ink/8">
+        <label className="field-label" htmlFor="delivery-address">
+          Deliver to
+        </label>
         <input
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          id="delivery-address"
+          value={deliveryAddress}
+          onChange={(e) => setDeliveryAddress(e.target.value)}
           className="input-brand"
-          placeholder="Delivery address"
+          placeholder="Street address"
+          autoComplete="street-address"
         />
-        <Row label="Subtotal" value={subtotal} />
-        <Row label="Delivery fee" value={deliveryFee} />
-        <Row label="Service fee" value={serviceFee} />
-        <Row label="Tax" value={tax} />
-        <div className="pt-2">
-          <p className="mb-2 text-[var(--muted)]">Tip</p>
-          <div className="flex gap-2">
-            {TIP_OPTIONS.map((amount) => (
-              <button
-                key={amount}
-                type="button"
-                onClick={() => setTip(amount)}
-                className={`flex-1 rounded-full px-2 py-2 text-xs font-bold ${
-                  tip === amount
-                    ? "bg-runr-primary text-white"
-                    : "border border-[var(--border)]"
-                }`}
-              >
-                {amount === 0 ? "None" : formatCurrency(amount)}
-              </button>
-            ))}
-          </div>
+
+        <p className="field-label mt-5">Promo code</p>
+        <div className="flex gap-2">
+          <input
+            value={promoInput}
+            onChange={(e) => setPromoInput(e.target.value)}
+            className="input-brand"
+            placeholder="RUNR5"
+            autoCapitalize="characters"
+          />
+          <button
+            type="button"
+            onClick={applyPromo}
+            className="tap-target h-12 shrink-0 rounded-full bg-ink px-5 text-sm font-bold text-white"
+          >
+            Apply
+          </button>
         </div>
-        <Row label="Tip" value={tip} />
-        <div className="border-t border-[var(--border)] pt-2">
+        {promoError ? <p className="mt-2 text-sm text-red-600">{promoError}</p> : null}
+        {promo ? (
+          <p className="mt-2 text-sm font-semibold text-purple">
+            {promoCode} applied — {promo.label}
+          </p>
+        ) : null}
+
+        <div className="mt-5 space-y-2 text-sm">
+          <Row label="Subtotal" value={subtotal} />
+          <Row label="Delivery fee" value={deliveryFee} />
+          <Row label="Service fee" value={serviceFee} />
+          <Row label="Tax" value={tax} />
+          {discount > 0 ? <Row label="Promo" value={-discount} /> : null}
+        </div>
+
+        <p className="mt-5 text-sm font-bold text-ink">Tip</p>
+        <div className="mt-2 flex gap-2">
+          {TIP_OPTIONS.map((amount) => (
+            <button
+              key={amount}
+              type="button"
+              onClick={() => setTip(amount)}
+              className={`h-11 flex-1 rounded-full text-xs font-bold ${
+                tip === amount ? "bg-purple text-white" : "bg-cream text-ink"
+              }`}
+            >
+              {amount === 0 ? "None" : formatCurrency(amount)}
+            </button>
+          ))}
+        </div>
+        <div className="mt-4 border-t border-ink/8 pt-3">
           <Row label="Total" value={total} bold />
         </div>
       </div>
 
-      <PrimaryButton className="mt-6 w-full" onClick={handlePlaceOrder}>
-        Place Order
-      </PrimaryButton>
+      <button
+        type="button"
+        onClick={handlePlaceOrder}
+        disabled={placing || !deliveryAddress.trim()}
+        className="tap-target mt-6 h-14 w-full rounded-full bg-purple text-base font-extrabold text-white disabled:opacity-50"
+      >
+        {placing ? "Placing order…" : `Place order · ${formatCurrency(total)}`}
+      </button>
     </div>
   );
 }
 
 function Row({ label, value, bold }: { label: string; value: number; bold?: boolean }) {
   return (
-    <div className={`flex justify-between ${bold ? "font-bold text-base" : ""}`}>
-      <span className="text-[var(--muted)]">{label}</span>
+    <div className={`flex justify-between ${bold ? "text-base font-extrabold" : "text-ink/70"}`}>
+      <span>{label}</span>
       <span>{formatCurrency(value)}</span>
     </div>
   );

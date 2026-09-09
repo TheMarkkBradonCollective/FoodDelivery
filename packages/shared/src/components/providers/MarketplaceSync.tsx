@@ -9,11 +9,16 @@ import { useAppStore } from "../../store/create-app-store";
 export function MarketplaceSync() {
   const user = useAppStore((s) => s.user);
   const hydrateMarketplace = useAppStore((s) => s.hydrateMarketplace);
+  const setMarketplaceReady = useAppStore((s) => s.setMarketplaceReady);
 
   useEffect(() => {
-    if (!isSupabaseConfigured() || !user) return;
+    if (!isSupabaseConfigured() || !user) {
+      setMarketplaceReady(Boolean(!user));
+      return;
+    }
 
     let cancelled = false;
+    setMarketplaceReady(false);
 
     const userId = user.id;
 
@@ -54,7 +59,7 @@ export function MarketplaceSync() {
       cancelled = true;
       void supabase.removeChannel(channel);
     };
-  }, [user, hydrateMarketplace]);
+  }, [user, hydrateMarketplace, setMarketplaceReady]);
 
   return null;
 }

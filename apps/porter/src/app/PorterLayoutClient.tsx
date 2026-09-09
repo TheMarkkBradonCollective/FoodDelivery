@@ -1,6 +1,6 @@
 "use client";
 
-import { BottomNavigation } from "@runr/shared/components/ui/BottomNavigation";
+import { AppFrame } from "@runr/shared/components/layout/AppFrame";
 import { Heart, Home, List, Activity, User } from "lucide-react";
 
 export const porterNav = [
@@ -13,9 +13,8 @@ export const porterNav = [
 
 export function PorterLayoutClient({ children }: { children: React.ReactNode }) {
   return (
-    <div className="app-screen relative bg-[var(--background)]">
+    <AppFrame app="porter" tabs={porterNav}>
       {children}
-      <BottomNavigation items={porterNav} />
-    </div>
+    </AppFrame>
   );
 }

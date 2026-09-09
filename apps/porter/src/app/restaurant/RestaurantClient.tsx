@@ -1,16 +1,23 @@
 "use client";
 
-import { useMemo } from "react";
+import type { ReactNode } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import { PrimaryButton } from "@runr/shared/components/ui/PrimaryButton";
+import { ArrowLeft, Clock, Heart, Star } from "lucide-react";
 import { EmptyState } from "@runr/shared/components/ui/EmptyState";
+import { DishCard } from "@runr/shared/components/ui/DishCard";
+import { DishPhoto } from "@runr/shared/components/ui/CuisinePlate";
+import { IconButton } from "@runr/shared/components/ui/IconButton";
+import { QuantityStepper } from "@runr/shared/components/ui/QuantityStepper";
+import { BottomSheet } from "@runr/shared/components/ui/BottomSheet";
 import { useAppStore } from "@/store";
 import { formatCurrency } from "@runr/shared/lib/utils";
-import { ArrowLeft, Plus } from "lucide-react";
 import type { MenuItem } from "@runr/shared/types";
 
 export function RestaurantClient({ businessId }: { businessId: string }) {
-  const { businesses, addToCart, cart } = useAppStore();
+  const { businesses, addToCart, cart, favoriteBusinessIds, toggleFavorite, updateCartQuantity } = useAppStore();
+  const [selected, setSelected] = useState<MenuItem | null>(null);
+  const [qty, setQty] = useState(1);
 
   const business = businesses.find((b) => b.id === businessId);
   const menuItems = useMemo(() => business?.menu ?? [], [business]);
@@ -25,88 +32,91 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
     return groups;
   }, [menuItems]);
 
+  function qtyFor(itemId: string) {
+    return cart.find((c) => c.menuItemId === itemId)?.quantity ?? 0;
+  }
+
+  function addItem(item: MenuItem, quantity = 1) {
+    addToCart(businessId, {
+      menuItemId: item.id,
+      name: item.name,
+      price: item.price,
+      quantity,
+    });
+  }
+
   if (!business) {
     return (
-      <div className="p-6">
+      <div className="px-5 py-8">
         <EmptyState
-          title="Business not found"
-          description="This listing is not available yet."
+          title="Kitchen not found"
+          description="This listing is not available. It may have been removed or is still loading."
+          action={
+            <Link href="/" className="inline-flex h-11 items-center rounded-full bg-purple px-5 text-sm font-bold text-white">
+              Back to Discover
+            </Link>
+          }
         />
-        <Link href="/" className="mt-4 inline-block text-sm font-semibold text-runr-primary">
-          Back to discover
-        </Link>
       </div>
     );
   }
 
+  const saved = favoriteBusinessIds.includes(business.id);
+
   return (
-    <div className="min-h-screen pb-24">
-      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[#7048F8] to-[#2A1478]">
-        <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-[#A0F878]/30" />
-        <Link
-          href="/"
-          className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface)] shadow-runr-card"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Link>
-        <p className="absolute bottom-16 left-5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#A0F878]">
-          {business.cuisine}
-        </p>
+    <div className="pb-8">
+      <div className="relative">
+        <DishPhoto cuisine={business.cuisine} className="h-56 w-full md:h-72" />
+        <div className="absolute inset-x-4 top-4 flex items-center justify-between">
+          <IconButton href="/" label="Back to Discover">
+            <ArrowLeft size={18} />
+          </IconButton>
+          <IconButton
+            label={saved ? "Remove favorite" : "Save kitchen"}
+            onClick={() => toggleFavorite(business.id)}
+          >
+            <Heart size={18} className={saved ? "fill-purple text-purple" : ""} />
+          </IconButton>
+        </div>
       </div>
 
-      <div className="px-4 -mt-8">
-        <div className="rounded-runr-xl border border-[var(--border)] bg-[var(--surface-elevated)] p-5 shadow-runr-card">
-          <h1 className="text-2xl font-bold">{business.name}</h1>
-          <p className="mt-1 text-sm text-[var(--muted)]">
-            {business.cuisine} · ★ {business.rating} · {business.etaMinutes} min ·{" "}
-            {formatCurrency(business.deliveryFee)} delivery
-          </p>
+      <div className="px-5 lg:px-8">
+        <div className="-mt-8 rounded-[28px] bg-white p-5 shadow-runr-card ring-1 ring-ink/8">
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">{business.cuisine}</p>
+          <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-ink">{business.name}</h1>
+          <p className="mt-1 text-sm text-ink/55">{business.address}</p>
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            <Stat icon={<Star size={14} />} label="Rating" value={String(business.rating)} />
+            <Stat icon={<Clock size={14} />} label="ETA" value={`${business.etaMinutes} min`} />
+            <Stat label="Delivery" value={formatCurrency(business.deliveryFee)} />
+          </div>
         </div>
 
         {menuItems.length === 0 ? (
           <div className="mt-8">
-            <EmptyState
-              title="No menu items yet"
-              description="This kitchen hasn't published a menu yet."
-            />
+            <EmptyState title="No menu items yet" description="This kitchen hasn’t published a menu yet." />
           </div>
         ) : (
           Object.entries(groupedMenu).map(([category, items]) => (
             <section key={category} className="mt-8">
-              <h2 className="text-lg font-semibold">{category}</h2>
-              <div className="mt-3 space-y-3">
+              <h2 className="text-lg font-extrabold text-ink">{category}</h2>
+              <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3">
                 {items.map((item) => (
-                  <div
+                  <DishCard
                     key={item.id}
-                    className="flex items-start justify-between gap-4 rounded-runr-lg border border-[var(--border)] p-4"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-medium">{item.name}</h3>
-                        {item.popular && (
-                          <span className="rounded-full bg-runr-primary-muted px-2 py-0.5 text-[10px] font-bold uppercase text-runr-primary">
-                            Popular
-                          </span>
-                        )}
-                      </div>
-                      <p className="mt-1 text-sm text-[var(--muted)]">{item.description}</p>
-                      <p className="mt-2 font-semibold">{formatCurrency(item.price)}</p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        addToCart(businessId, {
-                          menuItemId: item.id,
-                          name: item.name,
-                          price: item.price,
-                          quantity: 1,
-                        })
-                      }
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-runr-primary text-white"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </button>
-                  </div>
+                    name={item.name}
+                    description={item.description}
+                    price={item.price}
+                    cuisine={item.category || business.cuisine}
+                    qty={qtyFor(item.id)}
+                    discountLabel={item.popular ? "Popular" : undefined}
+                    onOpen={() => {
+                      setSelected(item);
+                      setQty(1);
+                    }}
+                    onAdd={() => addItem(item)}
+                    onRemove={() => updateCartQuantity(item.id, qtyFor(item.id) - 1)}
+                  />
                 ))}
               </div>
             </section>
@@ -115,12 +125,56 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
       </div>
 
       {cartCount > 0 && (
-        <div className="fixed inset-x-4 bottom-24 z-50">
-          <Link href="/cart">
-            <PrimaryButton className="w-full">View Cart ({cartCount})</PrimaryButton>
-          </Link>
-        </div>
+        <Link
+          href="/cart"
+          className="sticky-cta flex h-14 items-center justify-center rounded-full bg-ink text-sm font-extrabold text-white shadow-runr-card"
+        >
+          View cart ({cartCount})
+        </Link>
       )}
+
+      <BottomSheet
+        open={Boolean(selected)}
+        onClose={() => setSelected(null)}
+        title={selected?.name}
+        stickyAction={
+          selected ? (
+            <div className="flex items-center gap-3">
+              <QuantityStepper value={qty} onChange={setQty} min={1} />
+              <button
+                type="button"
+                className="tap-target h-12 flex-1 rounded-full bg-purple text-sm font-extrabold text-white"
+                onClick={() => {
+                  addItem(selected, qty);
+                  setSelected(null);
+                }}
+              >
+                Add · {formatCurrency(selected.price * qty)}
+              </button>
+            </div>
+          ) : null
+        }
+      >
+        {selected ? (
+          <div>
+            <DishPhoto cuisine={selected.category || business.cuisine} className="h-40 w-full rounded-[24px]" />
+            <p className="mt-4 text-sm leading-6 text-ink/65">{selected.description}</p>
+            <p className="mt-3 text-lg font-extrabold">{formatCurrency(selected.price)}</p>
+          </div>
+        ) : null}
+      </BottomSheet>
+    </div>
+  );
+}
+
+function Stat({ icon, label, value }: { icon?: ReactNode; label: string; value: string }) {
+  return (
+    <div className="rounded-2xl bg-cream px-3 py-2 text-center">
+      <p className="flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider text-ink/45">
+        {icon}
+        {label}
+      </p>
+      <p className="mt-1 text-sm font-extrabold text-ink">{value}</p>
     </div>
   );
 }

@@ -14,10 +14,10 @@ export default function RunrEarningsPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="brand-hero brand-hero--flush px-5 pb-10 pt-6">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">RUNR</p>
-        <h1 className="mt-1 text-2xl font-extrabold text-white">Earnings</h1>
-        <p className="mt-1 text-sm text-white/75">Per-delivery pay — not hourly</p>
+      <div className="px-5 pt-5">
+        <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">RUNR</p>
+        <h1 className="mt-1 text-2xl font-extrabold text-ink">Earnings</h1>
+        <p className="mt-1 text-sm text-ink/55">Per-delivery pay — not hourly</p>
       </div>
       <div className="px-4 pt-2">
       <section>

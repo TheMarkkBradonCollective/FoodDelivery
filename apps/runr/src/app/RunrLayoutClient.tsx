@@ -1,6 +1,6 @@
 "use client";
 
-import { BottomNavigation } from "@runr/shared/components/ui/BottomNavigation";
+import { AppFrame } from "@runr/shared/components/layout/AppFrame";
 import { Activity, DollarSign, List, Map, User } from "lucide-react";
 
 export const runrNav = [
@@ -13,9 +13,8 @@ export const runrNav = [
 
 export function RunrLayoutClient({ children }: { children: React.ReactNode }) {
   return (
-    <div className="app-screen relative bg-[var(--background)]">
+    <AppFrame app="runr" tabs={runrNav}>
       {children}
-      <BottomNavigation items={runrNav} />
-    </div>
+    </AppFrame>
   );
 }

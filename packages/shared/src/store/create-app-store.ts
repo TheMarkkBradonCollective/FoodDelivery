@@ -52,6 +52,11 @@ export interface AppState {
   searchQuery: string;
   mapFilter: "all" | "open" | "gap" | "high_demand";
   catalogPreview: boolean;
+  authReady: boolean;
+  marketplaceReady: boolean;
+  onboardingSeen: boolean;
+  deliveryAddress: string;
+  toast: { message: string; tone: "ok" | "err" } | null;
 
   setUser: (user: User | null) => void;
   logout: () => void;
@@ -70,12 +75,18 @@ export interface AppState {
   removeFromCart: (menuItemId: string) => void;
   updateCartQuantity: (menuItemId: string, quantity: number) => void;
   clearCart: () => void;
-  placeOrder: (options?: { tip?: number; address?: string }) => Order | null;
+  placeOrder: (options?: { tip?: number; address?: string; discount?: number }) => Order | null;
   updateOrderStatus: (orderId: string, status: Order["status"]) => void;
   hydrateMarketplace: (snapshot: MarketplaceSnapshot, preview?: boolean) => void;
   updateBusinessCapacity: (businessId: string, ruleId: string, maxRunrs: number) => void;
   markNotificationRead: (id: string) => void;
   sendStaffMessage: (body: string) => void;
+  setAuthReady: (ready: boolean) => void;
+  setMarketplaceReady: (ready: boolean) => void;
+  setOnboardingSeen: (seen: boolean) => void;
+  setDeliveryAddress: (address: string) => void;
+  showToast: (message: string, tone?: "ok" | "err") => void;
+  clearToast: () => void;
 }
 
 function buildStore(
@@ -103,6 +114,11 @@ function buildStore(
     searchQuery: "",
     mapFilter: "all" as const,
     catalogPreview: false,
+    authReady: false,
+    marketplaceReady: false,
+    onboardingSeen: false,
+    deliveryAddress: "1 Market St, San Francisco",
+    toast: null as { message: string; tone: "ok" | "err" } | null,
 
     setUser: (user: User | null) => set({ user }),
     logout: () => {
@@ -159,6 +175,7 @@ function buildStore(
       }));
 
       void persistRun(newRun);
+      get().showToast("RUN booked");
       return true;
     },
 
@@ -227,6 +244,7 @@ function buildStore(
       });
       void persistDelivery({ ...pendingDelivery, runrId: user.id, status: "accepted" });
       void persistOrderStatus(pendingDelivery.orderId, "runr_assigned", user.id);
+      get().showToast("RUN accepted");
     },
 
     completeDelivery: () => {
@@ -238,6 +256,7 @@ function buildStore(
         set({ activeDelivery: next });
         void persistDelivery(next);
         void persistOrderStatus(activeDelivery.orderId, "picked_up", user.id);
+        get().showToast("Picked up");
         return;
       }
 
@@ -263,9 +282,10 @@ function buildStore(
       void persistDelivery({ ...activeDelivery, status: "completed" });
       void persistEarning(record);
       void persistOrderStatus(activeDelivery.orderId, "delivered", user.id);
+      get().showToast("Delivery complete");
     },
 
-    addToCart: (businessId: string, item: CartItem) =>
+    addToCart: (businessId: string, item: CartItem) => {
       set((s) => {
         if (s.cartBusinessId && s.cartBusinessId !== businessId) {
           return { cart: [item], cartBusinessId: businessId };
@@ -282,7 +302,9 @@ function buildStore(
           };
         }
         return { cart: [...s.cart, item], cartBusinessId: businessId };
-      }),
+      });
+      get().showToast(`Added ${item.name}`);
+    },
 
     removeFromCart: (menuItemId: string) =>
       set((s) => ({
@@ -301,7 +323,7 @@ function buildStore(
 
     clearCart: () => set({ cart: [], cartBusinessId: null }),
 
-    placeOrder: (options?: { tip?: number; address?: string }) => {
+    placeOrder: (options?: { tip?: number; address?: string; discount?: number }) => {
       const { cart, cartBusinessId, user, businesses } = get();
       if (!cart.length || !cartBusinessId || !user) return null;
 
@@ -311,7 +333,8 @@ function buildStore(
       const serviceFee = 1.5;
       const tax = subtotal * 0.0875;
       const tip = options?.tip ?? 5.0;
-      const total = subtotal + deliveryFee + serviceFee + tax + tip;
+      const discount = Math.min(options?.discount ?? 0, subtotal + deliveryFee + serviceFee + tax + tip);
+      const total = Math.max(0, subtotal + deliveryFee + serviceFee + tax + tip - discount);
 
       const order: Order = {
         id: crypto.randomUUID(),
@@ -352,6 +375,7 @@ function buildStore(
         void offerDeliveryForOrder(order, business, user.name);
       }
 
+      get().showToast("Order placed");
       return order;
     },
 
@@ -402,6 +426,7 @@ function buildStore(
           favoriteBusinessIds: snapshot.favoriteBusinessIds,
           marketplaceUsers: snapshot.profiles,
           staffMessages: snapshot.staffMessages ?? [],
+          marketplaceReady: true,
         };
       }),
 
@@ -444,6 +469,18 @@ function buildStore(
       set((s) => ({ staffMessages: [...s.staffMessages, message] }));
       void persistStaffMessage(message);
     },
+    setAuthReady: (authReady: boolean) => set({ authReady }),
+    setMarketplaceReady: (marketplaceReady: boolean) => set({ marketplaceReady }),
+    setOnboardingSeen: (onboardingSeen: boolean) => set({ onboardingSeen }),
+    setDeliveryAddress: (deliveryAddress: string) => set({ deliveryAddress }),
+    showToast: (message: string, tone: "ok" | "err" = "ok") => {
+      set({ toast: { message, tone } });
+      window.setTimeout(() => {
+        const current = get().toast;
+        if (current?.message === message) set({ toast: null });
+      }, 2800);
+    },
+    clearToast: () => set({ toast: null }),
   };
 }
 
@@ -460,6 +497,8 @@ function initStore(storageKey: string): AppStoreHook {
         theme: state.theme,
         cart: state.cart,
         cartBusinessId: state.cartBusinessId,
+        onboardingSeen: state.onboardingSeen,
+        deliveryAddress: state.deliveryAddress,
       }),
     })
   );
@@ -468,7 +507,7 @@ function initStore(storageKey: string): AppStoreHook {
   return store;
 }
 
-function ensureStore(): AppStoreHook {
+export function ensureStore(): AppStoreHook {
   if (!activeStore) {
     return initStore(activeStorageKey);
   }

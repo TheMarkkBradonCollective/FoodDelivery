@@ -45,6 +45,7 @@ export default function RunrMapPage() {
     acceptDelivery,
     completeDelivery,
     theme,
+    showToast,
   } = useAppStore();
 
   const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(null);
@@ -154,11 +155,13 @@ export default function RunrMapPage() {
       setShowRunConfirm(false);
       setSelectedBusinessId(null);
       setCoverageAvailable(null);
+    } else {
+      showToast("That window is full. Try different times.", "err");
     }
   }
 
   return (
-    <div className="relative h-[calc(100vh-5rem)] w-full">
+    <div className="relative h-[calc(100dvh-8.5rem)] w-full lg:h-[calc(100dvh-4rem)]">
       <MapView
         center={location}
         userLocation={location}
@@ -223,7 +226,7 @@ export default function RunrMapPage() {
 
       {/* Pending delivery */}
       {activeRun && pendingDelivery && !activeDelivery && (
-        <div className="absolute inset-x-4 bottom-24 z-[1000]">
+        <div className="absolute inset-x-4 bottom-4 z-[1000]">
           <DeliveryCard
             delivery={pendingDelivery}
             businessName={
@@ -237,14 +240,23 @@ export default function RunrMapPage() {
 
       {/* Active delivery */}
       {activeDelivery && (
-        <div className="absolute inset-x-4 bottom-24 z-[1000] space-y-3">
+        <div className="absolute inset-x-4 bottom-4 z-[1000] space-y-3">
           <DeliveryCard
             delivery={activeDelivery}
             businessName={
               businesses.find((b) => b.id === activeDelivery.businessId)?.name ?? ""
             }
             variant={activeDelivery.status === "accepted" ? "pickup" : "dropoff"}
-            onNavigate={() => {}}
+            onNavigate={() => {
+              const kitchen = businesses.find((b) => b.id === activeDelivery.businessId);
+              if (!kitchen) return;
+              const { lat, lng } = kitchen.location;
+              window.open(
+                `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=16/${lat}/${lng}`,
+                "_blank",
+                "noopener,noreferrer",
+              );
+            }}
           />
           <PrimaryButton className="w-full" onClick={completeDelivery}>
             {activeDelivery.status === "accepted"
@@ -255,7 +267,7 @@ export default function RunrMapPage() {
       )}
 
       {businesses.length === 0 && (
-        <div className="absolute inset-x-4 bottom-24 z-[1000]">
+        <div className="absolute inset-x-4 bottom-4 z-[1000]">
           <EmptyState
             title="No RUN opportunities yet"
             description="Nearby businesses will show here once coverage is live. Pull to refresh after signing in."

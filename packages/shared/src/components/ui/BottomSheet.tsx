@@ -81,7 +81,7 @@ export function BottomSheet({
         <div className="flex-1 overflow-y-auto px-4 pb-4">{children}</div>
 
         {stickyAction && (
-          <div className="shrink-0 border-t border-[var(--border)] bg-[var(--surface)] p-4">
+          <div className="overlay-safe shrink-0 border-t border-[var(--border)] bg-[var(--surface)] p-4">
             {stickyAction}
           </div>
         )}

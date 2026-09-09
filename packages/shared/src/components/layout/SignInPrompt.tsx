@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import type { UserRole } from "../../types/index";
-import { authenticate, getAppForRole } from "../../lib/auth";
+import { authenticate, getAppForRole, registerAccount, sendPasswordReset } from "../../lib/auth";
 import { signOut } from "../../lib/supabase/auth";
 import { isSupabaseConfigured } from "../../lib/supabase/config";
 import { useAppStore } from "../../store/create-app-store";
@@ -70,35 +71,102 @@ const WELCOME: Record<
   },
 };
 
+type Mode = "signin" | "signup" | "forgot";
+
+function friendlyAuthError(message: string) {
+  const lower = message.toLowerCase();
+  if (lower.includes("invalid login") || lower.includes("invalid credentials")) {
+    return "Email or password is incorrect.";
+  }
+  if (lower.includes("email not confirmed") || lower.includes("not confirmed")) {
+    return "Check your inbox to verify this email, then sign in.";
+  }
+  if (lower.includes("already registered") || lower.includes("already exists")) {
+    return "An account with this email already exists. Sign in instead.";
+  }
+  if (lower.includes("rate limit") || lower.includes("too many")) {
+    return "Too many attempts. Wait a moment and try again.";
+  }
+  if (lower.includes("network") || lower.includes("fetch")) {
+    return "Network error. Check your connection and try again.";
+  }
+  return message;
+}
+
 export function SignInPrompt({ role }: { role: UserRole }) {
   const appName = role === "staff" ? "Staff Portal" : getAppForRole(role);
   const copy = WELCOME[role];
   const setUser = useAppStore((s) => s.setUser);
+  const showToast = useAppStore((s) => s.showToast);
+  const [mode, setMode] = useState<Mode>("signin");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setInfo("");
     setLoading(true);
-
     const result = await authenticate(email, password);
     setLoading(false);
-
     if (!result.success) {
-      setError(result.error);
+      setError(friendlyAuthError(result.error));
       return;
     }
-
     if (result.session.user.role !== role) {
       await signOut();
       setError(`This account is for ${getAppForRole(result.session.user.role)}, not ${appName}.`);
       return;
     }
-
     setUser(result.session.user);
+  }
+
+  async function handleSignUp(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setInfo("");
+    if (password.length < 8) {
+      setError("Use a password with at least 8 characters.");
+      return;
+    }
+    setLoading(true);
+    const result = await registerAccount(email, password, name, role);
+    setLoading(false);
+    if (!result.success) {
+      if (result.error.toLowerCase().includes("check your email")) {
+        setInfo(result.error);
+        setMode("signin");
+        return;
+      }
+      setError(friendlyAuthError(result.error));
+      return;
+    }
+    if (result.session.user.role !== role) {
+      await signOut();
+      setError(`This account is for ${getAppForRole(result.session.user.role)}, not ${appName}.`);
+      return;
+    }
+    setUser(result.session.user);
+    showToast(`Welcome to ${appName}`);
+  }
+
+  async function handleForgot(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setInfo("");
+    setLoading(true);
+    const result = await sendPasswordReset(email);
+    setLoading(false);
+    if (!result.success) {
+      setError(friendlyAuthError(result.error));
+      return;
+    }
+    setInfo("If that email is registered, a reset link is on its way. Check your inbox.");
   }
 
   return (
@@ -134,37 +202,201 @@ export function SignInPrompt({ role }: { role: UserRole }) {
           </p>
         ) : (
           <>
-            <p className="signin-title">Sign in to continue</p>
-            <p className="signin-copy">
-              Use your RUNR account. Marketplace data loads after sign-in.
-            </p>
-            <form onSubmit={handleSubmit} className="signin-form">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-                placeholder="Email"
-                className="signin-field"
-              />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                autoComplete="current-password"
-                placeholder="Password"
-                className="signin-field"
-              />
-              {error && <p className="signin-error">{error}</p>}
-              <button type="submit" className="signin-cta" disabled={loading}>
-                {loading ? "Signing in..." : "Get started"}
+            <div className="signin-tabs" role="tablist" aria-label="Account">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={mode === "signin"}
+                className={`signin-tab ${mode === "signin" ? "is-active" : ""}`}
+                onClick={() => {
+                  setMode("signin");
+                  setError("");
+                  setInfo("");
+                }}
+              >
+                Sign in
               </button>
-            </form>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={mode === "signup"}
+                className={`signin-tab ${mode === "signup" ? "is-active" : ""}`}
+                onClick={() => {
+                  setMode("signup");
+                  setError("");
+                  setInfo("");
+                }}
+              >
+                Create account
+              </button>
+            </div>
+
+            {mode === "signin" && (
+              <>
+                <p className="signin-title">Sign in to continue</p>
+                <p className="signin-copy">Use your RUNR account. Marketplace data loads after sign-in.</p>
+                <form onSubmit={handleSignIn} className="signin-form">
+                  <label className="field-label" htmlFor="auth-email">
+                    Email
+                  </label>
+                  <input
+                    id="auth-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    autoComplete="email"
+                    placeholder="you@email.com"
+                    className="signin-field"
+                  />
+                  <label className="field-label" htmlFor="auth-password">
+                    Password
+                  </label>
+                  <div className="signin-field-row">
+                    <input
+                      id="auth-password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      autoComplete="current-password"
+                      placeholder="Password"
+                      className="signin-field"
+                    />
+                    <button
+                      type="button"
+                      className="signin-eye"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      onClick={() => setShowPassword((v) => !v)}
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
+                  {error && <p className="signin-error">{error}</p>}
+                  {info && <p className="signin-info">{info}</p>}
+                  <button type="submit" className="signin-cta" disabled={loading}>
+                    {loading ? "Signing in…" : "Sign in"}
+                  </button>
+                </form>
+                <button
+                  type="button"
+                  className="signin-link"
+                  onClick={() => {
+                    setMode("forgot");
+                    setError("");
+                    setInfo("");
+                  }}
+                >
+                  Forgot password?
+                </button>
+              </>
+            )}
+
+            {mode === "signup" && (
+              <>
+                <p className="signin-title">Create your {appName} account</p>
+                <p className="signin-copy">Same RUNR login, scoped to this app. You will stay signed in on this device.</p>
+                <form onSubmit={handleSignUp} className="signin-form">
+                  <label className="field-label" htmlFor="signup-name">
+                    Name
+                  </label>
+                  <input
+                    id="signup-name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    autoComplete="name"
+                    placeholder="Your name"
+                    className="signin-field"
+                  />
+                  <label className="field-label" htmlFor="signup-email">
+                    Email
+                  </label>
+                  <input
+                    id="signup-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    autoComplete="email"
+                    placeholder="you@email.com"
+                    className="signin-field"
+                  />
+                  <label className="field-label" htmlFor="signup-password">
+                    Password
+                  </label>
+                  <div className="signin-field-row">
+                    <input
+                      id="signup-password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      minLength={8}
+                      autoComplete="new-password"
+                      placeholder="At least 8 characters"
+                      className="signin-field"
+                    />
+                    <button
+                      type="button"
+                      className="signin-eye"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      onClick={() => setShowPassword((v) => !v)}
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
+                  {error && <p className="signin-error">{error}</p>}
+                  <button type="submit" className="signin-cta" disabled={loading}>
+                    {loading ? "Creating account…" : "Create account"}
+                  </button>
+                </form>
+              </>
+            )}
+
+            {mode === "forgot" && (
+              <>
+                <p className="signin-title">Reset your password</p>
+                <p className="signin-copy">We will email a reset link if this address has a RUNR account.</p>
+                <form onSubmit={handleForgot} className="signin-form">
+                  <label className="field-label" htmlFor="reset-email">
+                    Email
+                  </label>
+                  <input
+                    id="reset-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    autoComplete="email"
+                    placeholder="you@email.com"
+                    className="signin-field"
+                  />
+                  {error && <p className="signin-error">{error}</p>}
+                  {info && <p className="signin-info">{info}</p>}
+                  <button type="submit" className="signin-cta" disabled={loading}>
+                    {loading ? "Sending…" : "Send reset link"}
+                  </button>
+                </form>
+                <button
+                  type="button"
+                  className="signin-link"
+                  onClick={() => {
+                    setMode("signin");
+                    setError("");
+                    setInfo("");
+                  }}
+                >
+                  Back to sign in
+                </button>
+              </>
+            )}
           </>
         )}
       </div>
     </div>
   );
 }
+
+export const AuthScreen = SignInPrompt;

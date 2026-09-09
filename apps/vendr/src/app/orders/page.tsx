@@ -19,7 +19,7 @@ export default function BusinessOrdersPage() {
   };
 
   return (
-    <div className="px-4 py-6 pb-24 lg:pb-6">
+    <div className="px-5 py-6">
       <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">VENDR</p>
       <h1 className="mt-1 text-2xl font-extrabold">Orders</h1>
       <div className="mt-6 space-y-3">

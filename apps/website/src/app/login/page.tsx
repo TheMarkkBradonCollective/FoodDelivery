@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
 import { getCurrentAuthSession, signOut } from "@runr/shared/lib/supabase/auth";
-import { LogIn, Shield, Smartphone } from "lucide-react";
+import { sendPasswordReset } from "@runr/shared/lib/auth";
+import { Eye, EyeOff, LogIn, Shield, Smartphone } from "lucide-react";
 
 export default function LoginPage() {
   const { login, session } = useAuth();
@@ -15,6 +16,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [resetNote, setResetNote] = useState("");
 
   useEffect(() => {
     if (session) {
@@ -113,17 +116,30 @@ export default function LoginPage() {
             <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
               Password
             </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm outline-none focus:border-[#7048F8]"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full rounded-lg border border-[var(--border)] px-3 py-2.5 pr-12 text-sm outline-none focus:border-[#7048F8]"
+              />
+              <button
+                type="button"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-2 text-[var(--muted)]"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                onClick={() => setShowPassword((v) => !v)}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
           </div>
 
           {error && (
             <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>
+          )}
+          {resetNote && (
+            <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-800">{resetNote}</p>
           )}
 
           <button
@@ -137,6 +153,27 @@ export default function LoginPage() {
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
+
+        <button
+          type="button"
+          className="mt-4 w-full text-center text-sm font-semibold text-[#7048F8]"
+          onClick={async () => {
+            setError("");
+            setResetNote("");
+            if (!email.trim()) {
+              setError("Enter your email first, then request a reset link.");
+              return;
+            }
+            const result = await sendPasswordReset(email);
+            if (!result.success) {
+              setError(result.error);
+              return;
+            }
+            setResetNote("If that email is registered, a reset link is on its way.");
+          }}
+        >
+          Forgot password?
+        </button>
 
         <p className="mt-6 text-center text-sm text-[var(--muted)]">
           <Link href="/" className="hover:text-[#7048F8]">

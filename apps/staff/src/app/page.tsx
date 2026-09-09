@@ -1,13 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { useAppStore } from "@/store";
 import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
 import { Panel, Stat } from "@/components/StaffUi";
 import { DesktopManageBanner } from "@/components/DesktopManageBanner";
 import { CatalogPreviewBanner } from "@runr/shared/components/ui/CatalogPreviewBanner";
+import { ConfirmDialog } from "@runr/shared/components/ui/ConfirmDialog";
+import { LogOut } from "lucide-react";
 
 export default function StaffStatusPage() {
-  const { businesses, orders } = useAppStore();
+  const { businesses, orders, logout } = useAppStore();
+  const [confirmOut, setConfirmOut] = useState(false);
 
   const liveOrders = orders.filter((o) => !["delivered", "cancelled"].includes(o.status));
   const platformRuns = businesses.flatMap((b) => b.scheduledRuns).filter((r) => r.status !== "cancelled");
@@ -65,6 +69,27 @@ export default function StaffStatusPage() {
           </ul>
         )}
       </Panel>
+
+      <button
+        type="button"
+        onClick={() => setConfirmOut(true)}
+        className="tap-target mt-8 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-white/8 text-sm font-bold text-cream lg:hidden"
+      >
+        <LogOut size={16} /> Sign out
+      </button>
+
+      <ConfirmDialog
+        open={confirmOut}
+        title="Sign out of STAFF?"
+        description="You will need your staff email and password to get back in."
+        confirmLabel="Sign out"
+        destructive
+        onCancel={() => setConfirmOut(false)}
+        onConfirm={() => {
+          logout();
+          setConfirmOut(false);
+        }}
+      />
     </div>
   );
 }

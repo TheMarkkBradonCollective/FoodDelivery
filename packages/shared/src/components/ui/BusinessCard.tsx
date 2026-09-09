@@ -4,6 +4,7 @@ import { cn } from "../../lib/utils";
 import { Star } from "lucide-react";
 import type { Business } from "../../types/index";
 import { CoverageBadge } from "./CoverageBadge";
+import { CuisinePlate } from "./CuisinePlate";
 import { calculateDistanceMiles, formatCurrency } from "../../lib/utils";
 import { getBusinessCoverageSummary } from "../../lib/coverage-engine";
 
@@ -34,13 +35,12 @@ export function BusinessCard({
 
   const body = (
     <div className="flex items-start justify-between gap-3">
+      <CuisinePlate cuisine={business.cuisine} size={featured ? 64 : 52} />
       <div className="min-w-0 flex-1">
         <span
           className={cn(
             "pill mb-2",
-            featured
-              ? "bg-runr-primary text-white"
-              : "bg-runr-primary-muted text-runr-primary"
+            featured ? "bg-ink text-white" : "bg-runr-primary-muted text-runr-primary",
           )}
         >
           {business.cuisine}
