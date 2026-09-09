@@ -2,13 +2,15 @@
 
 import { PrimaryButton } from "@runr/shared/components/ui/PrimaryButton";
 import { useAppStore } from "@/store";
-import { mockRunrProfile } from "@runr/shared/data/mock-data";
 import { Moon, Sun, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function RunrProfilePage() {
-  const { user, theme, toggleTheme, logout } = useAppStore();
+  const { user, theme, toggleTheme, logout, earnings, runHistory } = useAppStore();
   const router = useRouter();
+
+  const completedDeliveries = earnings.length;
+  const reliability = runHistory.length > 0 ? "—" : "—";
 
   return (
     <div className="min-h-screen px-4 py-6">
@@ -23,25 +25,22 @@ export default function RunrProfilePage() {
 
         <div className="mt-6 grid grid-cols-3 gap-4 text-center">
           <div>
-            <p className="text-lg font-bold">{mockRunrProfile.rating}</p>
+            <p className="text-lg font-bold">—</p>
             <p className="text-xs text-[var(--muted)]">Rating</p>
           </div>
           <div>
-            <p className="text-lg font-bold">{mockRunrProfile.completedDeliveries}</p>
+            <p className="text-lg font-bold">{completedDeliveries}</p>
             <p className="text-xs text-[var(--muted)]">Deliveries</p>
           </div>
           <div>
-            <p className="text-lg font-bold">{mockRunrProfile.reliability}%</p>
+            <p className="text-lg font-bold">{reliability}</p>
             <p className="text-xs text-[var(--muted)]">Reliability</p>
           </div>
         </div>
 
-        <div className="mt-6 space-y-2 text-sm">
-          <p>
-            <span className="text-[var(--muted)]">Vehicle:</span>{" "}
-            {mockRunrProfile.vehicle}
-          </p>
-        </div>
+        <p className="mt-6 text-sm text-[var(--muted)]">
+          Profile stats will sync from Supabase once your account is connected.
+        </p>
       </div>
 
       <div className="mt-6 space-y-3">

@@ -7,7 +7,7 @@ export function SiteFooter() {
         <div className="grid gap-8 md:grid-cols-3">
           <div>
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ff4f00] text-xs font-black text-white">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0066FF] text-xs font-black text-white">
                 R
               </div>
               <span className="font-bold">RUNR Platform</span>
@@ -25,9 +25,9 @@ export function SiteFooter() {
               Apps
             </p>
             <ul className="mt-3 space-y-2 text-sm">
-              <li><a href="#apps" className="hover:text-[#2563eb]">PORTER — Customer</a></li>
-              <li><a href="#apps" className="hover:text-[#ff4f00]">RUNR — Delivery</a></li>
-              <li><a href="#apps" className="hover:text-[#059669]">VENDR — Business</a></li>
+              <li><a href="#apps" className="hover:text-[#0066FF]">PORTER — Customer</a></li>
+              <li><a href="#apps" className="hover:text-[#0066FF]">RUNR — Delivery</a></li>
+              <li><a href="#apps" className="hover:text-[#0066FF]">VENDR — Business</a></li>
             </ul>
           </div>
 
@@ -39,9 +39,9 @@ export function SiteFooter() {
               <li><a href="#how-it-works">How We Operate</a></li>
               <li><a href="#ecosystem">The Ecosystem</a></li>
               <li><a href="#company">About</a></li>
-              <li><Link href="/login" className="hover:text-[#ff4f00]">Sign In</Link></li>
-              <li><Link href="/account" className="hover:text-[#ff4f00]">My Account</Link></li>
-              <li><Link href="/staff" className="hover:text-[#ff4f00]">Staff Portal</Link></li>
+              <li><Link href="/login" className="hover:text-[#0066FF]">Sign In</Link></li>
+              <li><Link href="/account" className="hover:text-[#0066FF]">My Account</Link></li>
+              <li><Link href="/staff" className="hover:text-[#0066FF]">Staff Portal</Link></li>
               <li>
                 <a href="mailto:themarkkbrandoncollective@gmail.com">Contact</a>
               </li>

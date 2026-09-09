@@ -50,7 +50,7 @@ function StaffPortal() {
       <div className="border-b border-zinc-800 bg-zinc-900">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#ff4f00]">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#0066FF]">
               Staff Portal
             </p>
             <h1 className="text-lg font-bold">Platform Management</h1>
@@ -84,7 +84,7 @@ function StaffPortal() {
               onClick={() => setTab(id)}
               className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                 tab === id
-                  ? "bg-[#ff4f00] text-white"
+                  ? "bg-[#0066FF] text-white"
                   : "bg-zinc-900 text-zinc-400 hover:text-white"
               }`}
             >
@@ -119,9 +119,9 @@ function StaffPortal() {
               </p>
               <div className="grid gap-4 md:grid-cols-3">
                 {[
-                  { name: "PORTER", pkg: "com.runr.porter", color: "border-blue-500/30", status: "Live" },
-                  { name: "RUNR", pkg: "com.runr.runr", color: "border-orange-500/30", status: "Live" },
-                  { name: "VENDR", pkg: "com.runr.vendr", color: "border-emerald-500/30", status: "Live" },
+                  { name: "PORTER", pkg: "com.runr.porter", color: "border-[#0066FF]/30", status: "Live" },
+                  { name: "RUNR", pkg: "com.runr.runr", color: "border-[#0066FF]/30", status: "Live" },
+                  { name: "VENDR", pkg: "com.runr.vendr", color: "border-[#0066FF]/30", status: "Live" },
                 ].map((app) => (
                   <div
                     key={app.name}
@@ -156,34 +156,9 @@ function StaffPortal() {
 
           {tab === "users" && (
             <Panel title="Marketplace Users">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead>
-                    <tr className="border-b border-zinc-800 text-zinc-500">
-                      <th className="pb-3 pr-4">Name</th>
-                      <th className="pb-3 pr-4">Email</th>
-                      <th className="pb-3 pr-4">App</th>
-                      <th className="pb-3">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[
-                      { name: "Alex Rivera", email: "alex@example.com", app: "PORTER", status: "Active" },
-                      { name: "James Chen", email: "james@example.com", app: "RUNR", status: "Active" },
-                      { name: "Tony Russo", email: "tony@tonyspizza.com", app: "VENDR", status: "Active" },
-                    ].map((u) => (
-                      <tr key={u.email} className="border-b border-zinc-800/50">
-                        <td className="py-3 pr-4">{u.name}</td>
-                        <td className="py-3 pr-4 text-zinc-400">{u.email}</td>
-                        <td className="py-3 pr-4">{u.app}</td>
-                        <td className="py-3">
-                          <span className="text-green-400">{u.status}</span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <p className="text-sm text-zinc-500">
+                User management will load from Supabase profiles once connected.
+              </p>
             </Panel>
           )}
 
@@ -266,7 +241,7 @@ function AdminStat({
   return (
     <div
       className={`rounded-xl border p-4 ${
-        alert ? "border-orange-500/30 bg-orange-500/10" : "border-zinc-800 bg-zinc-900"
+        alert ? "border-orange-500/30 bg-blue-500/10" : "border-zinc-800 bg-zinc-900"
       }`}
     >
       <p className="text-xs text-zinc-500">{label}</p>

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Download, Package } from "lucide-react";
 import type { AppDownload } from "@/data/site-content";
 
@@ -6,11 +7,13 @@ export function DownloadCard({ app }: { app: AppDownload }) {
     <div className="flex flex-col rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div
-            className={`flex h-12 w-12 items-center justify-center rounded-xl text-xl text-white ${app.colorClass}`}
-          >
-            {app.emoji}
-          </div>
+          <Image
+            src={app.iconUrl}
+            alt={`${app.name} app icon`}
+            width={48}
+            height={48}
+            className="h-12 w-12 rounded-xl"
+          />
           <div>
             <h3 className="text-lg font-bold">{app.name}</h3>
             <p className="text-sm text-[var(--muted)]">{app.tagline}</p>

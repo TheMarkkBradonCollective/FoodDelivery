@@ -1,12 +1,7 @@
-import { mockOrders } from "@runr/shared/data/mock-data";
 import { OrderTrackingClient } from "./OrderTrackingClient";
 
 export function generateStaticParams() {
-  const ids = new Set([
-    ...mockOrders.map((o) => o.id),
-    "order-demo",
-  ]);
-  return Array.from(ids).map((id) => ({ id }));
+  return [{ id: "_" }];
 }
 
 export default async function OrderTrackingPage({

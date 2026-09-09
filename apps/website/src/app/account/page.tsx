@@ -7,7 +7,6 @@ import { useAppStore } from "@/store";
 import { getAppForRole, getRoleLabel } from "@runr/shared/lib/auth";
 import { formatCurrency, formatTimeRange } from "@runr/shared/lib/utils";
 import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
-import { mockRunrProfile } from "@runr/shared/data/mock-data";
 import {
   Download,
   Heart,
@@ -36,7 +35,7 @@ function AccountContent() {
       <div className="mx-auto max-w-4xl px-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#ff4f00]">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#0066FF]">
               {getAppForRole(user.role)} Account
             </p>
             <h1 className="text-2xl font-bold">{user.name}</h1>
@@ -74,7 +73,7 @@ function AccountContent() {
           </p>
           <Link
             href="/#apps"
-            className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#ff4f00] hover:underline"
+            className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#0066FF] hover:underline"
           >
             <Download className="h-4 w-4" />
             Get the app
@@ -134,7 +133,7 @@ function RunrDashboard() {
       <div className="grid gap-4 sm:grid-cols-3">
         <StatCard label="Total earnings" value={formatCurrency(totalEarnings)} />
         <StatCard label="Deliveries" value={String(earnings.length)} />
-        <StatCard label="Rating" value={String(mockRunrProfile.rating)} />
+        <StatCard label="Rating" value="—" />
       </div>
 
       {activeRun && (
@@ -180,6 +179,17 @@ function RunrDashboard() {
 function BusinessDashboard() {
   const { businesses, orders } = useAppStore();
   const business = businesses[0];
+
+  if (!business) {
+    return (
+      <div className="mt-8 rounded-xl border border-[var(--border)] bg-white p-6">
+        <p className="text-sm text-[var(--muted)]">
+          No business linked yet. Connect your VENDR account via Supabase to see operations here.
+        </p>
+      </div>
+    );
+  }
+
   const coverage = getBusinessCoverageSummary(
     business.coverageRules,
     business.scheduledRuns

@@ -1,11 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import { cn } from "../../lib/utils";
 
 export interface AppBrandProps {
   name: string;
   tagline: string;
   emoji?: string;
+  iconUrl?: string;
   accentClass?: string;
   compact?: boolean;
   className?: string;
@@ -15,21 +17,32 @@ export function AppBrandHeader({
   name,
   tagline,
   emoji,
+  iconUrl,
   accentClass = "bg-runr-primary",
   compact,
   className,
 }: AppBrandProps) {
   return (
     <div className={cn("flex items-center gap-3", className)}>
-      <div
-        className={cn(
-          "flex shrink-0 items-center justify-center rounded-runr-md font-black text-white",
-          accentClass,
-          compact ? "h-9 w-9 text-sm" : "h-11 w-11 text-base"
-        )}
-      >
-        {emoji ?? name.charAt(0)}
-      </div>
+      {iconUrl ? (
+        <Image
+          src={iconUrl}
+          alt={`${name} logo`}
+          width={compact ? 36 : 44}
+          height={compact ? 36 : 44}
+          className={cn("shrink-0 rounded-runr-md", compact ? "h-9 w-9" : "h-11 w-11")}
+        />
+      ) : (
+        <div
+          className={cn(
+            "flex shrink-0 items-center justify-center rounded-runr-md font-black text-white",
+            accentClass,
+            compact ? "h-9 w-9 text-sm" : "h-11 w-11 text-base"
+          )}
+        >
+          {emoji ?? name.charAt(0)}
+        </div>
+      )}
       <div className="min-w-0">
         <p className={cn("font-bold tracking-tight", compact ? "text-base" : "text-lg")}>
           {name}

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
-import { getDemoAccounts } from "@runr/shared/lib/auth";
+import { getCurrentAuthSession, signOut } from "@runr/shared/lib/supabase/auth";
 import { LogIn, Shield, Smartphone } from "lucide-react";
 
 export default function LoginPage() {
@@ -25,7 +25,7 @@ export default function LoginPage() {
   if (session) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#ff4f00] border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#0066FF] border-t-transparent" />
       </div>
     );
   }
@@ -40,25 +40,19 @@ export default function LoginPage() {
       setError(result.error);
       return;
     }
-    const cred = getDemoAccounts().find((a) => a.email === email.trim().toLowerCase());
-    if (cred?.role === "Staff" || email.trim().toLowerCase() === "staff@runr.com") {
-      router.push("/staff/");
-    } else {
-      router.push("/account/");
+
+    const expectedRole = mode === "staff" ? "staff" : undefined;
+    if (expectedRole) {
+      const authSession = await getCurrentAuthSession();
+      if (authSession?.user.role !== "staff") {
+        await signOut();
+        setError("This account does not have staff access.");
+        return;
+      }
     }
-  }
 
-  function fillDemo(account: (typeof demoAccounts)[0]) {
-    setEmail(account.email);
-    setPassword(account.password);
-    if (account.role === "Staff") setMode("staff");
+    router.push(mode === "staff" ? "/staff/" : "/account/");
   }
-
-  const demoAccounts = getDemoAccounts();
-  const filteredDemos =
-    mode === "staff"
-      ? demoAccounts.filter((a) => a.role === "Staff")
-      : demoAccounts.filter((a) => a.role !== "Staff");
 
   return (
     <div className="min-h-[80vh] bg-[var(--surface)] py-16">
@@ -75,7 +69,7 @@ export default function LoginPage() {
             type="button"
             onClick={() => setMode("app")}
             className={`flex flex-1 items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-semibold transition-colors ${
-              mode === "app" ? "bg-[#ff4f00] text-white" : "text-[var(--muted)]"
+              mode === "app" ? "bg-[#0066FF] text-white" : "text-[var(--muted)]"
             }`}
           >
             <Smartphone className="h-4 w-4" />
@@ -109,7 +103,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm outline-none focus:border-[#ff4f00]"
+              className="w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm outline-none focus:border-[#0066FF]"
               placeholder={mode === "staff" ? "staff@runr.com" : "you@example.com"}
             />
           </div>
@@ -123,7 +117,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm outline-none focus:border-[#ff4f00]"
+              className="w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm outline-none focus:border-[#0066FF]"
             />
           </div>
 
@@ -135,7 +129,7 @@ export default function LoginPage() {
             type="submit"
             disabled={loading}
             className={`flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-white disabled:opacity-50 ${
-              mode === "staff" ? "bg-[#0a0a0a] hover:bg-zinc-800" : "bg-[#ff4f00] hover:bg-[#e64600]"
+              mode === "staff" ? "bg-[#0a0a0a] hover:bg-zinc-800" : "bg-[#0066FF] hover:bg-[#0052cc]"
             }`}
           >
             <LogIn className="h-4 w-4" />
@@ -143,30 +137,8 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-6 rounded-xl border border-dashed border-[var(--border)] bg-white p-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
-            Demo accounts
-          </p>
-          <div className="mt-3 space-y-2">
-            {filteredDemos.map((account) => (
-              <button
-                key={account.email}
-                type="button"
-                onClick={() => fillDemo(account)}
-                className="flex w-full items-center justify-between rounded-lg border border-[var(--border)] px-3 py-2 text-left text-sm hover:bg-[var(--surface)]"
-              >
-                <span>
-                  <strong>{account.app}</strong>
-                  <span className="ml-2 text-[var(--muted)]">{account.email}</span>
-                </span>
-                <span className="text-xs text-[var(--muted)]">Use</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
         <p className="mt-6 text-center text-sm text-[var(--muted)]">
-          <Link href="/" className="hover:text-[#ff4f00]">
+          <Link href="/" className="hover:text-[#0066FF]">
             ← Back to home
           </Link>
         </p>

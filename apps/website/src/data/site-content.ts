@@ -1,7 +1,7 @@
 export interface AppDownload {
   id: "porter" | "runr" | "vendr";
   name: string;
-  emoji: string;
+  iconUrl: string;
   tagline: string;
   description: string;
   flow: string;
@@ -17,52 +17,53 @@ export interface AppDownload {
 
 const MBC_STORE = "https://themarkkbradoncollective.github.io/main/download";
 const GITHUB_RELEASES = "https://github.com/TheMarkkBradonCollective/Runr/releases/download";
+const BRAND_BLUE = "#0066FF";
 
 export const apps: AppDownload[] = [
   {
     id: "porter",
     name: "PORTER",
-    emoji: "🛍️",
+    iconUrl: "/icons/apps/porter.png",
     tagline: "Get what you need.",
     description:
       "Discover nearby businesses, order food and products, track deliveries live, and see your RUNR on the map.",
     flow: "Discover → Order → Track → Receive",
     packageId: "com.runr.porter",
-    color: "#2563eb",
-    colorClass: "bg-blue-600",
+    color: BRAND_BLUE,
+    colorClass: "bg-[#0066FF]",
     storeUrl: `${MBC_STORE}/#download-porter`,
-    apkUrl: `${GITHUB_RELEASES}/v0.2.1-porter/porter-v0.2.1.apk`,
-    version: "0.2.1",
+    apkUrl: `${GITHUB_RELEASES}/v0.2.3-porter/porter-v0.2.3.apk`,
+    version: "0.2.3",
   },
   {
     id: "runr",
     name: "RUNR",
-    emoji: "🚗",
+    iconUrl: "/icons/apps/runr.png",
     tagline: "Pick it up. Run it there.",
     description:
       "Choose where and when to deliver. Select a business, set your RUN window, and earn per delivery — not hourly.",
     flow: "Choose → RUN → Deliver → Earn",
     packageId: "com.runr.runr",
-    color: "#ff4f00",
-    colorClass: "bg-[#ff4f00]",
+    color: BRAND_BLUE,
+    colorClass: "bg-[#0066FF]",
     storeUrl: `${MBC_STORE}/#download-runr`,
-    apkUrl: `${GITHUB_RELEASES}/v0.2.1-runr/runr-v0.2.1.apk`,
-    version: "0.2.1",
+    apkUrl: `${GITHUB_RELEASES}/v0.2.3-runr/runr-v0.2.3.apk`,
+    version: "0.2.3",
   },
   {
     id: "vendr",
     name: "VENDR",
-    emoji: "🏪",
+    iconUrl: "/icons/apps/vendr.png",
     tagline: "Sell. Manage. Grow.",
     description:
       "Run your business on the PORTER marketplace. Manage orders, set RUNR coverage, and monitor live deliveries.",
     flow: "Sell → Prepare → Dispatch → Fulfill → Grow",
     packageId: "com.runr.vendr",
-    color: "#059669",
-    colorClass: "bg-emerald-600",
+    color: BRAND_BLUE,
+    colorClass: "bg-[#0066FF]",
     storeUrl: `${MBC_STORE}/#download-vendr`,
-    apkUrl: `${GITHUB_RELEASES}/v0.2.1-vendr/vendr-v0.2.1.apk`,
-    version: "0.2.1",
+    apkUrl: `${GITHUB_RELEASES}/v0.2.3-vendr/vendr-v0.2.3.apk`,
+    version: "0.2.3",
   },
 ];
 

@@ -10,16 +10,21 @@ import {
 } from "react";
 import type { AuthSession } from "@runr/shared/lib/auth";
 import { authenticate } from "@runr/shared/lib/auth";
+import { getSupabaseClient } from "@runr/shared/lib/supabase/client";
+import { isSupabaseConfigured } from "@runr/shared/lib/supabase/config";
+import {
+  getCurrentAuthSession,
+  sessionToAuthSession,
+  signOut as supabaseSignOut,
+} from "@runr/shared/lib/supabase/auth";
 import type { User } from "@runr/shared/types";
 import { useAppStore } from "@/store";
-
-const SESSION_KEY = "runr-web-session";
 
 interface AuthContextValue {
   session: AuthSession | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<{ error?: string }>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -30,37 +35,70 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const setUser = useAppStore((s) => s.setUser);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(SESSION_KEY);
-      if (raw) {
-        const parsed: AuthSession = JSON.parse(raw);
-        setSession(parsed);
-        setUser(parsed.user);
+    let cancelled = false;
+
+    async function loadSession() {
+      if (!isSupabaseConfigured()) {
+        setIsLoading(false);
+        return;
       }
-    } catch {
-      localStorage.removeItem(SESSION_KEY);
+
+      const authSession = await getCurrentAuthSession();
+      if (cancelled) return;
+
+      setSession(authSession);
+      setUser(authSession?.user ?? null);
+      setIsLoading(false);
     }
-    setIsLoading(false);
+
+    void loadSession();
+
+    if (!isSupabaseConfigured()) {
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const supabase = getSupabaseClient();
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, nextSession) => {
+      if (cancelled) return;
+
+      if (!nextSession) {
+        setSession(null);
+        setUser(null);
+        return;
+      }
+
+      const authSession = await sessionToAuthSession(nextSession);
+      setSession(authSession);
+      setUser(authSession.user);
+    });
+
+    return () => {
+      cancelled = true;
+      subscription.unsubscribe();
+    };
   }, [setUser]);
 
   const login = useCallback(
     async (email: string, password: string) => {
-      const result = authenticate(email, password);
+      const result = await authenticate(email, password);
       if (!result.success) {
         return { error: result.error };
       }
       setSession(result.session);
       setUser(result.session.user);
-      localStorage.setItem(SESSION_KEY, JSON.stringify(result.session));
       return {};
     },
     [setUser]
   );
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    await supabaseSignOut();
     setSession(null);
     setUser(null);
-    localStorage.removeItem(SESSION_KEY);
   }, [setUser]);
 
   return (

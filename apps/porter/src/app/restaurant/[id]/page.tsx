@@ -1,8 +1,7 @@
-import { mockBusinesses } from "@runr/shared/data/mock-data";
 import { RestaurantClient } from "./RestaurantClient";
 
 export function generateStaticParams() {
-  return mockBusinesses.map((b) => ({ id: b.id }));
+  return [{ id: "_" }];
 }
 
 export default async function RestaurantPage({

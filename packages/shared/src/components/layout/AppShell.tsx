@@ -2,8 +2,9 @@
 
 import { ThemeProvider } from "../providers/ThemeProvider";
 import { NativeSafeArea } from "../providers/NativeSafeArea";
+import { SupabaseAuthSync } from "../providers/SupabaseAuthSync";
 import { useAppStore } from "../../store/create-app-store";
-import { useEffect } from "react";
+import { SignInPrompt } from "./SignInPrompt";
 
 export function AuthGuard({
   children,
@@ -13,22 +14,9 @@ export function AuthGuard({
   role: "customer" | "runr" | "business";
 }) {
   const user = useAppStore((s) => s.user);
-  const loginAs = useAppStore((s) => s.loginAs);
-
-  useEffect(() => {
-    if (!user) {
-      loginAs(role);
-    } else if (user.role !== role) {
-      loginAs(role);
-    }
-  }, [user, role, loginAs]);
 
   if (!user || user.role !== role) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-runr-primary border-t-transparent" />
-      </div>
-    );
+    return <SignInPrompt role={role} />;
   }
 
   return <>{children}</>;
@@ -44,6 +32,7 @@ export function AppShell({
   return (
     <ThemeProvider>
       <NativeSafeArea>
+        <SupabaseAuthSync role={role} />
         <AuthGuard role={role}>{children}</AuthGuard>
       </NativeSafeArea>
     </ThemeProvider>

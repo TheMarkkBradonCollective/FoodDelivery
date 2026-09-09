@@ -3,20 +3,21 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { PrimaryButton } from "@runr/shared/components/ui/PrimaryButton";
+import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 import { useAppStore } from "@/store";
-import { mockMenuItems } from "@runr/shared/data/mock-data";
 import { formatCurrency } from "@runr/shared/lib/utils";
 import { ArrowLeft, Plus } from "lucide-react";
+import type { MenuItem } from "@runr/shared/types";
 
 export function RestaurantClient({ businessId }: { businessId: string }) {
   const { businesses, addToCart, cart } = useAppStore();
 
   const business = businesses.find((b) => b.id === businessId);
-  const menuItems = mockMenuItems[businessId] ?? [];
+  const menuItems = useMemo<MenuItem[]>(() => [], []);
   const cartCount = cart.reduce((s, i) => s + i.quantity, 0);
 
   const groupedMenu = useMemo(() => {
-    const groups: Record<string, typeof menuItems> = {};
+    const groups: Record<string, MenuItem[]> = {};
     for (const item of menuItems) {
       if (!groups[item.category]) groups[item.category] = [];
       groups[item.category].push(item);
@@ -25,7 +26,17 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
   }, [menuItems]);
 
   if (!business) {
-    return <div className="p-6">Business not found</div>;
+    return (
+      <div className="p-6">
+        <EmptyState
+          title="Business not found"
+          description="This listing is not available yet. Connect Supabase to load marketplace data."
+        />
+        <Link href="/" className="mt-4 inline-block text-sm font-semibold text-runr-primary">
+          Back to discover
+        </Link>
+      </div>
+    );
   }
 
   return (
@@ -48,46 +59,55 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
           </p>
         </div>
 
-        {Object.entries(groupedMenu).map(([category, items]) => (
-          <section key={category} className="mt-8">
-            <h2 className="text-lg font-semibold">{category}</h2>
-            <div className="mt-3 space-y-3">
-              {items.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-start justify-between gap-4 rounded-runr-lg border border-[var(--border)] p-4"
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-medium">{item.name}</h3>
-                      {item.popular && (
-                        <span className="rounded-full bg-runr-primary-muted px-2 py-0.5 text-[10px] font-bold uppercase text-runr-primary">
-                          Popular
-                        </span>
-                      )}
-                    </div>
-                    <p className="mt-1 text-sm text-[var(--muted)]">{item.description}</p>
-                    <p className="mt-2 font-semibold">{formatCurrency(item.price)}</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      addToCart(businessId, {
-                        menuItemId: item.id,
-                        name: item.name,
-                        price: item.price,
-                        quantity: 1,
-                      })
-                    }
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-runr-primary text-white"
+        {menuItems.length === 0 ? (
+          <div className="mt-8">
+            <EmptyState
+              title="No menu items yet"
+              description="Menu data will load from Supabase once your business is connected."
+            />
+          </div>
+        ) : (
+          Object.entries(groupedMenu).map(([category, items]) => (
+            <section key={category} className="mt-8">
+              <h2 className="text-lg font-semibold">{category}</h2>
+              <div className="mt-3 space-y-3">
+                {items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-start justify-between gap-4 rounded-runr-lg border border-[var(--border)] p-4"
                   >
-                    <Plus className="h-4 w-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </section>
-        ))}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-medium">{item.name}</h3>
+                        {item.popular && (
+                          <span className="rounded-full bg-runr-primary-muted px-2 py-0.5 text-[10px] font-bold uppercase text-runr-primary">
+                            Popular
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-1 text-sm text-[var(--muted)]">{item.description}</p>
+                      <p className="mt-2 font-semibold">{formatCurrency(item.price)}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        addToCart(businessId, {
+                          menuItemId: item.id,
+                          name: item.name,
+                          price: item.price,
+                          quantity: 1,
+                        })
+                      }
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-runr-primary text-white"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </section>
+          ))
+        )}
       </div>
 
       {cartCount > 0 && (
