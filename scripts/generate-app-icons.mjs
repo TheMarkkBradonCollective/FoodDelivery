@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Generate launcher icons from the Porter rider mark (no text).
- * Each app gets a distinct background + mark color treatment.
+ * Generate launcher + in-app icons from the Porter rider mark (no text).
+ * Source: brands/porter-icon-mark.png (white rider on blue — text stripped).
  *
  * Usage: npm run icons:generate
  */
@@ -15,30 +15,10 @@ const markSource = join(root, "brands", "porter-icon-mark.png");
 
 /** @type {Array<{ id: string; background: string; mark: "blue" | "black" | "white"; launcherBg: string }>} */
 const variants = [
-  {
-    id: "porter",
-    background: "#FFFFFF",
-    mark: "blue",
-    launcherBg: "#FFFFFF",
-  },
-  {
-    id: "runr",
-    background: "#FFFFFF",
-    mark: "black",
-    launcherBg: "#FFFFFF",
-  },
-  {
-    id: "vendr",
-    background: "#0066FF",
-    mark: "white",
-    launcherBg: "#0066FF",
-  },
-  {
-    id: "staff",
-    background: "#18181B",
-    mark: "blue",
-    launcherBg: "#18181B",
-  },
+  { id: "porter", background: "#FFFFFF", mark: "blue", launcherBg: "#FFFFFF" },
+  { id: "runr", background: "#FFFFFF", mark: "black", launcherBg: "#FFFFFF" },
+  { id: "vendr", background: "#0066FF", mark: "white", launcherBg: "#0066FF" },
+  { id: "staff", background: "#18181B", mark: "blue", launcherBg: "#18181B" },
 ];
 
 const densities = {
@@ -47,6 +27,12 @@ const densities = {
   "mipmap-xhdpi": 96,
   "mipmap-xxhdpi": 144,
   "mipmap-xxxhdpi": 192,
+};
+
+const MARK_COLORS = {
+  blue: { r: 0, g: 102, b: 255 },
+  black: { r: 0, g: 0, b: 0 },
+  white: { r: 255, g: 255, b: 255 },
 };
 
 function hexToRgb(hex) {
@@ -58,25 +44,43 @@ function hexToRgb(hex) {
   };
 }
 
-async function tintedMark(markSize, markColor) {
-  let pipeline = sharp(markSource).resize(markSize, markSize, {
-    fit: "contain",
-    background: { r: 0, g: 0, b: 0, alpha: 0 },
-  });
+/** Extract white rider from blue background and recolor on transparency. */
+async function riderMarkBuffer(markSize, markColor) {
+  const color = MARK_COLORS[markColor];
+  const { data, info } = await sharp(markSource)
+    .resize(markSize, markSize, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
 
-  if (markColor === "black") {
-    pipeline = pipeline.greyscale().tint({ r: 0, g: 0, b: 0 });
-  } else if (markColor === "white") {
-    pipeline = pipeline.greyscale().tint({ r: 255, g: 255, b: 255 });
+  const out = Buffer.alloc(data.length);
+  for (let i = 0; i < info.width * info.height; i++) {
+    const o = i * 4;
+    const r = data[o];
+    const g = data[o + 1];
+    const b = data[o + 2];
+    const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+    if (lum > 175) {
+      out[o] = color.r;
+      out[o + 1] = color.g;
+      out[o + 2] = color.b;
+      out[o + 3] = 255;
+    } else {
+      out[o + 3] = 0;
+    }
   }
 
-  return pipeline.png().toBuffer();
+  return sharp(out, {
+    raw: { width: info.width, height: info.height, channels: 4 },
+  })
+    .png()
+    .toBuffer();
 }
 
 async function composeIcon(variant, size) {
-  const padding = Math.round(size * 0.14);
+  const padding = Math.round(size * 0.12);
   const markSize = size - padding * 2;
-  const markBuf = await tintedMark(markSize, variant.mark);
+  const markBuf = await riderMarkBuffer(markSize, variant.mark);
   const bg = hexToRgb(variant.background);
 
   return sharp({
@@ -92,18 +96,15 @@ async function composeIcon(variant, size) {
     .toBuffer();
 }
 
+/** Foreground layer for Android adaptive icons (rider only, transparent bg). */
+async function foregroundMark(variant, size) {
+  const padding = Math.round(size * 0.18);
+  const markSize = size - padding * 2;
+  return riderMarkBuffer(markSize, variant.mark);
+}
+
 function writeLauncherBackground(appId, color) {
-  const valuesDir = join(
-    root,
-    "apps",
-    appId,
-    "android",
-    "app",
-    "src",
-    "main",
-    "res",
-    "values"
-  );
+  const valuesDir = join(root, "apps", appId, "android", "app", "src", "main", "res", "values");
   mkdirSync(valuesDir, { recursive: true });
   writeFileSync(
     join(valuesDir, "ic_launcher_background.xml"),
@@ -126,17 +127,17 @@ async function generateForApp(variant) {
   for (const [folder, size] of Object.entries(densities)) {
     const outDir = join(resRoot, folder);
     mkdirSync(outDir, { recursive: true });
-    const icon = await composeIcon(variant, size);
-    const launcherPath = join(outDir, "ic_launcher.png");
-    const roundPath = join(outDir, "ic_launcher_round.png");
-    const foregroundPath = join(outDir, "ic_launcher_foreground.png");
-    await sharp(icon).toFile(launcherPath);
-    await sharp(icon).toFile(roundPath);
-    await sharp(icon).toFile(foregroundPath);
+
+    const launcher = await composeIcon(variant, size);
+    const foreground = await foregroundMark(variant, size);
+
+    await sharp(launcher).toFile(join(outDir, "ic_launcher.png"));
+    await sharp(launcher).toFile(join(outDir, "ic_launcher_round.png"));
+    await sharp(foreground).toFile(join(outDir, "ic_launcher_foreground.png"));
   }
 
   writeLauncherBackground(variant.id, variant.launcherBg);
-  console.log(`Generated icons for ${variant.id} (${variant.background} + ${variant.mark} mark)`);
+  console.log(`Generated icons for ${variant.id} (${variant.background} + ${variant.mark} rider)`);
 }
 
 async function main() {
