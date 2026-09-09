@@ -130,7 +130,7 @@ export default function PorterDiscoverPage() {
           ) : (
             <>
               {featured && (
-                <Link href={`/restaurant/${featured.id}`}>
+                <Link href={`/restaurant/?id=${featured.id}`}>
                   <BusinessCard
                     business={featured}
                     userLocation={location}
@@ -141,7 +141,7 @@ export default function PorterDiscoverPage() {
                 </Link>
               )}
               {rest.map((b) => (
-                <Link key={b.id} href={`/restaurant/${b.id}`}>
+                <Link key={b.id} href={`/restaurant/?id=${b.id}`}>
                   <BusinessCard
                     business={b}
                     userLocation={location}

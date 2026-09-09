@@ -58,8 +58,8 @@ export function MapView({
   useLeafletFix();
 
   const tileUrl = dark
-    ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-    : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
+    ? "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
   const userPos = userLocation ?? center;
 
@@ -84,7 +84,10 @@ export function MapView({
         zoomControl={false}
         attributionControl={false}
       >
-        <TileLayer url={tileUrl} />
+        <TileLayer
+          url={tileUrl}
+          attribution="&copy; OpenStreetMap"
+        />
         <RecenterControl center={center} zoom={zoom} />
 
         {showUserLocation && (

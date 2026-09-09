@@ -22,7 +22,7 @@ export default function CustomerFavoritesPage() {
         ) : (
           saved.map((b) => (
             <div key={b.id} className="relative">
-              <Link href={`/restaurant/${b.id}`}>
+              <Link href={`/restaurant/?id=${b.id}`}>
                 <BusinessCard business={b} userLocation={location} />
               </Link>
               <button

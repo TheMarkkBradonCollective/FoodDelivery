@@ -32,70 +32,77 @@ export function BusinessCard({
     business.scheduledRuns
   );
 
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "w-full rounded-runr-xl p-5 text-left shadow-runr-card transition-transform active:scale-[0.99]",
-        featured
-          ? "bg-runr-accent-bright text-runr-ink"
-          : "border border-[var(--border)] bg-[var(--surface-elevated)]",
-        className
-      )}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <span
+  const body = (
+    <div className="flex items-start justify-between gap-3">
+      <div className="min-w-0 flex-1">
+        <span
+          className={cn(
+            "pill mb-2",
+            featured
+              ? "bg-runr-primary text-white"
+              : "bg-runr-primary-muted text-runr-primary"
+          )}
+        >
+          {business.cuisine}
+        </span>
+        <div className="flex items-center gap-2">
+          <h3
             className={cn(
-              "pill mb-2",
-              featured
-                ? "bg-runr-primary text-white"
-                : "bg-runr-primary-muted text-runr-primary"
+              "truncate text-lg font-extrabold tracking-tight",
+              featured ? "text-runr-ink" : "text-[var(--foreground)]"
             )}
           >
-            {business.cuisine}
-          </span>
-          <div className="flex items-center gap-2">
-            <h3
-              className={cn(
-                "truncate text-lg font-extrabold tracking-tight",
-                featured ? "text-runr-ink" : "text-[var(--foreground)]"
-              )}
+            {business.name}
+          </h3>
+          {onFavoriteToggle && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onFavoriteToggle();
+              }}
+              className="shrink-0"
+              aria-label={isFavorite ? "Remove favorite" : "Add favorite"}
             >
-              {business.name}
-            </h3>
-            {onFavoriteToggle && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onFavoriteToggle();
-                }}
-                className="shrink-0"
-                aria-label={isFavorite ? "Remove favorite" : "Add favorite"}
-              >
-                <Star
-                  className={cn(
-                    "h-4 w-4",
-                    isFavorite
-                      ? "fill-runr-warning text-runr-warning"
-                      : featured
-                        ? "text-runr-ink/40"
-                        : "text-runr-neutral-300"
-                  )}
-                />
-              </button>
-            )}
-          </div>
-          <p className={cn("mt-1 text-sm", featured ? "text-runr-ink/75" : "text-[var(--muted)]")}>
-            {distance.toFixed(1)} mi · {business.etaMinutes} min · Delivery{" "}
-            {formatCurrency(business.deliveryFee)}
-          </p>
-          <p className="mt-2 text-sm font-semibold">★ {business.rating}</p>
+              <Star
+                className={cn(
+                  "h-4 w-4",
+                  isFavorite
+                    ? "fill-runr-warning text-runr-warning"
+                    : featured
+                      ? "text-runr-ink/40"
+                      : "text-runr-neutral-300"
+                )}
+              />
+            </button>
+          )}
         </div>
-        <CoverageBadge status={coverage.status} gap={coverage.gap} size="sm" />
+        <p className={cn("mt-1 text-sm", featured ? "text-runr-ink/75" : "text-[var(--muted)]")}>
+          {distance.toFixed(1)} mi · {business.etaMinutes} min · Delivery{" "}
+          {formatCurrency(business.deliveryFee)}
+        </p>
+        <p className="mt-2 text-sm font-semibold">★ {business.rating}</p>
       </div>
-    </button>
+      <CoverageBadge status={coverage.status} gap={coverage.gap} size="sm" />
+    </div>
   );
+
+  const classes = cn(
+    "block w-full rounded-runr-xl p-5 text-left shadow-runr-card transition-transform active:scale-[0.99]",
+    featured
+      ? "bg-runr-accent-bright text-runr-ink"
+      : "border border-[var(--border)] bg-[var(--surface-elevated)]",
+    className
+  );
+
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className={classes}>
+        {body}
+      </button>
+    );
+  }
+
+  return <div className={classes}>{body}</div>;
 }

@@ -23,7 +23,7 @@ export default function CustomerOrdersPage() {
           return (
             <Link
               key={order.id}
-              href={`/orders/${order.id}`}
+              href={`/track/?id=${order.id}`}
               className="block rounded-runr-lg border border-[var(--border)] bg-[var(--surface-elevated)] p-4"
             >
               <div className="flex items-start justify-between">

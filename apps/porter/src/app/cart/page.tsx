@@ -27,7 +27,7 @@ export default function CartPage() {
 
   function handlePlaceOrder() {
     const order = placeOrder({ tip, address });
-    if (order) router.push(`/orders/${order.id}`);
+    if (order) router.push(`/track/?id=${order.id}`);
   }
 
   if (!cart.length) {
@@ -43,7 +43,7 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen px-4 py-6">
-      <Link href={`/restaurant/${cartBusinessId}`} className="flex items-center gap-2 text-sm font-semibold text-runr-primary">
+      <Link href={`/restaurant/?id=${cartBusinessId}`} className="flex items-center gap-2 text-sm font-semibold text-runr-primary">
         <ArrowLeft className="h-4 w-4" /> Back to {business?.name}
       </Link>
 
