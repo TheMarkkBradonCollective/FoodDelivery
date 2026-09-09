@@ -106,11 +106,8 @@ export function MapView({
         attributionControl={false}
         preferCanvas
       >
-        <TileLayer
-          url={dark ? MAP_TILES.dark : MAP_TILES.light}
-          subdomains="abcd"
-          maxZoom={19}
-        />
+        <TileLayer url={dark ? MAP_TILES.dark : MAP_TILES.light} maxZoom={16} />
+        <TileLayer url={dark ? MAP_TILES.darkLabels : MAP_TILES.lightLabels} maxZoom={16} opacity={0.9} />
         {route ? <FitRoute from={route.from} to={route.to} /> : <RecenterControl center={center} zoom={zoom} />}
 
         {path ? (

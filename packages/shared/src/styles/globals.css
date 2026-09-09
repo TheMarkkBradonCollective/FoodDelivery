@@ -115,11 +115,11 @@ body {
 }
 
 .runr-map--light .leaflet-tile-pane {
-  filter: saturate(0.72) sepia(0.18) hue-rotate(228deg) brightness(1.04) contrast(0.94);
+  filter: sepia(0.42) saturate(0.62) hue-rotate(238deg) brightness(1.05) contrast(0.95);
 }
 
 .runr-map--dark .leaflet-tile-pane {
-  filter: hue-rotate(258deg) saturate(1.35) brightness(0.86) contrast(1.08);
+  filter: hue-rotate(258deg) saturate(1.4) brightness(0.9) contrast(1.06);
 }
 
 .runr-map .leaflet-control-attribution {
