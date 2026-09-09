@@ -212,11 +212,15 @@ $$;
 
 -- ---------------------------------------------------------------------------
 -- Test accounts — password for all: RunrTest2026!
--- | Email               | Role     | App          |
--- | porter@test.runr.com| customer | PORTER       |
--- | runr@test.runr.com  | runr     | RUNR         |
--- | vendr@test.runr.com | business | VENDR        |
--- | staff@runr.com      | staff    | Staff portal |
+-- | Email                      | Role     | App / portal      |
+-- | porter@test.runr.com       | customer | PORTER            |
+-- | runr@test.runr.com         | runr     | RUNR              |
+-- | vendr@test.runr.com        | business | VENDR             |
+-- | staff@runr.com             | staff    | Staff portal      |
+-- | Markkisstickz96@gmail.com  | staff    | Markeith (personal)|
+-- | markeith@runr.com          | staff    | Markeith (company) |
+-- | Immanuelcurry@gmail.com    | staff    | Immanuel (personal)|
+-- | immanuel@runr.com          | staff    | Immanuel (company) |
 -- ---------------------------------------------------------------------------
 select public.create_runr_test_user(
   'b1000000-0000-4000-8000-000000000001',
@@ -248,6 +252,39 @@ select public.create_runr_test_user(
   'RunrTest2026!',
   'staff',
   'Staff Tester'
+);
+
+-- Founders (staff portal)
+select public.create_runr_test_user(
+  'b1000000-0000-4000-8000-000000000005',
+  'Markkisstickz96@gmail.com',
+  'RunrTest2026!',
+  'staff',
+  'Markeith White'
+);
+
+select public.create_runr_test_user(
+  'b1000000-0000-4000-8000-000000000006',
+  'markeith@runr.com',
+  'RunrTest2026!',
+  'staff',
+  'Markeith White'
+);
+
+select public.create_runr_test_user(
+  'b1000000-0000-4000-8000-000000000007',
+  'Immanuelcurry@gmail.com',
+  'RunrTest2026!',
+  'staff',
+  'Immanuel Curry'
+);
+
+select public.create_runr_test_user(
+  'b1000000-0000-4000-8000-000000000008',
+  'immanuel@runr.com',
+  'RunrTest2026!',
+  'staff',
+  'Immanuel Curry'
 );
 
 commit;

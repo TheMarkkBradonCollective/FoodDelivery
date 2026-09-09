@@ -19,6 +19,15 @@ Password for every account: **`RunrTest2026!`**
 | `porter@test.runr.com` | PORTER |
 | `runr@test.runr.com` | RUNR |
 | `vendr@test.runr.com` | VENDR |
-| `staff@runr.com` | Staff portal |
+| `staff@runr.com` | Staff portal (test) |
+
+### Founders (staff portal)
+
+| Email | Name |
+|-------|------|
+| `Markkisstickz96@gmail.com` | Markeith White (personal) |
+| `markeith@runr.com` | Markeith White (company) |
+| `Immanuelcurry@gmail.com` | Immanuel Curry (personal) |
+| `immanuel@runr.com` | Immanuel Curry (company) |
 
 Each account only works in its matching app (role is enforced at sign-in).
