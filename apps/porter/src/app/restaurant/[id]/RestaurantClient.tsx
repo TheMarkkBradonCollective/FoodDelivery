@@ -13,7 +13,7 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
   const { businesses, addToCart, cart } = useAppStore();
 
   const business = businesses.find((b) => b.id === businessId);
-  const menuItems = useMemo<MenuItem[]>(() => [], []);
+  const menuItems = useMemo(() => business?.menu ?? [], [business]);
   const cartCount = cart.reduce((s, i) => s + i.quantity, 0);
 
   const groupedMenu = useMemo(() => {
@@ -30,7 +30,7 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
       <div className="p-6">
         <EmptyState
           title="Business not found"
-          description="This listing is not available yet. Connect Supabase to load marketplace data."
+          description="This listing is not available yet."
         />
         <Link href="/" className="mt-4 inline-block text-sm font-semibold text-runr-primary">
           Back to discover
@@ -63,7 +63,7 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
           <div className="mt-8">
             <EmptyState
               title="No menu items yet"
-              description="Menu data will load from Supabase once your business is connected."
+              description="This kitchen hasn't published a menu yet."
             />
           </div>
         ) : (

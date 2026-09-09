@@ -108,7 +108,7 @@ export default function PorterDiscoverPage() {
           {filtered.length === 0 ? (
             <EmptyState
               title="No businesses yet"
-              description="Marketplace listings will appear here once your account is connected to Supabase."
+              description="No listings match your search. Nearby kitchens appear after you sign in."
             />
           ) : (
             filtered.map((b) => (

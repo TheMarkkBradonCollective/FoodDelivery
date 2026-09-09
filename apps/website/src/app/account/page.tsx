@@ -5,7 +5,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { useAppStore } from "@/store";
 import { getAppForRole, getRoleLabel } from "@runr/shared/lib/auth";
-import { formatCurrency, formatTimeRange } from "@runr/shared/lib/utils";
+import { formatCurrency, formatTimeRange, selectVendorBusiness } from "@runr/shared/lib/utils";
 import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
 import {
   Download,
@@ -177,14 +177,14 @@ function RunrDashboard() {
 }
 
 function BusinessDashboard() {
-  const { businesses, orders } = useAppStore();
-  const business = businesses[0];
+  const { businesses, orders, user } = useAppStore();
+  const business = selectVendorBusiness(businesses, user?.id);
 
   if (!business) {
     return (
       <div className="mt-8 rounded-xl border border-[var(--border)] bg-white p-6">
         <p className="text-sm text-[var(--muted)]">
-          No business linked yet. Connect your VENDR account via Supabase to see operations here.
+          No business linked yet. Sign in with a VENDR account to see operations here.
         </p>
       </div>
     );

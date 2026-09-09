@@ -11,10 +11,11 @@ import {
   getBusinessCoverageSummary,
 } from "@runr/shared/lib/coverage-engine";
 import { DEFAULT_LOCATION } from "@runr/shared/data/constants";
+import { selectVendorBusiness } from "@runr/shared/lib/utils";
 
 export default function BusinessOperationsPage() {
-  const { businesses, orders, theme } = useAppStore();
-  const business = businesses[0];
+  const { businesses, orders, theme, user } = useAppStore();
+  const business = selectVendorBusiness(businesses, user?.id);
 
   const coverage = business
     ? getBusinessCoverageSummary(business.coverageRules, business.scheduledRuns)
@@ -53,7 +54,7 @@ export default function BusinessOperationsPage() {
       <div className="flex min-h-screen items-center justify-center p-6">
         <EmptyState
           title="No business connected"
-          description="Your VENDR operations dashboard will load once your business is linked via Supabase."
+          description="Sign in with vendr@test.runr.com to load Tony's Pizza, Golden Gate Burgers, and Mission Tacos."
         />
       </div>
     );

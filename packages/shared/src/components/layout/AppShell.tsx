@@ -3,6 +3,7 @@
 import { ThemeProvider } from "../providers/ThemeProvider";
 import { NativeSafeArea } from "../providers/NativeSafeArea";
 import { SupabaseAuthSync } from "../providers/SupabaseAuthSync";
+import { MarketplaceSync } from "../providers/MarketplaceSync";
 import { useAppStore } from "../../store/create-app-store";
 import { SignInPrompt } from "./SignInPrompt";
 import type { UserRole } from "../../types/index";
@@ -36,6 +37,7 @@ export function AppShell({
     <ThemeProvider>
       <NativeSafeArea>
         <SupabaseAuthSync role={role} />
+        <MarketplaceSync />
         <AuthGuard role={role}>{children}</AuthGuard>
       </NativeSafeArea>
     </ThemeProvider>

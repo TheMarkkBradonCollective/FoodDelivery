@@ -11,7 +11,7 @@ Monorepo for the RUNR coverage-driven delivery marketplace.
 | **`apps/website`** | **Main company website** — downloads, company info, how we operate |
 | `apps/porter` | PORTER customer Android app |
 | `apps/runr` | RUNR delivery Android app |
-| `apps/vendr` | VENDR business Android app |
+| `apps/staff` | STAFF founder/ops Android app |
 | `packages/shared` | Shared marketplace logic, UI, coverage engine |
 
 ## Quick start — Company website
@@ -30,7 +30,7 @@ The marketing site includes APK download links, ecosystem overview, company info
 | `/account` | Your account dashboard (orders, RUNs, business ops) |
 | `/staff` | Staff portal — manage apps, users, businesses, orders |
 
-Sign-in uses Supabase. Set `role` in user metadata (`customer`, `runr`, `business`, or `staff`) when creating accounts. See `docs/supabase/schema.sql` for an optional `profiles` table.
+Sign-in uses Supabase. Run `docs/supabase/schema.sql` in the SQL Editor to create profiles, marketplace tables, and seed restaurants. After that, PORTER/RUNR/VENDR/STAFF load live data (orders, RUNs, coverage, menus).
 
 ## The 3-App Ecosystem
 
