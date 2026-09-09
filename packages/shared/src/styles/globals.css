@@ -493,7 +493,7 @@ button:active:not(:disabled),
   position: fixed;
   left: 1rem;
   right: 1rem;
-  bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 0.35rem);
+  bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 0.85rem);
   z-index: 25;
 }
 
