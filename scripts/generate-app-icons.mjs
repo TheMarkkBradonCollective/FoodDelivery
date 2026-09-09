@@ -17,14 +17,16 @@ const markSource = join(root, "brands", "rider-mark.png");
 const interBold = "/usr/share/fonts/truetype/macos/Inter-Bold.ttf";
 
 const PURPLE = "#7048F8";
-const LIME = { r: 160, g: 248, b: 120 };
+const LIME = "#A0F878";
+const LIME_RGB = { r: 160, g: 248, b: 120 };
+const PURPLE_RGB = { r: 112, g: 72, b: 248 };
 
-/** @type {Array<{ id: string; wordmark: string | null }>} */
+/** @type {Array<{ id: string; wordmark: string | null; background: string; mark: "lime" | "purple" }>} */
 const variants = [
-  { id: "porter", wordmark: "Porter" },
-  { id: "runr", wordmark: "Runr" },
-  { id: "vendr", wordmark: "Vendr" },
-  { id: "staff", wordmark: null },
+  { id: "porter", wordmark: "Porter", background: PURPLE, mark: "lime" },
+  { id: "runr", wordmark: "Runr", background: PURPLE, mark: "lime" },
+  { id: "vendr", wordmark: "Vendr", background: PURPLE, mark: "lime" },
+  { id: "staff", wordmark: null, background: LIME, mark: "purple" },
 ];
 
 const densities = {
@@ -33,6 +35,11 @@ const densities = {
   "mipmap-xhdpi": 96,
   "mipmap-xxhdpi": 144,
   "mipmap-xxxhdpi": 192,
+};
+
+const MARK_RGB = {
+  lime: LIME_RGB,
+  purple: PURPLE_RGB,
 };
 
 function hexToRgb(hex) {
@@ -75,9 +82,9 @@ async function extractRider() {
       const alpha = Math.min(255, Math.round(((limeScore - 18) / 90) * 255));
       if (alpha < 12) continue;
 
-      out[o] = LIME.r;
-      out[o + 1] = LIME.g;
-      out[o + 2] = LIME.b;
+      out[o] = LIME_RGB.r;
+      out[o + 1] = LIME_RGB.g;
+      out[o + 2] = LIME_RGB.b;
       out[o + 3] = alpha;
 
       if (x < minX) minX = x;
@@ -104,6 +111,22 @@ async function extractRider() {
     .toBuffer();
 }
 
+async function tintRider(png, color) {
+  const { data, info } = await sharp(png).ensureAlpha().raw().toBuffer({
+    resolveWithObject: true,
+  });
+  for (let i = 0; i < info.width * info.height; i++) {
+    const o = i * 4;
+    if (data[o + 3] === 0) continue;
+    data[o] = color.r;
+    data[o + 1] = color.g;
+    data[o + 2] = color.b;
+  }
+  return sharp(data, { raw: { width: info.width, height: info.height, channels: 4 } })
+    .png()
+    .toBuffer();
+}
+
 async function riderAt(riderPng, markW, markH) {
   return sharp(riderPng)
     .resize(markW, markH, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
@@ -111,7 +134,7 @@ async function riderAt(riderPng, markW, markH) {
     .toBuffer();
 }
 
-function wordmarkSvg(size, label) {
+function wordmarkSvg(size, label, fill) {
   const fontSize = Math.round(size * 0.125);
   const y = Math.round(size * 0.9);
   const fontFace = existsSync(interBold)
@@ -123,15 +146,16 @@ function wordmarkSvg(size, label) {
     ${fontFace}
     text { font-family: "IconSans", "Inter", "Noto Sans", sans-serif; font-weight: 700; }
   ]]></style></defs>
-  <text x="50%" y="${y}" text-anchor="middle" font-size="${fontSize}" fill="#A0F878">${label}</text>
+  <text x="50%" y="${y}" text-anchor="middle" font-size="${fontSize}" fill="${fill}">${label}</text>
 </svg>`);
 }
 
-async function composeIcon(riderPng, size, wordmark) {
-  const bg = hexToRgb(PURPLE);
+async function composeIcon(riderPng, size, variant) {
+  const bg = hexToRgb(variant.background);
   const layers = [];
+  const markFill = variant.mark === "purple" ? PURPLE : LIME;
 
-  if (wordmark) {
+  if (variant.wordmark) {
     const markW = Math.round(size * 0.72);
     const markH = Math.round(size * 0.58);
     const top = Math.round(size * 0.12);
@@ -141,7 +165,7 @@ async function composeIcon(riderPng, size, wordmark) {
       left,
       top,
     });
-    layers.push({ input: wordmarkSvg(size, wordmark), left: 0, top: 0 });
+    layers.push({ input: wordmarkSvg(size, variant.wordmark, markFill), left: 0, top: 0 });
   } else {
     const pad = Math.round(size * 0.14);
     const markSize = size - pad * 2;
@@ -182,12 +206,12 @@ async function foregroundMark(riderPng, size) {
     .toBuffer();
 }
 
-function writeLauncherBackground(appId) {
+function writeLauncherBackground(appId, color) {
   const valuesDir = join(root, "apps", appId, "android", "app", "src", "main", "res", "values");
   mkdirSync(valuesDir, { recursive: true });
   writeFileSync(
     join(valuesDir, "ic_launcher_background.xml"),
-    `<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">${PURPLE}</color>\n</resources>\n`
+    `<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">${color}</color>\n</resources>\n`
   );
 }
 
@@ -199,7 +223,7 @@ async function generateForApp(variant, riderPng) {
   mkdirSync(publicIconDir, { recursive: true });
   mkdirSync(websiteIconDir, { recursive: true });
 
-  const master = await composeIcon(riderPng, 1024, variant.wordmark);
+  const master = await composeIcon(riderPng, 1024, variant);
   await sharp(master).toFile(join(publicIconDir, "app-icon.png"));
   await sharp(master).toFile(join(websiteIconDir, `${variant.id}.png`));
 
@@ -207,7 +231,7 @@ async function generateForApp(variant, riderPng) {
     const outDir = join(resRoot, folder);
     mkdirSync(outDir, { recursive: true });
 
-    const launcher = await composeIcon(riderPng, size, variant.wordmark);
+    const launcher = await composeIcon(riderPng, size, variant);
     const foreground = await foregroundMark(riderPng, size);
 
     await sharp(launcher).toFile(join(outDir, "ic_launcher.png"));
@@ -215,27 +239,27 @@ async function generateForApp(variant, riderPng) {
     await sharp(foreground).toFile(join(outDir, "ic_launcher_foreground.png"));
   }
 
-  writeLauncherBackground(variant.id);
+  writeLauncherBackground(variant.id, variant.background);
   const label = variant.wordmark ? `"${variant.wordmark}" lockup` : "wordless rider";
-  console.log(`Generated icons for ${variant.id} (${PURPLE} + lime ${label})`);
+  console.log(`Generated icons for ${variant.id} (${variant.background} + ${variant.mark} ${label})`);
 }
 
-async function generateShowcase(riderPng) {
-  const size = 1024;
+async function generateShowcase(coloredRiders) {
   const gap = 48;
   const cell = 420;
   const width = gap * 3 + cell * 2;
   const height = gap * 3 + cell * 2;
-  const labels = [
-    { id: "porter", wordmark: "Porter", x: gap, y: gap },
-    { id: "runr", wordmark: "Runr", x: gap * 2 + cell, y: gap },
-    { id: "vendr", wordmark: "Vendr", x: gap, y: gap * 2 + cell },
-    { id: "staff", wordmark: null, x: gap * 2 + cell, y: gap * 2 + cell },
+  const positions = [
+    { id: "porter", x: gap, y: gap },
+    { id: "runr", x: gap * 2 + cell, y: gap },
+    { id: "vendr", x: gap, y: gap * 2 + cell },
+    { id: "staff", x: gap * 2 + cell, y: gap * 2 + cell },
   ];
 
   const tiles = [];
-  for (const item of labels) {
-    const icon = await composeIcon(riderPng, cell, item.wordmark);
+  for (const item of positions) {
+    const variant = variants.find((v) => v.id === item.id);
+    const icon = await composeIcon(coloredRiders[item.id], cell, variant);
     const rounded = await sharp(icon)
       .composite([
         {
@@ -273,14 +297,19 @@ async function main() {
     throw new Error(`Missing rider mark: ${markSource}`);
   }
 
-  const riderPng = await extractRider();
-  await sharp(riderPng).toFile(join(root, "brands", "rider-mark-lime.png"));
+  const limeRider = await extractRider();
+  await sharp(limeRider).toFile(join(root, "brands", "rider-mark-lime.png"));
+  const purpleRider = await tintRider(limeRider, PURPLE_RGB);
+  await sharp(purpleRider).toFile(join(root, "brands", "rider-mark-purple.png"));
 
+  const coloredRiders = {};
   for (const variant of variants) {
-    await generateForApp(variant, riderPng);
+    const rider = variant.mark === "purple" ? purpleRider : limeRider;
+    coloredRiders[variant.id] = rider;
+    await generateForApp(variant, rider);
   }
 
-  await generateShowcase(riderPng);
+  await generateShowcase(coloredRiders);
   console.log("Done.");
 }
 

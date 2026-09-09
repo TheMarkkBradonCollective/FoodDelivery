@@ -12,7 +12,7 @@ Wordless **lime rider** on electric purple (`rider-mark.png`).
 | **PORTER** | Lime rider + "Porter" wordmark |
 | **RUNR** | Lime rider + "Runr" wordmark |
 | **VENDR** | Lime rider + "Vendr" wordmark |
-| **STAFF** | Lime rider, wordless |
+| **STAFF** | Purple rider on lime, wordless |
 
 ## Regenerate all launcher + in-app icons
 
