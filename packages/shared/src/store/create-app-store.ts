@@ -301,7 +301,7 @@ function buildStore(
 
     clearCart: () => set({ cart: [], cartBusinessId: null }),
 
-    placeOrder: (options) => {
+    placeOrder: (options?: { tip?: number; address?: string }) => {
       const { cart, cartBusinessId, user, businesses } = get();
       if (!cart.length || !cartBusinessId || !user) return null;
 
