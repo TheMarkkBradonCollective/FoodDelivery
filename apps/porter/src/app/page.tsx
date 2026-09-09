@@ -126,7 +126,7 @@ export default function PorterDiscoverPage() {
             <MapPin size={14} className="text-purple" />
             <span className="truncate">{deliveryAddress}</span>
           </p>
-          <h1 className="mt-2 font-display text-[1.85rem] font-extrabold leading-tight tracking-tight text-[var(--foreground)]">
+          <h1 className="mt-1 font-display text-[1.55rem] font-extrabold leading-tight tracking-tight text-[var(--foreground)]">
             Hungry? Get what you need.
           </h1>
           <p className="mt-1 text-sm text-[var(--muted)]">Hey {firstName} — kitchens around you are ready.</p>
@@ -166,15 +166,16 @@ export default function PorterDiscoverPage() {
         />
       </div>
 
-      <div className="mt-5 overflow-hidden rounded-[28px] bg-purple px-5 py-5 text-white shadow-runr-card">
-        <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-lime">Tonight</p>
-        <p className="mt-2 max-w-[16rem] text-xl font-extrabold leading-tight">$5 off with code RUNR5</p>
-        <p className="mt-1 text-sm text-white/75">Or 10% off with PORTER10 at checkout.</p>
+      <div className="mt-4 flex items-center justify-between gap-3 overflow-hidden rounded-[24px] bg-purple px-4 py-3 text-white shadow-runr-card">
+        <div className="min-w-0">
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-lime">Tonight · RUNR5</p>
+          <p className="truncate text-sm font-extrabold">$5 off · or PORTER10 for 10%</p>
+        </div>
         <Link
           href={filtered[0] ? `/restaurant/?id=${filtered[0].id}` : "/"}
-          className="mt-4 inline-flex h-10 items-center rounded-full bg-white px-4 text-sm font-extrabold text-ink"
+          className="tap-target inline-flex h-9 shrink-0 items-center rounded-full bg-white px-3 text-xs font-extrabold text-ink"
         >
-          Order now
+          Order
         </Link>
       </div>
 

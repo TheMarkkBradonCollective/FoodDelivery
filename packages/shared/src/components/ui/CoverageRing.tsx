@@ -42,9 +42,9 @@ export function CoverageRing({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <p className="text-xl font-extrabold text-[#1A1224]">{Math.round(clamped)}%</p>
+        <p className="text-xl font-extrabold text-[var(--foreground)]">{Math.round(clamped)}%</p>
         {label && (
-          <p className="text-[10px] uppercase tracking-wider text-[#6F6678]">{label}</p>
+          <p className="text-[10px] uppercase tracking-wider text-[var(--muted)]">{label}</p>
         )}
       </div>
     </div>

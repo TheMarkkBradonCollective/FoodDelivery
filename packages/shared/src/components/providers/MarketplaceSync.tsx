@@ -32,7 +32,7 @@ export function MarketplaceSync() {
         return;
       }
       const { buildPreviewSnapshot } = await import("../../data/demo-catalog");
-      hydrateMarketplace(buildPreviewSnapshot(userId), true);
+      hydrateMarketplace(buildPreviewSnapshot(user ?? undefined), true);
     }
 
     void load();

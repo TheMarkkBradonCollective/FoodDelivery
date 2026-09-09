@@ -503,6 +503,8 @@ create table if not exists public.orders (
   created_at timestamptz not null default now()
 );
 
+alter table public.orders add column if not exists delivery_address text;
+
 create table if not exists public.runs (
   id uuid primary key default gen_random_uuid(),
   runr_id uuid not null references auth.users (id) on delete cascade,

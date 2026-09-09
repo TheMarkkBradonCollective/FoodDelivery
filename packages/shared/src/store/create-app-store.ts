@@ -136,7 +136,7 @@ function buildStore(
         const favoriteBusinessIds = liked
           ? [...s.favoriteBusinessIds, businessId]
           : s.favoriteBusinessIds.filter((id) => id !== businessId);
-        if (s.user) void persistFavorite(s.user.id, businessId, liked);
+        if (s.user && !s.catalogPreview) void persistFavorite(s.user.id, businessId, liked);
         return { favoriteBusinessIds };
       }),
 
@@ -174,7 +174,7 @@ function buildStore(
         ),
       }));
 
-      void persistRun(newRun);
+      if (!get().catalogPreview) void persistRun(newRun);
       get().showToast("RUN booked");
       return true;
     },
@@ -194,7 +194,7 @@ function buildStore(
         activeRun: checkedIn,
         scheduledRuns: scheduledRuns.filter((r) => r.id !== next.id),
       });
-      void persistRun(checkedIn);
+      if (!get().catalogPreview) void persistRun(checkedIn);
     },
 
     checkOutRun: () => {
@@ -214,13 +214,13 @@ function buildStore(
         activeRun: null,
         runHistory: [completed, ...s.runHistory],
       }));
-      void persistRun(completed);
+      if (!get().catalogPreview) void persistRun(completed);
     },
 
     cancelRun: (runId: string) =>
       set((s) => {
         const run = s.scheduledRuns.find((r) => r.id === runId);
-        if (run) void persistRun({ ...run, status: "cancelled" });
+        if (run && !s.catalogPreview) void persistRun({ ...run, status: "cancelled" });
         return {
           scheduledRuns: s.scheduledRuns.filter((r) => r.id !== runId),
           businesses: s.businesses.map((b) => ({
@@ -242,8 +242,10 @@ function buildStore(
         },
         pendingDelivery: null,
       });
-      void persistDelivery({ ...pendingDelivery, runrId: user.id, status: "accepted" });
-      void persistOrderStatus(pendingDelivery.orderId, "runr_assigned", user.id);
+      if (!get().catalogPreview) {
+        void persistDelivery({ ...pendingDelivery, runrId: user.id, status: "accepted" });
+        void persistOrderStatus(pendingDelivery.orderId, "runr_assigned", user.id);
+      }
       get().showToast("RUN accepted");
     },
 
@@ -254,8 +256,10 @@ function buildStore(
       if (activeDelivery.status === "accepted" || activeDelivery.status === "pickup") {
         const next = { ...activeDelivery, status: "delivering" as const };
         set({ activeDelivery: next });
-        void persistDelivery(next);
-        void persistOrderStatus(activeDelivery.orderId, "picked_up", user.id);
+        if (!get().catalogPreview) {
+          void persistDelivery(next);
+          void persistOrderStatus(activeDelivery.orderId, "picked_up", user.id);
+        }
         get().showToast("Picked up");
         return;
       }
@@ -279,9 +283,11 @@ function buildStore(
         activeDelivery: null,
         earnings: [...earnings, record],
       });
-      void persistDelivery({ ...activeDelivery, status: "completed" });
-      void persistEarning(record);
-      void persistOrderStatus(activeDelivery.orderId, "delivered", user.id);
+      if (!get().catalogPreview) {
+        void persistDelivery({ ...activeDelivery, status: "completed" });
+        void persistEarning(record);
+        void persistOrderStatus(activeDelivery.orderId, "delivered", user.id);
+      }
       get().showToast("Delivery complete");
     },
 
@@ -368,11 +374,34 @@ function buildStore(
         notifications: [note, ...s.notifications],
       }));
 
-      void persistOrder(order);
-      void persistNotification(user.id, note);
-      const business = get().businesses.find((b) => b.id === cartBusinessId);
-      if (business) {
-        void offerDeliveryForOrder(order, business, user.name);
+      if (!get().catalogPreview) {
+        void persistOrder(order);
+        void persistNotification(user.id, note);
+        if (kitchen) {
+          void offerDeliveryForOrder(order, kitchen, user.name);
+        }
+      } else if (kitchen && !get().pendingDelivery && !get().activeDelivery) {
+        const drop = {
+          lat: kitchen.location.lat + 0.008,
+          lng: kitchen.location.lng + 0.006,
+        };
+        set({
+          pendingDelivery: {
+            id: crypto.randomUUID(),
+            orderId: order.id,
+            businessId: kitchen.id,
+            pickup: kitchen.location,
+            dropoff: drop,
+            distanceMiles: 1.4,
+            status: "offered",
+            basePay: 4.5,
+            distancePay: 1.85,
+            tip: order.tip,
+            totalEarnings: 4.5 + 1.85 + order.tip,
+            estimatedMinutes: kitchen.etaMinutes,
+            customerName: user.name,
+          },
+        });
       }
 
       get().showToast("Order placed");
@@ -388,7 +417,7 @@ function buildStore(
       set((s) => ({
         orders: s.orders.map((o) => (o.id === orderId ? { ...o, status } : o)),
       }));
-      void persistOrderStatus(orderId, status, order?.runrId);
+      if (!get().catalogPreview) void persistOrderStatus(orderId, status, order?.runrId);
       if (order && business && (status === "ready" || status === "runr_assigned")) {
         const already =
           get().pendingDelivery?.orderId === order.id || get().activeDelivery?.orderId === order.id;
@@ -443,7 +472,7 @@ function buildStore(
             : b
         ),
       }));
-      void persistCoverage(ruleId, maxRunrs);
+      if (!get().catalogPreview) void persistCoverage(ruleId, maxRunrs);
     },
 
     markNotificationRead: (id: string) => {
@@ -452,7 +481,7 @@ function buildStore(
           n.id === id ? { ...n, read: true } : n
         ),
       }));
-      void persistNotificationRead(id);
+      if (!get().catalogPreview) void persistNotificationRead(id);
     },
 
     sendStaffMessage: (body: string) => {
@@ -467,7 +496,7 @@ function buildStore(
         createdAt: new Date().toISOString(),
       };
       set((s) => ({ staffMessages: [...s.staffMessages, message] }));
-      void persistStaffMessage(message);
+      if (!get().catalogPreview) void persistStaffMessage(message);
     },
     setAuthReady: (authReady: boolean) => set({ authReady }),
     setMarketplaceReady: (marketplaceReady: boolean) => set({ marketplaceReady }),

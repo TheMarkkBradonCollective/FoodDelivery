@@ -263,12 +263,11 @@ export default function RunrMapPage() {
                 "noopener,noreferrer",
               );
             }}
+            onComplete={completeDelivery}
+            completeLabel={
+              activeDelivery.status === "accepted" ? "Confirm pickup" : "Complete"
+            }
           />
-          <PrimaryButton className="w-full" onClick={completeDelivery}>
-            {activeDelivery.status === "accepted"
-              ? "Confirm Pickup"
-              : "Complete Delivery"}
-          </PrimaryButton>
         </div>
       )}
 

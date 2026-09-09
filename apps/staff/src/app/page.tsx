@@ -33,7 +33,7 @@ export default function StaffStatusPage() {
         <DesktopManageBanner />
       </div>
 
-      <div className="mt-6 grid gap-4">
+      <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat label="Live orders" value={String(liveOrders.length)} />
         <Stat label="Coverage gaps" value={String(gaps.length)} alert={gaps.length > 0} />
         <Stat label="Scheduled RUNs" value={String(platformRuns.length)} />

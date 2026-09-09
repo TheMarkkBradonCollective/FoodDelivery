@@ -229,26 +229,47 @@ export const DEMO_NOTIFICATIONS: Notification[] = [
   },
 ];
 
-export function buildPreviewSnapshot(userId?: string): MarketplaceSnapshot {
-  const myRuns = DEMO_BUSINESSES.flatMap((b) => b.scheduledRuns).filter(
-    (r) => !userId || r.runrId === userId || r.runrId.startsWith("preview-")
-  );
-  const activeRun = myRuns.find((r) => r.runrId === userId && (r.status === "checked_in" || r.status === "active")) ?? null;
-  const pendingDelivery =
-    DEMO_DELIVERIES.find((d) => d.status === "offered" && (!d.runrId || d.runrId === userId)) ?? null;
-  const activeDelivery =
-    DEMO_DELIVERIES.find(
-      (d) => d.runrId === userId && !["completed", "cancelled", "offered"].includes(d.status)
-    ) ?? null;
+export function buildPreviewSnapshot(user?: { id: string; role: string }): MarketplaceSnapshot {
+  const userId = user?.id;
+  const role = user?.role;
+
+  const businesses = DEMO_BUSINESSES.map((b) => ({
+    ...b,
+    ownerId: role === "business" && userId ? userId : b.ownerId,
+    scheduledRuns: b.scheduledRuns.map((r) => {
+      const mine = role === "runr" && userId && r.runrId === RUNR_ID;
+      return {
+        ...r,
+        runrId: mine ? userId : r.runrId,
+        status: r.status === "checked_in" || r.status === "active" ? ("scheduled" as const) : r.status,
+      };
+    }),
+  }));
+
+  const orders = DEMO_ORDERS.map((o) => ({
+    ...o,
+    customerId: role === "customer" && userId ? userId : o.customerId,
+    runrId: undefined,
+    status: o.status === "delivering" || o.status === "picked_up" ? ("ready" as const) : o.status,
+  }));
+
+  const deliveries = DEMO_DELIVERIES.map((d) => ({
+    ...d,
+    runrId: undefined,
+    status: "offered" as const,
+  }));
+
+  const myRuns = businesses.flatMap((b) => b.scheduledRuns).filter((r) => !userId || r.runrId === userId);
+  const pendingDelivery = role === "runr" ? (deliveries.find((d) => d.status === "offered") ?? null) : null;
 
   return {
-    businesses: DEMO_BUSINESSES,
-    orders: DEMO_ORDERS,
-    scheduledRuns: myRuns.filter((r) => r.status === "scheduled" && r.runrId === userId),
+    businesses,
+    orders,
+    scheduledRuns: myRuns.filter((r) => r.status === "scheduled"),
     runHistory: [],
-    activeRun,
+    activeRun: null,
     pendingDelivery,
-    activeDelivery,
+    activeDelivery: null,
     earnings: [],
     notifications: DEMO_NOTIFICATIONS,
     favoriteBusinessIds: [],
