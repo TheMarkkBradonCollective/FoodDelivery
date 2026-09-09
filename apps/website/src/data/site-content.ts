@@ -34,8 +34,8 @@ export const apps: AppDownload[] = [
     color: BRAND_PURPLE,
     colorClass: "bg-brand",
     storeUrl: `${MBC_STORE}/#download-porter`,
-    apkUrl: `${MBC_APKS}/porter/porter-v0.3.1.apk`,
-    version: "0.3.1",
+    apkUrl: `${MBC_APKS}/porter/porter-v0.3.2.apk`,
+    version: "0.3.2",
   },
   {
     id: "runr",
@@ -49,8 +49,8 @@ export const apps: AppDownload[] = [
     color: BRAND_PURPLE,
     colorClass: "bg-brand",
     storeUrl: `${MBC_STORE}/#download-runr`,
-    apkUrl: `${MBC_APKS}/runr/runr-v0.3.1.apk`,
-    version: "0.3.1",
+    apkUrl: `${MBC_APKS}/runr/runr-v0.3.2.apk`,
+    version: "0.3.2",
   },
   {
     id: "vendr",
@@ -64,8 +64,8 @@ export const apps: AppDownload[] = [
     color: BRAND_PURPLE,
     colorClass: "bg-brand",
     storeUrl: `${MBC_STORE}/#download-vendr`,
-    apkUrl: `${MBC_APKS}/vendr/vendr-v0.3.1.apk`,
-    version: "0.3.1",
+    apkUrl: `${MBC_APKS}/vendr/vendr-v0.3.2.apk`,
+    version: "0.3.2",
   },
   {
     id: "staff",
@@ -79,8 +79,8 @@ export const apps: AppDownload[] = [
     color: BRAND_PLUM,
     colorClass: "bg-brand-deep",
     storeUrl: `${MBC_STORE}/#download-staff`,
-    apkUrl: `${MBC_APKS}/staff/staff-v0.3.1.apk`,
-    version: "0.3.1",
+    apkUrl: `${MBC_APKS}/staff/staff-v0.3.2.apk`,
+    version: "0.3.2",
   },
 ];
 
