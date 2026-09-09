@@ -21,3 +21,7 @@ npm run icons:generate
 ```
 
 Updates Android mipmaps, `apps/*/public/icons/app-icon.png`, and `apps/website/public/icons/apps/*.png`.
+
+## Marketing showcase
+
+Three-phone mockup (`marketing-showcase.png`, also at `apps/website/public/images/runr-app-showcase.png`) — PORTER login, RUNR available RUNs, VENDR live operations. Used on the website hero.

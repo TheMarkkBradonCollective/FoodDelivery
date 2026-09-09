@@ -36,7 +36,12 @@ export default function HomePage() {
             </a>
           </div>
 
-          <div className="mx-auto mt-16 grid max-w-3xl grid-cols-3 gap-4 text-center">
+          <img
+            src="/images/runr-app-showcase.png"
+            alt="PORTER, RUNR, and VENDR app screens"
+            className="mx-auto mt-16 w-full max-w-5xl"
+          />
+          <div className="mx-auto mt-10 grid max-w-3xl grid-cols-3 gap-4 text-center">
             <div>
               <p className="text-2xl">🛍️</p>
               <p className="mt-1 text-sm font-semibold text-[#7048F8]">PORTER</p>
