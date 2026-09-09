@@ -2,32 +2,30 @@
 
 ## Database setup
 
-Run **`schema.sql`** in the Supabase SQL Editor whenever you need to create or refresh the database:
+Run **`schema.sql`** in the Supabase SQL Editor whenever you need to create or refresh the database. The script is **idempotent** — safe to re-run after schema changes.
 
-- `profiles` table + RLS policies
-- Sign-up trigger (auto-creates profile rows)
-- Test accounts for PORTER, RUNR, VENDR, and staff
+## Founder accounts (permanent)
 
-The script is **idempotent** — safe to re-run after schema changes.
+One staff account per founder. **Sign in with your personal Gmail** until `@runr.com` mail is set up. Both emails live on the same profile.
 
-## Test logins
+| Name | Login (personal) | Company |
+|------|------------------|---------|
+| Markeith White | `Markkisstickz96@gmail.com` | `markeith@runr.com` |
+| Immanuel Curry | `Immanuelcurry@gmail.com` | `immanuel@runr.com` |
 
-Password for every account: **`RunrTest2026!`**
+Set your password in `schema.sql` (`upsert_runr_founder` calls) before first run. Change it in Supabase → Authentication after sign-in.
+
+When `@runr.com` inboxes are ready, switch the auth email to your company address in Supabase → Authentication → Users.
+
+## Dev test accounts (optional)
+
+Password: **`RunrTest2026!`** — remove the test block in `schema.sql` before production launch.
 
 | Email | App |
 |-------|-----|
 | `porter@test.runr.com` | PORTER |
 | `runr@test.runr.com` | RUNR |
 | `vendr@test.runr.com` | VENDR |
-| `staff@runr.com` | Staff portal (test) |
+| `staff@runr.com` | Staff portal |
 
-### Founders (staff portal)
-
-| Email | Name |
-|-------|------|
-| `Markkisstickz96@gmail.com` | Markeith White (personal) |
-| `markeith@runr.com` | Markeith White (company) |
-| `Immanuelcurry@gmail.com` | Immanuel Curry (personal) |
-| `immanuel@runr.com` | Immanuel Curry (company) |
-
-Each account only works in its matching app (role is enforced at sign-in).
+Each test account only works in its matching app (role is enforced at sign-in).
