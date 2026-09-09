@@ -2,7 +2,7 @@
   "name": "RUNR Platform",
   "app": "RUNR",
   "version": "0.3.3",
-  "updatedAt": "2026-09-09T07:03:05.127Z",
+  "updatedAt": "2026-09-09T10:16:35.072Z",
   "apk": {
     "ready": true,
     "packageId": "com.runr.runr",
@@ -12,8 +12,8 @@
     "versionCode": 303,
     "url": "https://themarkkbradoncollective.github.io/main/apks/runr/runr-v0.3.3.apk",
     "downloadName": "runr-v0.3.3.apk",
-    "fileSize": 3812358,
-    "sha256": "f6d4a06a2310f30081adf658edcbd2de2ac073d269edaa08286cf161a0a8f39c",
+    "fileSize": 3822897,
+    "sha256": "31d49db0cf2582681d4068a5af41d9f71c7c0e662b4c6c3ab0267c07849cc926",
     "releaseNotes": "RUNR v0.3.3 — Pick it up. Run it there. Full Capacitor build with embedded web shell.",
     "archives": [
       {
@@ -22,8 +22,8 @@
         "versionCode": 303,
         "url": "https://themarkkbradoncollective.github.io/main/apks/porter/porter-v0.3.3.apk",
         "downloadName": "porter-v0.3.3.apk",
-        "fileSize": 3839747,
-        "sha256": "4ec41d0d97c672cf0669a6efd09e1476401c42b351545188f99408e65513bc0a",
+        "fileSize": 3855563,
+        "sha256": "ab75cd6b9ef3c53983a2369e35ffa0ccb01798db6225eb337ff5c42a11b14726",
         "releaseNotes": "PORTER v0.3.3 — Get what you need. Full Capacitor build with embedded web shell.",
         "packageId": "com.runr.porter"
       },
@@ -33,8 +33,8 @@
         "versionCode": 303,
         "url": "https://themarkkbradoncollective.github.io/main/apks/vendr/vendr-v0.3.3.apk",
         "downloadName": "vendr-v0.3.3.apk",
-        "fileSize": 3761870,
-        "sha256": "4203af805713bf797b9f2a49ecaf29e5f88db47440f3d19ed7fa09d403e2af17",
+        "fileSize": 3774056,
+        "sha256": "6520a679d4de0bd9833df24947458ae63e42ea291b0112dc6e4cd6938d54e242",
         "releaseNotes": "VENDR v0.3.3 — Sell. Manage. Grow. Full Capacitor build with embedded web shell.",
         "packageId": "com.runr.vendr"
       },
@@ -44,8 +44,8 @@
         "versionCode": 303,
         "url": "https://themarkkbradoncollective.github.io/main/apks/staff/staff-v0.3.3.apk",
         "downloadName": "staff-v0.3.3.apk",
-        "fileSize": 3763380,
-        "sha256": "ba4813cf698c617249e9598acf8338374c1ebf9e1780b33e443d11bc03fb3752",
+        "fileSize": 3765739,
+        "sha256": "6aefa54a78cdcf115842c2f06fc9a14c6aa4b44851279637f0067a2449a5ea10",
         "releaseNotes": "STAFF v0.3.3 — Platform management. Full Capacitor build with embedded web shell.",
         "packageId": "com.runr.staff"
       }
@@ -59,8 +59,8 @@
       "version": "0.3.3",
       "url": "https://themarkkbradoncollective.github.io/main/apks/porter/porter-v0.3.3.apk",
       "downloadName": "porter-v0.3.3.apk",
-      "fileSize": 3839747,
-      "sha256": "4ec41d0d97c672cf0669a6efd09e1476401c42b351545188f99408e65513bc0a"
+      "fileSize": 3855563,
+      "sha256": "ab75cd6b9ef3c53983a2369e35ffa0ccb01798db6225eb337ff5c42a11b14726"
     },
     {
       "id": "runr",
@@ -69,8 +69,8 @@
       "version": "0.3.3",
       "url": "https://themarkkbradoncollective.github.io/main/apks/runr/runr-v0.3.3.apk",
       "downloadName": "runr-v0.3.3.apk",
-      "fileSize": 3812358,
-      "sha256": "f6d4a06a2310f30081adf658edcbd2de2ac073d269edaa08286cf161a0a8f39c"
+      "fileSize": 3822897,
+      "sha256": "31d49db0cf2582681d4068a5af41d9f71c7c0e662b4c6c3ab0267c07849cc926"
     },
     {
       "id": "vendr",
@@ -79,8 +79,8 @@
       "version": "0.3.3",
       "url": "https://themarkkbradoncollective.github.io/main/apks/vendr/vendr-v0.3.3.apk",
       "downloadName": "vendr-v0.3.3.apk",
-      "fileSize": 3761870,
-      "sha256": "4203af805713bf797b9f2a49ecaf29e5f88db47440f3d19ed7fa09d403e2af17"
+      "fileSize": 3774056,
+      "sha256": "6520a679d4de0bd9833df24947458ae63e42ea291b0112dc6e4cd6938d54e242"
     },
     {
       "id": "staff",
@@ -89,8 +89,8 @@
       "version": "0.3.3",
       "url": "https://themarkkbradoncollective.github.io/main/apks/staff/staff-v0.3.3.apk",
       "downloadName": "staff-v0.3.3.apk",
-      "fileSize": 3763380,
-      "sha256": "ba4813cf698c617249e9598acf8338374c1ebf9e1780b33e443d11bc03fb3752"
+      "fileSize": 3765739,
+      "sha256": "6aefa54a78cdcf115842c2f06fc9a14c6aa4b44851279637f0067a2449a5ea10"
     }
   ]
 }
