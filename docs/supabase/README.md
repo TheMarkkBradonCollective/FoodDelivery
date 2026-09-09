@@ -4,6 +4,14 @@
 
 Run **`schema.sql`** in the Supabase SQL Editor whenever you need to create or refresh the database. The script is **idempotent** — safe to re-run after schema changes.
 
+It creates:
+
+- Auth profiles + founder/test accounts
+- Marketplace: businesses, menus, coverage rules, orders, RUNs, deliveries, earnings, notifications, favorites
+- Seed kitchens owned by `vendr@test.runr.com` (Tony's Pizza, Golden Gate Burgers, Mission Tacos)
+
+If you already ran an older schema, you can also run **`marketplace.sql`** by itself.
+
 ## Founder accounts (permanent)
 
 Run **`founders.sql`** to create founder accounts only (self-contained — includes the function).

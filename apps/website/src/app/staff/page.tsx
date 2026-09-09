@@ -30,7 +30,7 @@ export default function StaffPage() {
 function StaffPortal() {
   const { session, logout } = useAuth();
   const [tab, setTab] = useState<StaffTab>("overview");
-  const { businesses, orders, scheduledRuns, runHistory, earnings } = useAppStore();
+  const { businesses, orders, scheduledRuns, runHistory, earnings, marketplaceUsers } = useAppStore();
 
   const tabs: { id: StaffTab; label: string; icon: typeof LayoutDashboard }[] = [
     { id: "overview", label: "Overview", icon: LayoutDashboard },
@@ -156,9 +156,24 @@ function StaffPortal() {
 
           {tab === "users" && (
             <Panel title="Marketplace Users">
-              <p className="text-sm text-zinc-500">
-                User management will load from Supabase profiles once connected.
-              </p>
+              <div className="space-y-3">
+                {marketplaceUsers.length === 0 ? (
+                  <p className="text-sm text-zinc-500">No profiles yet. Run schema.sql in Supabase.</p>
+                ) : (
+                  marketplaceUsers.map((u) => (
+                    <div
+                      key={u.id}
+                      className="flex items-center justify-between rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3"
+                    >
+                      <div>
+                        <p className="font-semibold">{u.name}</p>
+                        <p className="text-xs text-zinc-500">{u.email}</p>
+                      </div>
+                      <span className="text-xs uppercase text-[#0066FF]">{u.role}</span>
+                    </div>
+                  ))
+                )}
+              </div>
             </Panel>
           )}
 

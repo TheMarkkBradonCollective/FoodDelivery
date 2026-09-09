@@ -251,7 +251,7 @@ export default function RunrMapPage() {
         <div className="absolute inset-x-4 bottom-24 z-[1000]">
           <EmptyState
             title="No RUN opportunities yet"
-            description="Business coverage will appear on the map once marketplace data is connected."
+            description="Nearby businesses will show here once coverage is live. Pull to refresh after signing in."
           />
         </div>
       )}

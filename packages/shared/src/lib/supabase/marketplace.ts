@@ -1,0 +1,411 @@
+"use client";
+
+import type {
+  Business,
+  CartItem,
+  CoverageRule,
+  Delivery,
+  EarningRecord,
+  MenuItem,
+  Notification,
+  Order,
+  OrderStatus,
+  Run,
+  User,
+} from "../../types/index";
+import { getSupabaseClient } from "./client";
+import { isSupabaseConfigured } from "./config";
+
+export interface MarketplaceSnapshot {
+  businesses: Business[];
+  orders: Order[];
+  scheduledRuns: Run[];
+  runHistory: Run[];
+  activeRun: Run | null;
+  pendingDelivery: Delivery | null;
+  activeDelivery: Delivery | null;
+  earnings: EarningRecord[];
+  notifications: Notification[];
+  favoriteBusinessIds: string[];
+  profiles: User[];
+}
+
+function asNumber(value: unknown, fallback = 0) {
+  const n = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function mapBusiness(
+  row: Record<string, unknown>,
+  rules: CoverageRule[],
+  runs: Run[],
+  menu: MenuItem[]
+): Business {
+  return {
+    id: String(row.id),
+    ownerId: String(row.owner_id ?? ""),
+    name: String(row.name),
+    cuisine: String(row.cuisine ?? ""),
+    category: String(row.category ?? "Restaurant"),
+    rating: asNumber(row.rating, 4.8),
+    reviewCount: asNumber(row.review_count, 0),
+    location: { lat: asNumber(row.lat, 37.7749), lng: asNumber(row.lng, -122.4194) },
+    address: String(row.address ?? ""),
+    city: String(row.city ?? ""),
+    zip: String(row.zip ?? ""),
+    deliveryRadiusMiles: asNumber(row.delivery_radius_miles, 5),
+    operatingHours: String(row.operating_hours ?? ""),
+    deliveryFee: asNumber(row.delivery_fee, 2.99),
+    etaMinutes: asNumber(row.eta_minutes, 28),
+    demandLevel: (row.demand_level as Business["demandLevel"]) ?? "moderate",
+    coverageRules: rules,
+    scheduledRuns: runs,
+    menu,
+  };
+}
+
+function mapRun(row: Record<string, unknown>): Run {
+  return {
+    id: String(row.id),
+    runrId: String(row.runr_id),
+    businessId: String(row.business_id),
+    startTime: String(row.start_time),
+    endTime: String(row.end_time),
+    status: row.status as Run["status"],
+    checkInTime: row.check_in_time ? String(row.check_in_time) : undefined,
+    checkOutTime: row.check_out_time ? String(row.check_out_time) : undefined,
+    deliveryCount: asNumber(row.delivery_count, 0),
+    earnings: asNumber(row.earnings, 0),
+  };
+}
+
+function mapOrder(row: Record<string, unknown>): Order {
+  return {
+    id: String(row.id),
+    customerId: String(row.customer_id),
+    businessId: String(row.business_id),
+    items: (Array.isArray(row.items) ? row.items : []) as CartItem[],
+    subtotal: asNumber(row.subtotal),
+    deliveryFee: asNumber(row.delivery_fee),
+    serviceFee: asNumber(row.service_fee),
+    tax: asNumber(row.tax),
+    tip: asNumber(row.tip),
+    total: asNumber(row.total),
+    status: row.status as OrderStatus,
+    runrId: row.runr_id ? String(row.runr_id) : undefined,
+    createdAt: String(row.created_at),
+  };
+}
+
+function mapDelivery(row: Record<string, unknown>): Delivery {
+  return {
+    id: String(row.id),
+    orderId: String(row.order_id),
+    businessId: String(row.business_id),
+    runrId: row.runr_id ? String(row.runr_id) : undefined,
+    pickup: { lat: asNumber(row.pickup_lat), lng: asNumber(row.pickup_lng) },
+    dropoff: { lat: asNumber(row.dropoff_lat), lng: asNumber(row.dropoff_lng) },
+    distanceMiles: asNumber(row.distance_miles, 1.2),
+    status: row.status as Delivery["status"],
+    basePay: asNumber(row.base_pay, 4.5),
+    distancePay: asNumber(row.distance_pay, 1.8),
+    tip: asNumber(row.tip, 5),
+    totalEarnings: asNumber(row.total_earnings, 11.3),
+    estimatedMinutes: asNumber(row.estimated_minutes, 18),
+    customerName: String(row.customer_name ?? "Customer"),
+  };
+}
+
+export async function fetchMarketplace(userId?: string): Promise<MarketplaceSnapshot> {
+  const empty: MarketplaceSnapshot = {
+    businesses: [],
+    orders: [],
+    scheduledRuns: [],
+    runHistory: [],
+    activeRun: null,
+    pendingDelivery: null,
+    activeDelivery: null,
+    earnings: [],
+    notifications: [],
+    favoriteBusinessIds: [],
+    profiles: [],
+  };
+
+  if (!isSupabaseConfigured()) return empty;
+
+  const supabase = getSupabaseClient();
+
+  const [
+    businessesRes,
+    menusRes,
+    rulesRes,
+    runsRes,
+    ordersRes,
+    deliveriesRes,
+    earningsRes,
+    notificationsRes,
+    favoritesRes,
+    profilesRes,
+  ] = await Promise.all([
+    supabase.from("businesses").select("*"),
+    supabase.from("menu_items").select("*"),
+    supabase.from("coverage_rules").select("*"),
+    supabase.from("runs").select("*"),
+    supabase.from("orders").select("*").order("created_at", { ascending: false }),
+    supabase.from("deliveries").select("*"),
+    supabase.from("earnings").select("*").order("completed_at", { ascending: false }),
+    supabase.from("notifications").select("*").order("created_at", { ascending: false }),
+    userId
+      ? supabase.from("favorites").select("business_id").eq("user_id", userId)
+      : Promise.resolve({ data: [] as { business_id: string }[], error: null }),
+    supabase.from("profiles").select("id, name, email, role, avatar_url"),
+  ]);
+
+  if (businessesRes.error) {
+    console.warn("marketplace businesses", businessesRes.error.message);
+    return empty;
+  }
+
+  const runs = (runsRes.data ?? []).map((row) => mapRun(row as Record<string, unknown>));
+  const menus = (menusRes.data ?? []) as Record<string, unknown>[];
+  const rules = (rulesRes.data ?? []) as Record<string, unknown>[];
+
+  const businesses = (businessesRes.data ?? []).map((row) => {
+    const rec = row as Record<string, unknown>;
+    const id = String(rec.id);
+    return mapBusiness(
+      rec,
+      rules
+        .filter((r) => String(r.business_id) === id)
+        .map((r) => ({
+          id: String(r.id),
+          businessId: id,
+          startTime: String(r.start_time),
+          endTime: String(r.end_time),
+          maxRunrs: asNumber(r.max_runrs, 4),
+        })),
+      runs.filter((r) => r.businessId === id && r.status !== "cancelled"),
+      menus
+        .filter((m) => String(m.business_id) === id)
+        .map((m) => ({
+          id: String(m.id),
+          name: String(m.name),
+          description: String(m.description ?? ""),
+          price: asNumber(m.price),
+          category: String(m.category ?? "Mains"),
+          popular: Boolean(m.popular),
+        }))
+    );
+  });
+
+  const deliveries = (deliveriesRes.data ?? []).map((row) =>
+    mapDelivery(row as Record<string, unknown>)
+  );
+
+  const myRuns = userId ? runs.filter((r) => r.runrId === userId) : runs;
+  const activeRun =
+    myRuns.find((r) => r.status === "checked_in" || r.status === "active") ?? null;
+  const scheduledRuns = myRuns.filter((r) => r.status === "scheduled");
+  const runHistory = myRuns.filter((r) => r.status === "completed" || r.status === "cancelled");
+
+  const pendingDelivery =
+    deliveries.find(
+      (d) =>
+        (d.status === "offered" || d.status === "pending") &&
+        (!d.runrId || d.runrId === userId)
+    ) ?? null;
+  const activeDelivery =
+    deliveries.find(
+      (d) =>
+        d.runrId === userId &&
+        !["completed", "cancelled"].includes(d.status) &&
+        d.status !== "offered"
+    ) ?? null;
+
+  return {
+    businesses,
+    orders: (ordersRes.data ?? []).map((row) => mapOrder(row as Record<string, unknown>)),
+    scheduledRuns,
+    runHistory,
+    activeRun,
+    pendingDelivery,
+    activeDelivery,
+    earnings: (earningsRes.data ?? []).map((row) => {
+      const rec = row as Record<string, unknown>;
+      return {
+        id: String(rec.id),
+        runrId: String(rec.runr_id),
+        businessId: String(rec.business_id),
+        businessName: String(rec.business_name ?? ""),
+        deliveryId: String(rec.delivery_id ?? ""),
+        basePay: asNumber(rec.base_pay),
+        distancePay: asNumber(rec.distance_pay),
+        tip: asNumber(rec.tip),
+        total: asNumber(rec.total),
+        completedAt: String(rec.completed_at),
+      };
+    }),
+    notifications: (notificationsRes.data ?? []).map((row) => {
+      const rec = row as Record<string, unknown>;
+      return {
+        id: String(rec.id),
+        title: String(rec.title),
+        body: String(rec.body ?? ""),
+        type: rec.type as Notification["type"],
+        read: Boolean(rec.read),
+        createdAt: String(rec.created_at),
+      };
+    }),
+    favoriteBusinessIds: ((favoritesRes.data ?? []) as { business_id: string }[]).map(
+      (r) => r.business_id
+    ),
+    profiles: (profilesRes.data ?? []).map((row) => {
+      const rec = row as Record<string, unknown>;
+      return {
+        id: String(rec.id),
+        name: String(rec.name ?? rec.email ?? "User"),
+        email: String(rec.email ?? ""),
+        role: rec.role as User["role"],
+        avatarUrl: rec.avatar_url ? String(rec.avatar_url) : undefined,
+      };
+    }),
+  };
+}
+
+export async function persistOrder(order: Order) {
+  if (!isSupabaseConfigured()) return;
+  const supabase = getSupabaseClient();
+  await supabase.from("orders").upsert({
+    id: order.id,
+    customer_id: order.customerId,
+    business_id: order.businessId,
+    runr_id: order.runrId ?? null,
+    items: order.items,
+    subtotal: order.subtotal,
+    delivery_fee: order.deliveryFee,
+    service_fee: order.serviceFee,
+    tax: order.tax,
+    tip: order.tip,
+    total: order.total,
+    status: order.status,
+    created_at: order.createdAt,
+  });
+}
+
+export async function persistRun(run: Run) {
+  if (!isSupabaseConfigured()) return;
+  const supabase = getSupabaseClient();
+  await supabase.from("runs").upsert({
+    id: run.id,
+    runr_id: run.runrId,
+    business_id: run.businessId,
+    start_time: run.startTime,
+    end_time: run.endTime,
+    status: run.status,
+    check_in_time: run.checkInTime ?? null,
+    check_out_time: run.checkOutTime ?? null,
+    delivery_count: run.deliveryCount ?? 0,
+    earnings: run.earnings ?? 0,
+  });
+}
+
+export async function persistCoverage(ruleId: string, maxRunrs: number) {
+  if (!isSupabaseConfigured()) return;
+  const supabase = getSupabaseClient();
+  await supabase.from("coverage_rules").update({ max_runrs: maxRunrs }).eq("id", ruleId);
+}
+
+export async function persistOrderStatus(orderId: string, status: OrderStatus, runrId?: string) {
+  if (!isSupabaseConfigured()) return;
+  const supabase = getSupabaseClient();
+  const patch: Record<string, unknown> = { status };
+  if (runrId) patch.runr_id = runrId;
+  await supabase.from("orders").update(patch).eq("id", orderId);
+}
+
+export async function persistFavorite(userId: string, businessId: string, liked: boolean) {
+  if (!isSupabaseConfigured()) return;
+  const supabase = getSupabaseClient();
+  if (liked) {
+    await supabase.from("favorites").upsert({ user_id: userId, business_id: businessId });
+  } else {
+    await supabase.from("favorites").delete().eq("user_id", userId).eq("business_id", businessId);
+  }
+}
+
+export async function persistDelivery(delivery: Delivery) {
+  if (!isSupabaseConfigured()) return;
+  const supabase = getSupabaseClient();
+  await supabase.from("deliveries").upsert({
+    id: delivery.id,
+    order_id: delivery.orderId,
+    business_id: delivery.businessId,
+    runr_id: delivery.runrId ?? null,
+    pickup_lat: delivery.pickup.lat,
+    pickup_lng: delivery.pickup.lng,
+    dropoff_lat: delivery.dropoff.lat,
+    dropoff_lng: delivery.dropoff.lng,
+    distance_miles: delivery.distanceMiles,
+    status: delivery.status,
+    base_pay: delivery.basePay,
+    distance_pay: delivery.distancePay,
+    tip: delivery.tip,
+    total_earnings: delivery.totalEarnings,
+    estimated_minutes: delivery.estimatedMinutes,
+    customer_name: delivery.customerName,
+  });
+}
+
+export async function persistEarning(record: EarningRecord) {
+  if (!isSupabaseConfigured()) return;
+  const supabase = getSupabaseClient();
+  await supabase.from("earnings").upsert({
+    id: record.id,
+    runr_id: record.runrId,
+    business_id: record.businessId,
+    business_name: record.businessName,
+    delivery_id: record.deliveryId,
+    base_pay: record.basePay,
+    distance_pay: record.distancePay,
+    tip: record.tip,
+    total: record.total,
+    completed_at: record.completedAt,
+  });
+}
+
+export async function persistNotification(userId: string, note: Notification) {
+  if (!isSupabaseConfigured()) return;
+  const supabase = getSupabaseClient();
+  await supabase.from("notifications").upsert({
+    id: note.id,
+    user_id: userId,
+    title: note.title,
+    body: note.body,
+    type: note.type,
+    read: note.read,
+    created_at: note.createdAt,
+  });
+}
+
+export async function offerDeliveryForOrder(order: Order, business: Business, customerName: string) {
+  const delivery: Delivery = {
+    id: crypto.randomUUID(),
+    orderId: order.id,
+    businessId: business.id,
+    pickup: business.location,
+    dropoff: {
+      lat: business.location.lat + 0.008,
+      lng: business.location.lng + 0.006,
+    },
+    distanceMiles: 1.4,
+    status: "offered",
+    basePay: 4.5,
+    distancePay: 1.85,
+    tip: order.tip,
+    totalEarnings: 4.5 + 1.85 + order.tip,
+    estimatedMinutes: business.etaMinutes,
+    customerName,
+  };
+  await persistDelivery(delivery);
+  return delivery;
+}

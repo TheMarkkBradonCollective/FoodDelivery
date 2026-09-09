@@ -15,6 +15,18 @@ import type {
 import { canScheduleRun } from "../lib/coverage-engine";
 import { DEFAULT_LOCATION } from "../data/constants";
 import { signOut } from "../lib/supabase/auth";
+import type { MarketplaceSnapshot } from "../lib/supabase/marketplace";
+import {
+  offerDeliveryForOrder,
+  persistCoverage,
+  persistDelivery,
+  persistEarning,
+  persistFavorite,
+  persistNotification,
+  persistOrder,
+  persistOrderStatus,
+  persistRun,
+} from "../lib/supabase/marketplace";
 
 export interface AppState {
   user: User | null;
@@ -32,6 +44,7 @@ export interface AppState {
   favoriteBusinessIds: string[];
   notifications: Notification[];
   earnings: EarningRecord[];
+  marketplaceUsers: User[];
   searchQuery: string;
   mapFilter: "all" | "open" | "gap" | "high_demand";
 
@@ -53,6 +66,8 @@ export interface AppState {
   updateCartQuantity: (menuItemId: string, quantity: number) => void;
   clearCart: () => void;
   placeOrder: () => Order | null;
+  updateOrderStatus: (orderId: string, status: Order["status"]) => void;
+  hydrateMarketplace: (snapshot: MarketplaceSnapshot) => void;
   updateBusinessCapacity: (businessId: string, ruleId: string, maxRunrs: number) => void;
   markNotificationRead: (id: string) => void;
 }
@@ -77,6 +92,7 @@ function buildStore(
     favoriteBusinessIds: [] as string[],
     notifications: [] as Notification[],
     earnings: [] as EarningRecord[],
+    marketplaceUsers: [] as User[],
     searchQuery: "",
     mapFilter: "all" as const,
 
@@ -91,11 +107,14 @@ function buildStore(
     setSearchQuery: (searchQuery: string) => set({ searchQuery }),
     setMapFilter: (mapFilter: AppState["mapFilter"]) => set({ mapFilter }),
     toggleFavorite: (businessId: string) =>
-      set((s) => ({
-        favoriteBusinessIds: s.favoriteBusinessIds.includes(businessId)
-          ? s.favoriteBusinessIds.filter((id) => id !== businessId)
-          : [...s.favoriteBusinessIds, businessId],
-      })),
+      set((s) => {
+        const liked = !s.favoriteBusinessIds.includes(businessId);
+        const favoriteBusinessIds = liked
+          ? [...s.favoriteBusinessIds, businessId]
+          : s.favoriteBusinessIds.filter((id) => id !== businessId);
+        if (s.user) void persistFavorite(s.user.id, businessId, liked);
+        return { favoriteBusinessIds };
+      }),
 
     confirmRun: (businessId: string, startTime: string, endTime: string) => {
       const { user, businesses } = get();
@@ -114,7 +133,7 @@ function buildStore(
       if (!available) return false;
 
       const newRun: Run = {
-        id: `run-${Date.now()}`,
+        id: crypto.randomUUID(),
         runrId: user.id,
         businessId,
         startTime,
@@ -131,6 +150,7 @@ function buildStore(
         ),
       }));
 
+      void persistRun(newRun);
       return true;
     },
 
@@ -149,6 +169,7 @@ function buildStore(
         activeRun: checkedIn,
         scheduledRuns: scheduledRuns.filter((r) => r.id !== next.id),
       });
+      void persistRun(checkedIn);
     },
 
     checkOutRun: () => {
@@ -168,16 +189,21 @@ function buildStore(
         activeRun: null,
         runHistory: [completed, ...s.runHistory],
       }));
+      void persistRun(completed);
     },
 
     cancelRun: (runId: string) =>
-      set((s) => ({
-        scheduledRuns: s.scheduledRuns.filter((r) => r.id !== runId),
-        businesses: s.businesses.map((b) => ({
-          ...b,
-          scheduledRuns: b.scheduledRuns.filter((r) => r.id !== runId),
-        })),
-      })),
+      set((s) => {
+        const run = s.scheduledRuns.find((r) => r.id === runId);
+        if (run) void persistRun({ ...run, status: "cancelled" });
+        return {
+          scheduledRuns: s.scheduledRuns.filter((r) => r.id !== runId),
+          businesses: s.businesses.map((b) => ({
+            ...b,
+            scheduledRuns: b.scheduledRuns.filter((r) => r.id !== runId),
+          })),
+        };
+      }),
 
     acceptDelivery: () => {
       const { pendingDelivery, user } = get();
@@ -191,6 +217,8 @@ function buildStore(
         },
         pendingDelivery: null,
       });
+      void persistDelivery({ ...pendingDelivery, runrId: user.id, status: "accepted" });
+      void persistOrderStatus(pendingDelivery.orderId, "runr_assigned", user.id);
     },
 
     completeDelivery: () => {
@@ -198,7 +226,7 @@ function buildStore(
       if (!activeDelivery || !user) return;
 
       const record = {
-        id: `earn-${Date.now()}`,
+        id: crypto.randomUUID(),
         runrId: user.id,
         businessId: activeDelivery.businessId,
         businessName:
@@ -208,7 +236,7 @@ function buildStore(
         basePay: activeDelivery.basePay,
         distancePay: activeDelivery.distancePay,
         tip: activeDelivery.tip || 5.0,
-        total: activeDelivery.totalEarnings + 5.0,
+        total: activeDelivery.totalEarnings + (activeDelivery.tip ? 0 : 5.0),
         completedAt: new Date().toISOString(),
       };
 
@@ -216,6 +244,9 @@ function buildStore(
         activeDelivery: null,
         earnings: [...earnings, record],
       });
+      void persistDelivery({ ...activeDelivery, status: "completed" });
+      void persistEarning(record);
+      void persistOrderStatus(activeDelivery.orderId, "delivered", user.id);
     },
 
     addToCart: (businessId: string, item: CartItem) =>
@@ -266,7 +297,7 @@ function buildStore(
       const total = subtotal + deliveryFee + serviceFee + tax + tip;
 
       const order: Order = {
-        id: `order-${Date.now()}`,
+        id: crypto.randomUUID(),
         customerId: user.id,
         businessId: cartBusinessId,
         items: cart,
@@ -276,20 +307,60 @@ function buildStore(
         tax,
         tip,
         total,
-        status: "accepted",
+        status: "new",
         createdAt: new Date().toISOString(),
+      };
+
+      const note: Notification = {
+        id: crypto.randomUUID(),
+        title: "Order placed",
+        body: `Your order is in — ${get().businesses.find((b) => b.id === cartBusinessId)?.name ?? "marketplace"}`,
+        type: "order",
+        read: false,
+        createdAt: order.createdAt,
       };
 
       set((s) => ({
         orders: [order, ...s.orders],
         cart: [],
         cartBusinessId: null,
+        notifications: [note, ...s.notifications],
       }));
+
+      void persistOrder(order);
+      void persistNotification(user.id, note);
+      const business = get().businesses.find((b) => b.id === cartBusinessId);
+      if (business) {
+        void offerDeliveryForOrder(order, business, user.name);
+      }
 
       return order;
     },
 
-    updateBusinessCapacity: (businessId: string, ruleId: string, maxRunrs: number) =>
+    updateOrderStatus: (orderId: string, status: Order["status"]) => {
+      const order = get().orders.find((o) => o.id === orderId);
+      set((s) => ({
+        orders: s.orders.map((o) => (o.id === orderId ? { ...o, status } : o)),
+      }));
+      void persistOrderStatus(orderId, status, order?.runrId);
+    },
+
+    hydrateMarketplace: (snapshot: MarketplaceSnapshot) =>
+      set({
+        businesses: snapshot.businesses,
+        orders: snapshot.orders,
+        scheduledRuns: snapshot.scheduledRuns,
+        runHistory: snapshot.runHistory,
+        activeRun: snapshot.activeRun,
+        pendingDelivery: snapshot.pendingDelivery,
+        activeDelivery: snapshot.activeDelivery,
+        earnings: snapshot.earnings,
+        notifications: snapshot.notifications,
+        favoriteBusinessIds: snapshot.favoriteBusinessIds,
+        marketplaceUsers: snapshot.profiles,
+      }),
+
+    updateBusinessCapacity: (businessId: string, ruleId: string, maxRunrs: number) => {
       set((s) => ({
         businesses: s.businesses.map((b) =>
           b.id === businessId
@@ -301,7 +372,9 @@ function buildStore(
               }
             : b
         ),
-      })),
+      }));
+      void persistCoverage(ruleId, maxRunrs);
+    },
 
     markNotificationRead: (id: string) =>
       set((s) => ({
@@ -322,13 +395,9 @@ function initStore(storageKey: string): AppStoreHook {
     persist((set, get) => buildStore(set, get) as AppState, {
       name: storageKey,
       partialize: (state) => ({
-        user: state.user,
         theme: state.theme,
-        favoriteBusinessIds: state.favoriteBusinessIds,
-        scheduledRuns: state.scheduledRuns,
-        runHistory: state.runHistory,
-        orders: state.orders,
-        businesses: state.businesses,
+        cart: state.cart,
+        cartBusinessId: state.cartBusinessId,
       }),
     })
   );

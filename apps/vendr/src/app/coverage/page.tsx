@@ -8,17 +8,28 @@ import {
   calculateCoverageTimeline,
 } from "@runr/shared/lib/coverage-engine";
 import { formatTimeRange } from "@runr/shared/lib/utils";
+import { selectVendorBusiness } from "@runr/shared/lib/utils";
+import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 
 export default function BusinessCoveragePage() {
-  const { businesses, updateBusinessCapacity } = useAppStore();
-  const business = businesses[0];
+  const { businesses, updateBusinessCapacity, user } = useAppStore();
+  const business = selectVendorBusiness(businesses, user?.id);
   const [editingRuleId, setEditingRuleId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState(0);
 
-  const timeline = calculateCoverageTimeline(
-    business.coverageRules,
-    business.scheduledRuns
-  ).filter((i) => i.maxRunrs > 0);
+  const timeline = business
+    ? calculateCoverageTimeline(business.coverageRules, business.scheduledRuns).filter(
+        (i) => i.maxRunrs > 0
+      )
+    : [];
+
+  if (!business) {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-6">
+        <EmptyState title="No business connected" description="Sign in with your VENDR account." />
+      </div>
+    );
+  }
 
   return (
     <div className="px-4 py-6 pb-24 lg:pb-6">

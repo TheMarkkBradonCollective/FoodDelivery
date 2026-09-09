@@ -13,7 +13,10 @@ export default function CustomerOrdersPage() {
       <h1 className="text-2xl font-bold">Orders</h1>
 
       <div className="mt-6 space-y-3">
-        {orders.map((order) => {
+        {orders.length === 0 ? (
+          <p className="text-sm text-[var(--muted)]">No orders yet. Add items from Discover.</p>
+        ) : (
+          orders.map((order) => {
           const business = businesses.find((b) => b.id === order.businessId);
           return (
             <Link
@@ -32,7 +35,8 @@ export default function CustomerOrdersPage() {
               </div>
             </Link>
           );
-        })}
+        })
+        )}
       </div>
 
     </div>

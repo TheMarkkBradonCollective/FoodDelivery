@@ -71,3 +71,14 @@ export function getCoverageStatusLabel(status: string, gap: number): string {
       return status.toUpperCase();
   }
 }
+
+export function selectVendorBusiness<T extends { ownerId?: string }>(
+  businesses: T[],
+  userId?: string
+): T | undefined {
+  if (userId) {
+    const owned = businesses.find((b) => b.ownerId === userId);
+    if (owned) return owned;
+  }
+  return businesses[0];
+}

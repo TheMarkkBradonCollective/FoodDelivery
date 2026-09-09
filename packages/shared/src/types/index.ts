@@ -78,6 +78,7 @@ export interface Run {
 
 export interface Business {
   id: string;
+  ownerId?: string;
   name: string;
   cuisine: string;
   category: string;
@@ -96,6 +97,7 @@ export interface Business {
   demandLevel: DemandLevel;
   coverageRules: CoverageRule[];
   scheduledRuns: Run[];
+  menu?: MenuItem[];
 }
 
 export interface MenuItem {

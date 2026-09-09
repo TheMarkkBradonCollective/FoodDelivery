@@ -4,9 +4,10 @@ import { PrimaryButton } from "@runr/shared/components/ui/PrimaryButton";
 import { useAppStore } from "@/store";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { selectVendorBusiness } from "@runr/shared/lib/utils";
 
 export default function BusinessSettingsPage() {
-  const { user, logout } = useAppStore();
+  const { user, logout, businesses } = useAppStore();
   const router = useRouter();
 
   return (
@@ -15,7 +16,10 @@ export default function BusinessSettingsPage() {
       <div className="mt-6 rounded-runr-xl border border-[var(--border)] p-6">
         <p className="font-semibold">{user?.name}</p>
         <p className="text-sm text-[var(--muted)]">{user?.email}</p>
-        <p className="mt-4 text-sm">Tony&apos;s Pizza · San Francisco</p>
+        <p className="mt-4 text-sm">
+          {selectVendorBusiness(businesses, user?.id)?.name ?? "No business linked"} ·{" "}
+          {selectVendorBusiness(businesses, user?.id)?.city ?? ""}
+        </p>
       </div>
       <PrimaryButton
         className="mt-6 w-full"

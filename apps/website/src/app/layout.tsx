@@ -4,6 +4,7 @@ import "./globals.css";
 import "@/store";
 import { AuthProvider } from "@/components/AuthProvider";
 import { SiteChrome } from "@/components/SiteChrome";
+import { MarketplaceSync } from "@runr/shared/components/providers/MarketplaceSync";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
+          <MarketplaceSync />
           <SiteChrome>{children}</SiteChrome>
         </AuthProvider>
       </body>
