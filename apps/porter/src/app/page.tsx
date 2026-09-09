@@ -188,12 +188,14 @@ export default function PorterDiscoverPage() {
               key={cat}
               type="button"
               onClick={() => setSelectedCategory(cat === "All" ? null : cat)}
-              className="flex shrink-0 flex-col items-center gap-2"
+              className="flex w-16 shrink-0 flex-col items-center gap-1.5"
             >
               <span className={`rounded-full p-0.5 ${active ? "ring-2 ring-[var(--foreground)]" : ""}`}>
                 <CuisinePlate cuisine={cat} size={56} />
               </span>
-              <span className={`text-[11px] font-bold ${active ? "text-[var(--foreground)]" : "text-[var(--muted)]"}`}>{cat}</span>
+              <span className={`w-full text-center text-[10px] font-bold leading-tight ${active ? "text-[var(--foreground)]" : "text-[var(--muted)]"}`}>
+                {cat}
+              </span>
             </button>
           );
         })}

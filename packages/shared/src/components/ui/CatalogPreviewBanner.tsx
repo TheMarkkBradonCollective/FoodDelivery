@@ -33,7 +33,7 @@ export function CatalogPreviewBanner({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "flex items-center gap-2 rounded-2xl border border-purple/25 bg-[#EEE8FF] px-3 py-2 text-xs text-ink",
+        "flex items-center gap-2 rounded-2xl border border-purple/30 bg-purple/12 px-3 py-2 text-xs text-[var(--foreground)]",
         className,
       )}
     >
@@ -45,7 +45,7 @@ export function CatalogPreviewBanner({ className }: { className?: string }) {
         type="button"
         onClick={dismiss}
         aria-label="Dismiss preview notice"
-        className="tap-target flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-ink/50 hover:bg-white/70"
+        className="tap-target flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--muted)] hover:bg-[var(--surface-elevated)]"
       >
         <X size={14} />
       </button>

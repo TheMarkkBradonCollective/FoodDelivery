@@ -93,7 +93,7 @@ export function AppShell({
   }
 
   return (
-    <ThemeProvider>
+    <ThemeProvider forceDark={role === "staff"}>
       <NativeSafeArea darkChrome={role === "staff"}>
         <SupabaseAuthSync role={role} />
         <MarketplaceSync />

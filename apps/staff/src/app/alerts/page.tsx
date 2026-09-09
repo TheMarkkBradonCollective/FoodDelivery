@@ -25,7 +25,9 @@ export default function StaffAlertsPage() {
               type="button"
               onClick={() => markNotificationRead(n.id)}
               className={`w-full rounded-runr-lg border p-4 text-left ${
-                n.read ? "border-[var(--border)] opacity-70" : "border-runr-primary/20 bg-runr-primary-muted"
+                n.read
+                  ? "border-[var(--border)] bg-[var(--surface)] opacity-70"
+                  : "border-runr-primary/30 bg-runr-primary/15"
               }`}
             >
               <p className="font-semibold">{n.title}</p>

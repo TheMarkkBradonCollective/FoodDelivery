@@ -170,7 +170,10 @@ export default function RunrMapPage() {
         className="absolute inset-0"
       />
 
-      <MapControls onRecenter={() => setLocation(location)} />
+      <MapControls
+        onRecenter={() => setLocation(location)}
+        className={activeDelivery ? "top-4" : "top-28"}
+      />
 
       {/* Top overlay — hide extras while a delivery is in progress */}
       <div className="absolute inset-x-0 top-0 z-[1000] space-y-2 p-3">

@@ -61,7 +61,7 @@ export function DeliveryCard({
       </div>
 
       {delivery.instructions && variant === "dropoff" && (
-        <p className="mt-3 rounded-runr-md bg-runr-neutral-100 px-3 py-2 text-sm dark:bg-runr-neutral-800">
+        <p className="mt-3 rounded-runr-md bg-[var(--background)] px-3 py-2 text-sm">
           {delivery.instructions}
         </p>
       )}

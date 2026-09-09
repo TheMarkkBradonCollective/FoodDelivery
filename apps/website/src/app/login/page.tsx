@@ -68,7 +68,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <div className="mt-8 flex rounded-xl border border-[var(--border)] bg-white p-1">
+        <div className="mt-8 flex rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] p-1">
           <button
             type="button"
             onClick={() => setMode("app")}
@@ -91,7 +91,7 @@ export default function LoginPage() {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4 rounded-2xl border border-[var(--border)] bg-white p-6">
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] p-6">
           {mode === "staff" && (
             <p className="rounded-lg bg-zinc-100 px-3 py-2 text-xs text-zinc-600">
               Staff sign in to manage the platform, apps, users, and marketplace operations.
