@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { RunCard } from "@runr/shared/components/ui/RunCard";
 import { PrimaryButton } from "@runr/shared/components/ui/PrimaryButton";
 import { EmptyState } from "@runr/shared/components/ui/EmptyState";
+import { ConfirmDialog } from "@runr/shared/components/ui/ConfirmDialog";
 import { useAppStore } from "@/store";
 import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
 import { calculateDistanceMiles, formatCurrency } from "@runr/shared/lib/utils";
@@ -21,6 +23,7 @@ export default function RunrRunsPage() {
     checkOutRun,
     cancelRun,
   } = useAppStore();
+  const [cancelId, setCancelId] = useState<string | null>(null);
 
   const available = businesses
     .map((b) => {
@@ -36,8 +39,8 @@ export default function RunrRunsPage() {
     <div className="min-h-screen">
       <div className="px-5 pt-5">
         <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">RUNR</p>
-        <h1 className="mt-1 text-2xl font-extrabold text-ink">RUNs</h1>
-        <p className="mt-1 text-sm text-ink/55">Pick a kitchen. Run your window. Earn per drop.</p>
+        <h1 className="mt-1 text-2xl font-extrabold text-[var(--foreground)]">RUNs</h1>
+        <p className="mt-1 text-sm text-[var(--muted)]">Pick a kitchen. Run your window. Earn per drop.</p>
       </div>
       <div className="px-4 pt-2">
         <CatalogPreviewBanner className="mb-3" />
@@ -118,7 +121,7 @@ export default function RunrRunsPage() {
                   className="mt-2 w-full"
                   variant="ghost"
                   size="sm"
-                  onClick={() => cancelRun(run.id)}
+                  onClick={() => setCancelId(run.id)}
                 >
                   Cancel RUN
                 </PrimaryButton>
@@ -149,6 +152,18 @@ export default function RunrRunsPage() {
         </div>
       </section>
       </div>
+      <ConfirmDialog
+        open={Boolean(cancelId)}
+        title="Cancel this RUN?"
+        description="The coverage window will open back up for other RUNRs. You can book another kitchen from the map."
+        confirmLabel="Cancel RUN"
+        destructive
+        onCancel={() => setCancelId(null)}
+        onConfirm={() => {
+          if (cancelId) cancelRun(cancelId);
+          setCancelId(null);
+        }}
+      />
     </div>
   );
 }

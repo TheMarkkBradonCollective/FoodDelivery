@@ -25,34 +25,34 @@ export default function CustomerProfilePage() {
   return (
     <div className="px-5 pb-8 pt-5 lg:mx-auto lg:max-w-xl lg:px-8">
       <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">PORTER</p>
-      <h1 className="mt-1 text-2xl font-extrabold text-ink">Profile</h1>
+      <h1 className="mt-1 text-2xl font-extrabold text-[var(--foreground)]">Profile</h1>
 
-      <div className="mt-6 flex items-center gap-4 rounded-[28px] bg-white p-5 shadow-sm ring-1 ring-ink/8">
+      <div className="surface-card mt-6 flex items-center gap-4 rounded-[28px] p-5">
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-lime text-xl font-extrabold text-ink">
           {user?.name?.charAt(0) ?? "P"}
         </div>
         <div className="min-w-0">
-          <p className="truncate font-extrabold text-ink">{user?.name}</p>
-          <p className="truncate text-sm text-ink/50">{user?.email}</p>
+          <p className="truncate font-extrabold text-[var(--foreground)]">{user?.name}</p>
+          <p className="truncate text-sm text-[var(--muted)]">{user?.email}</p>
         </div>
       </div>
 
       <div className="mt-4 grid grid-cols-3 gap-3">
-        <Link href="/orders" className="rounded-[20px] bg-white p-3 text-center shadow-sm ring-1 ring-ink/8">
+        <Link href="/orders" className="surface-card rounded-[20px] p-3 text-center">
           <p className="text-lg font-extrabold">{orders.length}</p>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-ink/45">Orders</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">Orders</p>
         </Link>
-        <Link href="/favorites" className="rounded-[20px] bg-white p-3 text-center shadow-sm ring-1 ring-ink/8">
+        <Link href="/favorites" className="surface-card rounded-[20px] p-3 text-center">
           <p className="text-lg font-extrabold">{favoriteBusinessIds.length}</p>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-ink/45">Saved</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">Saved</p>
         </Link>
-        <Link href="/orders" className="rounded-[20px] bg-white p-3 text-center shadow-sm ring-1 ring-ink/8">
+        <Link href="/orders" className="surface-card rounded-[20px] p-3 text-center">
           <p className="text-lg font-extrabold">{live}</p>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-ink/45">Live</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">Live</p>
         </Link>
       </div>
 
-      <div className="mt-6 space-y-1 rounded-[28px] bg-white p-3 shadow-sm ring-1 ring-ink/8">
+      <div className="surface-card mt-6 space-y-1 rounded-[28px] p-3">
         <SettingsRow
           icon={<ShoppingBag size={18} />}
           iconClassName="bg-purple/10 text-purple"
@@ -69,14 +69,14 @@ export default function CustomerProfilePage() {
         />
         <SettingsRow
           icon={<MapPin size={18} />}
-          iconClassName="bg-cream text-purple"
+          iconClassName="bg-[var(--background)] text-purple"
           title="Delivery address"
           subtitle={deliveryAddress}
           onClick={() => router.push("/cart")}
         />
         <SettingsRow
           icon={theme === "dark" ? <Moon size={18} /> : <Sun size={18} />}
-          iconClassName="bg-ink/10 text-ink"
+          iconClassName="bg-[var(--background)] text-[var(--foreground)]"
           title="Dark mode"
           trailing={<ToggleSwitch on={theme === "dark"} onChange={() => toggleTheme()} label="Dark mode" />}
         />
@@ -85,7 +85,7 @@ export default function CustomerProfilePage() {
       <button
         type="button"
         onClick={() => setConfirmOut(true)}
-        className="tap-target mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-cream text-sm font-bold text-ink"
+        className="tap-target mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--background)] text-sm font-bold text-[var(--foreground)] ring-1 ring-[var(--border)]"
       >
         <LogOut size={16} /> Sign out
       </button>

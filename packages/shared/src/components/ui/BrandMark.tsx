@@ -44,10 +44,10 @@ export function BrandLockup({
     <div className={cn("flex items-center gap-3", className)}>
       <BrandMark size="sm" inverted={onDark} />
       <div className="min-w-0">
-        <p className={cn("truncate text-sm font-extrabold tracking-tight", onDark ? "text-cream" : "text-ink")}>
+        <p className={cn("truncate text-sm font-extrabold tracking-tight", onDark ? "text-cream" : "text-[var(--foreground)]")}>
           {copy.shortName}
         </p>
-        <p className={cn("truncate text-[11px]", onDark ? "text-cream/55" : "text-ink/50")}>{copy.tagline}</p>
+        <p className={cn("truncate text-[11px]", onDark ? "text-cream/55" : "text-[var(--muted)]")}>{copy.tagline}</p>
       </div>
     </div>
   );

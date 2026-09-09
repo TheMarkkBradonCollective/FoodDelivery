@@ -76,15 +76,15 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
       </div>
 
       <div className="-mt-8 px-4 pb-8 lg:mx-auto lg:max-w-xl">
-        <div className="rounded-[28px] bg-white p-5 shadow-runr-card ring-1 ring-ink/8">
+        <div className="rounded-[28px] bg-[var(--surface-elevated)] p-5 shadow-runr-card ring-1 ring-[var(--border)]">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h1 className="text-xl font-extrabold text-ink">{business.name}</h1>
-              <p className="mt-1 text-sm text-ink/55">
+              <h1 className="text-xl font-extrabold text-[var(--foreground)]">{business.name}</h1>
+              <p className="mt-1 text-sm text-[var(--muted)]">
                 Order #{order.id.slice(-4)} · {formatCurrency(order.total)}
               </p>
               {order.deliveryAddress ? (
-                <p className="mt-1 text-sm text-ink/55">Deliver to {order.deliveryAddress}</p>
+                <p className="mt-1 text-sm text-[var(--muted)]">Deliver to {order.deliveryAddress}</p>
               ) : null}
             </div>
             <StatusBadge label={order.status.replace(/_/g, " ")} variant="primary" />
@@ -93,15 +93,15 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
           <div className="mt-6 space-y-3">
             {statusSteps.map((step, i) => (
               <div key={step.key} className="flex items-center gap-3">
-                <div className={`h-3 w-3 rounded-full ${i <= currentStep ? "bg-purple" : "bg-ink/15"}`} />
-                <span className={`text-sm ${i <= currentStep ? "font-bold text-ink" : "text-ink/40"}`}>
+                <div className={`h-3 w-3 rounded-full ${i <= currentStep ? "bg-purple" : "bg-[var(--border)]"}`} />
+                <span className={`text-sm ${i <= currentStep ? "font-bold text-[var(--foreground)]" : "text-[var(--muted)]"}`}>
                   {step.label}
                 </span>
               </div>
             ))}
           </div>
 
-          <p className="mt-5 text-sm text-ink/55">Estimated arrival {business.etaMinutes} minutes after pickup.</p>
+          <p className="mt-5 text-sm text-[var(--muted)]">Estimated arrival {business.etaMinutes} minutes after pickup.</p>
 
           {canConfirmReceive ? (
             <button

@@ -161,7 +161,7 @@ export default function RunrMapPage() {
   }
 
   return (
-    <div className="relative h-[calc(100dvh-8.5rem)] w-full lg:h-[calc(100dvh-4rem)]">
+    <div className="relative h-[calc(100dvh-8.5rem)] w-full md:h-[calc(100dvh-2rem)]">
       <MapView
         center={location}
         userLocation={location}
@@ -172,45 +172,48 @@ export default function RunrMapPage() {
 
       <MapControls onRecenter={() => setLocation(location)} />
 
-      {/* Top overlay */}
-      <div className="absolute inset-x-0 top-0 z-[1000] space-y-3 p-4">
-        <div className="rounded-3xl bg-[var(--surface)]/95 px-4 py-3 shadow-runr-card backdrop-blur-md">
-          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-runr-primary">
-            Choose → RUN → Deliver → Earn
-          </p>
-          <p className="text-sm font-extrabold tracking-tight">Pick it up. Run it there.</p>
-        </div>
-        <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Search businesses" />
-        <CatalogPreviewBanner />
-        {openOpportunities > 0 && (
-          <div className="flex items-center gap-2 rounded-full bg-runr-primary px-4 py-2.5 text-sm font-semibold text-white shadow-runr-card">
+      {/* Top overlay — hide extras while a delivery is in progress */}
+      <div className="absolute inset-x-0 top-0 z-[1000] space-y-2 p-3">
+        {!activeDelivery && (
+          <div className="rounded-full bg-[var(--surface)]/95 px-4 py-2 shadow-runr-card backdrop-blur-md">
+            <p className="text-sm font-extrabold tracking-tight">Pick a kitchen. Run it there.</p>
+          </div>
+        )}
+        {!activeDelivery && (
+          <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Search businesses" />
+        )}
+        {!activeDelivery && !pendingDelivery && <CatalogPreviewBanner />}
+        {!activeDelivery && !pendingDelivery && openOpportunities > 0 && (
+          <div className="flex items-center gap-2 rounded-full bg-runr-primary px-4 py-2 text-sm font-semibold text-white shadow-runr-card">
             <Flame className="h-4 w-4" />
             {openOpportunities} RUN opportunities near you
           </div>
         )}
-        <div className="flex gap-2 overflow-x-auto pb-1">
-          {(
-            [
-              ["all", "All"],
-              ["open", "Open RUNs"],
-              ["gap", "RUN Gaps"],
-              ["high_demand", "High Demand"],
-            ] as const
-          ).map(([key, label]) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setMapFilter(key)}
-              className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
-                mapFilter === key
-                  ? "bg-runr-primary text-white"
-                  : "bg-[var(--surface)]/95 text-[var(--foreground)] border border-[var(--border)]"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        {!activeDelivery && (
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {(
+              [
+                ["all", "All"],
+                ["open", "Open RUNs"],
+                ["gap", "RUN Gaps"],
+                ["high_demand", "High Demand"],
+              ] as const
+            ).map(([key, label]) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setMapFilter(key)}
+                className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+                  mapFilter === key
+                    ? "bg-runr-primary text-white"
+                    : "bg-[var(--surface)]/95 text-[var(--foreground)] border border-[var(--border)]"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Active run banner */}

@@ -16,18 +16,17 @@ export default function RunrEarningsPage() {
     <div className="min-h-screen">
       <div className="px-5 pt-5">
         <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">RUNR</p>
-        <h1 className="mt-1 text-2xl font-extrabold text-ink">Earnings</h1>
-        <p className="mt-1 text-sm text-ink/55">Per-delivery pay — not hourly</p>
+        <h1 className="mt-1 text-2xl font-extrabold text-[var(--foreground)]">Earnings</h1>
+        <p className="mt-1 text-sm text-[var(--muted)]">Per-delivery pay — not hourly</p>
       </div>
       <div className="px-4 pt-2">
       <section>
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
           Today
         </h2>
-        <div className="grid grid-cols-2 gap-3">
-          <EarningsCard label="Delivery earnings" amount={deliveryPay} />
+        <div className="grid grid-cols-3 gap-3">
+          <EarningsCard label="Delivery pay" amount={deliveryPay} />
           <EarningsCard label="Tips" amount={tips} />
-          <EarningsCard label="Bonuses" amount={0} />
           <EarningsCard label="Total" amount={total} highlight />
         </div>
       </section>

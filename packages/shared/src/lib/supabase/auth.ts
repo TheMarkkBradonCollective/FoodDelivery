@@ -86,8 +86,22 @@ export async function requestPasswordReset(
     return { success: false, error: "Supabase is not configured for this build." };
   }
   const supabase = getSupabaseClient();
-  const { error } = await supabase.auth.resetPasswordForEmail(email.trim());
-  if (error) return { success: false, error: error.message };
+  const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/` : undefined;
+  const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+    redirectTo,
+  });
+  if (error) {
+    const status = "status" in error ? Number(error.status) : 0;
+    const msg = error.message.toLowerCase();
+    if (status === 400 || msg.includes("redirect") || msg.includes("invalid request")) {
+      return {
+        success: false,
+        error:
+          "We couldn’t send a reset email from this site. Check the address and try again, or ask an operator to allow this URL in Auth redirect settings.",
+      };
+    }
+    return { success: false, error: error.message };
+  }
   return { success: true };
 }
 

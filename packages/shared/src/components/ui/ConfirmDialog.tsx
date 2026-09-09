@@ -28,11 +28,11 @@ export function ConfirmDialog({
   return (
     <div className="overlay-safe fixed inset-0 z-[80] flex items-end justify-center bg-ink/45 p-4 sm:items-center" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
       <button type="button" className="absolute inset-0" aria-label="Close" onClick={onCancel} />
-      <div className="relative w-full max-w-sm rounded-[28px] bg-white p-6 shadow-2xl">
-        <h2 id="confirm-title" className="font-display text-xl font-bold text-ink">
+      <div className="relative w-full max-w-sm rounded-[28px] bg-[var(--surface-elevated)] p-6 shadow-2xl">
+        <h2 id="confirm-title" className="font-display text-xl font-bold text-[var(--foreground)]">
           {title}
         </h2>
-        <p className="mt-2 text-sm leading-6 text-ink/65">{description}</p>
+        <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{description}</p>
         <div className="mt-6 flex flex-col gap-2">
           <button
             type="button"
@@ -44,7 +44,11 @@ export function ConfirmDialog({
           >
             {confirmLabel}
           </button>
-          <button type="button" onClick={onCancel} className="tap-target h-12 rounded-full bg-cream text-sm font-bold text-ink">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="tap-target h-12 rounded-full bg-[var(--background)] text-sm font-bold text-[var(--foreground)]"
+          >
             {cancelLabel}
           </button>
         </div>

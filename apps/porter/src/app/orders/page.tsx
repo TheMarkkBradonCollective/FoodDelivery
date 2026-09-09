@@ -32,12 +32,12 @@ export default function CustomerOrdersPage() {
               <Link
                 key={order.id}
                 href={`/track/?id=${order.id}`}
-                className="flex items-center gap-3 rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-ink/8"
+                className="surface-card flex items-center gap-3 rounded-[24px] p-4"
               >
                 <CuisinePlate cuisine={business?.cuisine ?? "Restaurant"} size={48} />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-extrabold text-ink">{business?.name ?? "Kitchen"}</p>
-                  <p className="text-sm text-ink/50">
+                  <p className="truncate font-extrabold text-[var(--foreground)]">{business?.name ?? "Kitchen"}</p>
+                  <p className="text-sm text-[var(--muted)]">
                     {order.items.length} items · {formatCurrency(order.total)}
                   </p>
                 </div>

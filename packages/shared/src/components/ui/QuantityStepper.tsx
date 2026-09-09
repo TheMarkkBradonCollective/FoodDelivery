@@ -15,7 +15,7 @@ export function QuantityStepper({ value, onChange, min = 0, max = 99, className 
   return (
     <div
       className={clsx(
-        "inline-flex items-center gap-1 rounded-full bg-cream p-1 ring-1 ring-ink/10",
+        "inline-flex items-center gap-1 rounded-full bg-[var(--background)] p-1 ring-1 ring-[var(--border)]",
         className,
       )}
     >
@@ -24,7 +24,7 @@ export function QuantityStepper({ value, onChange, min = 0, max = 99, className 
         aria-label="Decrease quantity"
         disabled={value <= min}
         onClick={() => onChange(Math.max(min, value - 1))}
-        className="tap-target flex h-10 w-10 items-center justify-center rounded-full bg-white text-ink shadow-sm disabled:opacity-40"
+        className="tap-target flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface-elevated)] text-[var(--foreground)] shadow-sm disabled:opacity-40"
       >
         <Minus size={16} strokeWidth={2.4} />
       </button>

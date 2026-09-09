@@ -83,17 +83,17 @@ export function Onboarding({ app, onDone }: { app: AppId; onDone: () => void }) 
   const last = index === steps.length - 1;
 
   return (
-    <div className="flex min-h-dvh flex-col bg-cream">
+    <div className="flex min-h-dvh flex-col bg-[var(--background)]">
       <div
         className="flex items-center justify-between px-5"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 12px)" }}
       >
         <div className="flex flex-1 gap-1.5 pr-4">
           {steps.map((_, i) => (
-            <span key={i} className={`h-1 flex-1 rounded-full ${i <= index ? "bg-ink" : "bg-ink/15"}`} />
+            <span key={i} className={`h-1 flex-1 rounded-full ${i <= index ? "bg-[var(--foreground)]" : "bg-[var(--border)]"}`} />
           ))}
         </div>
-        <button type="button" onClick={onDone} className="tap-target text-sm font-bold text-ink/55">
+        <button type="button" onClick={onDone} className="tap-target text-sm font-bold text-[var(--muted)]">
           Skip
         </button>
       </div>
@@ -103,12 +103,12 @@ export function Onboarding({ app, onDone }: { app: AppId; onDone: () => void }) 
         style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)" }}
       >
         <BrandLockup app={app} />
-        <div className="mt-8 flex flex-1 flex-col items-center justify-center rounded-[36px] bg-white p-8 shadow-sm ring-1 ring-ink/8">
+        <div className="surface-card mt-8 flex flex-1 flex-col items-center justify-center rounded-[36px] p-8">
           <span className="text-7xl" aria-hidden>
             {step.visual}
           </span>
-          <h1 className="mt-8 text-center font-display text-3xl font-bold leading-tight text-ink">{step.title}</h1>
-          <p className="mt-3 max-w-sm text-center text-sm leading-6 text-ink/60">{step.body}</p>
+          <h1 className="mt-8 text-center font-display text-3xl font-bold leading-tight text-[var(--foreground)]">{step.title}</h1>
+          <p className="mt-3 max-w-sm text-center text-sm leading-6 text-[var(--muted)]">{step.body}</p>
         </div>
         <button
           type="button"

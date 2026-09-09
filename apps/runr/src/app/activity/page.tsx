@@ -10,8 +10,8 @@ export default function RunrActivityPage() {
     <div className="min-h-screen">
       <div className="px-5 pt-5">
         <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">RUNR</p>
-        <h1 className="mt-1 text-2xl font-extrabold text-ink">Activity</h1>
-        <p className="mt-1 text-sm text-ink/55">Notifications and delivery updates</p>
+        <h1 className="mt-1 text-2xl font-extrabold text-[var(--foreground)]">Activity</h1>
+        <p className="mt-1 text-sm text-[var(--muted)]">Notifications and delivery updates</p>
       </div>
       <div className="space-y-3 px-4 pt-2">
         {notifications.length === 0 ? (

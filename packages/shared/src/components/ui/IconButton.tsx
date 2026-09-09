@@ -12,9 +12,9 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const variants = {
-  light: "bg-white text-ink shadow-sm ring-1 ring-ink/10",
+  light: "bg-[var(--surface-elevated)] text-[var(--foreground)] shadow-sm ring-1 ring-[var(--border)]",
   dark: "bg-ink text-cream shadow-md",
-  ghost: "bg-cream/80 text-ink ring-1 ring-ink/10",
+  ghost: "bg-[var(--background)]/80 text-[var(--foreground)] ring-1 ring-[var(--border)]",
 };
 
 export function IconButton({ label, variant = "light", className, children, href, ...props }: Props) {

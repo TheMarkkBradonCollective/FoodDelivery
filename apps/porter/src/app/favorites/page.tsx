@@ -28,20 +28,20 @@ export default function CustomerFavoritesPage() {
         ) : (
           <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
             {saved.map((b) => (
-              <article key={b.id} className="overflow-hidden rounded-[24px] bg-white shadow-sm ring-1 ring-ink/8">
+              <article key={b.id} className="surface-card overflow-hidden rounded-[24px]">
                 <Link href={`/restaurant/?id=${b.id}`} className="block">
                   <DishPhoto cuisine={b.cuisine} className="aspect-square w-full" />
                 </Link>
                 <div className="flex items-start justify-between gap-2 p-3">
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-extrabold text-ink">{b.name}</p>
-                    <p className="text-xs text-ink/50">{b.cuisine}</p>
+                    <p className="truncate text-sm font-extrabold text-[var(--foreground)]">{b.name}</p>
+                    <p className="text-xs text-[var(--muted)]">{b.cuisine}</p>
                   </div>
                   <button
                     type="button"
                     aria-label={`Remove ${b.name}`}
                     onClick={() => toggleFavorite(b.id)}
-                    className="tap-target flex h-9 w-9 items-center justify-center rounded-full bg-cream text-purple"
+                    className="tap-target flex h-9 w-9 items-center justify-center rounded-full bg-[var(--background)] text-purple"
                   >
                     <Heart size={14} className="fill-purple" />
                   </button>

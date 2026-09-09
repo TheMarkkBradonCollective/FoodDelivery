@@ -16,6 +16,7 @@ import { LoadingState, SkeletonCard } from "@runr/shared/components/ui/ScreenSta
 import { IconButton } from "@runr/shared/components/ui/IconButton";
 import { useAppStore } from "@/store";
 import { cuisineCategories } from "@runr/shared/data/constants";
+import { displayFirstName } from "@runr/shared/lib/apps";
 import { getBusinessCoverageSummary, getMarkerColor } from "@runr/shared/lib/coverage-engine";
 import type { MenuItem } from "@runr/shared/types";
 
@@ -87,7 +88,7 @@ export default function PorterDiscoverPage() {
   });
 
   const cartCount = cart.reduce((s, i) => s + i.quantity, 0);
-  const firstName = user?.name?.split(" ")[0] ?? "there";
+  const firstName = displayFirstName(user?.name, "PORTER");
   const categories = ["All", ...cuisineCategories];
 
   function qtyFor(itemId: string) {
@@ -121,14 +122,14 @@ export default function PorterDiscoverPage() {
     <div className="px-5 pb-6 pt-4 lg:px-8">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="flex items-center gap-1.5 text-xs font-semibold text-ink/55">
+          <p className="flex items-center gap-1.5 text-xs font-semibold text-[var(--muted)]">
             <MapPin size={14} className="text-purple" />
             <span className="truncate">{deliveryAddress}</span>
           </p>
-          <h1 className="mt-2 font-display text-[1.85rem] font-extrabold leading-tight tracking-tight text-ink">
+          <h1 className="mt-2 font-display text-[1.85rem] font-extrabold leading-tight tracking-tight text-[var(--foreground)]">
             Hungry? Get what you need.
           </h1>
-          <p className="mt-1 text-sm text-ink/55">Hey {firstName} — kitchens around you are ready.</p>
+          <p className="mt-1 text-sm text-[var(--muted)]">Hey {firstName} — kitchens around you are ready.</p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <IconButton href="/activity" label="Notifications">
@@ -157,7 +158,7 @@ export default function PorterDiscoverPage() {
               type="button"
               aria-label="Filters"
               onClick={() => setFiltersOpen(true)}
-              className="tap-target flex h-9 w-9 items-center justify-center rounded-full bg-cream text-ink"
+              className="tap-target flex h-9 w-9 items-center justify-center rounded-full bg-[var(--background)] text-[var(--foreground)]"
             >
               <SlidersHorizontal size={16} />
             </button>
@@ -189,21 +190,21 @@ export default function PorterDiscoverPage() {
               onClick={() => setSelectedCategory(cat === "All" ? null : cat)}
               className="flex shrink-0 flex-col items-center gap-2"
             >
-              <span className={`rounded-full p-0.5 ${active ? "ring-2 ring-ink" : ""}`}>
+              <span className={`rounded-full p-0.5 ${active ? "ring-2 ring-[var(--foreground)]" : ""}`}>
                 <CuisinePlate cuisine={cat} size={56} />
               </span>
-              <span className={`text-[11px] font-bold ${active ? "text-ink" : "text-ink/45"}`}>{cat}</span>
+              <span className={`text-[11px] font-bold ${active ? "text-[var(--foreground)]" : "text-[var(--muted)]"}`}>{cat}</span>
             </button>
           );
         })}
       </div>
 
-      <div className="mt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-8">
+      <div className="mt-8 md:grid md:grid-cols-[minmax(0,1fr)_240px] md:items-start md:gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-8">
         <div>
           <div className="flex items-end justify-between">
             <div>
-              <h2 className="text-lg font-extrabold text-ink">Popular dishes</h2>
-              <p className="text-sm text-ink/50">Tap + to add, or open a kitchen for the full menu</p>
+              <h2 className="text-lg font-extrabold text-[var(--foreground)]">Popular dishes</h2>
+              <p className="text-sm text-[var(--muted)]">Tap + to add, or open a kitchen for the full menu</p>
             </div>
           </div>
 
@@ -235,8 +236,8 @@ export default function PorterDiscoverPage() {
 
           <div className="mt-8 flex items-end justify-between">
             <div>
-              <h2 className="text-lg font-extrabold text-ink">Nearby kitchens</h2>
-              <p className="text-sm text-ink/50">Fulfilled by RUNRs in your area</p>
+              <h2 className="text-lg font-extrabold text-[var(--foreground)]">Nearby kitchens</h2>
+              <p className="text-sm text-[var(--muted)]">Fulfilled by RUNRs in your area</p>
             </div>
           </div>
           <div className="mt-3 space-y-3">
@@ -273,26 +274,26 @@ export default function PorterDiscoverPage() {
           </div>
         </div>
 
-        <div className="mt-8 hidden overflow-hidden rounded-[28px] shadow-runr-card lg:sticky lg:top-6 lg:mt-0 lg:block lg:h-[28rem]">
+        <div className="mt-8 hidden overflow-hidden rounded-[28px] shadow-runr-card md:sticky md:top-6 md:mt-0 md:block md:h-[22rem] lg:h-[28rem]">
           <MapView center={location} markers={markers} dark={theme === "dark"} className="h-full" />
         </div>
       </div>
 
-      <div className="relative mt-6 h-48 overflow-hidden rounded-[28px] shadow-runr-card lg:hidden">
+      <div className="relative mt-6 h-48 overflow-hidden rounded-[28px] shadow-runr-card md:hidden">
         <MapView center={location} markers={markers} dark={theme === "dark"} className="h-full" />
       </div>
 
       {cartCount > 0 && (
         <Link
           href="/cart"
-          className="sticky-cta flex h-14 items-center justify-center rounded-full bg-ink text-sm font-extrabold text-white shadow-runr-card lg:static lg:mt-8 lg:w-full"
+          className="sticky-cta flex h-14 items-center justify-center rounded-full bg-ink text-sm font-extrabold text-white shadow-runr-card md:static md:mt-8 md:w-full"
         >
           View cart ({cartCount})
         </Link>
       )}
 
       <BottomSheet open={filtersOpen} onClose={() => setFiltersOpen(false)} title="Filters">
-        <p className="text-sm text-ink/60">Show kitchens by cuisine. This updates Discover immediately.</p>
+        <p className="text-sm text-[var(--muted)]">Show kitchens by cuisine. This updates Discover immediately.</p>
         <div className="mt-4 flex flex-wrap gap-2">
           {categories.map((cat) => {
             const active = cat === "All" ? !selectedCategory : selectedCategory === cat;
@@ -305,7 +306,7 @@ export default function PorterDiscoverPage() {
                   setFiltersOpen(false);
                 }}
                 className={`h-10 rounded-full px-4 text-sm font-bold ${
-                  active ? "bg-purple text-white" : "bg-cream text-ink"
+                  active ? "bg-purple text-white" : "bg-[var(--background)] text-[var(--foreground)]"
                 }`}
               >
                 {cat}

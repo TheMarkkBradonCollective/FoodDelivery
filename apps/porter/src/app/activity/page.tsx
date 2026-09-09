@@ -29,12 +29,12 @@ export default function CustomerActivityPage() {
               type="button"
               onClick={() => markNotificationRead(n.id)}
               className={`w-full rounded-[24px] p-4 text-left shadow-sm ring-1 ${
-                n.read ? "bg-white ring-ink/8 opacity-70" : "bg-runr-primary-muted ring-purple/20"
+                n.read ? "bg-[var(--surface-elevated)] ring-[var(--border)] opacity-70" : "bg-runr-primary-muted ring-purple/20"
               }`}
             >
-              <p className="font-extrabold text-ink">{n.title}</p>
-              <p className="mt-1 text-sm text-ink/60">{n.body}</p>
-              <p className="mt-2 text-[11px] font-semibold uppercase tracking-wider text-ink/40">
+              <p className="font-extrabold text-[var(--foreground)]">{n.title}</p>
+              <p className="mt-1 text-sm text-[var(--muted)]">{n.body}</p>
+              <p className="mt-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--muted)]">
                 {n.read ? "Read" : "New"} · tap to mark read
               </p>
             </button>

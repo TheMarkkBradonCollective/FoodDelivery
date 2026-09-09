@@ -1,27 +1,54 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 import { useAppStore } from "../../store/create-app-store";
 import { cn } from "../../lib/utils";
 
+const DISMISS_KEY = "runr-preview-banner-dismissed";
+
 export function CatalogPreviewBanner({ className }: { className?: string }) {
   const catalogPreview = useAppStore((s) => s.catalogPreview);
-  if (!catalogPreview) return null;
+  const [dismissed, setDismissed] = useState(true);
+
+  useEffect(() => {
+    try {
+      setDismissed(sessionStorage.getItem(DISMISS_KEY) === "1");
+    } catch {
+      setDismissed(false);
+    }
+  }, []);
+
+  if (!catalogPreview || dismissed) return null;
+
+  function dismiss() {
+    try {
+      sessionStorage.setItem(DISMISS_KEY, "1");
+    } catch {
+      /* ignore quota / private mode */
+    }
+    setDismissed(true);
+  }
 
   return (
     <div
       className={cn(
-        "rounded-2xl border border-[#7048F8]/25 bg-[#EEE8FF] px-4 py-3 text-sm text-[#1A1224]",
-        className
+        "flex items-center gap-2 rounded-2xl border border-purple/25 bg-[#EEE8FF] px-3 py-2 text-xs text-ink",
+        className,
       )}
     >
-      <p className="font-extrabold">Preview kitchens</p>
-      <p className="mt-0.5 text-xs text-[#6F6678]">
-        Live marketplace tables are empty. Tony&apos;s Pizza, Golden Gate Burgers, and Mission
-        Tacos are loaded so you can test tonight. Run{" "}
-        <code className="rounded bg-white px-1">docs/supabase/schema.sql</code> in Supabase for
-        live data.
+      <p className="min-w-0 flex-1 leading-5">
+        <span className="font-extrabold">Preview kitchens. </span>
+        Live marketplace tables are empty — sample kitchens are loaded for testing.
       </p>
+      <button
+        type="button"
+        onClick={dismiss}
+        aria-label="Dismiss preview notice"
+        className="tap-target flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-ink/50 hover:bg-white/70"
+      >
+        <X size={14} />
+      </button>
     </div>
   );
 }
-

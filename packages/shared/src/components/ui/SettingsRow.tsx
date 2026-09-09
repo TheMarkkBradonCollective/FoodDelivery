@@ -16,14 +16,14 @@ type Props = {
 export function SettingsRow({ icon, iconClassName, title, subtitle, onClick, trailing }: Props) {
   const inner = (
     <>
-      <span className={clsx("flex h-11 w-11 items-center justify-center rounded-full", iconClassName ?? "bg-cream text-purple")}>
+      <span className={clsx("flex h-11 w-11 items-center justify-center rounded-full", iconClassName ?? "bg-[var(--background)] text-purple")}>
         {icon}
       </span>
       <span className="min-w-0 flex-1 text-left">
-        <span className="block text-sm font-bold text-ink">{title}</span>
-        {subtitle ? <span className="block text-xs text-ink/50">{subtitle}</span> : null}
+        <span className="block text-sm font-bold text-[var(--foreground)]">{title}</span>
+        {subtitle ? <span className="block text-xs text-[var(--muted)]">{subtitle}</span> : null}
       </span>
-      {trailing ?? <ChevronRight size={18} className="shrink-0 text-ink/30" />}
+      {trailing ?? <ChevronRight size={18} className="shrink-0 text-[var(--muted)]" />}
     </>
   );
 
@@ -48,7 +48,7 @@ export function ToggleSwitch({ on, onChange, label }: { on: boolean; onChange: (
       onClick={() => onChange(!on)}
       className={clsx(
         "relative h-8 w-14 rounded-full transition-colors",
-        on ? "bg-purple" : "bg-ink/20",
+        on ? "bg-purple" : "bg-[var(--border)]",
       )}
     >
       <span

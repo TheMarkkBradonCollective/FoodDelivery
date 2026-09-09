@@ -81,10 +81,10 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
       </div>
 
       <div className="px-5 lg:px-8">
-        <div className="-mt-8 rounded-[28px] bg-white p-5 shadow-runr-card ring-1 ring-ink/8">
+        <div className="-mt-8 rounded-[28px] bg-[var(--surface-elevated)] p-5 shadow-runr-card ring-1 ring-[var(--border)]">
           <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">{business.cuisine}</p>
-          <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-ink">{business.name}</h1>
-          <p className="mt-1 text-sm text-ink/55">{business.address}</p>
+          <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-[var(--foreground)]">{business.name}</h1>
+          <p className="mt-1 text-sm text-[var(--muted)]">{business.address}</p>
           <div className="mt-4 grid grid-cols-3 gap-2">
             <Stat icon={<Star size={14} />} label="Rating" value={String(business.rating)} />
             <Stat icon={<Clock size={14} />} label="ETA" value={`${business.etaMinutes} min`} />
@@ -99,7 +99,7 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
         ) : (
           Object.entries(groupedMenu).map(([category, items]) => (
             <section key={category} className="mt-8">
-              <h2 className="text-lg font-extrabold text-ink">{category}</h2>
+              <h2 className="text-lg font-extrabold text-[var(--foreground)]">{category}</h2>
               <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3">
                 {items.map((item) => (
                   <DishCard
@@ -158,7 +158,7 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
         {selected ? (
           <div>
             <DishPhoto cuisine={selected.category || business.cuisine} className="h-40 w-full rounded-[24px]" />
-            <p className="mt-4 text-sm leading-6 text-ink/65">{selected.description}</p>
+            <p className="mt-4 text-sm leading-6 text-[var(--muted)]">{selected.description}</p>
             <p className="mt-3 text-lg font-extrabold">{formatCurrency(selected.price)}</p>
           </div>
         ) : null}
@@ -169,12 +169,12 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
 
 function Stat({ icon, label, value }: { icon?: ReactNode; label: string; value: string }) {
   return (
-    <div className="rounded-2xl bg-cream px-3 py-2 text-center">
-      <p className="flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider text-ink/45">
+    <div className="rounded-2xl bg-[var(--background)] px-3 py-2 text-center">
+      <p className="flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">
         {icon}
         {label}
       </p>
-      <p className="mt-1 text-sm font-extrabold text-ink">{value}</p>
+      <p className="mt-1 text-sm font-extrabold text-[var(--foreground)]">{value}</p>
     </div>
   );
 }

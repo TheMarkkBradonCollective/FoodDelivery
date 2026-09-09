@@ -46,10 +46,10 @@ function useStoreHydrated() {
 function Splash({ role }: { role: AppShellRole }) {
   const copy = APP_COPY[roleToApp(role)];
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center bg-cream px-6">
+    <div className="flex min-h-dvh flex-col items-center justify-center bg-[var(--background)] px-6">
       <BrandMark size="lg" inverted={role === "staff"} />
       <p className="mt-5 text-xs font-extrabold uppercase tracking-[0.22em] text-purple">{copy.shortName}</p>
-      <p className="mt-2 text-sm text-ink/55">{copy.tagline}</p>
+      <p className="mt-2 text-sm text-[var(--muted)]">{copy.tagline}</p>
     </div>
   );
 }

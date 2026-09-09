@@ -37,3 +37,10 @@ export function roleToApp(role: UserRole): AppId {
   };
   return map[role];
 }
+
+/** Skip names that are just the product (e.g. "PORTER Tester"). */
+export function displayFirstName(name: string | undefined, appName: string) {
+  const first = name?.split(/\s+/)[0]?.trim() ?? "";
+  if (!first || first.toUpperCase() === appName.toUpperCase()) return "there";
+  return first;
+}

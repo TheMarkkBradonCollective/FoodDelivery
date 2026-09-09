@@ -58,8 +58,8 @@ export function MapView({
   useLeafletFix();
 
   const tileUrl = dark
-    ? "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+    ? "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+    : "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 
   const userPos = userLocation ?? center;
 

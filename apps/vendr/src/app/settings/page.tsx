@@ -17,17 +17,17 @@ export default function BusinessSettingsPage() {
   return (
     <div className="px-5 pb-8 pt-5 lg:mx-auto lg:max-w-xl">
       <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">VENDR</p>
-      <h1 className="mt-1 text-2xl font-extrabold text-ink">Settings</h1>
+      <h1 className="mt-1 text-2xl font-extrabold text-[var(--foreground)]">Settings</h1>
 
-      <div className="mt-6 rounded-[28px] bg-white p-5 shadow-sm ring-1 ring-ink/8">
+      <div className="surface-card mt-6 rounded-[28px] p-5">
         <p className="font-extrabold">{user?.name}</p>
-        <p className="text-sm text-ink/50">{user?.email}</p>
-        <p className="mt-3 text-sm text-ink/70">
+        <p className="text-sm text-[var(--muted)]">{user?.email}</p>
+        <p className="mt-3 text-sm text-[var(--muted)]">
           {kitchen?.name ?? "No kitchen linked"} {kitchen?.city ? `· ${kitchen.city}` : ""}
         </p>
       </div>
 
-      <div className="mt-6 space-y-1 rounded-[28px] bg-white p-3 shadow-sm ring-1 ring-ink/8">
+      <div className="surface-card mt-6 space-y-1 rounded-[28px] p-3">
         <SettingsRow
           icon={<Store size={18} />}
           title="Operations"
@@ -44,7 +44,7 @@ export default function BusinessSettingsPage() {
       <button
         type="button"
         onClick={() => setConfirmOut(true)}
-        className="tap-target mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-cream text-sm font-bold text-ink"
+        className="tap-target mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--background)] text-sm font-bold text-[var(--foreground)] ring-1 ring-[var(--border)]"
       >
         <LogOut size={16} /> Sign out
       </button>

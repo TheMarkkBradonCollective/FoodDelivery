@@ -43,8 +43,8 @@ export function ScreenHeader({
           {eyebrow && (
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">{eyebrow}</p>
           )}
-          <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-ink">{title}</h1>
-          {subtitle && <p className="mt-1 text-sm text-ink/55">{subtitle}</p>}
+          <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-[var(--foreground)]">{title}</h1>
+          {subtitle && <p className="mt-1 text-sm text-[var(--muted)]">{subtitle}</p>}
         </div>
         {trailing}
       </div>

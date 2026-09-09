@@ -26,9 +26,11 @@ export function StaffLayoutClient({ children }: { children: React.ReactNode }) {
           <button
             type="button"
             onClick={() => setConfirmOut(true)}
+            aria-label="Sign out"
             className="tap-target flex w-full items-center justify-center gap-2 rounded-full bg-white/8 py-3 text-sm font-bold text-cream"
           >
-            <LogOut size={16} /> Sign out
+            <LogOut size={16} />
+            <span className="hidden lg:inline">Sign out</span>
           </button>
         }
       >

@@ -86,18 +86,18 @@ export default function CartPage() {
         </IconButton>
         <div>
           <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">PORTER</p>
-          <h1 className="text-2xl font-extrabold text-ink">Cart</h1>
+          <h1 className="text-2xl font-extrabold text-[var(--foreground)]">Cart</h1>
         </div>
       </div>
 
-      <p className="mt-2 text-sm text-ink/55">{business?.name ?? "Kitchen"}</p>
+      <p className="mt-2 text-sm text-[var(--muted)]">{business?.name ?? "Kitchen"}</p>
 
       <div className="mt-6 space-y-3">
         {cart.map((item) => (
-          <div key={item.menuItemId} className="flex items-center justify-between gap-3 rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-ink/8">
+          <div key={item.menuItemId} className="surface-card flex items-center justify-between gap-3 rounded-[24px] p-4">
             <div className="min-w-0">
-              <p className="truncate font-bold text-ink">{item.name}</p>
-              <p className="text-sm text-ink/50">{formatCurrency(item.price)}</p>
+              <p className="truncate font-bold text-[var(--foreground)]">{item.name}</p>
+              <p className="text-sm text-[var(--muted)]">{formatCurrency(item.price)}</p>
             </div>
             <QuantityStepper
               value={item.quantity}
@@ -107,7 +107,7 @@ export default function CartPage() {
         ))}
       </div>
 
-      <div className="mt-6 rounded-[28px] bg-white p-5 shadow-sm ring-1 ring-ink/8">
+      <div className="mt-6 rounded-[28px] bg-[var(--surface-elevated)] p-5 shadow-sm ring-1 ring-[var(--border)]">
         <label className="field-label" htmlFor="delivery-address">
           Deliver to
         </label>
@@ -152,7 +152,7 @@ export default function CartPage() {
           {discount > 0 ? <Row label="Promo" value={-discount} /> : null}
         </div>
 
-        <p className="mt-5 text-sm font-bold text-ink">Tip</p>
+        <p className="mt-5 text-sm font-bold text-[var(--foreground)]">Tip</p>
         <div className="mt-2 flex gap-2">
           {TIP_OPTIONS.map((amount) => (
             <button
@@ -160,23 +160,24 @@ export default function CartPage() {
               type="button"
               onClick={() => setTip(amount)}
               className={`h-11 flex-1 rounded-full text-xs font-bold ${
-                tip === amount ? "bg-purple text-white" : "bg-cream text-ink"
+                tip === amount ? "bg-purple text-white" : "bg-[var(--background)] text-[var(--foreground)]"
               }`}
             >
               {amount === 0 ? "None" : formatCurrency(amount)}
             </button>
           ))}
         </div>
-        <div className="mt-4 border-t border-ink/8 pt-3">
+        <div className="mt-4 border-t border-[var(--border)] pt-3">
           <Row label="Total" value={total} bold />
         </div>
       </div>
 
+      <div className="h-20 md:hidden" aria-hidden />
       <button
         type="button"
         onClick={handlePlaceOrder}
         disabled={placing || !deliveryAddress.trim()}
-        className="tap-target mt-6 h-14 w-full rounded-full bg-purple text-base font-extrabold text-white disabled:opacity-50"
+        className="sticky-cta tap-target h-14 w-full rounded-full bg-purple text-base font-extrabold text-white disabled:opacity-50 md:static md:mt-6"
       >
         {placing ? "Placing order…" : `Place order · ${formatCurrency(total)}`}
       </button>
@@ -186,7 +187,7 @@ export default function CartPage() {
 
 function Row({ label, value, bold }: { label: string; value: number; bold?: boolean }) {
   return (
-    <div className={`flex justify-between ${bold ? "text-base font-extrabold" : "text-ink/70"}`}>
+    <div className={`flex justify-between ${bold ? "text-base font-extrabold" : "text-[var(--muted)]"}`}>
       <span>{label}</span>
       <span>{formatCurrency(value)}</span>
     </div>

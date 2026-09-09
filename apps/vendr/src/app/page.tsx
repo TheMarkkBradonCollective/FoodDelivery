@@ -55,13 +55,13 @@ export default function BusinessOperationsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F6F1E8] pb-8">
+    <div className="min-h-screen pb-8">
       <div className="px-5 pt-5">
         <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#7048F8]">VENDR</p>
-        <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-[#1A1224]">
+        <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-[var(--foreground)]">
           {business.name}
         </h1>
-        <p className="mt-1 text-sm text-[#1A1224]/70">Live Operations</p>
+        <p className="mt-1 text-sm text-[var(--muted)]">Live Operations</p>
       </div>
 
       <div className="mt-4 px-4">
@@ -70,13 +70,13 @@ export default function BusinessOperationsPage() {
 
       <div className="space-y-5 px-4 pt-1">
         {coverage && (
-          <section className="flex items-center gap-4 rounded-[1.75rem] bg-white p-4 shadow-runr-card">
+          <section className="flex items-center gap-4 rounded-[1.75rem] bg-[var(--surface-elevated)] p-4 shadow-runr-card ring-1 ring-[var(--border)]">
             <CoverageRing percent={coveragePercent} />
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold uppercase tracking-wider text-[#6F6678]">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
                 Coverage
               </p>
-              <p className="text-lg font-extrabold text-[#1A1224]">
+              <p className="text-lg font-extrabold text-[var(--foreground)]">
                 {coverage.scheduledRunrs}/{coverage.maxRunrs} RUNRs
               </p>
               <Link
@@ -107,14 +107,14 @@ export default function BusinessOperationsPage() {
 
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-extrabold text-[#1A1224]">Coverage Timeline</h2>
+            <h2 className="font-extrabold text-[var(--foreground)]">Coverage Timeline</h2>
             {coverage && <CoverageBadge status={coverage.status} gap={coverage.gap} size="sm" />}
           </div>
           <CoverageTimeline intervals={timeline.slice(0, 5)} compact />
         </section>
 
         <section>
-          <h2 className="mb-3 font-extrabold text-[#1A1224]">Recent Orders</h2>
+          <h2 className="mb-3 font-extrabold text-[var(--foreground)]">Recent Orders</h2>
           {businessOrders.length === 0 ? (
             <EmptyState
               title="No orders yet"
@@ -126,11 +126,11 @@ export default function BusinessOperationsPage() {
                 <Link
                   key={order.id}
                   href="/orders"
-                  className="flex items-center justify-between rounded-2xl bg-white px-4 py-3 shadow-runr-card"
+                  className="flex items-center justify-between rounded-2xl bg-[var(--surface-elevated)] px-4 py-3 shadow-runr-card ring-1 ring-[var(--border)]"
                 >
                   <div>
-                    <p className="font-extrabold text-[#1A1224]">Order #{order.id.slice(-4)}</p>
-                    <p className="text-sm text-[#6F6678]">
+                    <p className="font-extrabold text-[var(--foreground)]">Order #{order.id.slice(-4)}</p>
+                    <p className="text-sm text-[var(--muted)]">
                       {order.items.length} items · ${order.total.toFixed(2)}
                     </p>
                   </div>
@@ -157,8 +157,8 @@ function StatCard({
   emphasis?: boolean;
 }) {
   return (
-    <div className="rounded-2xl bg-white p-4 shadow-runr-card">
-      <p className="text-xs text-[#6F6678]">{label}</p>
+    <div className="rounded-2xl bg-[var(--surface-elevated)] p-4 shadow-runr-card ring-1 ring-[var(--border)]">
+      <p className="text-xs text-[var(--muted)]">{label}</p>
       <p className={`mt-1 text-2xl font-extrabold ${emphasis ? "text-[#7048F8]" : "text-[#7048F8]"}`}>
         {value}
       </p>

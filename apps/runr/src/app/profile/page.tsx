@@ -18,37 +18,37 @@ export default function RunrProfilePage() {
   return (
     <div className="px-5 pb-8 pt-5 lg:mx-auto lg:max-w-xl">
       <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">RUNR</p>
-      <h1 className="mt-1 text-2xl font-extrabold text-ink">Profile</h1>
+      <h1 className="mt-1 text-2xl font-extrabold text-[var(--foreground)]">Profile</h1>
 
-      <div className="mt-6 flex items-center gap-4 rounded-[28px] bg-white p-5 shadow-sm ring-1 ring-ink/8">
+      <div className="surface-card mt-6 flex items-center gap-4 rounded-[28px] p-5">
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-purple text-xl font-extrabold text-white">
           {user?.name?.charAt(0) ?? "R"}
         </div>
         <div className="min-w-0">
           <p className="truncate font-extrabold">{user?.name}</p>
-          <p className="truncate text-sm text-ink/50">{user?.email}</p>
+          <p className="truncate text-sm text-[var(--muted)]">{user?.email}</p>
         </div>
       </div>
 
       <div className="mt-4 grid grid-cols-3 gap-3">
-        <div className="rounded-[20px] bg-white p-3 text-center shadow-sm ring-1 ring-ink/8">
+        <div className="surface-card rounded-[20px] p-3 text-center">
           <p className="text-lg font-extrabold">{runHistory.length}</p>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-ink/45">RUNs</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">RUNs</p>
         </div>
-        <div className="rounded-[20px] bg-white p-3 text-center shadow-sm ring-1 ring-ink/8">
+        <div className="surface-card rounded-[20px] p-3 text-center">
           <p className="text-lg font-extrabold">{completedDeliveries}</p>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-ink/45">Drops</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">Drops</p>
         </div>
-        <div className="rounded-[20px] bg-white p-3 text-center shadow-sm ring-1 ring-ink/8">
+        <div className="surface-card rounded-[20px] p-3 text-center">
           <p className="text-lg font-extrabold">{reliability}</p>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-ink/45">Reliability</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">Reliability</p>
         </div>
       </div>
-      <p className="mt-2 text-xs text-ink/45">
+      <p className="mt-2 text-xs text-[var(--muted)]">
         {completedDeliveries} completed drops on the marketplace.
       </p>
 
-      <div className="mt-6 space-y-1 rounded-[28px] bg-white p-3 shadow-sm ring-1 ring-ink/8">
+      <div className="surface-card mt-6 space-y-1 rounded-[28px] p-3">
         <SettingsRow
           icon={<Map size={18} />}
           title="Map"
@@ -77,7 +77,7 @@ export default function RunrProfilePage() {
       <button
         type="button"
         onClick={() => setConfirmOut(true)}
-        className="tap-target mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-cream text-sm font-bold text-ink"
+        className="tap-target mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--background)] text-sm font-bold text-[var(--foreground)] ring-1 ring-[var(--border)]"
       >
         <LogOut size={16} /> Sign out
       </button>

@@ -73,7 +73,7 @@ export default function StaffStatusPage() {
       <button
         type="button"
         onClick={() => setConfirmOut(true)}
-        className="tap-target mt-8 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-white/8 text-sm font-bold text-cream lg:hidden"
+        className="tap-target mt-8 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-white/8 text-sm font-bold text-cream md:hidden"
       >
         <LogOut size={16} /> Sign out
       </button>

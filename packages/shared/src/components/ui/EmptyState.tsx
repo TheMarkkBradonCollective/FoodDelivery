@@ -12,9 +12,9 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-[28px] border border-dashed border-[var(--border)] bg-white px-6 py-10 text-center shadow-sm">
-      <p className="font-extrabold text-ink">{title}</p>
-      {description && <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-ink/60">{description}</p>}
+    <div className="surface-card rounded-[28px] border-dashed px-6 py-10 text-center">
+      <p className="font-extrabold text-[var(--foreground)]">{title}</p>
+      {description && <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[var(--muted)]">{description}</p>}
       {action ? <div className="mt-5">{action}</div> : null}
     </div>
   );
