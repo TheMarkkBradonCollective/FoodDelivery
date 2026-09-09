@@ -27,7 +27,8 @@ export function MarketplaceSync() {
     async function load() {
       const snapshot = await fetchMarketplace(userId);
       if (cancelled) return;
-      if (snapshot.businesses.length > 0) {
+      const hasLiveCatalog = snapshot.businesses.some((b) => (b.menu?.length ?? 0) > 0);
+      if (hasLiveCatalog) {
         hydrateMarketplace(snapshot, false);
         return;
       }

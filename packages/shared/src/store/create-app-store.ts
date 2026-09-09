@@ -31,6 +31,27 @@ import {
   persistNotificationRead,
 } from "../lib/supabase/marketplace";
 
+function previewOfferForOrder(order: Order, kitchen: Business, customerName: string): Delivery {
+  return {
+    id: crypto.randomUUID(),
+    orderId: order.id,
+    businessId: kitchen.id,
+    pickup: kitchen.location,
+    dropoff: {
+      lat: kitchen.location.lat + 0.008,
+      lng: kitchen.location.lng + 0.006,
+    },
+    distanceMiles: 1.4,
+    status: "offered",
+    basePay: 4.5,
+    distancePay: 1.85,
+    tip: order.tip,
+    totalEarnings: 4.5 + 1.85 + order.tip,
+    estimatedMinutes: kitchen.etaMinutes,
+    customerName,
+  };
+}
+
 export interface AppState {
   user: User | null;
   theme: "light" | "dark";
@@ -123,7 +144,27 @@ function buildStore(
     setUser: (user: User | null) => set({ user }),
     logout: () => {
       void signOut();
-      set({ user: null });
+      set({
+        user: null,
+        businesses: [],
+        activeRun: null,
+        scheduledRuns: [],
+        runHistory: [],
+        activeDelivery: null,
+        pendingDelivery: null,
+        orders: [],
+        cart: [],
+        cartBusinessId: null,
+        favoriteBusinessIds: [],
+        notifications: [],
+        earnings: [],
+        marketplaceUsers: [],
+        staffMessages: [],
+        catalogPreview: false,
+        marketplaceReady: false,
+        searchQuery: "",
+        mapFilter: "all",
+      });
     },
     toggleTheme: () =>
       set((s) => ({ theme: s.theme === "light" ? "dark" : "light" })),
@@ -381,27 +422,7 @@ function buildStore(
           void offerDeliveryForOrder(order, kitchen, user.name);
         }
       } else if (kitchen && !get().pendingDelivery && !get().activeDelivery) {
-        const drop = {
-          lat: kitchen.location.lat + 0.008,
-          lng: kitchen.location.lng + 0.006,
-        };
-        set({
-          pendingDelivery: {
-            id: crypto.randomUUID(),
-            orderId: order.id,
-            businessId: kitchen.id,
-            pickup: kitchen.location,
-            dropoff: drop,
-            distanceMiles: 1.4,
-            status: "offered",
-            basePay: 4.5,
-            distancePay: 1.85,
-            tip: order.tip,
-            totalEarnings: 4.5 + 1.85 + order.tip,
-            estimatedMinutes: kitchen.etaMinutes,
-            customerName: user.name,
-          },
-        });
+        set({ pendingDelivery: previewOfferForOrder(order, kitchen, user.name) });
       }
 
       get().showToast("Order placed");
@@ -417,19 +438,35 @@ function buildStore(
       set((s) => ({
         orders: s.orders.map((o) => (o.id === orderId ? { ...o, status } : o)),
       }));
-      if (!get().catalogPreview) void persistOrderStatus(orderId, status, order?.runrId);
-      if (order && business && (status === "ready" || status === "runr_assigned")) {
-        const already =
-          get().pendingDelivery?.orderId === order.id || get().activeDelivery?.orderId === order.id;
-        if (!already) {
-          void offerDeliveryForOrder(order, business, customer?.name ?? "Customer").then(
-            (delivery) => {
-              if (delivery && !get().activeDelivery && !get().pendingDelivery) {
-                set({ pendingDelivery: delivery });
+      if (!get().catalogPreview) {
+        void persistOrderStatus(orderId, status, order?.runrId);
+        if (order && business && (status === "ready" || status === "runr_assigned")) {
+          const already =
+            get().pendingDelivery?.orderId === order.id || get().activeDelivery?.orderId === order.id;
+          if (!already) {
+            void offerDeliveryForOrder(order, business, customer?.name ?? "Customer").then(
+              (delivery) => {
+                if (delivery && !get().activeDelivery && !get().pendingDelivery) {
+                  set({ pendingDelivery: delivery });
+                }
               }
-            }
-          );
+            );
+          }
         }
+      } else if (
+        order &&
+        business &&
+        (status === "ready" || status === "runr_assigned") &&
+        !get().pendingDelivery &&
+        !get().activeDelivery
+      ) {
+        set({
+          pendingDelivery: previewOfferForOrder(
+            order,
+            business,
+            customer?.name ?? "Customer",
+          ),
+        });
       }
     },
 

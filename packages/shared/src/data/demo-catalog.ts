@@ -260,14 +260,18 @@ export function buildPreviewSnapshot(user?: { id: string; role: string }): Marke
   }));
 
   const myRuns = businesses.flatMap((b) => b.scheduledRuns).filter((r) => !userId || r.runrId === userId);
+  const activeRun =
+    role === "runr" && myRuns[0]
+      ? { ...myRuns[0], status: "checked_in" as const }
+      : null;
   const pendingDelivery = role === "runr" ? (deliveries.find((d) => d.status === "offered") ?? null) : null;
 
   return {
     businesses,
     orders,
-    scheduledRuns: myRuns.filter((r) => r.status === "scheduled"),
+    scheduledRuns: myRuns.filter((r) => r.id !== activeRun?.id && r.status === "scheduled"),
     runHistory: [],
-    activeRun: null,
+    activeRun,
     pendingDelivery,
     activeDelivery: null,
     earnings: [],

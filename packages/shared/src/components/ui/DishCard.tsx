@@ -36,7 +36,7 @@ export function DishCard({
     <article className="surface-card overflow-hidden rounded-[24px]">
       <div className="relative">
         <button type="button" onClick={onOpen} className="block w-full text-left" aria-label={name}>
-          <DishPhoto cuisine={cuisine} className="aspect-[4/3] w-full" />
+          <DishPhoto cuisine={cuisine} className="aspect-[3/2] w-full" />
         </button>
         {discountLabel ? (
           <span className="absolute left-2 top-2 rounded-full bg-ink px-2 py-0.5 text-[10px] font-bold text-white">

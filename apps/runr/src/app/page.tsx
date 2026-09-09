@@ -172,27 +172,22 @@ export default function RunrMapPage() {
 
       <MapControls
         onRecenter={() => setLocation(location)}
-        className={activeDelivery ? "top-4" : "top-28"}
+        className={activeDelivery || pendingDelivery ? "top-4" : "top-28"}
       />
 
-      {/* Top overlay — hide extras while a delivery is in progress */}
-      <div className="absolute inset-x-0 top-0 z-[1000] space-y-2 p-3">
-        {!activeDelivery && (
+      {!activeDelivery && !pendingDelivery && (
+        <div className="absolute inset-x-0 top-0 z-[1000] space-y-2 p-3">
           <div className="rounded-full bg-[var(--surface)]/95 px-4 py-2 shadow-runr-card backdrop-blur-md">
             <p className="text-sm font-extrabold tracking-tight">Pick a kitchen. Run it there.</p>
           </div>
-        )}
-        {!activeDelivery && (
           <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Search businesses" />
-        )}
-        {!activeDelivery && !pendingDelivery && <CatalogPreviewBanner />}
-        {!activeDelivery && !pendingDelivery && openOpportunities > 0 && (
-          <div className="flex items-center gap-2 rounded-full bg-runr-primary px-4 py-2 text-sm font-semibold text-white shadow-runr-card">
-            <Flame className="h-4 w-4" />
-            {openOpportunities} RUN opportunities near you
-          </div>
-        )}
-        {!activeDelivery && (
+          <CatalogPreviewBanner />
+          {openOpportunities > 0 && (
+            <div className="flex items-center gap-2 rounded-full bg-runr-primary px-4 py-2 text-sm font-semibold text-white shadow-runr-card">
+              <Flame className="h-4 w-4" />
+              {openOpportunities} RUN opportunities near you
+            </div>
+          )}
           <div className="flex gap-2 overflow-x-auto pb-1">
             {(
               [
@@ -216,11 +211,11 @@ export default function RunrMapPage() {
               </button>
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Active run banner */}
-      {activeRun && activeBusiness && !activeDelivery && (
+      {activeRun && activeBusiness && !activeDelivery && !pendingDelivery && (
         <ActiveRunBanner
           businessName={activeBusiness.name}
           timeRange={formatTimeRange(activeRun.startTime, activeRun.endTime)}
@@ -231,7 +226,7 @@ export default function RunrMapPage() {
       )}
 
       {/* Pending delivery */}
-      {activeRun && pendingDelivery && !activeDelivery && (
+      {pendingDelivery && !activeDelivery && (
         <div className="absolute inset-x-4 bottom-4 z-[1000]">
           <DeliveryCard
             delivery={pendingDelivery}

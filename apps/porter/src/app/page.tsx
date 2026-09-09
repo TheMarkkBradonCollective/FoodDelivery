@@ -166,22 +166,7 @@ export default function PorterDiscoverPage() {
         />
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-3 overflow-hidden rounded-[24px] bg-purple px-4 py-3 text-white shadow-runr-card">
-        <div className="min-w-0">
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-lime">Tonight · RUNR5</p>
-          <p className="truncate text-sm font-extrabold">$5 off · or PORTER10 for 10%</p>
-        </div>
-        <Link
-          href={filtered[0] ? `/restaurant/?id=${filtered[0].id}` : "/"}
-          className="tap-target inline-flex h-9 shrink-0 items-center rounded-full bg-white px-3 text-xs font-extrabold text-ink"
-        >
-          Order
-        </Link>
-      </div>
-
-      <CatalogPreviewBanner className="mt-4" />
-
-      <div className="mt-6 flex gap-4 overflow-x-auto pb-2">
+      <div className="mt-4 flex gap-4 overflow-x-auto pb-2">
         {categories.map((cat) => {
           const active = cat === "All" ? !selectedCategory : selectedCategory === cat;
           return (
@@ -202,7 +187,7 @@ export default function PorterDiscoverPage() {
         })}
       </div>
 
-      <div className="mt-8 md:grid md:grid-cols-[minmax(0,1fr)_240px] md:items-start md:gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-8">
+      <div className="mt-5 md:grid md:grid-cols-[minmax(0,1fr)_240px] md:items-start md:gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-8">
         <div>
           <div className="flex items-end justify-between">
             <div>
@@ -236,50 +221,65 @@ export default function PorterDiscoverPage() {
               ))}
             </div>
           )}
-
-          <div className="mt-8 flex items-end justify-between">
-            <div>
-              <h2 className="text-lg font-extrabold text-[var(--foreground)]">Nearby kitchens</h2>
-              <p className="text-sm text-[var(--muted)]">Fulfilled by RUNRs in your area</p>
-            </div>
-          </div>
-          <div className="mt-3 space-y-3">
-            {filtered.length === 0 ? (
-              <EmptyState
-                title="No kitchens yet"
-                description="No listings match your search. Clear filters to see everything nearby."
-                action={
-                  <button
-                    type="button"
-                    className="tap-target h-11 rounded-full bg-purple px-5 text-sm font-bold text-white"
-                    onClick={() => {
-                      setSelectedCategory(null);
-                      setSearchQuery("");
-                    }}
-                  >
-                    Clear filters
-                  </button>
-                }
-              />
-            ) : (
-              filtered.map((b, i) => (
-                <Link key={b.id} href={`/restaurant/?id=${b.id}`}>
-                  <BusinessCard
-                    business={b}
-                    userLocation={location}
-                    featured={i === 0}
-                    isFavorite={favoriteBusinessIds.includes(b.id)}
-                    onFavoriteToggle={() => toggleFavorite(b.id)}
-                  />
-                </Link>
-              ))
-            )}
-          </div>
         </div>
 
         <div className="mt-8 hidden overflow-hidden rounded-[28px] shadow-runr-card md:sticky md:top-6 md:mt-0 md:block md:h-[22rem] lg:h-[28rem]">
           <MapView center={location} markers={markers} dark={theme === "dark"} className="h-full" />
         </div>
+      </div>
+
+      <div className="mt-5 flex items-center justify-between gap-3 overflow-hidden rounded-[24px] bg-purple px-4 py-3 text-white shadow-runr-card">
+        <div className="min-w-0">
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-lime">Tonight · RUNR5</p>
+          <p className="truncate text-sm font-extrabold">$5 off · or PORTER10 for 10%</p>
+        </div>
+        <Link
+          href={filtered[0] ? `/restaurant/?id=${filtered[0].id}` : "/"}
+          className="tap-target inline-flex h-9 shrink-0 items-center rounded-full bg-white px-3 text-xs font-extrabold text-ink"
+        >
+          Order
+        </Link>
+      </div>
+
+      <CatalogPreviewBanner className="mt-4" />
+
+      <div className="mt-6 flex items-end justify-between">
+        <div>
+          <h2 className="text-lg font-extrabold text-[var(--foreground)]">Nearby kitchens</h2>
+          <p className="text-sm text-[var(--muted)]">Fulfilled by RUNRs in your area</p>
+        </div>
+      </div>
+      <div className="mt-3 space-y-3">
+        {filtered.length === 0 ? (
+          <EmptyState
+            title="No kitchens yet"
+            description="No listings match your search. Clear filters to see everything nearby."
+            action={
+              <button
+                type="button"
+                className="tap-target h-11 rounded-full bg-purple px-5 text-sm font-bold text-white"
+                onClick={() => {
+                  setSelectedCategory(null);
+                  setSearchQuery("");
+                }}
+              >
+                Clear filters
+              </button>
+            }
+          />
+        ) : (
+          filtered.map((b, i) => (
+            <Link key={b.id} href={`/restaurant/?id=${b.id}`}>
+              <BusinessCard
+                business={b}
+                userLocation={location}
+                featured={i === 0}
+                isFavorite={favoriteBusinessIds.includes(b.id)}
+                onFavoriteToggle={() => toggleFavorite(b.id)}
+              />
+            </Link>
+          ))
+        )}
       </div>
 
       <div className="relative mt-6 h-48 overflow-hidden rounded-[28px] shadow-runr-card md:hidden">
