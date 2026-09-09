@@ -29,7 +29,7 @@ export function getAppForRole(role: UserRole): string {
     customer: "PORTER",
     runr: "RUNR",
     business: "VENDR",
-    staff: "Admin Portal",
+    staff: "STAFF",
   };
   return apps[role];
 }

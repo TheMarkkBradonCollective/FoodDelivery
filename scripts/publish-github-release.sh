@@ -27,6 +27,7 @@ publish_app() {
     porter) title="PORTER v${version}" ;;
     runr) title="RUNR v${version}" ;;
     vendr) title="VENDR v${version}" ;;
+    staff) title="STAFF v${version}" ;;
     *) title="${app} v${version}" ;;
   esac
 
@@ -48,7 +49,7 @@ publish_app() {
   echo "Published $tag → https://github.com/$REPO/releases/tag/$tag"
 }
 
-for app in porter runr vendr; do
+for app in porter runr vendr staff; do
   publish_app "$app"
 done
 
@@ -64,17 +65,19 @@ fi
 gh release create "$platform_tag" \
   --repo "$REPO" \
   --title "RUNR Platform v${platform_version}" \
-  --notes "RUNR Platform v${platform_version} — signed Capacitor APKs with bundled UI for PORTER, RUNR, and VENDR." \
+  --notes "RUNR Platform v${platform_version} — signed Capacitor APKs for PORTER, RUNR, VENDR, and STAFF." \
   release/porter-v"${platform_version}".apk#porter-v"${platform_version}".apk \
   release/runr-v"${platform_version}".apk#runr-v"${platform_version}".apk \
-  release/vendr-v"${platform_version}".apk#vendr-v"${platform_version}".apk
+  release/vendr-v"${platform_version}".apk#vendr-v"${platform_version}".apk \
+  release/staff-v"${platform_version}".apk#staff-v"${platform_version}".apk
 
 zip_path="release/runr-apps-apks.zip"
 rm -f "$zip_path" "release/runr-apps-apks-v${platform_version}.zip"
 (cd release && zip -j "runr-apps-apks.zip" \
   "porter-v${platform_version}.apk" \
   "runr-v${platform_version}.apk" \
-  "vendr-v${platform_version}.apk")
+  "vendr-v${platform_version}.apk" \
+  "staff-v${platform_version}.apk")
 gh release upload "$platform_tag" --repo "$REPO" "$zip_path" --clobber
 
 echo "Published platform release $platform_tag (includes runr-apps-apks.zip)"

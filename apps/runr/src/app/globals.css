@@ -1,9 +1,16 @@
 @import "tailwindcss";
 @import "@runr/shared/styles/globals.css";
 
-/* RUNR — unified Porter blue brand */
+/* RUNR — black mark on white */
 :root {
-  --color-runr-primary: #0066ff;
-  --color-runr-primary-hover: #0052cc;
-  --color-runr-primary-muted: #e6f0ff;
+  --color-runr-primary: #18181b;
+  --color-runr-primary-hover: #000000;
+  --color-runr-primary-muted: #f4f4f5;
+  --color-runr-navigation: #18181b;
+  --background: #ffffff;
+  --foreground: #18181b;
+  --surface: #ffffff;
+  --surface-elevated: #f4f4f5;
+  --border: #e4e4e7;
+  --muted: #71717a;
 }

@@ -17,8 +17,8 @@ export default function HomePage() {
             <span className="text-[#0066FF]">Run Your Time.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-[var(--muted)]">
-            RUNR is a three-app ecosystem connecting customers, delivery workers,
-            and businesses on one map-first marketplace network.
+            RUNR is a four-app ecosystem connecting customers, delivery workers,
+            businesses, and platform staff on one map-first marketplace network.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
@@ -62,12 +62,12 @@ export default function HomePage() {
           <div className="text-center">
             <h2 className="text-3xl font-bold tracking-tight">Download the Apps</h2>
             <p className="mx-auto mt-3 max-w-xl text-[var(--muted)]">
-              Three separate Android apps — each built for one role on the RUNR
+              Four Android apps — each built for one role on the RUNR
               marketplace. Download the app that fits you.
             </p>
           </div>
 
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {apps.map((app) => (
               <DownloadCard key={app.id} app={app} />
             ))}

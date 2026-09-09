@@ -1,9 +1,19 @@
 @import "tailwindcss";
 @import "@runr/shared/styles/globals.css";
 
-/* VENDR — unified Porter blue brand */
+/* VENDR — white mark on Porter blue */
 :root {
   --color-runr-primary: #0066ff;
   --color-runr-primary-hover: #0052cc;
-  --color-runr-primary-muted: #e6f0ff;
+  --color-runr-primary-muted: #1e4a8a;
+  --background: #0066ff;
+  --foreground: #ffffff;
+  --surface: #0052cc;
+  --surface-elevated: #0047b3;
+  --border: #3385ff;
+  --muted: #cce0ff;
+}
+
+body {
+  color: var(--foreground);
 }
