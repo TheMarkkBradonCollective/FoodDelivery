@@ -8,10 +8,10 @@ export const MapView = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-full w-full items-center justify-center bg-runr-neutral-100 dark:bg-runr-neutral-900">
+      <div className="flex h-full w-full items-center justify-center bg-[#F6F1E8] dark:bg-[#100814]">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="h-8 w-8 animate-spin text-runr-primary" />
-          <p className="text-sm text-[var(--muted)]">Loading map...</p>
+          <Loader2 className="h-7 w-7 animate-spin text-purple" />
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--muted)]">Mapping</p>
         </div>
       </div>
     ),

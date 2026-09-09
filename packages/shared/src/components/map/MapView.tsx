@@ -2,13 +2,21 @@
 
 import { useEffect, useMemo } from "react";
 import {
+  Circle,
   MapContainer,
   Marker,
+  Polyline,
   Popup,
   TileLayer,
   useMap,
 } from "react-leaflet";
-import { useLeafletFix, createCoverageIcon, createUserIcon } from "./map-utils";
+import {
+  MAP_TILES,
+  createPlaceIcon,
+  createUserIcon,
+  routeArc,
+  useLeafletFix,
+} from "./map-utils";
 import type { Coordinates } from "../../types/index";
 
 export interface MapMarker {
@@ -27,6 +35,7 @@ export interface MapViewProps {
   markers?: MapMarker[];
   showUserLocation?: boolean;
   userLocation?: Coordinates;
+  route?: { from: Coordinates; to: Coordinates };
   onRecenter?: () => void;
   className?: string;
   dark?: boolean;
@@ -46,33 +55,45 @@ function RecenterControl({
   return null;
 }
 
+function FitRoute({ from, to }: { from: Coordinates; to: Coordinates }) {
+  const map = useMap();
+  useEffect(() => {
+    map.fitBounds(
+      [
+        [from.lat, from.lng],
+        [to.lat, to.lng],
+      ],
+      { padding: [56, 56], maxZoom: 15, animate: true },
+    );
+  }, [from.lat, from.lng, to.lat, to.lng, map]);
+  return null;
+}
+
 export function MapView({
   center,
   zoom = 14,
   markers = [],
   showUserLocation = true,
   userLocation,
+  route,
   className,
   dark = false,
 }: MapViewProps) {
   useLeafletFix();
 
-  const tileUrl = dark
-    ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-    : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
-
   const userPos = userLocation ?? center;
+  const path = useMemo(
+    () => (route ? routeArc(route.from, route.to) : null),
+    [route],
+  );
 
   const markerIcons = useMemo(
     () =>
-      markers.reduce<Record<string, ReturnType<typeof createCoverageIcon>>>(
-        (acc, m) => {
-          acc[m.id] = createCoverageIcon(m.color, m.label);
-          return acc;
-        },
-        {}
-      ),
-    [markers]
+      markers.reduce<Record<string, ReturnType<typeof createPlaceIcon>>>((acc, m) => {
+        acc[m.id] = createPlaceIcon(m.color, m.label);
+        return acc;
+      }, {}),
+    [markers],
   );
 
   return (
@@ -80,18 +101,54 @@ export function MapView({
       <MapContainer
         center={[center.lat, center.lng]}
         zoom={zoom}
-        className="h-full w-full"
+        className={`runr-map h-full w-full ${dark ? "runr-map--dark" : "runr-map--light"}`}
         zoomControl={false}
         attributionControl={false}
+        preferCanvas
       >
-        <TileLayer url={tileUrl} />
-        <RecenterControl center={center} zoom={zoom} />
+        <TileLayer url={dark ? MAP_TILES.dark : MAP_TILES.light} maxZoom={16} />
+        <TileLayer url={dark ? MAP_TILES.darkLabels : MAP_TILES.lightLabels} maxZoom={16} opacity={0.9} />
+        {route ? <FitRoute from={route.from} to={route.to} /> : <RecenterControl center={center} zoom={zoom} />}
+
+        {path ? (
+          <>
+            <Polyline
+              positions={path}
+              pathOptions={{
+                color: dark ? "#1A1224" : "#F6F1E8",
+                weight: 10,
+                opacity: 0.95,
+                lineCap: "round",
+                lineJoin: "round",
+              }}
+            />
+            <Polyline
+              positions={path}
+              pathOptions={{
+                color: "#7048F8",
+                weight: 5,
+                opacity: 1,
+                lineCap: "round",
+                lineJoin: "round",
+              }}
+            />
+          </>
+        ) : null}
 
         {showUserLocation && (
-          <Marker
-            position={[userPos.lat, userPos.lng]}
-            icon={createUserIcon()}
-          />
+          <>
+            <Circle
+              center={[userPos.lat, userPos.lng]}
+              radius={110}
+              pathOptions={{
+                color: "#7048F8",
+                fillColor: "#A0F878",
+                fillOpacity: dark ? 0.16 : 0.18,
+                weight: 0,
+              }}
+            />
+            <Marker position={[userPos.lat, userPos.lng]} icon={createUserIcon()} />
+          </>
         )}
 
         {markers.map((marker) => (
@@ -103,12 +160,10 @@ export function MapView({
               click: () => marker.onClick?.(),
             }}
           >
-            <Popup>
-              <div className="text-sm">
-                <p className="font-semibold">{marker.title}</p>
-                {marker.subtitle && (
-                  <p className="text-gray-600">{marker.subtitle}</p>
-                )}
+            <Popup className="runr-map-popup">
+              <div>
+                <p className="font-extrabold">{marker.title}</p>
+                {marker.subtitle ? <p className="mt-0.5 text-xs opacity-75">{marker.subtitle}</p> : null}
               </div>
             </Popup>
           </Marker>

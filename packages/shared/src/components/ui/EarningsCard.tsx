@@ -18,7 +18,7 @@ export function EarningsCard({
   return (
     <div
       className={cn(
-        "rounded-runr-lg border border-[var(--border)] bg-[var(--surface-elevated)] p-4",
+        "rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] p-3",
         highlight && "border-runr-primary/20 bg-runr-primary-muted",
         className
       )}
@@ -28,7 +28,7 @@ export function EarningsCard({
       </p>
       <p
         className={cn(
-          "mt-1 text-2xl font-bold tabular-nums",
+          "mt-0.5 text-lg font-extrabold tabular-nums",
           highlight ? "text-runr-primary" : "text-[var(--foreground)]"
         )}
       >

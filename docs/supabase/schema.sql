@@ -49,14 +49,23 @@ create policy "Users can read own profile"
   using (auth.uid() = id);
 
 drop policy if exists "Staff can read all profiles" on public.profiles;
+create or replace function public.is_staff()
+returns boolean
+language sql
+security definer
+set search_path = public
+stable
+as $$
+  select exists (
+    select 1 from public.profiles p
+    where p.id = auth.uid() and p.role = 'staff'
+  );
+$$;
+
+drop policy if exists "Staff can read all profiles" on public.profiles;
 create policy "Staff can read all profiles"
   on public.profiles for select
-  using (
-    exists (
-      select 1 from public.profiles p
-      where p.id = auth.uid() and p.role = 'staff'
-    )
-  );
+  using (public.is_staff());
 
 drop policy if exists "Users can update own profile" on public.profiles;
 create policy "Users can update own profile"
@@ -493,6 +502,8 @@ create table if not exists public.orders (
   status text not null default 'new',
   created_at timestamptz not null default now()
 );
+
+alter table public.orders add column if not exists delivery_address text;
 
 create table if not exists public.runs (
   id uuid primary key default gen_random_uuid(),

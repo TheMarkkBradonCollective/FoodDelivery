@@ -49,6 +49,62 @@ export async function signOut(): Promise<void> {
   await getSupabaseClient().auth.signOut();
 }
 
+export async function signUpWithEmail(
+  email: string,
+  password: string,
+  name: string,
+  role: import("../../types/index").UserRole
+): Promise<{ success: true; session: AuthSession } | { success: false; error: string }> {
+  if (!isSupabaseConfigured()) {
+    return { success: false, error: "Supabase is not configured for this build." };
+  }
+  if (password.length < 8) {
+    return { success: false, error: "Use a password with at least 8 characters." };
+  }
+  const supabase = getSupabaseClient();
+  const { data, error } = await supabase.auth.signUp({
+    email: email.trim(),
+    password,
+    options: {
+      data: { name: name.trim() || email.split("@")[0], role },
+    },
+  });
+  if (error) return { success: false, error: error.message };
+  if (!data.session) {
+    return {
+      success: false,
+      error: "Account created. Check your email to verify, then sign in.",
+    };
+  }
+  return { success: true, session: await sessionToAuthSession(data.session) };
+}
+
+export async function requestPasswordReset(
+  email: string
+): Promise<{ success: true } | { success: false; error: string }> {
+  if (!isSupabaseConfigured()) {
+    return { success: false, error: "Supabase is not configured for this build." };
+  }
+  const supabase = getSupabaseClient();
+  const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/` : undefined;
+  const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+    redirectTo,
+  });
+  if (error) {
+    const status = "status" in error ? Number(error.status) : 0;
+    const msg = error.message.toLowerCase();
+    if (status === 400 || msg.includes("redirect") || msg.includes("invalid request")) {
+      return {
+        success: false,
+        error:
+          "We couldn’t send a reset email from this site. Check the address and try again, or ask an operator to allow this URL in Auth redirect settings.",
+      };
+    }
+    return { success: false, error: error.message };
+  }
+  return { success: true };
+}
+
 export async function getCurrentAuthSession(): Promise<AuthSession | null> {
   if (!isSupabaseConfigured()) return null;
 

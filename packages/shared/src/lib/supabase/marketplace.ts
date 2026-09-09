@@ -96,6 +96,7 @@ function mapOrder(row: Record<string, unknown>): Order {
     status: row.status as OrderStatus,
     runrId: row.runr_id ? String(row.runr_id) : undefined,
     createdAt: String(row.created_at),
+    deliveryAddress: row.delivery_address ? String(row.delivery_address) : undefined,
   };
 }
 
@@ -290,7 +291,7 @@ export async function fetchMarketplace(userId?: string): Promise<MarketplaceSnap
 export async function persistOrder(order: Order) {
   if (!isSupabaseConfigured()) return;
   const supabase = getSupabaseClient();
-  await supabase.from("orders").upsert({
+  const { error } = await supabase.from("orders").upsert({
     id: order.id,
     customer_id: order.customerId,
     business_id: order.businessId,
@@ -304,7 +305,9 @@ export async function persistOrder(order: Order) {
     total: order.total,
     status: order.status,
     created_at: order.createdAt,
+    delivery_address: order.deliveryAddress ?? null,
   });
+  if (error) console.warn("persistOrder", error.message);
 }
 
 export async function persistRun(run: Run) {
@@ -400,6 +403,13 @@ export async function persistNotification(userId: string, note: Notification) {
     read: note.read,
     created_at: note.createdAt,
   });
+}
+
+export async function persistNotificationRead(id: string) {
+  if (!isSupabaseConfigured()) return;
+  const supabase = getSupabaseClient();
+  const { error } = await supabase.from("notifications").update({ read: true }).eq("id", id);
+  if (error) console.warn("notifications read", error.message);
 }
 
 export async function offerDeliveryForOrder(order: Order, business: Business, customerName: string) {

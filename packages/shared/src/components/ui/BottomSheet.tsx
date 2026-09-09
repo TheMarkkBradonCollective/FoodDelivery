@@ -72,16 +72,16 @@ export function BottomSheet({
         >
           <div className="h-1 w-10 rounded-full bg-runr-neutral-300 dark:bg-runr-neutral-600" />
           {title && (
-            <h2 className="mt-3 text-lg font-semibold text-[var(--foreground)]">
+            <h2 className="mt-2.5 text-base font-extrabold text-[var(--foreground)]">
               {title}
             </h2>
           )}
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4 pb-4">{children}</div>
+        <div className="flex-1 overflow-y-auto px-5 pb-4">{children}</div>
 
         {stickyAction && (
-          <div className="shrink-0 border-t border-[var(--border)] bg-[var(--surface)] p-4">
+          <div className="overlay-safe shrink-0 border-t border-[var(--border)] bg-[var(--surface)] px-5 py-3">
             {stickyAction}
           </div>
         )}

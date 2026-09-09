@@ -20,8 +20,8 @@ export function CoverageTimeline({
         <div
           key={`${interval.startTime}-${interval.endTime}`}
           className={cn(
-            "flex items-center justify-between rounded-runr-md border border-[var(--border)] bg-[var(--surface-elevated)]",
-            compact ? "px-3 py-2" : "px-4 py-3"
+            "flex items-center justify-between rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)]",
+            compact ? "px-3 py-2" : "px-3.5 py-2.5"
           )}
         >
           <div className="min-w-0 flex-1">
@@ -29,10 +29,11 @@ export function CoverageTimeline({
               {formatTimeRange(interval.startTime, interval.endTime)}
             </p>
             <p className="text-xs text-[var(--muted)]">
-              {interval.scheduledRunrs} / {interval.maxRunrs} RUNRs
+              Needed {interval.maxRunrs} · Covered {interval.scheduledRunrs}
+              {interval.gap > 0 ? ` · Gap ${interval.gap}` : " · Full"}
             </p>
           </div>
-          <CoverageBadge status={interval.status} gap={interval.gap} size="sm" />
+          {compact ? null : <CoverageBadge status={interval.status} gap={interval.gap} size="sm" />}
         </div>
       ))}
     </div>

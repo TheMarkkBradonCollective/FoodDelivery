@@ -1,5 +1,5 @@
 import type { User, UserRole } from "../types/index";
-import { signInWithEmail as supabaseSignIn } from "./supabase/auth";
+import { signInWithEmail as supabaseSignIn, signUpWithEmail, requestPasswordReset } from "./supabase/auth";
 
 export interface AuthSession {
   user: User;
@@ -12,6 +12,19 @@ export async function authenticate(
   password: string
 ): Promise<{ success: true; session: AuthSession } | { success: false; error: string }> {
   return supabaseSignIn(email, password);
+}
+
+export async function registerAccount(
+  email: string,
+  password: string,
+  name: string,
+  role: UserRole
+) {
+  return signUpWithEmail(email, password, name, role);
+}
+
+export async function sendPasswordReset(email: string) {
+  return requestPasswordReset(email);
 }
 
 export function getRoleLabel(role: UserRole): string {

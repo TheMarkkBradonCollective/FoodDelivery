@@ -17,8 +17,8 @@ export default function HomePage() {
             <span className="text-[#7048F8]">Run Your Time.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-[var(--muted)]">
-            RUNR is a four-app ecosystem connecting customers, delivery workers,
-            businesses, and platform staff on one map-first marketplace network.
+            PORTER creates the demand. VENDR fulfills the business side. RUNR moves it.
+            One coverage-driven marketplace — not three disconnected apps.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a

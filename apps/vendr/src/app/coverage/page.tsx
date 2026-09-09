@@ -1,12 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { useAppStore } from "@/store";
 import { CoverageTimeline } from "@runr/shared/components/ui/CoverageTimeline";
-import { PrimaryButton } from "@runr/shared/components/ui/PrimaryButton";
-import {
-  calculateCoverageTimeline,
-} from "@runr/shared/lib/coverage-engine";
+import { calculateCoverageTimeline } from "@runr/shared/lib/coverage-engine";
 import { formatTimeRange } from "@runr/shared/lib/utils";
 import { selectVendorBusiness } from "@runr/shared/lib/utils";
 import { EmptyState } from "@runr/shared/components/ui/EmptyState";
@@ -14,8 +10,6 @@ import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 export default function BusinessCoveragePage() {
   const { businesses, updateBusinessCapacity, user } = useAppStore();
   const business = selectVendorBusiness(businesses, user?.id);
-  const [editingRuleId, setEditingRuleId] = useState<string | null>(null);
-  const [editValue, setEditValue] = useState(0);
 
   const timeline = business
     ? calculateCoverageTimeline(business.coverageRules, business.scheduledRuns).filter(
@@ -25,82 +19,50 @@ export default function BusinessCoveragePage() {
 
   if (!business) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-6">
+      <div className="px-5 py-8">
         <EmptyState title="No business connected" description="Sign in with your VENDR account." />
       </div>
     );
   }
 
   return (
-    <div className="px-4 py-6 pb-24 lg:pb-6">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">VENDR</p>
-      <h1 className="mt-1 text-2xl font-extrabold">Coverage Schedule</h1>
+    <div className="px-5 pb-8 pt-4">
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">VENDR</p>
+      <h1 className="mt-0.5 text-[1.375rem] font-extrabold">Coverage</h1>
       <p className="mt-1 text-sm text-[var(--muted)]">
-        Define maximum RUNRs needed per time period
+        Slide Needed per window. Covered updates as RUNRs book.
       </p>
 
-      <section className="mt-6">
-        <h2 className="mb-3 font-semibold">Live Timeline</h2>
-        <CoverageTimeline intervals={timeline} />
-      </section>
-
-      <section className="mt-8">
-        <h2 className="mb-3 font-semibold">Capacity Rules</h2>
-        <div className="space-y-3">
+      <section className="mt-5">
+        <h2 className="mb-2 text-base font-extrabold">Needed by window</h2>
+        <div className="space-y-2">
           {business.coverageRules.map((rule) => (
             <div
               key={rule.id}
-              className="rounded-runr-lg border border-[var(--border)] bg-[var(--surface-elevated)] p-4"
+              className="rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] px-3.5 py-3"
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium">
-                    {formatTimeRange(rule.startTime, rule.endTime)}
-                  </p>
-                  {editingRuleId === rule.id ? (
-                    <div className="mt-2 flex items-center gap-2">
-                      <label className="text-sm text-[var(--muted)]">Max RUNRs:</label>
-                      <input
-                        type="number"
-                        min={0}
-                        max={20}
-                        value={editValue}
-                        onChange={(e) => setEditValue(Number(e.target.value))}
-                        className="w-20 rounded-runr-md border border-[var(--border)] px-2 py-1 text-sm"
-                      />
-                    </div>
-                  ) : (
-                    <p className="text-sm text-[var(--muted)]">
-                      Maximum RUNRs: {rule.maxRunrs}
-                    </p>
-                  )}
-                </div>
-                {editingRuleId === rule.id ? (
-                  <PrimaryButton
-                    size="sm"
-                    onClick={() => {
-                      updateBusinessCapacity(business.id, rule.id, editValue);
-                      setEditingRuleId(null);
-                    }}
-                  >
-                    Save
-                  </PrimaryButton>
-                ) : (
-                  <PrimaryButton
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => {
-                      setEditingRuleId(rule.id);
-                      setEditValue(rule.maxRunrs);
-                    }}
-                  >
-                    Edit
-                  </PrimaryButton>
-                )}
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="text-sm font-bold">{formatTimeRange(rule.startTime, rule.endTime)}</p>
+                <p className="text-sm font-extrabold tabular-nums text-purple">{rule.maxRunrs}</p>
               </div>
+              <input
+                type="range"
+                min={0}
+                max={12}
+                step={1}
+                value={rule.maxRunrs}
+                aria-label={`Needed RUNRs ${formatTimeRange(rule.startTime, rule.endTime)}`}
+                onChange={(e) => updateBusinessCapacity(business.id, rule.id, Number(e.target.value))}
+                className="mt-2 h-8 w-full range-slider"
+              />
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="mt-6">
+        <h2 className="mb-2 text-base font-extrabold">Live timeline</h2>
+        <CoverageTimeline intervals={timeline.slice(0, 4)} compact />
       </section>
     </div>
   );

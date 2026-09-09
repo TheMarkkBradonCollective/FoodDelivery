@@ -1,21 +1,24 @@
 @import "tailwindcss";
 @import "@runr/shared/styles/globals.css";
+@source "../../../packages/shared/src/**/*.{ts,tsx}";
 
-/* VENDR — immersive purple operations console */
+/* VENDR — cream operations surface, purple + lime brand */
 :root {
-  --color-runr-primary: #a0f878;
-  --color-runr-primary-hover: #8eef64;
-  --color-runr-primary-muted: #4a28c8;
-  --color-runr-navigation: #a0f878;
-  --on-primary: #1a1224;
-  --background: #7048f8;
-  --foreground: #fffdf9;
-  --surface: #5c36e0;
-  --surface-elevated: #4a28c8;
-  --border: #9b86ff;
-  --muted: #eee8ff;
+  --color-runr-primary: #7048f8;
+  --color-runr-primary-hover: #5c36e0;
+  --color-runr-primary-muted: #eee8ff;
+  --color-runr-navigation: #7048f8;
+  --on-primary: #ffffff;
+  --background: #f6f1e8;
+  --foreground: #1a1224;
+  --surface: #fffdf9;
+  --surface-elevated: #ffffff;
+  --border: #e8e0d4;
+  --muted: #6f6678;
 }
 
-body {
+.vendr-app {
+  min-height: 100dvh;
+  background: var(--background);
   color: var(--foreground);
 }

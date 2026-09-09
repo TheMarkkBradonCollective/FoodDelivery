@@ -2,14 +2,15 @@
 
 import { cn, formatCurrency } from "../../lib/utils";
 import type { Delivery } from "../../types/index";
-import { PrimaryButton } from "./PrimaryButton";
-import { MapPin, Clock, DollarSign } from "lucide-react";
+import { SlideToConfirm } from "./SlideToConfirm";
 
 interface DeliveryCardProps {
   delivery: Delivery;
   businessName: string;
   onAccept?: () => void;
   onNavigate?: () => void;
+  onComplete?: () => void;
+  completeLabel?: string;
   variant?: "offer" | "pickup" | "dropoff" | "complete";
   className?: string;
 }
@@ -19,65 +20,62 @@ export function DeliveryCard({
   businessName,
   onAccept,
   onNavigate,
+  onComplete,
+  completeLabel,
   variant = "offer",
   className,
 }: DeliveryCardProps) {
   return (
     <div
       className={cn(
-        "rounded-runr-xl border border-[var(--border)] bg-[var(--surface-elevated)] p-5 shadow-runr-card",
+        "rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] p-3.5",
         variant === "offer" && "border-runr-primary/30 ring-2 ring-runr-primary/10",
         className
       )}
     >
-      <p className="text-xs font-semibold uppercase tracking-wider text-runr-primary">
+      <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-runr-primary">
         {variant === "offer" && "New Delivery"}
         {variant === "pickup" && "Pickup"}
         {variant === "dropoff" && "Deliver To"}
         {variant === "complete" && "Delivery Complete"}
       </p>
-      <h3 className="mt-1 text-lg font-semibold text-[var(--foreground)]">
+      <h3 className="mt-0.5 text-base font-extrabold text-[var(--foreground)]">
         {variant === "dropoff" ? delivery.customerName : businessName}
       </h3>
 
-      <div className="mt-4 space-y-2">
-        <div className="flex items-center gap-2 text-sm text-[var(--muted)]">
-          <MapPin className="h-4 w-4" />
-          <span>{delivery.distanceMiles.toFixed(1)} miles</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-[var(--muted)]">
-          <Clock className="h-4 w-4" />
-          <span>{delivery.estimatedMinutes} min estimated</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm font-medium text-[var(--foreground)]">
-          <DollarSign className="h-4 w-4 text-runr-success" />
-          <span>
-            {formatCurrency(delivery.totalEarnings)} delivery earnings
-            {variant === "complete" && delivery.tip > 0 && (
-              <> + {formatCurrency(delivery.tip)} tip</>
-            )}
-          </span>
-        </div>
-      </div>
+      <p className="mt-2 text-xs text-[var(--muted)]">
+        {delivery.distanceMiles.toFixed(1)} mi · {delivery.estimatedMinutes} min ·{" "}
+        <span className="font-semibold text-[var(--foreground)]">
+          {formatCurrency(delivery.totalEarnings)}
+        </span>
+      </p>
 
       {delivery.instructions && variant === "dropoff" && (
-        <p className="mt-3 rounded-runr-md bg-runr-neutral-100 px-3 py-2 text-sm dark:bg-runr-neutral-800">
+        <p className="mt-2 rounded-runr-md bg-[var(--background)] px-3 py-2 text-sm">
           {delivery.instructions}
         </p>
       )}
 
-      <div className="mt-4 flex gap-2">
-        {variant === "offer" && onAccept && (
-          <PrimaryButton className="w-full" onClick={onAccept}>
-            Accept
-          </PrimaryButton>
-        )}
-        {(variant === "pickup" || variant === "dropoff") && onNavigate && (
-          <PrimaryButton className="w-full" onClick={onNavigate}>
-            Navigate
-          </PrimaryButton>
-        )}
-      </div>
+      {variant === "offer" && onAccept ? (
+        <SlideToConfirm className="mt-3" label="Slide to accept" onConfirm={onAccept} />
+      ) : null}
+
+      {(variant === "pickup" || variant === "dropoff") && (onNavigate || onComplete) ? (
+        <div className="mt-3 space-y-2">
+          {onComplete ? (
+            <SlideToConfirm label={completeLabel ?? "Slide to complete"} onConfirm={onComplete} />
+          ) : null}
+          {onNavigate ? (
+            <button
+              type="button"
+              onClick={onNavigate}
+              className="h-9 w-full rounded-full text-xs font-bold text-purple"
+            >
+              Open map
+            </button>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

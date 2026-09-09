@@ -13,6 +13,7 @@
     "./components/map": "./src/components/map/index.tsx",
     "./components/map/*": "./src/components/map/*",
     "./components/layout/*": "./src/components/layout/*",
+    "./components/auth/*": "./src/components/auth/*",
     "./components/providers/*": "./src/components/providers/*",
     "./components/staff/*": "./src/components/staff/*"
   },

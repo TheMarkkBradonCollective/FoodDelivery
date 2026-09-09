@@ -152,15 +152,15 @@ export function getBusinessCoverageSummary(
 }
 
 export function getMarkerColor(status: CoverageStatus, demandHigh?: boolean): string {
-  if (demandHigh && status !== "full") return "#FF4F00";
+  if (demandHigh && status !== "full") return "#5C36E0";
   switch (status) {
     case "full":
-      return "#22C55E";
+      return "#A0F878";
     case "low":
-      return "#F97316";
+      return "#7048F8";
     case "gap":
-      return "#EF4444";
+      return "#2A1478";
     default:
-      return "#71717A";
+      return "#6F6678";
   }
 }

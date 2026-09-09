@@ -3,74 +3,81 @@
 import { useEffect } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import type { Coordinates } from "../../types/index";
+
+export const MAP_TILES = {
+  light: "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+  lightLabels:
+    "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
+  dark: "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+  darkLabels:
+    "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
+} as const;
 
 export function useLeafletFix() {
   useEffect(() => {
-    // Fix default marker icons in webpack/next
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     delete (L.Icon.Default.prototype as any)._getIconUrl;
     L.Icon.Default.mergeOptions({
-      iconRetinaUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
-      iconUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
-      shadowUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
+      iconRetinaUrl: "",
+      iconUrl: "",
+      shadowUrl: "",
     });
   }, []);
 }
 
-export function createCoverageIcon(color: string, label?: string) {
+function contrastOn(color: string) {
+  const c = color.replace("#", "").toLowerCase();
+  if (c === "a0f878" || c === "f6f1e8") return "#1A1224";
+  return "#F6F1E8";
+}
+
+export function createPlaceIcon(color: string, label?: string) {
+  const ink = contrastOn(color);
+  const text = label
+    ? `<text x="16" y="18.5" text-anchor="middle" font-size="9" font-weight="800" font-family="Plus Jakarta Sans, Inter, sans-serif" fill="${ink}">${label}</text>`
+    : `<circle cx="16" cy="16" r="4.5" fill="${ink}"/>`;
+
   return L.divIcon({
-    className: "runr-marker",
-    html: `<div style="
-      width: 36px;
-      height: 36px;
-      background: ${color};
-      border: 3px solid white;
-      border-radius: 50%;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 10px;
-      font-weight: 700;
-    ">${label ?? ""}</div>`,
-    iconSize: [36, 36],
-    iconAnchor: [18, 18],
+    className: "runr-pin",
+    html: `<svg width="32" height="40" viewBox="0 0 32 40" aria-hidden="true">
+      <path d="M16 1.6c7.6 0 13.8 6 13.8 13.4 0 9.6-13.8 23-13.8 23S2.2 24.6 2.2 15C2.2 7.6 8.4 1.6 16 1.6z" fill="${color}" stroke="#F6F1E8" stroke-width="2.2"/>
+      ${text}
+    </svg>`,
+    iconSize: [32, 40],
+    iconAnchor: [16, 38],
+    popupAnchor: [0, -32],
   });
 }
 
 export function createUserIcon() {
   return L.divIcon({
-    className: "runr-user-marker",
-    html: `<div style="
-      width: 16px;
-      height: 16px;
-      background: #3B82F6;
-      border: 3px solid white;
-      border-radius: 50%;
-      box-shadow: 0 0 0 8px rgba(59,130,246,0.25);
-    "></div>`,
-    iconSize: [16, 16],
-    iconAnchor: [8, 8],
+    className: "runr-puck",
+    html: `<span class="runr-puck-pulse"></span><span class="runr-puck-core"></span>`,
+    iconSize: [22, 22],
+    iconAnchor: [11, 11],
   });
 }
 
 export function createRunrIcon(status: "available" | "busy" = "available") {
-  const color = status === "available" ? "#22C55E" : "#F97316";
-  return L.divIcon({
-    className: "runr-driver-marker",
-    html: `<div style="
-      width: 28px;
-      height: 28px;
-      background: ${color};
-      border: 2px solid white;
-      border-radius: 50%;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    "></div>`,
-    iconSize: [28, 28],
-    iconAnchor: [14, 14],
-  });
+  return createPlaceIcon(status === "available" ? "#A0F878" : "#7048F8");
+}
+
+export function routeArc(from: Coordinates, to: Coordinates, steps = 28): [number, number][] {
+  const midLat = (from.lat + to.lat) / 2;
+  const midLng = (from.lng + to.lng) / 2;
+  const dx = to.lng - from.lng;
+  const dy = to.lat - from.lat;
+  const bulge = 0.18;
+  const cx = midLng - dy * bulge;
+  const cy = midLat + dx * bulge;
+  const pts: [number, number][] = [];
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const u = 1 - t;
+    const lat = u * u * from.lat + 2 * u * t * cy + t * t * to.lat;
+    const lng = u * u * from.lng + 2 * u * t * cx + t * t * to.lng;
+    pts.push([lat, lng]);
+  }
+  return pts;
 }

@@ -4,55 +4,80 @@ import { useAppStore } from "@/store";
 import { StatusBadge } from "@runr/shared/components/ui/StatusBadge";
 import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 import { selectVendorBusiness } from "@runr/shared/lib/utils";
-import { PrimaryButton } from "@runr/shared/components/ui/PrimaryButton";
+import { SlideToConfirm } from "@runr/shared/components/ui/SlideToConfirm";
+import { JobLoop } from "@runr/shared/components/ui/JobLoop";
 
 export default function BusinessOrdersPage() {
   const { orders, businesses, user, updateOrderStatus } = useAppStore();
   const business = selectVendorBusiness(businesses, user?.id);
   const visible = business ? orders.filter((o) => o.businessId === business.id) : orders;
 
-  const nextStatus: Record<string, string | undefined> = {
-    new: "accepted",
-    accepted: "preparing",
-    preparing: "ready",
-    ready: "runr_assigned",
-  };
-
   return (
-    <div className="px-4 py-6 pb-24 lg:pb-6">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">VENDR</p>
-      <h1 className="mt-1 text-2xl font-extrabold">Orders</h1>
-      <div className="mt-6 space-y-3">
+    <div className="px-5 pb-8 pt-4">
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">VENDR</p>
+      <h1 className="mt-0.5 text-[1.375rem] font-extrabold">Orders</h1>
+      <JobLoop app="vendr" className="mt-1" />
+      <p className="mt-1 text-sm text-[var(--muted)]">
+        Accept, prepare, mark ready. Matching goes to RUNRs covering your window.
+      </p>
+      <div className="mt-4 space-y-2">
         {visible.length === 0 ? (
           <EmptyState
             title="No orders yet"
-            description="Orders from PORTER show up here in real time."
+            description="PORTER orders from the marketplace show up here in real time."
           />
         ) : (
           visible.map((order) => (
             <div
               key={order.id}
-              className="rounded-runr-lg border border-[var(--border)] bg-[var(--surface-elevated)] p-4"
+              className="rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] p-3.5"
             >
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="font-semibold">Order #{order.id.slice(-4)}</p>
-                  <p className="text-sm text-[var(--muted)]">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-extrabold">Order #{order.id.slice(-4)}</p>
+                  <p className="mt-0.5 text-sm text-[var(--muted)]">
+                    {order.fulfillment === "pickup" ? "Pickup" : "Delivery"} ·{" "}
                     {order.items.map((i) => `${i.quantity}× ${i.name}`).join(", ")} · $
                     {order.total.toFixed(2)}
                   </p>
                 </div>
                 <StatusBadge label={order.status.replace("_", " ")} variant="primary" />
               </div>
-              {nextStatus[order.status] && (
-                <PrimaryButton
+              {order.status === "new" && (
+                <div className="mt-3 space-y-1">
+                  <SlideToConfirm
+                    label="Slide to accept"
+                    onConfirm={() => updateOrderStatus(order.id, "accepted")}
+                  />
+                  <button
+                    type="button"
+                    className="h-9 w-full text-xs font-bold text-[var(--muted)]"
+                    onClick={() => updateOrderStatus(order.id, "cancelled")}
+                  >
+                    Decline
+                  </button>
+                </div>
+              )}
+              {order.status === "accepted" && (
+                <SlideToConfirm
                   className="mt-3"
-                  onClick={() =>
-                    updateOrderStatus(order.id, nextStatus[order.status] as typeof order.status)
-                  }
-                >
-                  Mark {nextStatus[order.status]?.replace("_", " ")}
-                </PrimaryButton>
+                  label="Slide to prepare"
+                  onConfirm={() => updateOrderStatus(order.id, "preparing")}
+                />
+              )}
+              {order.status === "preparing" && (
+                <SlideToConfirm
+                  className="mt-3"
+                  label="Slide when ready"
+                  onConfirm={() => updateOrderStatus(order.id, "ready")}
+                />
+              )}
+              {order.status === "ready" && (
+                <p className="mt-3 text-sm text-[var(--muted)]">
+                  {order.fulfillment === "pickup"
+                    ? "Waiting for the customer to collect."
+                    : "Waiting for a RUNR covering this window."}
+                </p>
               )}
             </div>
           ))

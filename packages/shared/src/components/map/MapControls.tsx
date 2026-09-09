@@ -1,31 +1,23 @@
 "use client";
 
-import { MapPin, Navigation2 } from "lucide-react";
-import { PrimaryButton } from "../ui/PrimaryButton";
+import { Navigation2 } from "lucide-react";
+import { clsx } from "clsx";
 
 interface MapControlsProps {
   onRecenter: () => void;
-  onToggleTraffic?: () => void;
-  showTraffic?: boolean;
+  className?: string;
 }
 
-export function MapControls({ onRecenter }: MapControlsProps) {
+export function MapControls({ onRecenter, className }: MapControlsProps) {
   return (
-    <div className="absolute right-4 top-24 z-[1000] flex flex-col gap-2">
+    <div className={clsx("absolute right-3 top-24 z-[1000] flex flex-col gap-2", className)}>
       <button
         type="button"
         onClick={onRecenter}
-        className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] shadow-runr-card"
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface-elevated)] text-purple shadow-runr-card ring-1 ring-[var(--border)]"
         aria-label="Recenter map"
       >
-        <Navigation2 className="h-5 w-5 text-[var(--foreground)]" />
-      </button>
-      <button
-        type="button"
-        className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] shadow-runr-card"
-        aria-label="My location"
-      >
-        <MapPin className="h-5 w-5 text-runr-navigation" />
+        <Navigation2 className="h-4 w-4 text-[var(--foreground)]" />
       </button>
     </div>
   );
@@ -47,19 +39,18 @@ export function ActiveRunBanner({
   onViewRun,
 }: ActiveRunBannerProps) {
   return (
-    <div className="absolute inset-x-4 bottom-24 z-[1000] rounded-runr-xl border border-[var(--border)] bg-[var(--surface)]/95 p-4 shadow-runr-sheet backdrop-blur-md">
-      <p className="text-xs font-semibold uppercase tracking-wider text-runr-success">
-        Active RUN · Checked In
+    <button
+      type="button"
+      onClick={onViewRun}
+      className="map-dock rounded-2xl border border-[var(--border)] bg-[var(--surface)]/95 p-3.5 text-left shadow-runr-sheet backdrop-blur-md"
+    >
+      <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-runr-success">
+        Active RUN · Checked in
       </p>
-      <h3 className="mt-1 font-semibold text-[var(--foreground)]">{businessName}</h3>
-      <p className="text-sm text-[var(--muted)]">{timeRange}</p>
-      <div className="mt-2 flex items-center justify-between text-sm">
-        <span>{deliveries} deliveries</span>
-        <span className="font-semibold">${earnings.toFixed(2)}</span>
-      </div>
-      <PrimaryButton className="mt-3 w-full" size="sm" onClick={onViewRun}>
-        View RUN
-      </PrimaryButton>
-    </div>
+      <h3 className="mt-0.5 text-base font-extrabold text-[var(--foreground)]">{businessName}</h3>
+      <p className="text-xs text-[var(--muted)]">
+        {timeRange} · {deliveries} drops · ${earnings.toFixed(2)}
+      </p>
+    </button>
   );
 }
