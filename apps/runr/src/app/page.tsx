@@ -157,7 +157,7 @@ export default function RunrMapPage() {
   }
 
   return (
-    <div className="relative h-[calc(100dvh-8.5rem)] w-full md:h-[calc(100dvh-2rem)]">
+    <div className="map-screen">
       <MapView
         center={location}
         userLocation={location}
@@ -209,7 +209,7 @@ export default function RunrMapPage() {
 
       {/* Pending delivery */}
       {pendingDelivery && !activeDelivery && (
-        <div className="absolute inset-x-4 bottom-4 z-[1000]">
+        <div className="map-dock">
           <DeliveryCard
             delivery={pendingDelivery}
             businessName={
@@ -223,7 +223,7 @@ export default function RunrMapPage() {
 
       {/* Active delivery */}
       {activeDelivery && (
-        <div className="absolute inset-x-4 bottom-4 z-[1000] space-y-3">
+        <div className="map-dock space-y-3">
           <DeliveryCard
             delivery={activeDelivery}
             businessName={
@@ -249,7 +249,7 @@ export default function RunrMapPage() {
       )}
 
       {businesses.length === 0 && (
-        <div className="absolute inset-x-4 bottom-4 z-[1000]">
+        <div className="map-dock">
           <EmptyState
             title="No RUN opportunities yet"
             description="Nearby businesses will show here once coverage is live. Pull to refresh after signing in."

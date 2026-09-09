@@ -42,7 +42,7 @@ export function ActiveRunBanner({
     <button
       type="button"
       onClick={onViewRun}
-      className="absolute inset-x-4 bottom-4 z-[1000] rounded-2xl border border-[var(--border)] bg-[var(--surface)]/95 p-3.5 text-left shadow-runr-sheet backdrop-blur-md"
+      className="map-dock rounded-2xl border border-[var(--border)] bg-[var(--surface)]/95 p-3.5 text-left shadow-runr-sheet backdrop-blur-md"
     >
       <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-runr-success">
         Active RUN · Checked in

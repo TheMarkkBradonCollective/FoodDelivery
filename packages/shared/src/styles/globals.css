@@ -685,6 +685,32 @@ button:active:not(:disabled),
   flex: 1;
 }
 
+.map-screen {
+  position: relative;
+  width: 100%;
+  height: calc(100dvh - env(safe-area-inset-top, 0px));
+  margin-bottom: calc(-1 * (var(--bottom-nav-height) + var(--safe-bottom)));
+}
+
+.map-dock {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 0.35rem);
+  z-index: 1000;
+}
+
+@media (min-width: 768px) {
+  .map-screen {
+    height: calc(100dvh - 2rem);
+    margin-bottom: 0;
+  }
+
+  .map-dock {
+    bottom: 1rem;
+  }
+}
+
 .field-label {
   display: block;
   margin-bottom: 0.35rem;
