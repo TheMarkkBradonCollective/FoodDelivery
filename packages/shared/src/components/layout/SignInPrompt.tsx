@@ -90,7 +90,7 @@ export function SignInPrompt({ role }: { role: UserRole }) {
         </div>
       </div>
 
-      <div className="relative z-10 rounded-t-[2rem] bg-[#F6F1E8] px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-7 text-[#1A1224]">
+      <div className="signin-sheet px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-7">
         {!isSupabaseConfigured() ? (
           <p className="text-sm text-[var(--muted)]">
             Supabase is not configured for this build. Add your project URL and publishable key.
@@ -109,7 +109,7 @@ export function SignInPrompt({ role }: { role: UserRole }) {
                 required
                 autoComplete="email"
                 placeholder="Email"
-                className="w-full rounded-[1.25rem] border-[1.5px] border-[#E8E0D4] bg-white px-4 py-3 text-sm text-[#1A1224] outline-none focus:border-[#6B3FA0]"
+                className="signin-field"
               />
               <input
                 type="password"
@@ -118,14 +118,14 @@ export function SignInPrompt({ role }: { role: UserRole }) {
                 required
                 autoComplete="current-password"
                 placeholder="Password"
-                className="w-full rounded-[1.25rem] border-[1.5px] border-[#E8E0D4] bg-white px-4 py-3 text-sm text-[#1A1224] outline-none focus:border-[#6B3FA0]"
+                className="signin-field"
               />
               {error && (
                 <p className="rounded-runr-md bg-runr-critical-muted px-3 py-2 text-sm text-runr-critical">
                   {error}
                 </p>
               )}
-              <PrimaryButton type="submit" className="w-full !bg-[#6B3FA0] !text-white hover:!bg-[#5A3282]" size="lg" disabled={loading}>
+              <PrimaryButton type="submit" className="signin-cta w-full" size="lg" disabled={loading}>
                 {loading ? "Signing in..." : "Get started"}
               </PrimaryButton>
             </form>

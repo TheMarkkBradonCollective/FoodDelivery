@@ -140,6 +140,39 @@ body {
   box-shadow: 0 0 0 4px rgb(107 63 160 / 0.12);
 }
 
+.signin-sheet {
+  position: relative;
+  z-index: 10;
+  border-radius: 2rem 2rem 0 0;
+  background: #f6f1e8;
+  color: #1a1224;
+}
+
+.signin-field {
+  width: 100%;
+  border-radius: 1.25rem;
+  border: 1.5px solid #e8e0d4;
+  background: #ffffff;
+  padding: 0.8rem 1.1rem;
+  font-size: 0.9375rem;
+  color: #1a1224;
+  outline: none;
+}
+
+.signin-field:focus {
+  border-color: #6b3fa0;
+  box-shadow: 0 0 0 4px rgb(107 63 160 / 0.12);
+}
+
+.signin-cta {
+  background: #6b3fa0 !important;
+  color: #ffffff !important;
+}
+
+.signin-cta:hover {
+  background: #5a3282 !important;
+}
+
 .pill {
   display: inline-flex;
   align-items: center;
