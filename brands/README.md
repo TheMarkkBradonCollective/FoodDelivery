@@ -1,17 +1,18 @@
 # RUNR App Icons
 
-Unified **Porter** branding across all three apps. Same rider logo; RUNR and VENDR add a small subtitle under the right side of "Porter".
+Wordless **Porter rider mark** (`porter-icon-mark.png`) — no text on launcher icons.
 
-| App | File | Wordmark |
-|-----|------|----------|
-| **PORTER** | `porter-icon.png` | Porter |
-| **RUNR** | `runr-icon.png` | Porter + small `Runner` |
-| **VENDR** | `vendr-icon.png` | Porter + small `Vendor` |
+| App | Background | Mark color |
+|-----|------------|------------|
+| **PORTER** | White `#FFFFFF` | Porter blue `#0066FF` |
+| **RUNR** | White `#FFFFFF` | Black `#000000` |
+| **VENDR** | Porter blue `#0066FF` | White |
+| **STAFF** | Dark zinc `#18181B` | Porter blue `#0066FF` |
 
-Brand color: `#0066FF`
-
-## Regenerate Android mipmaps
+## Regenerate all launcher + in-app icons
 
 ```bash
 npm run icons:generate
 ```
+
+Updates Android mipmaps, `apps/*/public/icons/app-icon.png`, and `apps/website/public/icons/apps/*.png`.

@@ -1,5 +1,5 @@
 export interface AppDownload {
-  id: "porter" | "runr" | "vendr";
+  id: "porter" | "runr" | "vendr" | "staff";
   name: string;
   iconUrl: string;
   tagline: string;
@@ -64,6 +64,21 @@ export const apps: AppDownload[] = [
     colorClass: "bg-[#0066FF]",
     storeUrl: `${MBC_STORE}/#download-vendr`,
     apkUrl: `${MBC_APKS}/vendr/vendr-v0.2.3.apk`,
+    version: "0.2.3",
+  },
+  {
+    id: "staff",
+    name: "STAFF",
+    iconUrl: "/icons/apps/staff.png",
+    tagline: "Platform management.",
+    description:
+      "Founder and operations console for the RUNR platform — users, businesses, orders, and app management.",
+    flow: "Monitor → Manage → Operate → Grow",
+    packageId: "com.runr.staff",
+    color: "#18181B",
+    colorClass: "bg-zinc-900",
+    storeUrl: `${MBC_STORE}/#download-staff`,
+    apkUrl: `${MBC_APKS}/staff/staff-v0.2.3.apk`,
     version: "0.2.3",
   },
 ];

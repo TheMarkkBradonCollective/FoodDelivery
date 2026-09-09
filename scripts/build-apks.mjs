@@ -25,6 +25,7 @@ const apps = [
   { id: 'porter', workspace: '@runr/porter', packageId: 'com.runr.porter', name: 'PORTER' },
   { id: 'runr', workspace: '@runr/runr-app', packageId: 'com.runr.runr', name: 'RUNR' },
   { id: 'vendr', workspace: '@runr/vendr', packageId: 'com.runr.vendr', name: 'VENDR' },
+  { id: 'staff', workspace: '@runr/staff', packageId: 'com.runr.staff', name: 'STAFF' },
 ];
 
 function env() {

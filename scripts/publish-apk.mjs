@@ -35,6 +35,12 @@ const apps = [
     packageId: 'com.runr.vendr',
     tagline: 'Sell. Manage. Grow.',
   },
+  {
+    id: 'staff',
+    name: 'STAFF',
+    packageId: 'com.runr.staff',
+    tagline: 'Platform management.',
+  },
 ];
 
 function sha256File(filePath) {

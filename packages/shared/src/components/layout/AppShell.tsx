@@ -5,13 +5,16 @@ import { NativeSafeArea } from "../providers/NativeSafeArea";
 import { SupabaseAuthSync } from "../providers/SupabaseAuthSync";
 import { useAppStore } from "../../store/create-app-store";
 import { SignInPrompt } from "./SignInPrompt";
+import type { UserRole } from "../../types/index";
+
+type AppShellRole = Exclude<UserRole, never>;
 
 export function AuthGuard({
   children,
   role,
 }: {
   children: React.ReactNode;
-  role: "customer" | "runr" | "business";
+  role: AppShellRole;
 }) {
   const user = useAppStore((s) => s.user);
 
@@ -27,7 +30,7 @@ export function AppShell({
   role,
 }: {
   children: React.ReactNode;
-  role: "customer" | "runr" | "business";
+  role: AppShellRole;
 }) {
   return (
     <ThemeProvider>
