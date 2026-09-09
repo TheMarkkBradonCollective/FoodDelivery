@@ -165,15 +165,15 @@ export default function RunrMapPage() {
 
       {/* Top overlay */}
       <div className="absolute inset-x-0 top-0 z-[1000] space-y-3 p-4">
-        <div className="rounded-runr-lg bg-[var(--surface)]/95 px-3 py-2 shadow-runr-card backdrop-blur-md">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-runr-primary">
+        <div className="rounded-3xl bg-[var(--surface)]/95 px-4 py-3 shadow-runr-card backdrop-blur-md">
+          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-runr-primary">
             Choose → RUN → Deliver → Earn
           </p>
-          <p className="text-xs text-[var(--muted)]">Pick it up. Run it there.</p>
+          <p className="text-sm font-extrabold tracking-tight">Pick it up. Run it there.</p>
         </div>
         <SearchBar value={searchQuery} onChange={setSearchQuery} />
         {openOpportunities > 0 && (
-          <div className="flex items-center gap-2 rounded-runr-lg bg-runr-primary px-4 py-2.5 text-sm font-semibold text-white shadow-runr-card">
+          <div className="flex items-center gap-2 rounded-full bg-runr-primary px-4 py-2.5 text-sm font-semibold text-white shadow-runr-card">
             <Flame className="h-4 w-4" />
             {openOpportunities} RUN opportunities near you
           </div>

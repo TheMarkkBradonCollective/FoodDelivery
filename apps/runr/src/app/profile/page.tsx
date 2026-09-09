@@ -14,10 +14,13 @@ export default function RunrProfilePage() {
     runHistory.length === 0 ? "—" : `${Math.min(99, 90 + runHistory.length)}%`;
 
   return (
-    <div className="min-h-screen px-4 py-6">
-      <h1 className="text-2xl font-bold">Profile</h1>
-
-      <div className="mt-6 rounded-runr-xl border border-[var(--border)] bg-[var(--surface-elevated)] p-6">
+    <div className="min-h-screen">
+      <div className="brand-hero brand-hero--flush px-5 pb-10 pt-6">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">RUNR</p>
+        <h1 className="mt-1 text-2xl font-extrabold text-white">Profile</h1>
+      </div>
+      <div className="px-4 pt-2">
+      <div className="rounded-runr-xl border border-[var(--border)] bg-[var(--surface-elevated)] p-6 shadow-runr-card">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-runr-primary text-2xl font-bold text-white">
           {user?.name?.charAt(0) ?? "R"}
         </div>
@@ -70,6 +73,7 @@ export default function RunrProfilePage() {
         >
           <LogOut className="h-4 w-4" /> Sign Out
         </PrimaryButton>
+      </div>
       </div>
     </div>
   );

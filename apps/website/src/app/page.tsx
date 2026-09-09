@@ -8,13 +8,13 @@ export default function HomePage() {
       {/* Hero */}
       <section className="gradient-mesh border-b border-[var(--border)]">
         <div className="mx-auto max-w-6xl px-6 py-24 text-center md:py-32">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0066FF]">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#6B3FA0]">
             Coverage-Driven Delivery Marketplace
           </p>
           <h1 className="mx-auto mt-4 max-w-4xl text-4xl font-bold tracking-tight md:text-6xl">
             Pick Your Place.
             <br />
-            <span className="text-[#0066FF]">Run Your Time.</span>
+            <span className="text-[#6B3FA0]">Run Your Time.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-[var(--muted)]">
             RUNR is a four-app ecosystem connecting customers, delivery workers,
@@ -23,14 +23,14 @@ export default function HomePage() {
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
               href="#apps"
-              className="inline-flex items-center gap-2 rounded-xl bg-[#0066FF] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#0052cc]"
+              className="inline-flex items-center gap-2 rounded-full bg-[#6B3FA0] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#5A3282]"
             >
               Download the Apps
               <ArrowDown className="h-4 w-4" />
             </a>
             <a
               href="#how-it-works"
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-white px-8 py-3.5 text-sm font-semibold hover:bg-[var(--surface)]"
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-white px-8 py-3.5 text-sm font-semibold hover:bg-[var(--surface)]"
             >
               How We Operate
             </a>
@@ -39,17 +39,17 @@ export default function HomePage() {
           <div className="mx-auto mt-16 grid max-w-3xl grid-cols-3 gap-4 text-center">
             <div>
               <p className="text-2xl">🛍️</p>
-              <p className="mt-1 text-sm font-semibold text-[#0066FF]">PORTER</p>
+              <p className="mt-1 text-sm font-semibold text-[#6B3FA0]">PORTER</p>
               <p className="text-xs text-[var(--muted)]">Customer</p>
             </div>
             <div>
               <p className="text-2xl">🚗</p>
-              <p className="mt-1 text-sm font-semibold text-[#0066FF]">RUNR</p>
+              <p className="mt-1 text-sm font-semibold text-[#6B3FA0]">RUNR</p>
               <p className="text-xs text-[var(--muted)]">Delivery</p>
             </div>
             <div>
               <p className="text-2xl">🏪</p>
-              <p className="mt-1 text-sm font-semibold text-[#0066FF]">VENDR</p>
+              <p className="mt-1 text-sm font-semibold text-[#6B3FA0]">VENDR</p>
               <p className="text-xs text-[var(--muted)]">Business</p>
             </div>
           </div>
@@ -97,7 +97,7 @@ export default function HomePage() {
                 key={item.title}
                 className="rounded-2xl border border-[var(--border)] bg-white p-6"
               >
-                <span className="text-xs font-bold uppercase tracking-wider text-[#0066FF]">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#6B3FA0]">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="mt-2 text-lg font-semibold">{item.title}</h3>
@@ -125,19 +125,19 @@ export default function HomePage() {
               <p className="text-center font-bold text-[var(--muted)]">PLATFORM</p>
               <p className="text-center text-[var(--muted)]">│</p>
               <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="rounded-lg bg-blue-50 p-3">
-                  <Store className="mx-auto h-5 w-5 text-[#0066FF]" />
-                  <p className="mt-1 font-semibold text-[#0066FF]">PORTER</p>
+                <div className="rounded-2xl bg-brand-muted p-3">
+                  <Store className="mx-auto h-5 w-5 text-[#6B3FA0]" />
+                  <p className="mt-1 font-semibold text-[#6B3FA0]">PORTER</p>
                   <p className="text-[10px] text-[var(--muted)]">Customer</p>
                 </div>
-                <div className="rounded-lg bg-blue-50 p-3">
-                  <MapPin className="mx-auto h-5 w-5 text-[#0066FF]" />
-                  <p className="mt-1 font-semibold text-[#0066FF]">VENDR</p>
+                <div className="rounded-2xl bg-brand-muted p-3">
+                  <MapPin className="mx-auto h-5 w-5 text-[#6B3FA0]" />
+                  <p className="mt-1 font-semibold text-[#6B3FA0]">VENDR</p>
                   <p className="text-[10px] text-[var(--muted)]">Business</p>
                 </div>
-                <div className="rounded-lg bg-blue-50 p-3">
-                  <Truck className="mx-auto h-5 w-5 text-[#0066FF]" />
-                  <p className="mt-1 font-semibold text-[#0066FF]">RUNR</p>
+                <div className="rounded-2xl bg-brand-muted p-3">
+                  <Truck className="mx-auto h-5 w-5 text-[#6B3FA0]" />
+                  <p className="mt-1 font-semibold text-[#6B3FA0]">RUNR</p>
                   <p className="text-[10px] text-[var(--muted)]">Delivery</p>
                 </div>
               </div>
@@ -174,7 +174,7 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="mt-12 rounded-2xl bg-[#0a0a0a] p-8 text-white md:p-12">
+          <div className="mt-12 rounded-[2rem] bg-[#3D2458] p-8 text-white md:p-12">
             <h3 className="text-xl font-bold">The Markk Brandon Collective</h3>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-400">
               RUNR is developed by The Markk Brandon Collective — a team focused on
@@ -184,7 +184,7 @@ export default function HomePage() {
             </p>
             <a
               href="mailto:themarkkbrandoncollective@gmail.com"
-              className="mt-6 inline-block text-sm font-semibold text-[#0066FF] hover:underline"
+              className="mt-6 inline-block text-sm font-semibold text-[#6B3FA0] hover:underline"
             >
               themarkkbrandoncollective@gmail.com
             </a>

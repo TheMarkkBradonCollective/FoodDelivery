@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import "@/store";
 import { AppShell } from "@runr/shared/components/layout/AppShell";
 import { StaffLayoutClient } from "./StaffLayoutClient";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const font = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "STAFF — Platform Management",
@@ -19,13 +19,13 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: "cover",
-  themeColor: "#18181B",
+  themeColor: "#3D2458",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} antialiased`}>
+      <body className={`${font.variable} antialiased`}>
         <AppShell role="staff">
           <StaffLayoutClient>{children}</StaffLayoutClient>
         </AppShell>

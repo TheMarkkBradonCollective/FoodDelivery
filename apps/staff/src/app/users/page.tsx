@@ -8,7 +8,8 @@ export default function StaffUsersPage() {
 
   return (
     <div className="p-4 lg:p-8">
-      <h1 className="text-2xl font-bold">Users</h1>
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">STAFF</p>
+      <h1 className="mt-1 text-2xl font-extrabold">Users</h1>
       <Panel title="Marketplace users" className="mt-6">
         {marketplaceUsers.length === 0 ? (
           <p className="text-sm text-[var(--muted)]">No profiles yet.</p>

@@ -9,7 +9,8 @@ export default function StaffOrdersPage() {
 
   return (
     <div className="p-4 lg:p-8">
-      <h1 className="text-2xl font-bold">Orders</h1>
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">STAFF</p>
+      <h1 className="mt-1 text-2xl font-extrabold">Orders</h1>
       <Panel title="All marketplace orders" className="mt-6">
         {orders.length === 0 ? (
           <p className="text-sm text-[var(--muted)]">No orders yet.</p>

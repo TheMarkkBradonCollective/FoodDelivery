@@ -9,11 +9,13 @@ export default function RunrRunsPage() {
     useAppStore();
 
   return (
-    <div className="min-h-screen px-4 py-6">
-      <h1 className="text-2xl font-bold">RUNs</h1>
-      <p className="mt-1 text-sm text-[var(--muted)]">
-        Scheduled, active, and completed RUNs
-      </p>
+    <div className="min-h-screen">
+      <div className="brand-hero brand-hero--flush px-5 pb-10 pt-6">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">RUNR</p>
+        <h1 className="mt-1 text-2xl font-extrabold text-white">RUNs</h1>
+        <p className="mt-1 text-sm text-white/75">Scheduled, active, and completed</p>
+      </div>
+      <div className="px-4 pt-2">
 
       {activeRun && (
         <section className="mt-6">
@@ -85,6 +87,7 @@ export default function RunrRunsPage() {
           ))}
         </div>
       </section>
+      </div>
     </div>
   );
 }

@@ -14,7 +14,8 @@ export default function StaffOverviewPage() {
 
   return (
     <div className="p-4 lg:p-8">
-      <h1 className="text-2xl font-bold">Overview</h1>
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">STAFF</p>
+      <h1 className="mt-1 text-2xl font-extrabold">Overview</h1>
       <p className="mt-1 text-sm text-[var(--muted)]">RUNR platform at a glance</p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

@@ -9,7 +9,8 @@ export default function StaffBusinessesPage() {
 
   return (
     <div className="p-4 lg:p-8">
-      <h1 className="text-2xl font-bold">Businesses</h1>
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">STAFF</p>
+      <h1 className="mt-1 text-2xl font-extrabold">Businesses</h1>
       <Panel title="On marketplace" className="mt-6">
         <div className="space-y-3">
           {businesses.map((b) => {

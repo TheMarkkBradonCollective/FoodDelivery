@@ -12,7 +12,8 @@ const apps = [
 export default function StaffAppsPage() {
   return (
     <div className="p-4 lg:p-8">
-      <h1 className="text-2xl font-bold">Apps</h1>
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">STAFF</p>
+      <h1 className="mt-1 text-2xl font-extrabold">Apps</h1>
       <p className="mt-1 text-sm text-[var(--muted)]">Mobile app management</p>
       <Panel title="Marketplace apps" className="mt-6">
         <div className="grid gap-4 md:grid-cols-2">
@@ -23,7 +24,7 @@ export default function StaffAppsPage() {
             >
               <div className="flex items-center justify-between">
                 <h3 className="font-bold">{app.name}</h3>
-                <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-xs text-green-400">
+                <span className="rounded-full bg-runr-accent-bright/20 px-2 py-0.5 text-xs text-runr-accent-bright">
                   {app.status}
                 </span>
               </div>

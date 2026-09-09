@@ -5,14 +5,13 @@ import Link from "next/link";
 import { MapView } from "@runr/shared/components/map";
 import { SearchBar } from "@runr/shared/components/ui/SearchBar";
 import { BusinessCard } from "@runr/shared/components/ui/BusinessCard";
-import { AppBrandHeader, FlowBadge } from "@runr/shared/components/layout/AppBrandHeader";
 import { useAppStore } from "@/store";
 import { cuisineCategories } from "@runr/shared/data/constants";
 import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 import { getBusinessCoverageSummary, getMarkerColor } from "@runr/shared/lib/coverage-engine";
 
 export default function PorterDiscoverPage() {
-  const { businesses, location, searchQuery, setSearchQuery, theme } = useAppStore();
+  const { businesses, location, searchQuery, setSearchQuery, theme, user } = useAppStore();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
@@ -43,26 +42,28 @@ export default function PorterDiscoverPage() {
     };
   });
 
+  const featured = filtered[0];
+  const rest = filtered.slice(1);
+  const firstName = user?.name?.split(" ")[0] ?? "there";
+
   return (
     <div className="min-h-screen">
-      <div className="border-b border-[var(--border)] bg-[var(--surface)] px-4 py-3">
-        <AppBrandHeader
-          name="PORTER"
-          tagline="Get what you need."
-          iconUrl="/icons/app-icon.png"
-          compact
-        />
-        <FlowBadge label="Discover → Order → Track → Receive" className="mt-3" />
-      </div>
-
-      <div className="relative h-56">
-        <MapView
-          center={location}
-          markers={markers}
-          dark={theme === "dark"}
-          className="absolute inset-0"
-        />
-        <div className="absolute inset-x-0 top-0 p-4">
+      <div className="brand-hero brand-hero--flush px-5 pb-10 pt-5">
+        <div className="relative z-10 flex items-center justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">
+              PORTER
+            </p>
+            <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-white">
+              Hey, {firstName}
+            </h1>
+            <p className="mt-1 text-sm text-white/75">Get what you need nearby.</p>
+          </div>
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-runr-accent-bright text-lg font-extrabold text-runr-ink">
+            {firstName.charAt(0)}
+          </div>
+        </div>
+        <div className="relative z-10 mt-5">
           <SearchBar
             value={searchQuery}
             onChange={setSearchQuery}
@@ -71,14 +72,25 @@ export default function PorterDiscoverPage() {
         </div>
       </div>
 
-      <div className="px-4 py-4">
+      <div className="relative -mt-2 h-52 overflow-hidden px-4">
+        <div className="h-full overflow-hidden rounded-runr-xl shadow-runr-card">
+          <MapView
+            center={location}
+            markers={markers}
+            dark={theme === "dark"}
+            className="h-full"
+          />
+        </div>
+      </div>
+
+      <div className="px-4 py-5">
         <div className="flex gap-2 overflow-x-auto pb-2">
           <button
             type="button"
             onClick={() => setSelectedCategory(null)}
-            className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold ${
+            className={`shrink-0 rounded-full px-4 py-2 text-xs font-bold ${
               !selectedCategory
-                ? "bg-runr-primary text-white"
+                ? "bg-runr-ink text-white"
                 : "border border-[var(--border)] bg-[var(--surface-elevated)]"
             }`}
           >
@@ -89,9 +101,9 @@ export default function PorterDiscoverPage() {
               key={cat}
               type="button"
               onClick={() => setSelectedCategory(cat)}
-              className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold ${
+              className={`shrink-0 rounded-full px-4 py-2 text-xs font-bold ${
                 selectedCategory === cat
-                  ? "bg-runr-primary text-white"
+                  ? "bg-runr-ink text-white"
                   : "border border-[var(--border)] bg-[var(--surface-elevated)]"
               }`}
             >
@@ -100,10 +112,12 @@ export default function PorterDiscoverPage() {
           ))}
         </div>
 
-        <h2 className="mt-4 text-lg font-semibold">Nearby on the marketplace</h2>
-        <p className="text-sm text-[var(--muted)]">
-          Order from businesses fulfilled by RUNRs in your area
-        </p>
+        <div className="mt-5 flex items-end justify-between">
+          <div>
+            <h2 className="text-xl font-extrabold tracking-tight">Nearby kitchens</h2>
+            <p className="text-sm text-[var(--muted)]">Fulfilled by RUNRs in your area</p>
+          </div>
+        </div>
         <div className="mt-3 space-y-3">
           {filtered.length === 0 ? (
             <EmptyState
@@ -111,11 +125,18 @@ export default function PorterDiscoverPage() {
               description="No listings match your search. Nearby kitchens appear after you sign in."
             />
           ) : (
-            filtered.map((b) => (
-              <Link key={b.id} href={`/restaurant/${b.id}`}>
-                <BusinessCard business={b} userLocation={location} />
-              </Link>
-            ))
+            <>
+              {featured && (
+                <Link href={`/restaurant/${featured.id}`}>
+                  <BusinessCard business={featured} userLocation={location} featured />
+                </Link>
+              )}
+              {rest.map((b) => (
+                <Link key={b.id} href={`/restaurant/${b.id}`}>
+                  <BusinessCard business={b} userLocation={location} />
+                </Link>
+              ))}
+            </>
           )}
         </div>
       </div>

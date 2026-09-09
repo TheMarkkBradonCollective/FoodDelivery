@@ -1,20 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #0066ff;
-  --color-brand-hover: #0052cc;
-  --color-porter: #0066ff;
-  --color-runr: #0066ff;
-  --color-vendr: #0066ff;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-brand: #6b3fa0;
+  --color-brand-hover: #5a3282;
+  --color-brand-muted: #ede4f5;
+  --color-brand-deep: #3d2458;
+  --color-accent: #6b8f5a;
+  --color-accent-bright: #c5e86a;
+  --color-porter: #6b3fa0;
+  --color-runr: #6b3fa0;
+  --color-vendr: #3d2458;
+  --color-staff: #1a1224;
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-  --muted: #71717a;
-  --border: #e4e4e7;
-  --surface: #fafafa;
+  --background: #f6f1e8;
+  --foreground: #1a1224;
+  --muted: #6f6678;
+  --border: #e8e0d4;
+  --surface: #fffdf9;
 }
 
 html {
@@ -30,7 +35,7 @@ body {
 
 .gradient-mesh {
   background:
-    radial-gradient(ellipse 80% 60% at 50% -10%, rgb(0 102 255 / 0.14), transparent),
-    radial-gradient(ellipse 60% 50% at 100% 0%, rgb(0 102 255 / 0.08), transparent),
-    radial-gradient(ellipse 50% 40% at 0% 100%, rgb(0 102 255 / 0.08), transparent);
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgb(107 63 160 / 0.2), transparent),
+    radial-gradient(ellipse 60% 50% at 100% 0%, rgb(197 232 106 / 0.18), transparent),
+    radial-gradient(ellipse 50% 40% at 0% 100%, rgb(107 143 90 / 0.14), transparent);
 }

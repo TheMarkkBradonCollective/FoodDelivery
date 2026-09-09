@@ -1,57 +1,64 @@
 @import "tailwindcss";
 
 @theme {
-  --color-runr-primary: #0066ff;
-  --color-runr-primary-hover: #0052cc;
-  --color-runr-primary-muted: #e6f0ff;
-  --color-runr-success: #22c55e;
-  --color-runr-success-muted: #ecfdf3;
-  --color-runr-warning: #f97316;
+  --color-runr-primary: #6b3fa0;
+  --color-runr-primary-hover: #5a3282;
+  --color-runr-primary-muted: #ede4f5;
+  --color-runr-primary-deep: #3d2458;
+  --color-runr-accent: #6b8f5a;
+  --color-runr-accent-bright: #c5e86a;
+  --color-runr-accent-muted: #e8f0e4;
+  --color-runr-cream: #f6f1e8;
+  --color-runr-ink: #1a1224;
+  --color-runr-success: #6b8f5a;
+  --color-runr-success-muted: #e8f0e4;
+  --color-runr-warning: #d97706;
   --color-runr-warning-muted: #fff7ed;
-  --color-runr-critical: #ef4444;
+  --color-runr-critical: #dc2626;
   --color-runr-critical-muted: #fef2f2;
-  --color-runr-navigation: #0066ff;
-  --color-runr-neutral-50: #fafafa;
-  --color-runr-neutral-100: #f4f4f5;
-  --color-runr-neutral-200: #e4e4e7;
-  --color-runr-neutral-300: #d4d4d8;
-  --color-runr-neutral-400: #a1a1aa;
-  --color-runr-neutral-500: #71717a;
-  --color-runr-neutral-600: #52525b;
-  --color-runr-neutral-700: #3f3f46;
-  --color-runr-neutral-800: #27272a;
-  --color-runr-neutral-900: #18181b;
-  --color-runr-neutral-950: #09090b;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --radius-runr-sm: 0.5rem;
-  --radius-runr-md: 0.75rem;
-  --radius-runr-lg: 1rem;
-  --radius-runr-xl: 1.25rem;
-  --shadow-runr-card: 0 1px 3px rgb(0 0 0 / 0.08), 0 4px 12px rgb(0 0 0 / 0.06);
-  --shadow-runr-sheet: 0 -4px 24px rgb(0 0 0 / 0.12);
+  --color-runr-navigation: #6b3fa0;
+  --color-runr-neutral-50: #faf7f2;
+  --color-runr-neutral-100: #f3eee6;
+  --color-runr-neutral-200: #e8e0d4;
+  --color-runr-neutral-300: #d4cbbd;
+  --color-runr-neutral-400: #a89fb0;
+  --color-runr-neutral-500: #6f6678;
+  --color-runr-neutral-600: #534b5c;
+  --color-runr-neutral-700: #3d3550;
+  --color-runr-neutral-800: #2a1b3d;
+  --color-runr-neutral-900: #1a1224;
+  --color-runr-neutral-950: #100814;
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --radius-runr-sm: 0.875rem;
+  --radius-runr-md: 1.25rem;
+  --radius-runr-lg: 1.75rem;
+  --radius-runr-xl: 2.25rem;
+  --shadow-runr-card: 0 10px 28px rgb(61 36 88 / 0.1);
+  --shadow-runr-sheet: 0 -8px 32px rgb(61 36 88 / 0.14);
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #18181b;
-  --surface: #ffffff;
+  --background: #f6f1e8;
+  --foreground: #1a1224;
+  --surface: #fffdf9;
   --surface-elevated: #ffffff;
-  --border: #e4e4e7;
-  --muted: #71717a;
+  --border: #e8e0d4;
+  --muted: #6f6678;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
-  --bottom-nav-height: 4.5rem;
+  --bottom-nav-height: 5.25rem;
+  --on-primary: #ffffff;
 }
 
 .dark {
-  --background: #09090b;
-  --foreground: #fafafa;
-  --surface: #18181b;
-  --surface-elevated: #27272a;
-  --border: #3f3f46;
-  --muted: #a1a1aa;
+  --background: #100814;
+  --foreground: #f6f1e8;
+  --surface: #1a1224;
+  --surface-elevated: #2a1b3d;
+  --border: #3d3550;
+  --muted: #c5b6c8;
 }
 
 * {
@@ -90,6 +97,57 @@ body {
   height: 100%;
   z-index: 0;
   font-family: var(--font-sans);
+}
+
+.brand-hero {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  background:
+    radial-gradient(ellipse 80% 80% at 92% -8%, rgb(197 232 106 / 0.32), transparent 52%),
+    radial-gradient(ellipse 70% 60% at -4% 108%, rgb(107 143 90 / 0.24), transparent 48%),
+    linear-gradient(165deg, #7b52b8 0%, #6b3fa0 46%, #3d2458 100%);
+}
+
+.brand-hero--flush::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 1.5rem;
+  background: var(--background);
+  border-radius: 1.75rem 1.75rem 0 0;
+}
+
+.brand-blob {
+  pointer-events: none;
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(2px);
+}
+
+.input-brand {
+  width: 100%;
+  border-radius: 1.25rem;
+  border: 1.5px solid var(--border);
+  background: var(--surface-elevated);
+  padding: 0.8rem 1.1rem;
+  font-size: 0.9375rem;
+  outline: none;
+}
+
+.input-brand:focus {
+  border-color: var(--color-runr-primary);
+  box-shadow: 0 0 0 4px rgb(107 63 160 / 0.12);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
 @keyframes slide-up {

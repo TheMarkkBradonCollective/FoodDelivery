@@ -30,12 +30,12 @@ export function AppBrandHeader({
           alt={`${name} logo`}
           width={compact ? 36 : 44}
           height={compact ? 36 : 44}
-          className={cn("shrink-0 rounded-runr-md", compact ? "h-9 w-9" : "h-11 w-11")}
+          className={cn("shrink-0 rounded-2xl", compact ? "h-9 w-9" : "h-11 w-11")}
         />
       ) : (
         <div
           className={cn(
-            "flex shrink-0 items-center justify-center rounded-runr-md font-black text-white",
+            "flex shrink-0 items-center justify-center rounded-2xl font-black text-white",
             accentClass,
             compact ? "h-9 w-9 text-sm" : "h-11 w-11 text-base"
           )}
@@ -57,7 +57,7 @@ export function FlowBadge({ label, className }: { label: string; className?: str
   return (
     <span
       className={cn(
-        "inline-flex rounded-full bg-[var(--surface-elevated)] px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)] border border-[var(--border)]",
+        "inline-flex rounded-full bg-runr-accent-bright px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-runr-ink",
         className
       )}
     >

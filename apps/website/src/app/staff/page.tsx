@@ -46,11 +46,11 @@ function StaffPortal() {
   }).length;
 
   return (
-    <div className="min-h-[80vh] bg-zinc-950 text-white">
-      <div className="border-b border-zinc-800 bg-zinc-900">
+    <div className="min-h-[80vh] bg-[#100814] text-[#F6F1E8]">
+      <div className="border-b border-[#3D3550] bg-[#1A1224]">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#0066FF]">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#6B3FA0]">
               Staff Portal
             </p>
             <h1 className="text-lg font-bold">Platform Management</h1>
@@ -84,7 +84,7 @@ function StaffPortal() {
               onClick={() => setTab(id)}
               className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                 tab === id
-                  ? "bg-[#0066FF] text-white"
+                  ? "bg-[#6B3FA0] text-white"
                   : "bg-zinc-900 text-zinc-400 hover:text-white"
               }`}
             >
@@ -119,9 +119,9 @@ function StaffPortal() {
               </p>
               <div className="grid gap-4 md:grid-cols-3">
                 {[
-                  { name: "PORTER", pkg: "com.runr.porter", color: "border-[#0066FF]/30", status: "Live" },
-                  { name: "RUNR", pkg: "com.runr.runr", color: "border-[#0066FF]/30", status: "Live" },
-                  { name: "VENDR", pkg: "com.runr.vendr", color: "border-[#0066FF]/30", status: "Live" },
+                  { name: "PORTER", pkg: "com.runr.porter", color: "border-[#6B3FA0]/30", status: "Live" },
+                  { name: "RUNR", pkg: "com.runr.runr", color: "border-[#6B3FA0]/30", status: "Live" },
+                  { name: "VENDR", pkg: "com.runr.vendr", color: "border-[#6B3FA0]/30", status: "Live" },
                 ].map((app) => (
                   <div
                     key={app.name}
@@ -169,7 +169,7 @@ function StaffPortal() {
                         <p className="font-semibold">{u.name}</p>
                         <p className="text-xs text-zinc-500">{u.email}</p>
                       </div>
-                      <span className="text-xs uppercase text-[#0066FF]">{u.role}</span>
+                      <span className="text-xs uppercase text-[#6B3FA0]">{u.role}</span>
                     </div>
                   ))
                 )}
@@ -256,7 +256,7 @@ function AdminStat({
   return (
     <div
       className={`rounded-xl border p-4 ${
-        alert ? "border-orange-500/30 bg-blue-500/10" : "border-zinc-800 bg-zinc-900"
+        alert ? "border-orange-500/30 bg-[#6B3FA0]/20" : "border-zinc-800 bg-zinc-900"
       }`}
     >
       <p className="text-xs text-zinc-500">{label}</p>

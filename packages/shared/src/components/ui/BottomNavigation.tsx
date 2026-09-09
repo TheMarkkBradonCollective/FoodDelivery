@@ -22,25 +22,32 @@ export function BottomNavigation({ items, className }: BottomNavigationProps) {
   return (
     <nav
       className={cn(
-        "fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border)] bg-[var(--surface)]/95 backdrop-blur-md pb-[env(safe-area-inset-bottom)]",
+        "fixed inset-x-3 bottom-3 z-30 rounded-full border border-[var(--border)] bg-[var(--surface)]/95 pb-[max(0.25rem,env(safe-area-inset-bottom))] shadow-runr-sheet backdrop-blur-md",
         className
       )}
     >
-      <div className="mx-auto flex max-w-lg items-stretch justify-around px-2">
+      <div className="mx-auto flex max-w-lg items-stretch justify-around px-1">
         {items.map(({ href, label, icon: Icon }) => {
-          const active = pathname?.startsWith(href) ?? false;
+          const active = href === "/" ? pathname === "/" : Boolean(pathname?.startsWith(href));
           return (
             <Link
               key={href}
               href={href}
               className={cn(
-                "flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium transition-colors",
+                "flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-semibold transition-colors",
                 active
                   ? "text-runr-primary"
                   : "text-[var(--muted)] hover:text-[var(--foreground)]"
               )}
             >
-              <Icon className={cn("h-5 w-5", active && "stroke-[2.5]")} />
+              <span
+                className={cn(
+                  "flex h-8 w-8 items-center justify-center rounded-full",
+                  active && "bg-runr-primary-muted"
+                )}
+              >
+                <Icon className={cn("h-5 w-5", active && "stroke-[2.5]")} />
+              </span>
               <span>{label}</span>
             </Link>
           );

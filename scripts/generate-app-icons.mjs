@@ -13,12 +13,12 @@ import sharp from "sharp";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const markSource = join(root, "brands", "porter-icon-mark.png");
 
-/** @type {Array<{ id: string; background: string; mark: "blue" | "black" | "white"; launcherBg: string }>} */
+/** @type {Array<{ id: string; background: string; mark: "purple" | "white" | "lime"; launcherBg: string }>} */
 const variants = [
-  { id: "porter", background: "#FFFFFF", mark: "blue", launcherBg: "#FFFFFF" },
-  { id: "runr", background: "#FFFFFF", mark: "black", launcherBg: "#FFFFFF" },
-  { id: "vendr", background: "#0066FF", mark: "white", launcherBg: "#0066FF" },
-  { id: "staff", background: "#18181B", mark: "blue", launcherBg: "#18181B" },
+  { id: "porter", background: "#F6F1E8", mark: "purple", launcherBg: "#F6F1E8" },
+  { id: "runr", background: "#C5E86A", mark: "purple", launcherBg: "#C5E86A" },
+  { id: "vendr", background: "#6B3FA0", mark: "white", launcherBg: "#6B3FA0" },
+  { id: "staff", background: "#3D2458", mark: "lime", launcherBg: "#3D2458" },
 ];
 
 const densities = {
@@ -30,8 +30,8 @@ const densities = {
 };
 
 const MARK_COLORS = {
-  blue: { r: 0, g: 102, b: 255 },
-  black: { r: 0, g: 0, b: 0 },
+  purple: { r: 107, g: 63, b: 160 },
+  lime: { r: 197, g: 232, b: 106 },
   white: { r: 255, g: 255, b: 255 },
 };
 
