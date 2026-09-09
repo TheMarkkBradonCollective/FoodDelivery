@@ -15,7 +15,7 @@ const WELCOME: Record<
     line: string;
     stack?: string[];
     highlight: string;
-    pills: string[];
+    pills: { label: string; lime: boolean }[];
     grid?: boolean;
     showMark?: boolean;
   }
@@ -24,7 +24,12 @@ const WELCOME: Record<
     brand: "PORTER",
     line: "Get what you",
     highlight: "need.",
-    pills: ["Discover", "Track", "Order", "Receive"],
+    pills: [
+      { label: "Discover", lime: true },
+      { label: "Track", lime: true },
+      { label: "Order", lime: false },
+      { label: "Receive", lime: false },
+    ],
     grid: true,
     showMark: true,
   },
@@ -33,20 +38,35 @@ const WELCOME: Record<
     line: "Run your",
     stack: ["Pick your place."],
     highlight: "time.",
-    pills: ["Choose", "RUN", "Deliver", "Eat"],
+    pills: [
+      { label: "Choose", lime: true },
+      { label: "RUN", lime: false },
+      { label: "Deliver", lime: true },
+      { label: "Eat", lime: false },
+    ],
     showMark: true,
   },
   business: {
     brand: "VENDR",
     line: "Sell. Manage.",
     highlight: "grow.",
-    pills: ["Sell", "Dispatch", "Fulfill", "Grow"],
+    pills: [
+      { label: "Sell", lime: true },
+      { label: "Dispatch", lime: false },
+      { label: "Fulfill", lime: true },
+      { label: "Grow", lime: false },
+    ],
   },
   staff: {
     brand: "STAFF PORTAL",
     line: "Quick status. Shared",
     highlight: "chat.",
-    pills: ["Status", "Chat", "Alerts", "Desktop"],
+    pills: [
+      { label: "Status", lime: true },
+      { label: "Chat", lime: false },
+      { label: "Alerts", lime: true },
+      { label: "Desktop", lime: false },
+    ],
   },
 };
 
@@ -99,9 +119,9 @@ export function SignInPrompt({ role }: { role: UserRole }) {
           </span>
         </h1>
         <div className={`signin-pills ${copy.grid ? "signin-pills-grid" : ""}`}>
-          {copy.pills.map((pill, i) => (
-            <span key={pill} className={`pill ${i % 2 === 0 ? "signin-pill-lime" : "signin-pill-ghost"}`}>
-              {pill}
+          {copy.pills.map((pill) => (
+            <span key={pill.label} className={`pill ${pill.lime ? "signin-pill-lime" : "signin-pill-ghost"}`}>
+              {pill.label}
             </span>
           ))}
         </div>
