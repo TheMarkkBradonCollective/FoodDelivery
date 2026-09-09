@@ -58,7 +58,8 @@
   --on-primary: #ffffff;
 }
 
-.dark {
+html.dark {
+  color-scheme: dark;
   --background: #100814;
   --foreground: #f6f1e8;
   --surface: #1a1224;
@@ -498,18 +499,12 @@ button:active:not(:disabled),
 
 @media (min-width: 768px) {
   .sticky-cta {
+    position: static;
     left: auto;
-    right: 1.5rem;
-    bottom: 1.5rem;
-    width: min(24rem, calc(100% - 7.5rem));
-  }
-}
-
-@media (min-width: 1024px) {
-  .sticky-cta {
-    right: 2rem;
-    bottom: 2rem;
-    width: min(24rem, calc(100% - 18rem));
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    margin-top: 2rem;
   }
 }
 

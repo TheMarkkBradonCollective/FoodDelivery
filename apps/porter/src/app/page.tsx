@@ -286,7 +286,7 @@ export default function PorterDiscoverPage() {
       {cartCount > 0 && (
         <Link
           href="/cart"
-          className="sticky-cta flex h-14 items-center justify-center rounded-full bg-ink text-sm font-extrabold text-white shadow-runr-card md:static md:mt-8 md:w-full"
+          className="sticky-cta flex h-14 items-center justify-center rounded-full bg-ink text-sm font-extrabold text-white shadow-runr-card"
         >
           View cart ({cartCount})
         </Link>

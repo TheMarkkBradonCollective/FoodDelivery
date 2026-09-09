@@ -177,7 +177,7 @@ export default function CartPage() {
         type="button"
         onClick={handlePlaceOrder}
         disabled={placing || !deliveryAddress.trim()}
-        className="sticky-cta tap-target h-14 w-full rounded-full bg-purple text-base font-extrabold text-white disabled:opacity-50 md:static md:mt-6"
+        className="sticky-cta tap-target h-14 w-full rounded-full bg-purple text-base font-extrabold text-white disabled:opacity-50"
       >
         {placing ? "Placing order…" : `Place order · ${formatCurrency(total)}`}
       </button>
