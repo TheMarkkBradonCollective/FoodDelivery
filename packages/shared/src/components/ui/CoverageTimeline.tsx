@@ -33,7 +33,7 @@ export function CoverageTimeline({
               {interval.gap > 0 ? ` · Gap ${interval.gap}` : " · Full"}
             </p>
           </div>
-          <CoverageBadge status={interval.status} gap={interval.gap} size="sm" />
+          {compact ? null : <CoverageBadge status={interval.status} gap={interval.gap} size="sm" />}
         </div>
       ))}
     </div>

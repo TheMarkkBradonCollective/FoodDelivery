@@ -34,7 +34,7 @@ export default function BusinessCatalogPage() {
           menu.map((item) => (
             <div
               key={item.id}
-              className="flex items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] px-3.5 py-3"
+              className="flex items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] px-3.5 py-2.5"
             >
               <div className="min-w-0 flex-1">
                 <p className="truncate font-extrabold">{item.name}</p>
@@ -50,7 +50,7 @@ export default function BusinessCatalogPage() {
                   onChange={(e) =>
                     updateMenuItem(business.id, item.id, { price: Number(e.target.value) || 0 })
                   }
-                  className="mt-1 block w-20 rounded-xl border border-[var(--border)] bg-[var(--background)] px-2 py-1.5 text-sm font-extrabold text-[var(--foreground)]"
+                  className="mt-0.5 block h-9 w-[4.5rem] rounded-lg border border-[var(--border)] bg-[var(--background)] px-1.5 text-right text-sm font-extrabold tabular-nums text-[var(--foreground)]"
                 />
               </label>
             </div>

@@ -70,17 +70,16 @@ export default function BusinessOperationsPage() {
           <section className="flex items-center gap-3 rounded-2xl bg-[var(--surface-elevated)] p-3.5 ring-1 ring-[var(--border)]">
             <CoverageRing percent={coveragePercent} />
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">Coverage</p>
-              <p className="text-[15px] font-extrabold leading-snug text-[var(--foreground)]">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">Coverage</p>
+                <Link href="/coverage" className="text-[11px] font-extrabold text-purple">
+                  Manage
+                </Link>
+              </div>
+              <p className="mt-0.5 text-[15px] font-extrabold leading-snug text-[var(--foreground)]">
                 Needed {coverage.maxRunrs} · Covered {coverage.scheduledRunrs}
                 {coverage.gap > 0 ? ` · Gap ${coverage.gap}` : " · Full"}
               </p>
-              <Link
-                href="/coverage"
-                className="mt-2 inline-flex h-8 items-center rounded-full bg-lime px-3 text-[11px] font-extrabold text-ink"
-              >
-                Manage
-              </Link>
             </div>
           </section>
         )}

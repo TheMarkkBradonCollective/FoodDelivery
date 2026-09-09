@@ -125,12 +125,15 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
       </div>
 
       {cartCount > 0 && (
-        <Link
-          href="/cart"
-          className="sticky-cta flex h-12 items-center justify-center rounded-full bg-ink text-sm font-extrabold text-white shadow-runr-card"
-        >
-          View cart ({cartCount})
-        </Link>
+        <>
+          <div className="h-16 md:hidden" aria-hidden />
+          <Link
+            href="/cart"
+            className="sticky-cta flex h-12 items-center justify-center rounded-full bg-ink text-sm font-extrabold text-white shadow-runr-card"
+          >
+            View cart ({cartCount})
+          </Link>
+        </>
       )}
 
       <BottomSheet

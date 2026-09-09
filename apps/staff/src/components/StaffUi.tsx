@@ -8,11 +8,11 @@ export function Stat({
   alert?: boolean;
 }) {
   return (
-    <div className={`rounded-2xl border p-3 ${
+    <div className={`rounded-2xl border p-2.5 ${
         alert ? "border-orange-500/40 bg-orange-500/10" : "border-[var(--border)] bg-[var(--surface)]"
       }`}>
       <p className="text-xs text-[var(--muted)]">{label}</p>
-      <p className="mt-1 text-xl font-extrabold text-white">{value}</p>
+      <p className="mt-0.5 text-lg font-extrabold text-white">{value}</p>
     </div>
   );
 }

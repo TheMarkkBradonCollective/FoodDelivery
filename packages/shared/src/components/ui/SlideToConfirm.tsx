@@ -72,7 +72,7 @@ export function SlideToConfirm({
       onPointerUp={endDrag}
       onPointerCancel={endDrag}
       className={cn(
-        "relative h-12 w-full touch-none select-none overflow-hidden rounded-full bg-[var(--background)] ring-1 ring-[var(--border)]",
+        "relative h-11 w-full touch-none select-none overflow-hidden rounded-full bg-[var(--background)] ring-1 ring-[var(--border)]",
         disabled && "opacity-50",
         className,
       )}
@@ -85,7 +85,7 @@ export function SlideToConfirm({
         {label}
       </p>
       <span
-        className="absolute top-1 flex h-10 w-10 items-center justify-center rounded-full bg-purple text-white shadow-sm"
+        className="absolute top-0.5 flex h-10 w-10 items-center justify-center rounded-full bg-purple text-white shadow-sm"
         style={{ left: `calc(4px + ${pct} * (100% - 48px))` }}
       >
         <ChevronRight size={18} strokeWidth={2.6} />

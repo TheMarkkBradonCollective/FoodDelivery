@@ -34,11 +34,6 @@ export default function BusinessCoveragePage() {
       </p>
 
       <section className="mt-5">
-        <h2 className="mb-2 text-base font-extrabold">Live timeline</h2>
-        <CoverageTimeline intervals={timeline.slice(0, 8)} compact />
-      </section>
-
-      <section className="mt-6">
         <h2 className="mb-2 text-base font-extrabold">Needed by window</h2>
         <div className="space-y-2">
           {business.coverageRules.map((rule) => (
@@ -63,6 +58,11 @@ export default function BusinessCoveragePage() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="mt-6">
+        <h2 className="mb-2 text-base font-extrabold">Live timeline</h2>
+        <CoverageTimeline intervals={timeline.slice(0, 4)} compact />
       </section>
     </div>
   );

@@ -98,9 +98,9 @@ export default function CartPage() {
         </div>
       </div>
 
-      <p className="mt-2 text-sm text-[var(--muted)]">{business?.name ?? "Business"}</p>
+      <p className="mt-1 text-sm text-[var(--muted)]">{business?.name ?? "Business"}</p>
 
-      <div className="mt-6 space-y-3">
+      <div className="mt-3 space-y-2">
         {cart.map((item) => (
           <div key={item.menuItemId} className="surface-card flex items-center justify-between gap-3 rounded-2xl p-3">
             <div className="min-w-0">
@@ -115,7 +115,7 @@ export default function CartPage() {
         ))}
       </div>
 
-      <div className="mt-5 rounded-2xl bg-[var(--surface-elevated)] p-4 ring-1 ring-[var(--border)]">
+      <div className="mt-3 rounded-2xl bg-[var(--surface-elevated)] p-3.5 ring-1 ring-[var(--border)]">
         <p className="field-label">How you get it</p>
         <SegmentedControl
           value={fulfillment}
@@ -125,13 +125,13 @@ export default function CartPage() {
             { value: "pickup", label: "Pickup" },
           ]}
         />
-        <p className="mt-2 text-xs text-[var(--muted)]">
+        <p className="mt-1 text-xs text-[var(--muted)]">
           {fulfillment === "delivery"
             ? "A RUNR covering this VENDR brings it to you."
             : `Collect at ${business?.address ?? "the business"}. No RUNR needed.`}
         </p>
 
-        <p className="field-label mt-4">When</p>
+        <p className="field-label mt-3">When</p>
         <SegmentedControl
           value={when}
           onChange={setWhen}
@@ -151,7 +151,7 @@ export default function CartPage() {
 
         {fulfillment === "delivery" ? (
           <>
-            <label className="field-label mt-4" htmlFor="delivery-address">
+            <label className="field-label mt-3" htmlFor="delivery-address">
               Deliver to
             </label>
             <input
@@ -165,8 +165,8 @@ export default function CartPage() {
           </>
         ) : null}
 
-        <p className="field-label mt-4">Promo code</p>
-        <div className="flex gap-2">
+        <p className="field-label mt-3">Promo code</p>
+        <div className="flex items-center gap-2">
           <input
             value={promoInput}
             onChange={(e) => setPromoInput(e.target.value)}
@@ -189,7 +189,7 @@ export default function CartPage() {
           </p>
         ) : null}
 
-        <div className="mt-4 space-y-1.5 text-sm">
+        <div className="mt-3 space-y-1 text-sm">
           <Row label="Subtotal" value={subtotal} />
           {fulfillment === "delivery" ? <Row label="Delivery fee" value={deliveryFee} /> : null}
           <Row label="Service fee" value={serviceFee} />
@@ -197,7 +197,7 @@ export default function CartPage() {
           {discount > 0 ? <Row label="Promo" value={-discount} /> : null}
         </div>
 
-        <p className="field-label mt-4">Tip · {formatCurrency(tip)}</p>
+        <p className="field-label mt-3">Tip · {formatCurrency(tip)}</p>
         <input
           type="range"
           min={0}
@@ -205,27 +205,25 @@ export default function CartPage() {
           step={1}
           value={tip}
           onChange={(e) => setTip(Number(e.target.value))}
-          className="mt-1 h-8 w-full range-slider"
+          className="mt-1 h-6 w-full range-slider"
           aria-label="Tip amount"
         />
         <div className="flex justify-between text-[11px] text-[var(--muted)]">
           <span>None</span>
           <span>$8</span>
         </div>
-        <div className="mt-3 border-t border-[var(--border)] pt-3">
+        <div className="mt-2.5 border-t border-[var(--border)] pt-2.5">
           <Row label="Total" value={total} bold />
         </div>
+        <button
+          type="button"
+          onClick={handlePlaceOrder}
+          disabled={placing || (fulfillment === "delivery" && !deliveryAddress.trim())}
+          className="mt-3 h-11 w-full rounded-full bg-purple text-sm font-extrabold text-white disabled:opacity-50"
+        >
+          {placing ? "Placing order…" : `Place order · ${formatCurrency(total)}`}
+        </button>
       </div>
-
-      <div className="h-20 md:hidden" aria-hidden />
-      <button
-        type="button"
-        onClick={handlePlaceOrder}
-        disabled={placing || (fulfillment === "delivery" && !deliveryAddress.trim())}
-        className="sticky-cta tap-target h-12 w-full rounded-full bg-purple text-sm font-extrabold text-white disabled:opacity-50"
-      >
-        {placing ? "Placing order…" : `Place order · ${formatCurrency(total)}`}
-      </button>
     </div>
   );
 }
