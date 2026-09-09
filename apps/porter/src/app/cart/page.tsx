@@ -118,6 +118,7 @@ export default function CartPage() {
       <div className="mt-3 rounded-2xl bg-[var(--surface-elevated)] p-3.5 ring-1 ring-[var(--border)]">
         <p className="field-label">How you get it</p>
         <SegmentedControl
+          size="sm"
           value={fulfillment}
           onChange={setFulfillment}
           options={[
@@ -133,6 +134,7 @@ export default function CartPage() {
 
         <p className="field-label mt-3">When</p>
         <SegmentedControl
+          size="sm"
           value={when}
           onChange={setWhen}
           options={[
@@ -148,6 +150,22 @@ export default function CartPage() {
             className="input-brand mt-3"
           />
         ) : null}
+
+        <p className="field-label mt-3">Tip · {formatCurrency(tip)}</p>
+        <input
+          type="range"
+          min={0}
+          max={8}
+          step={1}
+          value={tip}
+          onChange={(e) => setTip(Number(e.target.value))}
+          className="mt-1 h-6 w-full range-slider"
+          aria-label="Tip amount"
+        />
+        <div className="flex justify-between text-[11px] text-[var(--muted)]">
+          <span>None</span>
+          <span>$8</span>
+        </div>
 
         {fulfillment === "delivery" ? (
           <>
@@ -177,7 +195,7 @@ export default function CartPage() {
           <button
             type="button"
             onClick={applyPromo}
-            className="h-11 shrink-0 rounded-full bg-ink px-4 text-sm font-bold text-white"
+            className="h-10 shrink-0 rounded-full bg-ink px-4 text-sm font-bold text-white"
           >
             Apply
           </button>
@@ -196,34 +214,20 @@ export default function CartPage() {
           <Row label="Tax" value={tax} />
           {discount > 0 ? <Row label="Promo" value={-discount} /> : null}
         </div>
-
-        <p className="field-label mt-3">Tip · {formatCurrency(tip)}</p>
-        <input
-          type="range"
-          min={0}
-          max={8}
-          step={1}
-          value={tip}
-          onChange={(e) => setTip(Number(e.target.value))}
-          className="mt-1 h-6 w-full range-slider"
-          aria-label="Tip amount"
-        />
-        <div className="flex justify-between text-[11px] text-[var(--muted)]">
-          <span>None</span>
-          <span>$8</span>
-        </div>
         <div className="mt-2.5 border-t border-[var(--border)] pt-2.5">
           <Row label="Total" value={total} bold />
         </div>
-        <button
-          type="button"
-          onClick={handlePlaceOrder}
-          disabled={placing || (fulfillment === "delivery" && !deliveryAddress.trim())}
-          className="mt-3 h-11 w-full rounded-full bg-purple text-sm font-extrabold text-white disabled:opacity-50"
-        >
-          {placing ? "Placing order…" : `Place order · ${formatCurrency(total)}`}
-        </button>
       </div>
+
+      <div className="h-16 md:hidden" aria-hidden />
+      <button
+        type="button"
+        onClick={handlePlaceOrder}
+        disabled={placing || (fulfillment === "delivery" && !deliveryAddress.trim())}
+        className="sticky-cta h-11 w-full rounded-full bg-purple text-sm font-extrabold text-white disabled:opacity-50"
+      >
+        {placing ? "Placing order…" : `Place order · ${formatCurrency(total)}`}
+      </button>
     </div>
   );
 }
