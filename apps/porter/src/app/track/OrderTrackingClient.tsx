@@ -68,15 +68,21 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
               position: business.location,
               color: "#7048F8",
               title: business.name,
-              subtitle: "VENDR",
+              subtitle: "Pickup",
             },
             {
               id: "customer",
               position: location,
               color: "#A0F878",
-              title: order.fulfillment === "pickup" ? "Pickup" : "Your RUNR drop-off",
+              title: order.fulfillment === "pickup" ? "Pickup" : "Drop-off",
             },
           ]}
+          route={
+            order.fulfillment === "pickup"
+              ? undefined
+              : { from: business.location, to: location }
+          }
+          showUserLocation={false}
           dark={theme === "dark"}
           className="absolute inset-0"
         />

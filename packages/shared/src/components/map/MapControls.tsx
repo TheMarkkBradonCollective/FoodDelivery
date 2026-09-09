@@ -14,7 +14,7 @@ export function MapControls({ onRecenter, className }: MapControlsProps) {
       <button
         type="button"
         onClick={onRecenter}
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] shadow-runr-card"
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface-elevated)] text-purple shadow-runr-card ring-1 ring-[var(--border)]"
         aria-label="Recenter map"
       >
         <Navigation2 className="h-4 w-4 text-[var(--foreground)]" />

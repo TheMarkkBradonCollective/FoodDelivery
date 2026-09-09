@@ -162,6 +162,13 @@ export default function RunrMapPage() {
         center={location}
         userLocation={location}
         markers={mapMarkers}
+        route={
+          activeDelivery
+            ? { from: activeDelivery.pickup, to: activeDelivery.dropoff }
+            : pendingDelivery
+              ? { from: pendingDelivery.pickup, to: pendingDelivery.dropoff }
+              : undefined
+        }
         dark={theme === "dark"}
         className="absolute inset-0"
       />
