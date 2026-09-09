@@ -1,0 +1,344 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import { useAuth } from "@/components/AuthProvider";
+import { useAppStore } from "@/store";
+import { apps } from "@/data/site-content";
+import { StaffChat } from "@runr/shared/components/staff/StaffChat";
+import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
+import { formatCurrency } from "@runr/shared/lib/utils";
+import type { Order } from "@runr/shared/types";
+import {
+  Building2,
+  LayoutDashboard,
+  LogOut,
+  MessageSquare,
+  Package,
+  Smartphone,
+  Users,
+} from "lucide-react";
+
+type StaffTab = "overview" | "orders" | "coverage" | "users" | "chat" | "apps";
+
+const NEXT_STATUS: Partial<Record<Order["status"], Order["status"]>> = {
+  new: "accepted",
+  accepted: "preparing",
+  preparing: "ready",
+  ready: "runr_assigned",
+  runr_assigned: "picked_up",
+  picked_up: "delivering",
+  delivering: "delivered",
+};
+
+export function StaffConsole() {
+  const { session, logout } = useAuth();
+  const [tab, setTab] = useState<StaffTab>("overview");
+  const {
+    businesses,
+    orders,
+    marketplaceUsers,
+    updateOrderStatus,
+    updateBusinessCapacity,
+  } = useAppStore();
+
+  const platformRuns = useMemo(
+    () => businesses.flatMap((b) => b.scheduledRuns).filter((r) => r.status !== "cancelled"),
+    [businesses]
+  );
+  const liveOrders = orders.filter((o) => !["delivered", "cancelled"].includes(o.status));
+  const gaps = businesses
+    .map((b) => ({ business: b, coverage: getBusinessCoverageSummary(b.coverageRules, b.scheduledRuns) }))
+    .filter((x) => x.coverage.gap > 0);
+
+  const tabs: { id: StaffTab; label: string; icon: typeof LayoutDashboard }[] = [
+    { id: "overview", label: "Overview", icon: LayoutDashboard },
+    { id: "orders", label: "Orders", icon: Package },
+    { id: "coverage", label: "Coverage", icon: Building2 },
+    { id: "users", label: "Users", icon: Users },
+    { id: "chat", label: "Chat", icon: MessageSquare },
+    { id: "apps", label: "Apps", icon: Smartphone },
+  ];
+
+  return (
+    <div className="min-h-[100dvh] bg-[#100814] text-[#F6F1E8]">
+      <div className="border-b border-[#3D3550] bg-[#1A1224]">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#A0F878]">
+              Desktop Staff Console
+            </p>
+            <h1 className="text-lg font-bold">Manage the marketplace</h1>
+            <p className="text-xs text-zinc-400">{session!.user.email}</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link href="/download" className="text-sm text-zinc-400 hover:text-white">
+              Downloads
+            </Link>
+            <Link href="/" className="text-sm text-zinc-400 hover:text-white">
+              Public site
+            </Link>
+            <button
+              type="button"
+              onClick={logout}
+              className="inline-flex items-center gap-2 rounded-full border border-[#3D3550] px-3 py-2 text-sm hover:bg-[#2A1B3D]"
+            >
+              <LogOut className="h-4 w-4" />
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-6xl px-6 py-8">
+        <p className="mb-4 text-sm text-zinc-400">
+          Use this desktop site for actions. The STAFF phone app is for quick status and chat only.
+        </p>
+        <nav className="flex flex-wrap gap-2">
+          {tabs.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setTab(id)}
+              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                tab === id ? "bg-[#7048F8] text-white" : "bg-[#1A1224] text-zinc-400 hover:text-white"
+              }`}
+            >
+              <Icon className="h-4 w-4" />
+              {label}
+            </button>
+          ))}
+        </nav>
+
+        <div className="mt-8">
+          {tab === "overview" && (
+            <div className="space-y-6">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <Stat label="Businesses" value={String(businesses.length)} />
+                <Stat label="Live orders" value={String(liveOrders.length)} />
+                <Stat label="Scheduled RUNs" value={String(platformRuns.length)} />
+                <Stat label="Coverage gaps" value={String(gaps.length)} alert={gaps.length > 0} />
+              </div>
+              <Panel title="Needs attention">
+                {gaps.length === 0 && liveOrders.length === 0 ? (
+                  <p className="text-sm text-zinc-400">Marketplace is clear. No gaps or live orders.</p>
+                ) : (
+                  <ul className="space-y-2 text-sm">
+                    {gaps.map(({ business, coverage }) => (
+                      <li key={business.id}>
+                        <button type="button" className="text-[#A0F878] hover:underline" onClick={() => setTab("coverage")}>
+                          {business.name} needs {coverage.gap} RUNR{coverage.gap === 1 ? "" : "s"}
+                        </button>
+                      </li>
+                    ))}
+                    {liveOrders.slice(0, 6).map((order) => (
+                      <li key={order.id}>
+                        <button type="button" className="text-[#A0F878] hover:underline" onClick={() => setTab("orders")}>
+                          Order #{order.id.slice(-6)} · {order.status.replace("_", " ")}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </Panel>
+            </div>
+          )}
+
+          {tab === "orders" && (
+            <Panel title="Order operations">
+              <p className="mb-4 text-sm text-zinc-400">
+                Advance or cancel marketplace orders from here. Phone STAFF is read-only.
+              </p>
+              {orders.length === 0 ? (
+                <p className="text-sm text-zinc-500">No orders yet.</p>
+              ) : (
+                <div className="space-y-3">
+                  {orders.map((order) => {
+                    const biz = businesses.find((b) => b.id === order.businessId);
+                    const next = NEXT_STATUS[order.status];
+                    const closed = order.status === "delivered" || order.status === "cancelled";
+                    return (
+                      <div
+                        key={order.id}
+                        className="flex flex-col gap-3 rounded-2xl border border-[#3D3550] bg-[#1A1224] p-4 sm:flex-row sm:items-center sm:justify-between"
+                      >
+                        <div>
+                          <p className="font-semibold">
+                            #{order.id.slice(-6)} · {biz?.name ?? "Business"}
+                          </p>
+                          <p className="text-xs text-zinc-500">
+                            {order.items.length} items · {formatCurrency(order.total)} ·{" "}
+                            {order.status.replace("_", " ")}
+                          </p>
+                        </div>
+                        {!closed && (
+                          <div className="flex flex-wrap gap-2">
+                            {next && (
+                              <button
+                                type="button"
+                                onClick={() => updateOrderStatus(order.id, next)}
+                                className="rounded-full bg-[#7048F8] px-3 py-1.5 text-xs font-semibold text-white"
+                              >
+                                Mark {next.replace("_", " ")}
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => updateOrderStatus(order.id, "cancelled")}
+                              className="rounded-full border border-red-400/40 px-3 py-1.5 text-xs font-semibold text-red-300"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </Panel>
+          )}
+
+          {tab === "coverage" && (
+            <Panel title="Coverage capacity">
+              <p className="mb-4 text-sm text-zinc-400">
+                Raise or lower RUNR slots per kitchen. This writes to the live marketplace.
+              </p>
+              <div className="space-y-4">
+                {businesses.map((b) => {
+                  const c = getBusinessCoverageSummary(b.coverageRules, b.scheduledRuns);
+                  return (
+                    <div key={b.id} className="rounded-2xl border border-[#3D3550] bg-[#1A1224] p-4">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                          <p className="font-semibold">{b.name}</p>
+                          <p className="text-xs text-zinc-500">
+                            {b.city} · {c.scheduledRunrs}/{c.maxRunrs} RUNRs
+                            {c.gap > 0 ? ` · ${c.gap} needed` : " · full"}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mt-3 space-y-2">
+                        {b.coverageRules.map((rule) => (
+                          <div key={rule.id} className="flex items-center justify-between gap-3 text-sm">
+                            <span className="text-zinc-400">
+                              {rule.startTime}–{rule.endTime}
+                            </span>
+                            <div className="flex items-center gap-2">
+                              <button
+                                type="button"
+                                className="h-8 w-8 rounded-full bg-[#2A1B3D]"
+                                onClick={() =>
+                                  updateBusinessCapacity(b.id, rule.id, Math.max(0, rule.maxRunrs - 1))
+                                }
+                              >
+                                −
+                              </button>
+                              <span className="w-8 text-center font-bold">{rule.maxRunrs}</span>
+                              <button
+                                type="button"
+                                className="h-8 w-8 rounded-full bg-[#7048F8]"
+                                onClick={() => updateBusinessCapacity(b.id, rule.id, rule.maxRunrs + 1)}
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </Panel>
+          )}
+
+          {tab === "users" && (
+            <Panel title="Marketplace users">
+              <p className="mb-4 text-sm text-zinc-400">
+                Directory for support. Role changes stay in Supabase for now.
+              </p>
+              <div className="space-y-3">
+                {marketplaceUsers.length === 0 ? (
+                  <p className="text-sm text-zinc-500">No profiles yet. Run schema.sql in Supabase.</p>
+                ) : (
+                  marketplaceUsers.map((u) => (
+                    <div
+                      key={u.id}
+                      className="flex items-center justify-between rounded-2xl border border-[#3D3550] bg-[#1A1224] px-4 py-3"
+                    >
+                      <div>
+                        <p className="font-semibold">{u.name}</p>
+                        <p className="text-xs text-zinc-500">{u.email}</p>
+                      </div>
+                      <span className="rounded-full bg-[#7048F8]/30 px-3 py-1 text-xs uppercase text-[#A0F878]">
+                        {u.role}
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
+            </Panel>
+          )}
+
+          {tab === "chat" && (
+            <Panel title="Staff status chat">
+              <p className="mb-4 text-sm text-zinc-400">
+                Shared with the STAFF phone app. Use it for on-call notes and handoffs.
+              </p>
+              <StaffChat />
+            </Panel>
+          )}
+
+          {tab === "apps" && (
+            <Panel title="App downloads">
+              <p className="mb-4 text-sm text-zinc-400">
+                Users install from the public download page. These are the live packages.
+              </p>
+              <div className="grid gap-4 md:grid-cols-2">
+                {apps.map((app) => (
+                  <div key={app.id} className="rounded-2xl border border-[#3D3550] bg-[#1A1224] p-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-bold">{app.name}</h3>
+                      <span className="text-xs text-[#A0F878]">v{app.version}</span>
+                    </div>
+                    <p className="mt-1 text-sm text-zinc-400">{app.tagline}</p>
+                    <p className="mt-2 font-mono text-xs text-zinc-500">{app.packageId}</p>
+                    <Link
+                      href="/download"
+                      className="mt-4 inline-flex rounded-full bg-[#7048F8] px-3 py-1.5 text-xs font-semibold text-white"
+                    >
+                      Open download page
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </Panel>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Stat({ label, value, alert }: { label: string; value: string; alert?: boolean }) {
+  return (
+    <div
+      className={`rounded-2xl border p-4 ${
+        alert ? "border-orange-500/30 bg-[#7048F8]/20" : "border-[#3D3550] bg-[#1A1224]"
+      }`}
+    >
+      <p className="text-xs text-zinc-500">{label}</p>
+      <p className="mt-1 text-2xl font-bold">{value}</p>
+    </div>
+  );
+}
+
+function Panel({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="rounded-3xl border border-[#3D3550] bg-[#1A1224]/60 p-6">
+      <h2 className="text-lg font-semibold">{title}</h2>
+      <div className="mt-4">{children}</div>
+    </div>
+  );
+}

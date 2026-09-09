@@ -2,15 +2,15 @@
 
 import { useAppStore } from "@/store";
 import { EmptyState } from "@runr/shared/components/ui/EmptyState";
+import { ScreenHeader } from "@runr/shared/components/layout/ScreenHeader";
 
 export default function CustomerActivityPage() {
   const { notifications, markNotificationRead } = useAppStore();
 
   return (
-    <div className="min-h-screen px-4 py-6">
-      <h1 className="text-2xl font-bold">Activity</h1>
-      <p className="mt-2 text-sm text-[var(--muted)]">Order updates and notifications</p>
-      <div className="mt-6 space-y-3">
+    <div className="min-h-screen">
+      <ScreenHeader title="Activity" subtitle="Order updates and alerts" eyebrow="PORTER" flush />
+      <div className="space-y-3 px-4 pt-2">
         {notifications.length === 0 ? (
           <EmptyState
             title="No activity yet"

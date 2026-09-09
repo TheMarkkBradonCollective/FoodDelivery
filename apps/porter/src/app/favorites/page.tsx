@@ -4,16 +4,16 @@ import Link from "next/link";
 import { useAppStore } from "@/store";
 import { BusinessCard } from "@runr/shared/components/ui/BusinessCard";
 import { EmptyState } from "@runr/shared/components/ui/EmptyState";
+import { ScreenHeader } from "@runr/shared/components/layout/ScreenHeader";
 
 export default function CustomerFavoritesPage() {
   const { businesses, favoriteBusinessIds, location, toggleFavorite } = useAppStore();
   const saved = businesses.filter((b) => favoriteBusinessIds.includes(b.id));
 
   return (
-    <div className="min-h-screen px-4 py-6">
-      <h1 className="text-2xl font-bold">Favorites</h1>
-      <p className="mt-2 text-sm text-[var(--muted)]">Your saved restaurants</p>
-      <div className="mt-6 space-y-3">
+    <div className="min-h-screen">
+      <ScreenHeader title="Favorites" subtitle="Kitchens you saved" eyebrow="PORTER" flush />
+      <div className="space-y-3 px-4 pt-2">
         {saved.length === 0 ? (
           <EmptyState
             title="No favorites yet"

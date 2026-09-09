@@ -12,7 +12,8 @@ export default function BusinessSettingsPage() {
 
   return (
     <div className="px-4 py-6 pb-24 lg:pb-6">
-      <h1 className="text-2xl font-bold">Settings</h1>
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">VENDR</p>
+      <h1 className="mt-1 text-2xl font-extrabold">Settings</h1>
       <div className="mt-6 rounded-runr-xl border border-[var(--border)] p-6">
         <p className="font-semibold">{user?.name}</p>
         <p className="text-sm text-[var(--muted)]">{user?.email}</p>

@@ -8,13 +8,13 @@ export default function HomePage() {
       {/* Hero */}
       <section className="gradient-mesh border-b border-[var(--border)]">
         <div className="mx-auto max-w-6xl px-6 py-24 text-center md:py-32">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0066FF]">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#7048F8]">
             Coverage-Driven Delivery Marketplace
           </p>
           <h1 className="mx-auto mt-4 max-w-4xl text-4xl font-bold tracking-tight md:text-6xl">
             Pick Your Place.
             <br />
-            <span className="text-[#0066FF]">Run Your Time.</span>
+            <span className="text-[#7048F8]">Run Your Time.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-[var(--muted)]">
             RUNR is a four-app ecosystem connecting customers, delivery workers,
@@ -22,34 +22,39 @@ export default function HomePage() {
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
-              href="#apps"
-              className="inline-flex items-center gap-2 rounded-xl bg-[#0066FF] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#0052cc]"
+              href="/download"
+              className="inline-flex items-center gap-2 rounded-full bg-[#7048F8] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#5C36E0]"
             >
               Download the Apps
               <ArrowDown className="h-4 w-4" />
             </a>
             <a
               href="#how-it-works"
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-white px-8 py-3.5 text-sm font-semibold hover:bg-[var(--surface)]"
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-white px-8 py-3.5 text-sm font-semibold hover:bg-[var(--surface)]"
             >
               How We Operate
             </a>
           </div>
 
-          <div className="mx-auto mt-16 grid max-w-3xl grid-cols-3 gap-4 text-center">
+          <img
+            src="/images/runr-app-showcase.png"
+            alt="PORTER, RUNR, and VENDR app screens"
+            className="mx-auto mt-16 w-full max-w-5xl"
+          />
+          <div className="mx-auto mt-10 grid max-w-3xl grid-cols-3 gap-4 text-center">
             <div>
               <p className="text-2xl">🛍️</p>
-              <p className="mt-1 text-sm font-semibold text-[#0066FF]">PORTER</p>
+              <p className="mt-1 text-sm font-semibold text-[#7048F8]">PORTER</p>
               <p className="text-xs text-[var(--muted)]">Customer</p>
             </div>
             <div>
               <p className="text-2xl">🚗</p>
-              <p className="mt-1 text-sm font-semibold text-[#0066FF]">RUNR</p>
+              <p className="mt-1 text-sm font-semibold text-[#7048F8]">RUNR</p>
               <p className="text-xs text-[var(--muted)]">Delivery</p>
             </div>
             <div>
               <p className="text-2xl">🏪</p>
-              <p className="mt-1 text-sm font-semibold text-[#0066FF]">VENDR</p>
+              <p className="mt-1 text-sm font-semibold text-[#7048F8]">VENDR</p>
               <p className="text-xs text-[var(--muted)]">Business</p>
             </div>
           </div>
@@ -62,8 +67,9 @@ export default function HomePage() {
           <div className="text-center">
             <h2 className="text-3xl font-bold tracking-tight">Download the Apps</h2>
             <p className="mx-auto mt-3 max-w-xl text-[var(--muted)]">
-              Four Android apps — each built for one role on the RUNR
-              marketplace. Download the app that fits you.
+              This website is the official install page. Download the app for your role —
+              PORTER, RUNR, VENDR, or STAFF. Staff manage the live marketplace from the
+              desktop Staff Portal.
             </p>
           </div>
 
@@ -74,8 +80,8 @@ export default function HomePage() {
           </div>
 
           <div className="mx-auto mt-10 max-w-2xl rounded-xl border border-amber-200 bg-amber-50 p-4 text-center text-sm text-amber-900">
-            <strong>Android APKs</strong> — Install from the MBC App Store. Each app bundles its
-            full UI inside the APK; no website or Vercel deploy required.
+            <strong>Android APKs</strong> — Install from this site or the MBC App Store. Each app
+            bundles its full UI. Staff actions (orders, coverage) stay on the desktop website.
           </div>
         </div>
       </section>
@@ -97,7 +103,7 @@ export default function HomePage() {
                 key={item.title}
                 className="rounded-2xl border border-[var(--border)] bg-white p-6"
               >
-                <span className="text-xs font-bold uppercase tracking-wider text-[#0066FF]">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#7048F8]">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="mt-2 text-lg font-semibold">{item.title}</h3>
@@ -125,19 +131,19 @@ export default function HomePage() {
               <p className="text-center font-bold text-[var(--muted)]">PLATFORM</p>
               <p className="text-center text-[var(--muted)]">│</p>
               <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="rounded-lg bg-blue-50 p-3">
-                  <Store className="mx-auto h-5 w-5 text-[#0066FF]" />
-                  <p className="mt-1 font-semibold text-[#0066FF]">PORTER</p>
+                <div className="rounded-2xl bg-brand-muted p-3">
+                  <Store className="mx-auto h-5 w-5 text-[#7048F8]" />
+                  <p className="mt-1 font-semibold text-[#7048F8]">PORTER</p>
                   <p className="text-[10px] text-[var(--muted)]">Customer</p>
                 </div>
-                <div className="rounded-lg bg-blue-50 p-3">
-                  <MapPin className="mx-auto h-5 w-5 text-[#0066FF]" />
-                  <p className="mt-1 font-semibold text-[#0066FF]">VENDR</p>
+                <div className="rounded-2xl bg-brand-muted p-3">
+                  <MapPin className="mx-auto h-5 w-5 text-[#7048F8]" />
+                  <p className="mt-1 font-semibold text-[#7048F8]">VENDR</p>
                   <p className="text-[10px] text-[var(--muted)]">Business</p>
                 </div>
-                <div className="rounded-lg bg-blue-50 p-3">
-                  <Truck className="mx-auto h-5 w-5 text-[#0066FF]" />
-                  <p className="mt-1 font-semibold text-[#0066FF]">RUNR</p>
+                <div className="rounded-2xl bg-brand-muted p-3">
+                  <Truck className="mx-auto h-5 w-5 text-[#7048F8]" />
+                  <p className="mt-1 font-semibold text-[#7048F8]">RUNR</p>
                   <p className="text-[10px] text-[var(--muted)]">Delivery</p>
                 </div>
               </div>
@@ -174,7 +180,7 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="mt-12 rounded-2xl bg-[#0a0a0a] p-8 text-white md:p-12">
+          <div className="mt-12 rounded-[2rem] bg-[#2A1478] p-8 text-white md:p-12">
             <h3 className="text-xl font-bold">The Markk Brandon Collective</h3>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-400">
               RUNR is developed by The Markk Brandon Collective — a team focused on
@@ -184,7 +190,7 @@ export default function HomePage() {
             </p>
             <a
               href="mailto:themarkkbrandoncollective@gmail.com"
-              className="mt-6 inline-block text-sm font-semibold text-[#0066FF] hover:underline"
+              className="mt-6 inline-block text-sm font-semibold text-[#7048F8] hover:underline"
             >
               themarkkbrandoncollective@gmail.com
             </a>

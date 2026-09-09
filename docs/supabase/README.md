@@ -7,10 +7,10 @@ Run **`schema.sql`** in the Supabase SQL Editor whenever you need to create or r
 It creates:
 
 - Auth profiles + founder/test accounts
-- Marketplace: businesses, menus, coverage rules, orders, RUNs, deliveries, earnings, notifications, favorites
+- Marketplace: businesses, menus, coverage rules, orders, RUNs, deliveries, earnings, notifications, favorites, staff ops chat
 - Seed kitchens owned by `vendr@test.runr.com` (Tony's Pizza, Golden Gate Burgers, Mission Tacos)
 
-If you already ran an older schema, you can also run **`marketplace.sql`** by itself.
+If you already ran an older schema, you can also run **`marketplace.sql`** and **`staff-chat.sql`** by themselves.
 
 ## Founder accounts (permanent)
 

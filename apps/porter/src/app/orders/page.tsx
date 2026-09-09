@@ -4,15 +4,16 @@ import Link from "next/link";
 import { useAppStore } from "@/store";
 import { formatCurrency } from "@runr/shared/lib/utils";
 import { StatusBadge } from "@runr/shared/components/ui/StatusBadge";
+import { ScreenHeader } from "@runr/shared/components/layout/ScreenHeader";
 
 export default function CustomerOrdersPage() {
   const { orders, businesses } = useAppStore();
 
   return (
-    <div className="min-h-screen px-4 py-6">
-      <h1 className="text-2xl font-bold">Orders</h1>
+    <div className="min-h-screen">
+      <ScreenHeader title="Orders" subtitle="Track → Receive" eyebrow="PORTER" flush />
 
-      <div className="mt-6 space-y-3">
+      <div className="space-y-3 px-4 pt-2">
         {orders.length === 0 ? (
           <p className="text-sm text-[var(--muted)]">No orders yet. Add items from Discover.</p>
         ) : (

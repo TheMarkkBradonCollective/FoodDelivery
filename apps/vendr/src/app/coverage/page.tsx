@@ -33,7 +33,8 @@ export default function BusinessCoveragePage() {
 
   return (
     <div className="px-4 py-6 pb-24 lg:pb-6">
-      <h1 className="text-2xl font-bold">Coverage Schedule</h1>
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">VENDR</p>
+      <h1 className="mt-1 text-2xl font-extrabold">Coverage Schedule</h1>
       <p className="mt-1 text-sm text-[var(--muted)]">
         Define maximum RUNRs needed per time period
       </p>

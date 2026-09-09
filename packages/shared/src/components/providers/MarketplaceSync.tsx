@@ -39,6 +39,9 @@ export function MarketplaceSync() {
       .on("postgres_changes", { event: "*", schema: "public", table: "businesses" }, () => {
         void load();
       })
+      .on("postgres_changes", { event: "*", schema: "public", table: "staff_messages" }, () => {
+        void load();
+      })
       .subscribe();
 
     return () => {

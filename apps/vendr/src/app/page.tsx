@@ -42,7 +42,7 @@ export default function BusinessOperationsPage() {
         {
           id: "business",
           position: business.location,
-          color: "#0066FF",
+          color: "#A0F878",
           title: business.name,
           subtitle: "Your restaurant",
         },

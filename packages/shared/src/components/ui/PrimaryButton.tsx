@@ -19,7 +19,7 @@ export function PrimaryButton({
 }: PrimaryButtonProps) {
   const variants = {
     primary:
-      "bg-runr-primary text-white hover:bg-runr-primary-hover shadow-sm",
+      "bg-runr-primary text-[var(--on-primary,#ffffff)] hover:bg-runr-primary-hover shadow-runr-card",
     secondary:
       "bg-[var(--surface-elevated)] text-[var(--foreground)] border border-[var(--border)] hover:bg-runr-neutral-100 dark:hover:bg-runr-neutral-800",
     ghost: "bg-transparent text-[var(--foreground)] hover:bg-runr-neutral-100 dark:hover:bg-runr-neutral-800",
@@ -27,15 +27,15 @@ export function PrimaryButton({
   };
 
   const sizes = {
-    sm: "h-9 px-3 text-sm",
-    md: "h-11 px-4 text-sm font-semibold",
-    lg: "h-12 px-6 text-base font-semibold",
+    sm: "h-10 px-4 text-sm",
+    md: "h-12 px-5 text-sm font-semibold",
+    lg: "h-14 px-7 text-base font-bold",
   };
 
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-runr-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
+        "inline-flex items-center justify-center gap-2 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
         variants[variant],
         sizes[size],
         className

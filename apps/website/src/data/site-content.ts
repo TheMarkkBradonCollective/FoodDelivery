@@ -18,7 +18,8 @@ export interface AppDownload {
 const MBC_STORE = "https://themarkkbradoncollective.github.io/main/download";
 /** Public MBC mirror — works without GitHub auth (private Runr releases 404). */
 const MBC_APKS = "https://themarkkbradoncollective.github.io/main/apks";
-const BRAND_BLUE = "#0066FF";
+const BRAND_PURPLE = "#7048F8";
+const BRAND_PLUM = "#2A1478";
 
 export const apps: AppDownload[] = [
   {
@@ -30,11 +31,11 @@ export const apps: AppDownload[] = [
       "Discover nearby businesses, order food and products, track deliveries live, and see your RUNR on the map.",
     flow: "Discover → Order → Track → Receive",
     packageId: "com.runr.porter",
-    color: BRAND_BLUE,
-    colorClass: "bg-[#0066FF]",
+    color: BRAND_PURPLE,
+    colorClass: "bg-brand",
     storeUrl: `${MBC_STORE}/#download-porter`,
-    apkUrl: `${MBC_APKS}/porter/porter-v0.3.0.apk`,
-    version: "0.3.0",
+    apkUrl: `${MBC_APKS}/porter/porter-v0.3.2.apk`,
+    version: "0.3.2",
   },
   {
     id: "runr",
@@ -45,11 +46,11 @@ export const apps: AppDownload[] = [
       "Choose where and when to deliver. Select a business, set your RUN window, and earn per delivery — not hourly.",
     flow: "Choose → RUN → Deliver → Earn",
     packageId: "com.runr.runr",
-    color: BRAND_BLUE,
-    colorClass: "bg-[#0066FF]",
+    color: BRAND_PURPLE,
+    colorClass: "bg-brand",
     storeUrl: `${MBC_STORE}/#download-runr`,
-    apkUrl: `${MBC_APKS}/runr/runr-v0.3.0.apk`,
-    version: "0.3.0",
+    apkUrl: `${MBC_APKS}/runr/runr-v0.3.2.apk`,
+    version: "0.3.2",
   },
   {
     id: "vendr",
@@ -60,26 +61,26 @@ export const apps: AppDownload[] = [
       "Run your business on the PORTER marketplace. Manage orders, set RUNR coverage, and monitor live deliveries.",
     flow: "Sell → Prepare → Dispatch → Fulfill → Grow",
     packageId: "com.runr.vendr",
-    color: BRAND_BLUE,
-    colorClass: "bg-[#0066FF]",
+    color: BRAND_PURPLE,
+    colorClass: "bg-brand",
     storeUrl: `${MBC_STORE}/#download-vendr`,
-    apkUrl: `${MBC_APKS}/vendr/vendr-v0.3.0.apk`,
-    version: "0.3.0",
+    apkUrl: `${MBC_APKS}/vendr/vendr-v0.3.2.apk`,
+    version: "0.3.2",
   },
   {
     id: "staff",
     name: "STAFF",
     iconUrl: "/icons/apps/staff.png",
-    tagline: "Platform management.",
+    tagline: "Status and staff chat.",
     description:
-      "Founder and operations console for the RUNR platform — users, businesses, orders, and app management.",
-    flow: "Monitor → Manage → Operate → Grow",
+      "Quick reads, alerts, and ops chat on the go. Manage orders, coverage, and users from the desktop Staff Portal.",
+    flow: "Status → Chat → Alerts → Desktop",
     packageId: "com.runr.staff",
-    color: "#18181B",
-    colorClass: "bg-zinc-900",
+    color: BRAND_PLUM,
+    colorClass: "bg-brand-deep",
     storeUrl: `${MBC_STORE}/#download-staff`,
-    apkUrl: `${MBC_APKS}/staff/staff-v0.3.0.apk`,
-    version: "0.3.0",
+    apkUrl: `${MBC_APKS}/staff/staff-v0.3.2.apk`,
+    version: "0.3.2",
   },
 ];
 

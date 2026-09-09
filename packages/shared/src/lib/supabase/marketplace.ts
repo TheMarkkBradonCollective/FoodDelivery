@@ -11,6 +11,7 @@ import type {
   Order,
   OrderStatus,
   Run,
+  StaffMessage,
   User,
 } from "../../types/index";
 import { getSupabaseClient } from "./client";
@@ -28,6 +29,7 @@ export interface MarketplaceSnapshot {
   notifications: Notification[];
   favoriteBusinessIds: string[];
   profiles: User[];
+  staffMessages: StaffMessage[];
 }
 
 function asNumber(value: unknown, fallback = 0) {
@@ -129,6 +131,7 @@ export async function fetchMarketplace(userId?: string): Promise<MarketplaceSnap
     notifications: [],
     favoriteBusinessIds: [],
     profiles: [],
+    staffMessages: [],
   };
 
   if (!isSupabaseConfigured()) return empty;
@@ -146,6 +149,7 @@ export async function fetchMarketplace(userId?: string): Promise<MarketplaceSnap
     notificationsRes,
     favoritesRes,
     profilesRes,
+    messagesRes,
   ] = await Promise.all([
     supabase.from("businesses").select("*"),
     supabase.from("menu_items").select("*"),
@@ -159,6 +163,7 @@ export async function fetchMarketplace(userId?: string): Promise<MarketplaceSnap
       ? supabase.from("favorites").select("business_id").eq("user_id", userId)
       : Promise.resolve({ data: [] as { business_id: string }[], error: null }),
     supabase.from("profiles").select("id, name, email, role, avatar_url"),
+    supabase.from("staff_messages").select("*").order("created_at", { ascending: true }).limit(200),
   ]);
 
   if (businessesRes.error) {
@@ -259,6 +264,16 @@ export async function fetchMarketplace(userId?: string): Promise<MarketplaceSnap
     favoriteBusinessIds: ((favoritesRes.data ?? []) as { business_id: string }[]).map(
       (r) => r.business_id
     ),
+    staffMessages: (messagesRes.error ? [] : messagesRes.data ?? []).map((row) => {
+      const rec = row as Record<string, unknown>;
+      return {
+        id: String(rec.id),
+        authorId: String(rec.author_id ?? ""),
+        authorName: String(rec.author_name ?? "Staff"),
+        body: String(rec.body ?? ""),
+        createdAt: String(rec.created_at),
+      };
+    }),
     profiles: (profilesRes.data ?? []).map((row) => {
       const rec = row as Record<string, unknown>;
       return {
@@ -408,4 +423,17 @@ export async function offerDeliveryForOrder(order: Order, business: Business, cu
   };
   await persistDelivery(delivery);
   return delivery;
+}
+
+export async function persistStaffMessage(message: StaffMessage) {
+  if (!isSupabaseConfigured()) return;
+  const supabase = getSupabaseClient();
+  const { error } = await supabase.from("staff_messages").insert({
+    id: message.id,
+    author_id: message.authorId,
+    author_name: message.authorName,
+    body: message.body,
+    created_at: message.createdAt,
+  });
+  if (error) console.warn("staff_messages", error.message);
 }

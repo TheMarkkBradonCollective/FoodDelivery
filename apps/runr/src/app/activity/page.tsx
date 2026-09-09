@@ -6,13 +6,13 @@ export default function RunrActivityPage() {
   const { notifications, markNotificationRead } = useAppStore();
 
   return (
-    <div className="min-h-screen px-4 py-6">
-      <h1 className="text-2xl font-bold">Activity</h1>
-      <p className="mt-1 text-sm text-[var(--muted)]">
-        Notifications and delivery updates
-      </p>
-
-      <div className="mt-6 space-y-3">
+    <div className="min-h-screen">
+      <div className="brand-hero brand-hero--flush px-5 pb-10 pt-6">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">RUNR</p>
+        <h1 className="mt-1 text-2xl font-extrabold text-white">Activity</h1>
+        <p className="mt-1 text-sm text-white/75">Notifications and delivery updates</p>
+      </div>
+      <div className="space-y-3 px-4 pt-2">
         {notifications.map((n) => (
           <button
             key={n.id}

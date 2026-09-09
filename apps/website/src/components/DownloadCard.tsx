@@ -4,7 +4,7 @@ import type { AppDownload } from "@/data/site-content";
 
 export function DownloadCard({ app }: { app: AppDownload }) {
   return (
-    <div className="flex flex-col rounded-2xl border border-[var(--border)] bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+    <div className="flex flex-col rounded-[1.75rem] border border-[var(--border)] bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           <Image
@@ -12,7 +12,7 @@ export function DownloadCard({ app }: { app: AppDownload }) {
             alt={`${app.name} app icon`}
             width={48}
             height={48}
-            className="h-12 w-12 rounded-xl"
+            className="h-12 w-12 rounded-2xl"
           />
           <div>
             <h3 className="text-lg font-bold">{app.name}</h3>
@@ -38,7 +38,7 @@ export function DownloadCard({ app }: { app: AppDownload }) {
 
       <a
         href={app.storeUrl}
-        className={`mt-5 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 ${app.colorClass}`}
+        className={`mt-5 inline-flex items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 ${app.colorClass}`}
       >
         <Download className="h-4 w-4" />
         Get on MBC App Store

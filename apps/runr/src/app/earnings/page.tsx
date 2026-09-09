@@ -12,13 +12,14 @@ export default function RunrEarningsPage() {
   const total = earnings.reduce((s, e) => s + e.total, 0);
 
   return (
-    <div className="min-h-screen px-4 py-6">
-      <h1 className="text-2xl font-bold">Earnings</h1>
-      <p className="mt-1 text-sm text-[var(--muted)]">
-        Per-delivery pay — not hourly guaranteed income
-      </p>
-
-      <section className="mt-6">
+    <div className="min-h-screen">
+      <div className="brand-hero brand-hero--flush px-5 pb-10 pt-6">
+        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">RUNR</p>
+        <h1 className="mt-1 text-2xl font-extrabold text-white">Earnings</h1>
+        <p className="mt-1 text-sm text-white/75">Per-delivery pay — not hourly</p>
+      </div>
+      <div className="px-4 pt-2">
+      <section>
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
           Today
         </h2>
@@ -57,6 +58,7 @@ export default function RunrEarningsPage() {
           ))}
         </div>
       </section>
+      </div>
     </div>
   );
 }

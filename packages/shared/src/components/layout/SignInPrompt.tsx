@@ -8,8 +8,32 @@ import { isSupabaseConfigured } from "../../lib/supabase/config";
 import { PrimaryButton } from "../ui/PrimaryButton";
 import { useAppStore } from "../../store/create-app-store";
 
+const WELCOME: Record<UserRole, { highlight: string; line: string; pills: string[] }> = {
+  customer: {
+    highlight: "need.",
+    line: "Get what you",
+    pills: ["Discover", "Order", "Track", "Receive"],
+  },
+  runr: {
+    highlight: "time.",
+    line: "Pick your place. Run your",
+    pills: ["Choose", "RUN", "Deliver", "Earn"],
+  },
+  business: {
+    highlight: "grow.",
+    line: "Sell. Manage.",
+    pills: ["Sell", "Dispatch", "Fulfill", "Grow"],
+  },
+  staff: {
+    highlight: "chat.",
+    line: "Quick status. Shared",
+    pills: ["Status", "Chat", "Alerts", "Desktop"],
+  },
+};
+
 export function SignInPrompt({ role }: { role: UserRole }) {
   const appName = role === "staff" ? "Staff Portal" : getAppForRole(role);
+  const copy = WELCOME[role];
   const setUser = useAppStore((s) => s.setUser);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,74 +62,75 @@ export function SignInPrompt({ role }: { role: UserRole }) {
     setUser(result.session.user);
   }
 
-  if (!isSupabaseConfigured()) {
-    return (
-      <div className="flex min-h-[100dvh] items-center justify-center px-6 py-12">
-        <div className="max-w-sm text-center">
-          <p className="text-xs font-bold uppercase tracking-wider text-runr-primary">
-            {appName}
-          </p>
-          <h1 className="mt-3 text-2xl font-bold">Sign in to continue</h1>
-          <p className="mt-3 text-sm text-[var(--muted)]">
-            Supabase is not configured for this build. Add your project URL and publishable key.
-          </p>
+  return (
+    <div className="brand-hero relative flex min-h-[100dvh] flex-col overflow-hidden">
+      <div className="brand-blob -left-16 top-10 h-40 w-40 bg-runr-accent/30" />
+      <div className="brand-blob -right-10 top-32 h-28 w-28 bg-runr-accent-bright/25" />
+      <div className="brand-blob bottom-40 left-8 h-16 w-16 bg-white/10" />
+
+      <div className="relative z-10 flex flex-1 flex-col justify-end px-6 pb-4 pt-16 text-white">
+        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-runr-accent-bright">
+          {appName}
+        </p>
+        <h1 className="mt-4 max-w-sm text-4xl font-extrabold leading-[1.05] tracking-tight">
+          {copy.line}{" "}
+          <span className="inline-block rounded-xl bg-white px-2 py-0.5 text-runr-ink">{copy.highlight}</span>
+        </h1>
+        <div className="mt-6 flex flex-wrap gap-2">
+          {copy.pills.map((pill, i) => (
+            <span
+              key={pill}
+              className={`pill ${
+                i % 2 === 0 ? "bg-runr-accent-bright text-runr-ink" : "bg-white/15 text-white"
+              }`}
+            >
+              {pill}
+            </span>
+          ))}
         </div>
       </div>
-    );
-  }
 
-  return (
-    <div className="flex min-h-[100dvh] items-center justify-center px-6 py-12">
-      <div className="w-full max-w-sm">
-        <div className="text-center">
-          <p className="text-xs font-bold uppercase tracking-wider text-runr-primary">
-            {appName}
+      <div className="signin-sheet px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-7">
+        {!isSupabaseConfigured() ? (
+          <p className="text-sm text-[var(--muted)]">
+            Supabase is not configured for this build. Add your project URL and publishable key.
           </p>
-          <h1 className="mt-3 text-2xl font-bold">Sign in to continue</h1>
-          <p className="mt-3 text-sm text-[var(--muted)]">
-            Use your RUNR account. Marketplace data loads after sign-in.
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-          <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-              className="w-full rounded-runr-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
-              className="w-full rounded-runr-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm"
-            />
-          </div>
-
-          {error && (
-            <p className="rounded-runr-md bg-runr-critical-muted px-3 py-2 text-sm text-runr-critical">
-              {error}
+        ) : (
+          <>
+            <p className="text-lg font-extrabold tracking-tight">Sign in to continue</p>
+            <p className="mt-1 text-sm text-[#6F6678]">
+              Use your RUNR account. Marketplace data loads after sign-in.
             </p>
-          )}
-
-          <PrimaryButton type="submit" className="w-full" disabled={loading}>
-            {loading ? "Signing in..." : "Sign In"}
-          </PrimaryButton>
-        </form>
+            <form onSubmit={handleSubmit} className="mt-6 space-y-3">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                autoComplete="email"
+                placeholder="Email"
+                className="signin-field"
+              />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+                placeholder="Password"
+                className="signin-field"
+              />
+              {error && (
+                <p className="rounded-runr-md bg-runr-critical-muted px-3 py-2 text-sm text-runr-critical">
+                  {error}
+                </p>
+              )}
+              <PrimaryButton type="submit" className="signin-cta w-full" size="lg" disabled={loading}>
+                {loading ? "Signing in..." : "Get started"}
+              </PrimaryButton>
+            </form>
+          </>
+        )}
       </div>
     </div>
   );

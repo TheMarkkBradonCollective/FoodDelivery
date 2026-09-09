@@ -1,15 +1,16 @@
 @import "tailwindcss";
 @import "@runr/shared/styles/globals.css";
 
-/* PORTER — blue mark on white */
+/* PORTER — cream surfaces, purple brand, lime accents */
 :root {
-  --color-runr-primary: #0066ff;
-  --color-runr-primary-hover: #0052cc;
-  --color-runr-primary-muted: #e6f0ff;
-  --background: #ffffff;
-  --foreground: #18181b;
-  --surface: #ffffff;
-  --surface-elevated: #f4f4f5;
-  --border: #e4e4e7;
-  --muted: #71717a;
+  --color-runr-primary: #7048f8;
+  --color-runr-primary-hover: #5c36e0;
+  --color-runr-primary-muted: #eee8ff;
+  --color-runr-navigation: #7048f8;
+  --background: #f6f1e8;
+  --foreground: #1a1224;
+  --surface: #fffdf9;
+  --surface-elevated: #ffffff;
+  --border: #e8e0d4;
+  --muted: #6f6678;
 }

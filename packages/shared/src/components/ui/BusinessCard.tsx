@@ -13,6 +13,7 @@ interface BusinessCardProps {
   isFavorite?: boolean;
   onFavoriteToggle?: () => void;
   onClick?: () => void;
+  featured?: boolean;
   className?: string;
 }
 
@@ -22,6 +23,7 @@ export function BusinessCard({
   isFavorite,
   onFavoriteToggle,
   onClick,
+  featured,
   className,
 }: BusinessCardProps) {
   const distance = calculateDistanceMiles(userLocation, business.location);
@@ -35,14 +37,32 @@ export function BusinessCard({
       type="button"
       onClick={onClick}
       className={cn(
-        "w-full rounded-runr-lg border border-[var(--border)] bg-[var(--surface-elevated)] p-4 text-left shadow-runr-card transition-transform active:scale-[0.99]",
+        "w-full rounded-runr-xl p-5 text-left shadow-runr-card transition-transform active:scale-[0.99]",
+        featured
+          ? "bg-runr-accent-bright text-runr-ink"
+          : "border border-[var(--border)] bg-[var(--surface-elevated)]",
         className
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
+          <span
+            className={cn(
+              "pill mb-2",
+              featured
+                ? "bg-runr-primary text-white"
+                : "bg-runr-primary-muted text-runr-primary"
+            )}
+          >
+            {business.cuisine}
+          </span>
           <div className="flex items-center gap-2">
-            <h3 className="truncate text-base font-semibold text-[var(--foreground)]">
+            <h3
+              className={cn(
+                "truncate text-lg font-extrabold tracking-tight",
+                featured ? "text-runr-ink" : "text-[var(--foreground)]"
+              )}
+            >
               {business.name}
             </h3>
             {onFavoriteToggle && (
@@ -60,21 +80,19 @@ export function BusinessCard({
                     "h-4 w-4",
                     isFavorite
                       ? "fill-runr-warning text-runr-warning"
-                      : "text-runr-neutral-300"
+                      : featured
+                        ? "text-runr-ink/40"
+                        : "text-runr-neutral-300"
                   )}
                 />
               </button>
             )}
           </div>
-          <p className="mt-0.5 text-sm text-[var(--muted)]">
-            {business.cuisine} · {distance.toFixed(1)} mi · {business.etaMinutes} min
+          <p className={cn("mt-1 text-sm", featured ? "text-runr-ink/75" : "text-[var(--muted)]")}>
+            {distance.toFixed(1)} mi · {business.etaMinutes} min · Delivery{" "}
+            {formatCurrency(business.deliveryFee)}
           </p>
-          <div className="mt-2 flex items-center gap-2">
-            <span className="text-sm font-medium">★ {business.rating}</span>
-            <span className="text-xs text-[var(--muted)]">
-              Delivery {formatCurrency(business.deliveryFee)}
-            </span>
-          </div>
+          <p className="mt-2 text-sm font-semibold">★ {business.rating}</p>
         </div>
         <CoverageBadge status={coverage.status} gap={coverage.gap} size="sm" />
       </div>

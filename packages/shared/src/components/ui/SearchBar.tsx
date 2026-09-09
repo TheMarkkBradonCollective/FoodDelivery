@@ -19,11 +19,11 @@ export function SearchBar({
   return (
     <div
       className={cn(
-        "flex items-center gap-2 rounded-runr-lg border border-[var(--border)] bg-[var(--surface-elevated)] px-3 py-2.5 shadow-runr-card",
+        "flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-elevated)] px-4 py-3 shadow-runr-card",
         className
       )}
     >
-      <Search className="h-4 w-4 shrink-0 text-[var(--muted)]" />
+      <Search className="h-4 w-4 shrink-0 text-runr-primary" />
       <input
         type="search"
         value={value}
