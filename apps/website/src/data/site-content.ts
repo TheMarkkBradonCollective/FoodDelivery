@@ -71,10 +71,10 @@ export const apps: AppDownload[] = [
     id: "staff",
     name: "STAFF",
     iconUrl: "/icons/apps/staff.png",
-    tagline: "Platform management.",
+    tagline: "Status and staff chat.",
     description:
-      "Founder and operations console for the RUNR platform — users, businesses, orders, and app management.",
-    flow: "Monitor → Manage → Operate → Grow",
+      "Quick reads, alerts, and ops chat on the go. Manage orders, coverage, and users from the desktop Staff Portal.",
+    flow: "Status → Chat → Alerts → Desktop",
     packageId: "com.runr.staff",
     color: BRAND_PLUM,
     colorClass: "bg-brand-deep",

@@ -60,7 +60,8 @@ export default function LoginPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold">Sign in to RUNR</h1>
           <p className="mt-2 text-sm text-[var(--muted)]">
-            One account across PORTER, RUNR, and VENDR — managed here on the web.
+            Customers, RUNRs, and businesses sign in for their account. Staff sign in here to
+            manage the marketplace on desktop.
           </p>
         </div>
 

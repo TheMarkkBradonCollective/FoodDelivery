@@ -25,9 +25,10 @@ export function SiteFooter() {
               Apps
             </p>
             <ul className="mt-3 space-y-2 text-sm">
-              <li><a href="#apps" className="hover:text-[#6B3FA0]">PORTER — Customer</a></li>
-              <li><a href="#apps" className="hover:text-[#6B3FA0]">RUNR — Delivery</a></li>
-              <li><a href="#apps" className="hover:text-[#6B3FA0]">VENDR — Business</a></li>
+              <li><Link href="/download" className="hover:text-[#6B3FA0]">Download apps</Link></li>
+              <li><Link href="/download" className="hover:text-[#6B3FA0]">PORTER — Customer</Link></li>
+              <li><Link href="/download" className="hover:text-[#6B3FA0]">RUNR — Delivery</Link></li>
+              <li><Link href="/download" className="hover:text-[#6B3FA0]">VENDR — Business</Link></li>
             </ul>
           </div>
 

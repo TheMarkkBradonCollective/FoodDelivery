@@ -22,7 +22,7 @@ export default function HomePage() {
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
-              href="#apps"
+              href="/download"
               className="inline-flex items-center gap-2 rounded-full bg-[#6B3FA0] px-8 py-3.5 text-sm font-semibold text-white hover:bg-[#5A3282]"
             >
               Download the Apps
@@ -62,8 +62,9 @@ export default function HomePage() {
           <div className="text-center">
             <h2 className="text-3xl font-bold tracking-tight">Download the Apps</h2>
             <p className="mx-auto mt-3 max-w-xl text-[var(--muted)]">
-              Four Android apps — each built for one role on the RUNR
-              marketplace. Download the app that fits you.
+              This website is the official install page. Download the app for your role —
+              PORTER, RUNR, VENDR, or STAFF. Staff manage the live marketplace from the
+              desktop Staff Portal.
             </p>
           </div>
 
@@ -74,8 +75,8 @@ export default function HomePage() {
           </div>
 
           <div className="mx-auto mt-10 max-w-2xl rounded-xl border border-amber-200 bg-amber-50 p-4 text-center text-sm text-amber-900">
-            <strong>Android APKs</strong> — Install from the MBC App Store. Each app bundles its
-            full UI inside the APK; no website or Vercel deploy required.
+            <strong>Android APKs</strong> — Install from this site or the MBC App Store. Each app
+            bundles its full UI. Staff actions (orders, coverage) stay on the desktop website.
           </div>
         </div>
       </section>

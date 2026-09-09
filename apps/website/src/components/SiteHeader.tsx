@@ -6,7 +6,7 @@ import { getAppForRole } from "@runr/shared/lib/auth";
 import { LogIn, User, Shield } from "lucide-react";
 
 const nav = [
-  { href: "/#apps", label: "Download Apps" },
+  { href: "/download", label: "Download Apps" },
   { href: "/#how-it-works", label: "How It Works" },
   { href: "/#ecosystem", label: "Ecosystem" },
   { href: "/#company", label: "Company" },

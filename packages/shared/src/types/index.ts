@@ -181,6 +181,14 @@ export interface RunrProfile {
   favoriteBusinessIds: string[];
 }
 
+export interface StaffMessage {
+  id: string;
+  authorId: string;
+  authorName: string;
+  body: string;
+  createdAt: string;
+}
+
 export interface BusinessOperations {
   businessId: string;
   activeOrders: number;

@@ -25,9 +25,9 @@ const WELCOME: Record<UserRole, { highlight: string; line: string; pills: string
     pills: ["Sell", "Dispatch", "Fulfill", "Grow"],
   },
   staff: {
-    highlight: "operate.",
-    line: "Monitor. Manage.",
-    pills: ["Users", "Coverage", "Orders", "Apps"],
+    highlight: "chat.",
+    line: "Quick status. Shared",
+    pills: ["Status", "Chat", "Alerts", "Desktop"],
   },
 };
 

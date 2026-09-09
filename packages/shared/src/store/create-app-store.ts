@@ -10,6 +10,7 @@ import type {
   Notification,
   Order,
   Run,
+  StaffMessage,
   User,
 } from "../types/index";
 import { canScheduleRun } from "../lib/coverage-engine";
@@ -26,6 +27,7 @@ import {
   persistOrder,
   persistOrderStatus,
   persistRun,
+  persistStaffMessage,
 } from "../lib/supabase/marketplace";
 
 export interface AppState {
@@ -45,6 +47,7 @@ export interface AppState {
   notifications: Notification[];
   earnings: EarningRecord[];
   marketplaceUsers: User[];
+  staffMessages: StaffMessage[];
   searchQuery: string;
   mapFilter: "all" | "open" | "gap" | "high_demand";
 
@@ -70,6 +73,7 @@ export interface AppState {
   hydrateMarketplace: (snapshot: MarketplaceSnapshot) => void;
   updateBusinessCapacity: (businessId: string, ruleId: string, maxRunrs: number) => void;
   markNotificationRead: (id: string) => void;
+  sendStaffMessage: (body: string) => void;
 }
 
 function buildStore(
@@ -93,6 +97,7 @@ function buildStore(
     notifications: [] as Notification[],
     earnings: [] as EarningRecord[],
     marketplaceUsers: [] as User[],
+    staffMessages: [] as StaffMessage[],
     searchQuery: "",
     mapFilter: "all" as const,
 
@@ -358,6 +363,7 @@ function buildStore(
         notifications: snapshot.notifications,
         favoriteBusinessIds: snapshot.favoriteBusinessIds,
         marketplaceUsers: snapshot.profiles,
+        staffMessages: snapshot.staffMessages ?? [],
       }),
 
     updateBusinessCapacity: (businessId: string, ruleId: string, maxRunrs: number) => {
@@ -382,6 +388,21 @@ function buildStore(
           n.id === id ? { ...n, read: true } : n
         ),
       })),
+
+    sendStaffMessage: (body: string) => {
+      const user = get().user;
+      const text = body.trim();
+      if (!user || !text) return;
+      const message: StaffMessage = {
+        id: crypto.randomUUID(),
+        authorId: user.id,
+        authorName: user.name,
+        body: text,
+        createdAt: new Date().toISOString(),
+      };
+      set((s) => ({ staffMessages: [...s.staffMessages, message] }));
+      void persistStaffMessage(message);
+    },
   };
 }
 

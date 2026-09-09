@@ -5,22 +5,13 @@ import { usePathname } from "next/navigation";
 import { cn } from "@runr/shared/lib/utils";
 import { AppBrandHeader } from "@runr/shared/components/layout/AppBrandHeader";
 import { useAppStore } from "@/store";
-import {
-  Building2,
-  LayoutDashboard,
-  LogOut,
-  Package,
-  Smartphone,
-  Users,
-} from "lucide-react";
+import { Bell, LayoutDashboard, LogOut, MessageSquare } from "lucide-react";
 import { signOut } from "@runr/shared/lib/supabase/auth";
 
 export const staffNav = [
-  { href: "/", label: "Overview", icon: LayoutDashboard },
-  { href: "/apps", label: "Apps", icon: Smartphone },
-  { href: "/users", label: "Users", icon: Users },
-  { href: "/businesses", label: "Businesses", icon: Building2 },
-  { href: "/orders", label: "Orders", icon: Package },
+  { href: "/", label: "Status", icon: LayoutDashboard },
+  { href: "/chat", label: "Chat", icon: MessageSquare },
+  { href: "/alerts", label: "Alerts", icon: Bell },
 ];
 
 export function StaffLayoutClient({ children }: { children: React.ReactNode }) {
@@ -38,7 +29,7 @@ export function StaffLayoutClient({ children }: { children: React.ReactNode }) {
       <aside className="hidden w-56 shrink-0 border-r border-[var(--border)] bg-[var(--surface)] p-4 pt-[calc(1rem+var(--safe-top))] lg:block">
         <AppBrandHeader
           name="STAFF"
-          tagline="Platform management"
+          tagline="Status & chat"
           iconUrl="/icons/app-icon.png"
           className="mb-6"
         />
@@ -76,9 +67,9 @@ export function StaffLayoutClient({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border)] bg-[var(--surface)] pb-[env(safe-area-inset-bottom)] lg:hidden">
+      <nav className="fixed inset-x-3 bottom-3 z-30 rounded-full border border-[var(--border)] bg-[var(--surface)]/95 pb-[max(0.25rem,env(safe-area-inset-bottom))] shadow-runr-sheet backdrop-blur-md lg:hidden">
         <div className="flex justify-around px-1">
-          {staffNav.slice(0, 4).map(({ href, label, icon: Icon }) => (
+          {staffNav.map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
               href={href}

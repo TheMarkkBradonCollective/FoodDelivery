@@ -13,7 +13,8 @@
     "./components/map": "./src/components/map/index.tsx",
     "./components/map/*": "./src/components/map/*",
     "./components/layout/*": "./src/components/layout/*",
-    "./components/providers/*": "./src/components/providers/*"
+    "./components/providers/*": "./src/components/providers/*",
+    "./components/staff/*": "./src/components/staff/*"
   },
   "dependencies": {
     "@capacitor/core": "^7.2.0",
