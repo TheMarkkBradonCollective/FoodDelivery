@@ -120,7 +120,7 @@ export function AppFrame({
           paddingRight: "env(safe-area-inset-right, 0px)",
         }}
       >
-        <div className="mx-auto min-h-dvh w-full max-w-6xl pb-[calc(5.75rem+env(safe-area-inset-bottom,0px))] md:pb-8">
+        <div className="mx-auto min-h-dvh w-full max-w-6xl pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] md:pb-8">
           {children}
         </div>
       </div>
@@ -130,7 +130,7 @@ export function AppFrame({
         style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 10px)" }}
         aria-label="Main"
       >
-        <div className="pointer-events-auto flex w-full max-w-md items-center justify-around rounded-full bg-ink px-2 py-2 shadow-2xl">
+        <div className="pointer-events-auto flex w-full max-w-md items-center justify-around rounded-full bg-ink px-1.5 py-1.5 shadow-2xl">
           {tabs.map((tab) => {
             const active = isActive(pathname, tab.href);
             const Icon = tab.icon;

@@ -9,9 +9,8 @@ import { QuantityStepper } from "@runr/shared/components/ui/QuantityStepper";
 import { IconButton } from "@runr/shared/components/ui/IconButton";
 import { useAppStore } from "@/store";
 import { formatCurrency } from "@runr/shared/lib/utils";
+import { SegmentedControl } from "@runr/shared/components/ui/SegmentedControl";
 import { PROMO_CODES } from "@runr/shared/data/constants";
-
-const TIP_OPTIONS = [0, 3, 5, 8];
 
 export default function CartPage() {
   const {
@@ -95,7 +94,7 @@ export default function CartPage() {
         </IconButton>
         <div>
           <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">PORTER</p>
-          <h1 className="text-2xl font-extrabold text-[var(--foreground)]">Cart</h1>
+          <h1 className="text-[1.375rem] font-extrabold text-[var(--foreground)]">Cart</h1>
         </div>
       </div>
 
@@ -103,7 +102,7 @@ export default function CartPage() {
 
       <div className="mt-6 space-y-3">
         {cart.map((item) => (
-          <div key={item.menuItemId} className="surface-card flex items-center justify-between gap-3 rounded-[24px] p-4">
+          <div key={item.menuItemId} className="surface-card flex items-center justify-between gap-3 rounded-2xl p-3">
             <div className="min-w-0">
               <p className="truncate font-bold text-[var(--foreground)]">{item.name}</p>
               <p className="text-sm text-[var(--muted)]">{formatCurrency(item.price)}</p>
@@ -116,53 +115,31 @@ export default function CartPage() {
         ))}
       </div>
 
-      <div className="mt-6 rounded-[28px] bg-[var(--surface-elevated)] p-5 shadow-sm ring-1 ring-[var(--border)]">
+      <div className="mt-5 rounded-2xl bg-[var(--surface-elevated)] p-4 ring-1 ring-[var(--border)]">
         <p className="field-label">How you get it</p>
-        <div className="flex gap-2">
-          {(
-            [
-              ["delivery", "Delivery"],
-              ["pickup", "Pickup"],
-            ] as const
-          ).map(([key, label]) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setFulfillment(key)}
-              className={`h-11 flex-1 rounded-full text-xs font-bold ${
-                fulfillment === key ? "bg-purple text-white" : "bg-[var(--background)] text-[var(--foreground)]"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        <SegmentedControl
+          value={fulfillment}
+          onChange={setFulfillment}
+          options={[
+            { value: "delivery", label: "Delivery" },
+            { value: "pickup", label: "Pickup" },
+          ]}
+        />
         <p className="mt-2 text-xs text-[var(--muted)]">
           {fulfillment === "delivery"
             ? "A RUNR covering this VENDR brings it to you."
             : `Collect at ${business?.address ?? "the business"}. No RUNR needed.`}
         </p>
 
-        <p className="field-label mt-5">When</p>
-        <div className="flex gap-2">
-          {(
-            [
-              ["now", "Now"],
-              ["schedule", "Schedule"],
-            ] as const
-          ).map(([key, label]) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setWhen(key)}
-              className={`h-11 flex-1 rounded-full text-xs font-bold ${
-                when === key ? "bg-purple text-white" : "bg-[var(--background)] text-[var(--foreground)]"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        <p className="field-label mt-4">When</p>
+        <SegmentedControl
+          value={when}
+          onChange={setWhen}
+          options={[
+            { value: "now", label: "Now" },
+            { value: "schedule", label: "Schedule" },
+          ]}
+        />
         {when === "schedule" ? (
           <input
             type="time"
@@ -174,7 +151,7 @@ export default function CartPage() {
 
         {fulfillment === "delivery" ? (
           <>
-            <label className="field-label mt-5" htmlFor="delivery-address">
+            <label className="field-label mt-4" htmlFor="delivery-address">
               Deliver to
             </label>
             <input
@@ -188,7 +165,7 @@ export default function CartPage() {
           </>
         ) : null}
 
-        <p className="field-label mt-5">Promo code</p>
+        <p className="field-label mt-4">Promo code</p>
         <div className="flex gap-2">
           <input
             value={promoInput}
@@ -200,7 +177,7 @@ export default function CartPage() {
           <button
             type="button"
             onClick={applyPromo}
-            className="tap-target h-12 shrink-0 rounded-full bg-ink px-5 text-sm font-bold text-white"
+            className="h-11 shrink-0 rounded-full bg-ink px-4 text-sm font-bold text-white"
           >
             Apply
           </button>
@@ -212,30 +189,30 @@ export default function CartPage() {
           </p>
         ) : null}
 
-        <div className="mt-5 space-y-2 text-sm">
+        <div className="mt-4 space-y-1.5 text-sm">
           <Row label="Subtotal" value={subtotal} />
-          <Row label="Delivery fee" value={deliveryFee} />
+          {fulfillment === "delivery" ? <Row label="Delivery fee" value={deliveryFee} /> : null}
           <Row label="Service fee" value={serviceFee} />
           <Row label="Tax" value={tax} />
           {discount > 0 ? <Row label="Promo" value={-discount} /> : null}
         </div>
 
-        <p className="mt-5 text-sm font-bold text-[var(--foreground)]">Tip</p>
-        <div className="mt-2 flex gap-2">
-          {TIP_OPTIONS.map((amount) => (
-            <button
-              key={amount}
-              type="button"
-              onClick={() => setTip(amount)}
-              className={`h-11 flex-1 rounded-full text-xs font-bold ${
-                tip === amount ? "bg-purple text-white" : "bg-[var(--background)] text-[var(--foreground)]"
-              }`}
-            >
-              {amount === 0 ? "None" : formatCurrency(amount)}
-            </button>
-          ))}
+        <p className="field-label mt-4">Tip · {formatCurrency(tip)}</p>
+        <input
+          type="range"
+          min={0}
+          max={8}
+          step={1}
+          value={tip}
+          onChange={(e) => setTip(Number(e.target.value))}
+          className="mt-1 h-8 w-full range-slider"
+          aria-label="Tip amount"
+        />
+        <div className="flex justify-between text-[11px] text-[var(--muted)]">
+          <span>None</span>
+          <span>$8</span>
         </div>
-        <div className="mt-4 border-t border-[var(--border)] pt-3">
+        <div className="mt-3 border-t border-[var(--border)] pt-3">
           <Row label="Total" value={total} bold />
         </div>
       </div>
@@ -245,7 +222,7 @@ export default function CartPage() {
         type="button"
         onClick={handlePlaceOrder}
         disabled={placing || (fulfillment === "delivery" && !deliveryAddress.trim())}
-        className="sticky-cta tap-target h-14 w-full rounded-full bg-purple text-base font-extrabold text-white disabled:opacity-50"
+        className="sticky-cta tap-target h-12 w-full rounded-full bg-purple text-sm font-extrabold text-white disabled:opacity-50"
       >
         {placing ? "Placing order…" : `Place order · ${formatCurrency(total)}`}
       </button>

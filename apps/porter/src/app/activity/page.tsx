@@ -28,7 +28,7 @@ export default function CustomerActivityPage() {
               key={n.id}
               type="button"
               onClick={() => markNotificationRead(n.id)}
-              className={`w-full rounded-[24px] p-4 text-left shadow-sm ring-1 ${
+              className={`w-full rounded-2xl p-3.5 text-left ring-1 ${
                 n.read ? "bg-[var(--surface-elevated)] ring-[var(--border)] opacity-70" : "bg-runr-primary-muted ring-purple/20"
               }`}
             >

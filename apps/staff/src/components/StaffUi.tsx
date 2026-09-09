@@ -8,13 +8,11 @@ export function Stat({
   alert?: boolean;
 }) {
   return (
-    <div
-      className={`rounded-xl border p-4 ${
+    <div className={`rounded-2xl border p-3 ${
         alert ? "border-orange-500/40 bg-orange-500/10" : "border-[var(--border)] bg-[var(--surface)]"
-      }`}
-    >
+      }`}>
       <p className="text-xs text-[var(--muted)]">{label}</p>
-      <p className="mt-1 text-2xl font-extrabold text-white">{value}</p>
+      <p className="mt-1 text-xl font-extrabold text-white">{value}</p>
     </div>
   );
 }
@@ -29,9 +27,9 @@ export function Panel({
   className?: string;
 }) {
   return (
-    <div className={`rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 ${className}`}>
-      <h2 className="text-lg font-semibold">{title}</h2>
-      <div className="mt-4">{children}</div>
+    <div className={`rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3.5 ${className}`}>
+      <h2 className="text-sm font-extrabold">{title}</h2>
+      <div className="mt-2">{children}</div>
     </div>
   );
 }

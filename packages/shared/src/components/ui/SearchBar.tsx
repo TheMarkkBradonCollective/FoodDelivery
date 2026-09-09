@@ -22,7 +22,7 @@ export function SearchBar({
   return (
     <div
       className={cn(
-        "flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-elevated)] px-4 py-2.5 shadow-sm",
+        "flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-elevated)] px-3.5 py-2",
         className,
       )}
     >
@@ -39,7 +39,7 @@ export function SearchBar({
         <button
           type="button"
           onClick={() => onChange("")}
-          className="tap-target rounded-full p-1 hover:bg-[var(--background)]"
+          className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-[var(--background)]"
           aria-label="Clear search"
         >
           <X className="h-3.5 w-3.5 text-[var(--muted)]" />

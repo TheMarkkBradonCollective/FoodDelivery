@@ -33,7 +33,7 @@ export function CatalogPreviewBanner({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "flex items-center gap-2 rounded-2xl border border-purple/30 bg-purple/12 px-3 py-2 text-xs text-[var(--foreground)]",
+        "flex items-center gap-2 rounded-2xl border border-purple/30 bg-purple/10 px-3 py-2 text-xs text-[var(--foreground)]",
         className,
       )}
     >

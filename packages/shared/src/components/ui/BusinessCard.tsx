@@ -35,11 +35,11 @@ export function BusinessCard({
 
   const body = (
     <div className="flex items-start justify-between gap-3">
-      <CuisinePlate cuisine={business.cuisine} size={featured ? 64 : 52} />
+      <CuisinePlate cuisine={business.cuisine} size={featured ? 56 : 48} />
       <div className="min-w-0 flex-1">
         <span
           className={cn(
-            "pill mb-2",
+            "pill mb-1.5 !px-2 !py-0.5 text-[10px]",
             featured ? "bg-ink text-white" : "bg-runr-primary-muted text-runr-primary",
           )}
         >
@@ -48,7 +48,7 @@ export function BusinessCard({
         <div className="flex items-center gap-2">
           <h3
             className={cn(
-              "truncate text-lg font-extrabold tracking-tight",
+              "truncate text-[15px] font-extrabold tracking-tight",
               featured ? "text-runr-ink" : "text-[var(--foreground)]"
             )}
           >
@@ -79,17 +79,16 @@ export function BusinessCard({
           )}
         </div>
         <p className={cn("mt-1 text-sm", featured ? "text-runr-ink/75" : "text-[var(--muted)]")}>
-          {distance.toFixed(1)} mi · {business.etaMinutes} min · Delivery{" "}
+          ★ {business.rating} · {distance.toFixed(1)} mi · {business.etaMinutes} min ·{" "}
           {formatCurrency(business.deliveryFee)}
         </p>
-        <p className="mt-2 text-sm font-semibold">★ {business.rating}</p>
       </div>
       <CoverageBadge status={coverage.status} gap={coverage.gap} size="sm" />
     </div>
   );
 
   const classes = cn(
-    "block w-full rounded-runr-xl p-5 text-left shadow-runr-card transition-transform active:scale-[0.99]",
+    "block w-full rounded-2xl p-4 text-left transition-transform active:scale-[0.99]",
     featured
       ? "bg-runr-accent-bright text-runr-ink"
       : "border border-[var(--border)] bg-[var(--surface-elevated)]",

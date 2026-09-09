@@ -19,7 +19,7 @@ const variants = {
 
 export function IconButton({ label, variant = "light", className, children, href, ...props }: Props) {
   const classes = clsx(
-    "tap-target inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-transform active:scale-95",
+        "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-transform active:scale-95",
     variants[variant],
     className,
   );

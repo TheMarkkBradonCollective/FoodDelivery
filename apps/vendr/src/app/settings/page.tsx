@@ -19,20 +19,20 @@ export default function BusinessSettingsPage() {
   const [hours, setHours] = useState(kitchen?.operatingHours ?? "");
 
   return (
-    <div className="px-5 pb-8 pt-5 lg:mx-auto lg:max-w-xl">
+    <div className="px-5 pb-8 pt-4 lg:mx-auto lg:max-w-xl">
       <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">VENDR</p>
-      <h1 className="mt-1 text-2xl font-extrabold text-[var(--foreground)]">Settings</h1>
+      <h1 className="mt-0.5 text-[1.375rem] font-extrabold text-[var(--foreground)]">Settings</h1>
       <JobLoop app="vendr" className="mt-1" />
 
-      <div className="surface-card mt-6 rounded-[28px] p-5">
+      <div className="surface-card mt-5 rounded-2xl p-3.5">
         <p className="font-extrabold">{user?.name}</p>
         <p className="text-sm text-[var(--muted)]">{user?.email}</p>
-        <p className="mt-3 text-sm text-[var(--muted)]">
+        <p className="mt-2 text-sm text-[var(--muted)]">
           {kitchen?.name ?? "No business linked"} {kitchen?.city ? `· ${kitchen.city}` : ""}
         </p>
       </div>
 
-      <div className="surface-card mt-6 space-y-1 rounded-[28px] p-3">
+      <div className="surface-card mt-4 space-y-0.5 rounded-2xl p-2">
         <SettingsRow
           icon={<Store size={18} />}
           title="Operations"

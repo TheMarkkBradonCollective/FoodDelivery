@@ -22,10 +22,10 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="surface-card rounded-[28px] p-8 text-center">
-      <h3 className="font-display text-lg font-bold text-[var(--foreground)]">{title}</h3>
+    <div className="surface-card rounded-2xl px-5 py-6 text-center">
+      <h3 className="font-display text-base font-bold text-[var(--foreground)]">{title}</h3>
       <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[var(--muted)]">{description}</p>
-      {action ? <div className="mt-5">{action}</div> : null}
+      {action ? <div className="mt-4">{action}</div> : null}
     </div>
   );
 }
@@ -40,11 +40,11 @@ export function ErrorState({
   onRetry?: () => void;
 }) {
   return (
-    <div className="surface-card rounded-[28px] p-8 text-center">
-      <h3 className="font-display text-lg font-bold text-[var(--foreground)]">{title}</h3>
+    <div className="surface-card rounded-2xl px-5 py-6 text-center">
+      <h3 className="font-display text-base font-bold text-[var(--foreground)]">{title}</h3>
       <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[var(--muted)]">{description}</p>
       {onRetry ? (
-        <button type="button" onClick={onRetry} className="tap-target mt-5 h-11 rounded-full bg-purple px-6 text-sm font-bold text-white">
+        <button type="button" onClick={onRetry} className="tap-target mt-4 h-11 rounded-full bg-purple px-6 text-sm font-bold text-white">
           Try again
         </button>
       ) : null}
@@ -53,5 +53,5 @@ export function ErrorState({
 }
 
 export function SkeletonCard({ className }: { className?: string }) {
-  return <div className={clsx("animate-pulse rounded-[24px] bg-[var(--border)]", className)} />;
+  return <div className={clsx("animate-pulse rounded-2xl bg-[var(--border)]", className)} />;
 }

@@ -2,7 +2,6 @@
 
 import { Navigation2 } from "lucide-react";
 import { clsx } from "clsx";
-import { PrimaryButton } from "../ui/PrimaryButton";
 
 interface MapControlsProps {
   onRecenter: () => void;
@@ -15,10 +14,10 @@ export function MapControls({ onRecenter, className }: MapControlsProps) {
       <button
         type="button"
         onClick={onRecenter}
-        className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] shadow-runr-card"
+        className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] shadow-runr-card"
         aria-label="Recenter map"
       >
-        <Navigation2 className="h-5 w-5 text-[var(--foreground)]" />
+        <Navigation2 className="h-4 w-4 text-[var(--foreground)]" />
       </button>
     </div>
   );
@@ -40,19 +39,18 @@ export function ActiveRunBanner({
   onViewRun,
 }: ActiveRunBannerProps) {
   return (
-    <div className="absolute inset-x-4 bottom-4 z-[1000] rounded-runr-xl border border-[var(--border)] bg-[var(--surface)]/95 p-4 shadow-runr-sheet backdrop-blur-md">
-      <p className="text-xs font-semibold uppercase tracking-wider text-runr-success">
-        Active RUN · Checked In
+    <button
+      type="button"
+      onClick={onViewRun}
+      className="absolute inset-x-4 bottom-4 z-[1000] rounded-2xl border border-[var(--border)] bg-[var(--surface)]/95 p-3.5 text-left shadow-runr-sheet backdrop-blur-md"
+    >
+      <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-runr-success">
+        Active RUN · Checked in
       </p>
-      <h3 className="mt-1 font-semibold text-[var(--foreground)]">{businessName}</h3>
-      <p className="text-sm text-[var(--muted)]">{timeRange}</p>
-      <div className="mt-2 flex items-center justify-between text-sm">
-        <span>{deliveries} deliveries</span>
-        <span className="font-semibold">${earnings.toFixed(2)}</span>
-      </div>
-      <PrimaryButton className="mt-3 w-full" size="sm" onClick={onViewRun}>
-        View RUN
-      </PrimaryButton>
-    </div>
+      <h3 className="mt-0.5 text-base font-extrabold text-[var(--foreground)]">{businessName}</h3>
+      <p className="text-xs text-[var(--muted)]">
+        {timeRange} · {deliveries} drops · ${earnings.toFixed(2)}
+      </p>
+    </button>
   );
 }

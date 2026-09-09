@@ -7,6 +7,7 @@ import { SettingsRow, ToggleSwitch } from "@runr/shared/components/ui/SettingsRo
 import { ConfirmDialog } from "@runr/shared/components/ui/ConfirmDialog";
 import { BottomSheet } from "@runr/shared/components/ui/BottomSheet";
 import { JobLoop } from "@runr/shared/components/ui/JobLoop";
+import { SegmentedControl } from "@runr/shared/components/ui/SegmentedControl";
 import { useAppStore } from "@/store";
 
 export default function RunrProfilePage() {
@@ -14,20 +15,20 @@ export default function RunrProfilePage() {
   const router = useRouter();
   const [confirmOut, setConfirmOut] = useState(false);
   const [sheet, setSheet] = useState<"vehicle" | "payout" | null>(null);
-  const [vehicle, setVehicle] = useState("Bike");
+  const [vehicle, setVehicle] = useState<"Bike" | "Scooter" | "Car">("Bike");
   const [payoutEmail, setPayoutEmail] = useState(user?.email ?? "");
 
   const completedDeliveries = earnings.length;
   const reliability = runHistory.length === 0 ? "—" : `${Math.min(99, 90 + runHistory.length)}%`;
 
   return (
-    <div className="px-5 pb-8 pt-5 lg:mx-auto lg:max-w-xl">
+    <div className="px-5 pb-8 pt-4 lg:mx-auto lg:max-w-xl">
       <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">RUNR</p>
-      <h1 className="mt-1 text-2xl font-extrabold text-[var(--foreground)]">Profile</h1>
+      <h1 className="mt-0.5 text-[1.375rem] font-extrabold text-[var(--foreground)]">Profile</h1>
       <JobLoop app="runr" className="mt-1" />
 
-      <div className="surface-card mt-6 flex items-center gap-4 rounded-[28px] p-5">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-purple text-xl font-extrabold text-white">
+      <div className="surface-card mt-5 flex items-center gap-3 rounded-2xl p-3.5">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple text-lg font-extrabold text-white">
           {user?.name?.charAt(0) ?? "R"}
         </div>
         <div className="min-w-0">
@@ -36,16 +37,16 @@ export default function RunrProfilePage() {
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-3">
-        <div className="surface-card rounded-[20px] p-3 text-center">
+      <div className="mt-3 grid grid-cols-3 gap-2">
+        <div className="surface-card rounded-2xl p-2.5 text-center">
           <p className="text-lg font-extrabold">{runHistory.length}</p>
           <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">RUNs</p>
         </div>
-        <div className="surface-card rounded-[20px] p-3 text-center">
+        <div className="surface-card rounded-2xl p-2.5 text-center">
           <p className="text-lg font-extrabold">{completedDeliveries}</p>
           <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">Drops</p>
         </div>
-        <div className="surface-card rounded-[20px] p-3 text-center">
+        <div className="surface-card rounded-2xl p-2.5 text-center">
           <p className="text-lg font-extrabold">{reliability}</p>
           <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">Reliability</p>
         </div>
@@ -54,7 +55,7 @@ export default function RunrProfilePage() {
         {completedDeliveries} completed drops on the marketplace.
       </p>
 
-      <div className="surface-card mt-6 space-y-1 rounded-[28px] p-3">
+      <div className="surface-card mt-4 space-y-0.5 rounded-2xl p-2">
         <SettingsRow
           icon={<Map size={18} />}
           title="Map"
@@ -99,19 +100,16 @@ export default function RunrProfilePage() {
 
       <BottomSheet open={sheet === "vehicle"} onClose={() => setSheet(null)} title="Vehicle">
         <p className="text-sm text-[var(--muted)]">Used when you navigate to pickup and drop-off.</p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {["Bike", "Scooter", "Car"].map((option) => (
-            <button
-              key={option}
-              type="button"
-              onClick={() => setVehicle(option)}
-              className={`h-11 rounded-full px-4 text-sm font-bold ${
-                vehicle === option ? "bg-purple text-white" : "bg-[var(--background)]"
-              }`}
-            >
-              {option}
-            </button>
-          ))}
+        <div className="mt-4">
+          <SegmentedControl
+            value={vehicle}
+            onChange={setVehicle}
+            options={[
+              { value: "Bike", label: "Bike" },
+              { value: "Scooter", label: "Scooter" },
+              { value: "Car", label: "Car" },
+            ]}
+          />
         </div>
         <button
           type="button"

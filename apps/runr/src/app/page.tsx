@@ -4,6 +4,7 @@ import { useMemo, useState, useEffect } from "react";
 import { MapView } from "@runr/shared/components/map";
 import { MapControls, ActiveRunBanner } from "@runr/shared/components/map/MapControls";
 import { SearchBar } from "@runr/shared/components/ui/SearchBar";
+import { SegmentedControl } from "@runr/shared/components/ui/SegmentedControl";
 import { BottomSheet } from "@runr/shared/components/ui/BottomSheet";
 import { PrimaryButton } from "@runr/shared/components/ui/PrimaryButton";
 import { CoverageBadge } from "@runr/shared/components/ui/CoverageBadge";
@@ -22,7 +23,7 @@ import {
   getCoverageStatusLabel,
   getDemandLabel,
 } from "@runr/shared/lib/utils";
-import { Flame, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 import { CatalogPreviewBanner } from "@runr/shared/components/ui/CatalogPreviewBanner";
 
@@ -112,11 +113,6 @@ export default function RunrMapPage() {
     [filteredBusinesses]
   );
 
-  const openOpportunities = businesses.filter((b) => {
-    const c = getBusinessCoverageSummary(b.coverageRules, b.scheduledRuns);
-    return c.gap > 0;
-  }).length;
-
   const coverageTimeline = selectedBusiness
     ? calculateCoverageTimeline(
         selectedBusiness.coverageRules,
@@ -172,45 +168,24 @@ export default function RunrMapPage() {
 
       <MapControls
         onRecenter={() => setLocation(location)}
-        className={activeDelivery || pendingDelivery ? "top-4" : "top-28"}
+        className={activeDelivery || pendingDelivery ? "top-4" : "top-[7.5rem]"}
       />
 
       {!activeDelivery && !pendingDelivery && (
         <div className="absolute inset-x-0 top-0 z-[1000] space-y-2 p-3">
-          <div className="rounded-full bg-[var(--surface)]/95 px-4 py-2 shadow-runr-card backdrop-blur-md">
-            <p className="text-sm font-extrabold tracking-tight">Pick a business. Cover a window.</p>
-          </div>
           <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Search businesses" />
           <CatalogPreviewBanner />
-          {openOpportunities > 0 && (
-            <div className="flex items-center gap-2 rounded-full bg-runr-primary px-4 py-2 text-sm font-semibold text-white shadow-runr-card">
-              <Flame className="h-4 w-4" />
-              {openOpportunities} RUN opportunities near you
-            </div>
-          )}
-          <div className="flex gap-2 overflow-x-auto pb-1">
-            {(
-              [
-                ["all", "All"],
-                ["open", "Open RUNs"],
-                ["gap", "RUN Gaps"],
-                ["high_demand", "High Demand"],
-              ] as const
-            ).map(([key, label]) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setMapFilter(key)}
-                className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
-                  mapFilter === key
-                    ? "bg-runr-primary text-white"
-                    : "bg-[var(--surface)]/95 text-[var(--foreground)] border border-[var(--border)]"
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
+          <SegmentedControl
+            size="sm"
+            value={mapFilter}
+            onChange={setMapFilter}
+            options={[
+              { value: "all", label: "All" },
+              { value: "open", label: "Open" },
+              { value: "gap", label: "Gaps" },
+              { value: "high_demand", label: "Busy" },
+            ]}
+          />
         </div>
       )}
 
@@ -260,7 +235,7 @@ export default function RunrMapPage() {
             }}
             onComplete={completeDelivery}
             completeLabel={
-              activeDelivery.status === "accepted" ? "Confirm pickup" : "Complete"
+              activeDelivery.status === "accepted" ? "Slide to pick up" : "Slide to complete"
             }
           />
         </div>
@@ -333,15 +308,15 @@ export default function RunrMapPage() {
         }
       >
         {selectedBusiness && (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div>
-              <h3 className="text-lg font-semibold">I&apos;m covering {selectedBusiness.name}</h3>
+              <h3 className="text-base font-extrabold">I&apos;m covering {selectedBusiness.name}</h3>
               <p className="text-sm text-[var(--muted)]">
                 Choose your window. The marketplace matches PORTER orders to this RUN — you don&apos;t wait on random pings.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <TimeInput
                 label="Start"
                 value={runStart}
@@ -365,7 +340,7 @@ export default function RunrMapPage() {
             </p>
 
             {coverageAvailable === true && (
-              <div className="rounded-runr-lg border border-runr-success/30 bg-runr-success-muted p-4 text-center">
+              <div className="rounded-2xl border border-runr-success/30 bg-runr-success-muted p-3 text-center">
                 <p className="font-semibold text-runr-success">COVERAGE AVAILABLE</p>
                 <p className="mt-1 text-sm text-[var(--muted)]">
                   Your requested RUN period has open capacity
@@ -374,7 +349,7 @@ export default function RunrMapPage() {
             )}
 
             {coverageAvailable === false && (
-              <div className="rounded-runr-lg border border-runr-critical/30 bg-runr-critical-muted p-4 text-center">
+              <div className="rounded-2xl border border-runr-critical/30 bg-runr-critical-muted p-3 text-center">
                 <p className="font-semibold text-runr-critical">NOT AVAILABLE</p>
                 <p className="mt-1 text-sm text-[var(--muted)]">
                   Coverage is full for part of your selected period. Try adjusting times.
@@ -409,11 +384,11 @@ function BusinessSheetContent({
   const distance = calculateDistanceMiles(userLocation, business.location);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold">{business.name}</h2>
+            <h2 className="text-lg font-extrabold">{business.name}</h2>
             <button type="button" onClick={onFavoriteToggle} aria-label="Toggle favorite">
               <Star
                 className={`h-5 w-5 ${
@@ -434,7 +409,7 @@ function BusinessSheetContent({
         <CoverageBadge status={coverage.status} gap={coverage.gap} />
       </div>
 
-      <div className="rounded-runr-lg border border-[var(--border)] p-4">
+      <div className="rounded-2xl border border-[var(--border)] p-3.5">
         <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
           Current Coverage
         </p>
@@ -488,7 +463,7 @@ function TimeInput({
         type="time"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-runr-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-sm"
+        className="input-brand"
       />
     </div>
   );

@@ -4,7 +4,7 @@ import { useAppStore } from "@/store";
 import { StatusBadge } from "@runr/shared/components/ui/StatusBadge";
 import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 import { selectVendorBusiness } from "@runr/shared/lib/utils";
-import { PrimaryButton } from "@runr/shared/components/ui/PrimaryButton";
+import { SlideToConfirm } from "@runr/shared/components/ui/SlideToConfirm";
 import { JobLoop } from "@runr/shared/components/ui/JobLoop";
 
 export default function BusinessOrdersPage() {
@@ -13,14 +13,14 @@ export default function BusinessOrdersPage() {
   const visible = business ? orders.filter((o) => o.businessId === business.id) : orders;
 
   return (
-    <div className="px-5 py-6">
+    <div className="px-5 pb-8 pt-4">
       <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">VENDR</p>
-      <h1 className="mt-1 text-2xl font-extrabold">Orders</h1>
+      <h1 className="mt-0.5 text-[1.375rem] font-extrabold">Orders</h1>
       <JobLoop app="vendr" className="mt-1" />
       <p className="mt-1 text-sm text-[var(--muted)]">
-        Accept, prepare, mark ready. Matching goes to RUNRs covering your window — not “send me a driver.”
+        Accept, prepare, mark ready. Matching goes to RUNRs covering your window.
       </p>
-      <div className="mt-6 space-y-3">
+      <div className="mt-4 space-y-2">
         {visible.length === 0 ? (
           <EmptyState
             title="No orders yet"
@@ -30,12 +30,12 @@ export default function BusinessOrdersPage() {
           visible.map((order) => (
             <div
               key={order.id}
-              className="rounded-runr-lg border border-[var(--border)] bg-[var(--surface-elevated)] p-4"
+              className="rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] p-3.5"
             >
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="font-semibold">Order #{order.id.slice(-4)}</p>
-                  <p className="text-sm text-[var(--muted)]">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-extrabold">Order #{order.id.slice(-4)}</p>
+                  <p className="mt-0.5 text-sm text-[var(--muted)]">
                     {order.fulfillment === "pickup" ? "Pickup" : "Delivery"} ·{" "}
                     {order.items.map((i) => `${i.quantity}× ${i.name}`).join(", ")} · $
                     {order.total.toFixed(2)}
@@ -44,28 +44,33 @@ export default function BusinessOrdersPage() {
                 <StatusBadge label={order.status.replace("_", " ")} variant="primary" />
               </div>
               {order.status === "new" && (
-                <div className="mt-3 flex gap-2">
-                  <PrimaryButton className="flex-1" onClick={() => updateOrderStatus(order.id, "accepted")}>
-                    Accept
-                  </PrimaryButton>
-                  <PrimaryButton
-                    className="flex-1"
-                    variant="secondary"
+                <div className="mt-3 space-y-1">
+                  <SlideToConfirm
+                    label="Slide to accept"
+                    onConfirm={() => updateOrderStatus(order.id, "accepted")}
+                  />
+                  <button
+                    type="button"
+                    className="h-9 w-full text-xs font-bold text-[var(--muted)]"
                     onClick={() => updateOrderStatus(order.id, "cancelled")}
                   >
                     Decline
-                  </PrimaryButton>
+                  </button>
                 </div>
               )}
               {order.status === "accepted" && (
-                <PrimaryButton className="mt-3 w-full" onClick={() => updateOrderStatus(order.id, "preparing")}>
-                  Start preparing
-                </PrimaryButton>
+                <SlideToConfirm
+                  className="mt-3"
+                  label="Slide to prepare"
+                  onConfirm={() => updateOrderStatus(order.id, "preparing")}
+                />
               )}
               {order.status === "preparing" && (
-                <PrimaryButton className="mt-3 w-full" onClick={() => updateOrderStatus(order.id, "ready")}>
-                  Mark ready
-                </PrimaryButton>
+                <SlideToConfirm
+                  className="mt-3"
+                  label="Slide when ready"
+                  onConfirm={() => updateOrderStatus(order.id, "ready")}
+                />
               )}
               {order.status === "ready" && (
                 <p className="mt-3 text-sm text-[var(--muted)]">

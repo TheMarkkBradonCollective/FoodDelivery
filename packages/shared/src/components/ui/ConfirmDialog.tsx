@@ -28,7 +28,7 @@ export function ConfirmDialog({
   return (
     <div className="overlay-safe fixed inset-0 z-[80] flex items-end justify-center bg-ink/45 p-4 sm:items-center" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
       <button type="button" className="absolute inset-0" aria-label="Close" onClick={onCancel} />
-      <div className="relative w-full max-w-sm rounded-[28px] bg-[var(--surface-elevated)] p-6 shadow-2xl">
+      <div className="relative w-full max-w-sm rounded-2xl bg-[var(--surface-elevated)] p-5 shadow-2xl">
         <h2 id="confirm-title" className="font-display text-xl font-bold text-[var(--foreground)]">
           {title}
         </h2>

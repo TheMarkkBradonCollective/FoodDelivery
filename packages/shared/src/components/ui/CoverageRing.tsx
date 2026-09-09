@@ -15,8 +15,8 @@ export function CoverageRing({
   const offset = c - (clamped / 100) * c;
 
   return (
-    <div className="relative flex h-28 w-28 shrink-0 items-center justify-center">
-      <svg viewBox="0 0 108 108" className="h-28 w-28 -rotate-90">
+    <div className="relative flex h-20 w-20 shrink-0 items-center justify-center">
+      <svg viewBox="0 0 108 108" className="h-20 w-20 -rotate-90">
         <circle cx="54" cy="54" r={r} fill="none" stroke="#EEE8FF" strokeWidth="8" />
         <circle
           cx="54"
@@ -42,7 +42,7 @@ export function CoverageRing({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <p className="text-xl font-extrabold text-[var(--foreground)]">{Math.round(clamped)}%</p>
+        <p className="text-base font-extrabold tabular-nums text-[var(--foreground)]">{Math.round(clamped)}%</p>
         {label && (
           <p className="text-[10px] uppercase tracking-wider text-[var(--muted)]">{label}</p>
         )}

@@ -37,18 +37,18 @@ export function ScreenHeader({
   }
 
   return (
-    <header className={cn("px-5 pb-4 pt-5", className)}>
+    <header className={cn("px-5 pb-3 pt-4", className)}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           {eyebrow && (
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">{eyebrow}</p>
           )}
-          <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-[var(--foreground)]">{title}</h1>
-          {subtitle && <p className="mt-1 text-sm text-[var(--muted)]">{subtitle}</p>}
+          <h1 className="mt-0.5 text-[1.375rem] font-extrabold tracking-tight text-[var(--foreground)]">{title}</h1>
+          {subtitle && <p className="mt-0.5 text-sm text-[var(--muted)]">{subtitle}</p>}
         </div>
         {trailing}
       </div>
-      {children && <div className="mt-4">{children}</div>}
+      {children && <div className="mt-3">{children}</div>}
     </header>
   );
 }

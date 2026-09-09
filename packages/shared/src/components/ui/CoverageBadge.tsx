@@ -40,7 +40,7 @@ export function CoverageBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full border font-semibold uppercase tracking-wide",
+        "inline-flex shrink-0 items-center rounded-full border font-semibold uppercase tracking-wide",
         statusStyles[status],
         size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-3 py-1 text-xs",
         className

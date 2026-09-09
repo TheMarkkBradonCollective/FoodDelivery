@@ -16,14 +16,14 @@ type Props = {
 export function SettingsRow({ icon, iconClassName, title, subtitle, onClick, trailing }: Props) {
   const inner = (
     <>
-      <span className={clsx("flex h-11 w-11 items-center justify-center rounded-full", iconClassName ?? "bg-[var(--background)] text-purple")}>
+      <span className={clsx("flex h-10 w-10 items-center justify-center rounded-full", iconClassName ?? "bg-[var(--background)] text-purple")}>
         {icon}
       </span>
       <span className="min-w-0 flex-1 text-left">
         <span className="block text-sm font-bold text-[var(--foreground)]">{title}</span>
-        {subtitle ? <span className="block text-xs text-[var(--muted)]">{subtitle}</span> : null}
+        {subtitle ? <span className="mt-0.5 block truncate text-xs text-[var(--muted)]">{subtitle}</span> : null}
       </span>
-      {trailing ?? <ChevronRight size={18} className="shrink-0 text-[var(--muted)]" />}
+      {trailing ?? <ChevronRight size={16} className="shrink-0 text-[var(--muted)]" />}
     </>
   );
 
@@ -47,14 +47,14 @@ export function ToggleSwitch({ on, onChange, label }: { on: boolean; onChange: (
       aria-label={label}
       onClick={() => onChange(!on)}
       className={clsx(
-        "relative h-8 w-14 rounded-full transition-colors",
+        "relative h-7 w-12 shrink-0 rounded-full transition-colors",
         on ? "bg-purple" : "bg-[var(--border)]",
       )}
     >
       <span
         className={clsx(
-          "absolute top-1 h-6 w-6 rounded-full bg-white shadow-sm transition-transform",
-          on ? "left-7" : "left-1",
+          "absolute top-0.5 h-6 w-6 rounded-full bg-white shadow-sm transition-transform",
+          on ? "translate-x-5" : "translate-x-0.5",
         )}
       />
     </button>

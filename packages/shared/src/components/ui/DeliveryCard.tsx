@@ -2,7 +2,7 @@
 
 import { cn, formatCurrency } from "../../lib/utils";
 import type { Delivery } from "../../types/index";
-import { PrimaryButton } from "./PrimaryButton";
+import { SlideToConfirm } from "./SlideToConfirm";
 
 interface DeliveryCardProps {
   delivery: Delivery;
@@ -28,7 +28,7 @@ export function DeliveryCard({
   return (
     <div
       className={cn(
-        "rounded-runr-xl border border-[var(--border)] bg-[var(--surface-elevated)] p-4 shadow-runr-card",
+        "rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] p-3.5",
         variant === "offer" && "border-runr-primary/30 ring-2 ring-runr-primary/10",
         className
       )}
@@ -56,23 +56,26 @@ export function DeliveryCard({
         </p>
       )}
 
-      <div className="mt-3 flex gap-2">
-        {variant === "offer" && onAccept && (
-          <PrimaryButton className="w-full" onClick={onAccept}>
-            Accept
-          </PrimaryButton>
-        )}
-        {(variant === "pickup" || variant === "dropoff") && onNavigate && (
-          <PrimaryButton className="flex-1" variant="secondary" onClick={onNavigate}>
-            Navigate
-          </PrimaryButton>
-        )}
-        {(variant === "pickup" || variant === "dropoff") && onComplete && (
-          <PrimaryButton className="flex-1" onClick={onComplete}>
-            {completeLabel ?? "Complete"}
-          </PrimaryButton>
-        )}
-      </div>
+      {variant === "offer" && onAccept ? (
+        <SlideToConfirm className="mt-3" label="Slide to accept" onConfirm={onAccept} />
+      ) : null}
+
+      {(variant === "pickup" || variant === "dropoff") && (onNavigate || onComplete) ? (
+        <div className="mt-3 space-y-2">
+          {onComplete ? (
+            <SlideToConfirm label={completeLabel ?? "Slide to complete"} onConfirm={onComplete} />
+          ) : null}
+          {onNavigate ? (
+            <button
+              type="button"
+              onClick={onNavigate}
+              className="h-9 w-full rounded-full text-xs font-bold text-purple"
+            >
+              Open map
+            </button>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

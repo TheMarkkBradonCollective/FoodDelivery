@@ -28,7 +28,7 @@ export default function CustomerFavoritesPage() {
         ) : (
           <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
             {saved.map((b) => (
-              <article key={b.id} className="surface-card overflow-hidden rounded-[24px]">
+              <article key={b.id} className="surface-card overflow-hidden rounded-2xl">
                 <Link href={`/restaurant/?id=${b.id}`} className="block">
                   <DishPhoto cuisine={b.cuisine} className="aspect-square w-full" />
                 </Link>

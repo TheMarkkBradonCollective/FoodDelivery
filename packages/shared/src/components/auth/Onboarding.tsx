@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { BrandLockup } from "../ui/BrandMark";
 import { JobLoop } from "../ui/JobLoop";
 import { APP_COPY, type AppId } from "../../lib/apps";
@@ -82,6 +82,7 @@ export function Onboarding({ app, onDone }: { app: AppId; onDone: () => void }) 
   const [index, setIndex] = useState(0);
   const step = steps[index];
   const last = index === steps.length - 1;
+  const startX = useRef(0);
 
   return (
     <div className="flex min-h-dvh flex-col bg-[var(--background)]">
@@ -100,22 +101,33 @@ export function Onboarding({ app, onDone }: { app: AppId; onDone: () => void }) 
       </div>
 
       <div
-        className="flex flex-1 flex-col px-6 pt-6"
-        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)" }}
+        className="flex flex-1 flex-col px-5 pt-5"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 16px)" }}
       >
         <BrandLockup app={app} />
-        <JobLoop app={app} className="mt-3" />
-        <div className="surface-card mt-8 flex flex-1 flex-col items-center justify-center rounded-[36px] p-8">
-          <span className="text-7xl" aria-hidden>
+        <JobLoop app={app} className="mt-2" />
+        <div
+          className="mt-6 flex flex-1 flex-col items-center justify-center rounded-2xl px-5 py-6"
+          onTouchStart={(e) => {
+            startX.current = e.touches[0].clientX;
+          }}
+          onTouchEnd={(e) => {
+            const delta = e.changedTouches[0].clientX - startX.current;
+            if (delta < -48 && !last) setIndex((i) => i + 1);
+            if (delta > 48 && index > 0) setIndex((i) => i - 1);
+          }}
+        >
+          <span className="text-5xl" aria-hidden>
             {step.visual}
           </span>
-          <h1 className="mt-8 text-center font-display text-3xl font-bold leading-tight text-[var(--foreground)]">{step.title}</h1>
-          <p className="mt-3 max-w-sm text-center text-sm leading-6 text-[var(--muted)]">{step.body}</p>
+          <h1 className="mt-5 text-center font-display text-[1.625rem] font-extrabold leading-tight text-[var(--foreground)]">{step.title}</h1>
+          <p className="mt-2 max-w-sm text-center text-sm leading-6 text-[var(--muted)]">{step.body}</p>
+          <p className="mt-6 text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--muted)]">Swipe to continue</p>
         </div>
         <button
           type="button"
           onClick={() => (last ? onDone() : setIndex((i) => i + 1))}
-          className="tap-target mt-6 h-14 w-full rounded-full bg-ink text-base font-bold text-white"
+          className="tap-target mt-4 h-12 w-full rounded-full bg-ink text-sm font-bold text-white"
         >
           {last ? `Get started with ${copy.shortName}` : "Next"}
         </button>

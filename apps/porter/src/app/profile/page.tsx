@@ -32,13 +32,13 @@ export default function CustomerProfilePage() {
   const live = orders.filter((o) => !["delivered", "cancelled"].includes(o.status)).length;
 
   return (
-    <div className="px-5 pb-8 pt-5 lg:mx-auto lg:max-w-xl lg:px-8">
+    <div className="px-5 pb-8 pt-4 lg:mx-auto lg:max-w-xl lg:px-8">
       <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">PORTER</p>
-      <h1 className="mt-1 text-2xl font-extrabold text-[var(--foreground)]">Profile</h1>
+      <h1 className="mt-0.5 text-[1.375rem] font-extrabold text-[var(--foreground)]">Profile</h1>
       <JobLoop app="porter" className="mt-1" />
 
-      <div className="surface-card mt-6 flex items-center gap-4 rounded-[28px] p-5">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-lime text-xl font-extrabold text-ink">
+      <div className="surface-card mt-5 flex items-center gap-3 rounded-2xl p-3.5">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-lime text-lg font-extrabold text-ink">
           {user?.name?.charAt(0) ?? "P"}
         </div>
         <div className="min-w-0">
@@ -47,22 +47,22 @@ export default function CustomerProfilePage() {
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-3">
-        <Link href="/orders" className="surface-card rounded-[20px] p-3 text-center">
+      <div className="mt-3 grid grid-cols-3 gap-2">
+        <Link href="/orders" className="surface-card rounded-2xl p-2.5 text-center">
           <p className="text-lg font-extrabold">{orders.length}</p>
           <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">Orders</p>
         </Link>
-        <Link href="/favorites" className="surface-card rounded-[20px] p-3 text-center">
+        <Link href="/favorites" className="surface-card rounded-2xl p-2.5 text-center">
           <p className="text-lg font-extrabold">{favoriteBusinessIds.length}</p>
           <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">Saved</p>
         </Link>
-        <Link href="/orders" className="surface-card rounded-[20px] p-3 text-center">
+        <Link href="/orders" className="surface-card rounded-2xl p-2.5 text-center">
           <p className="text-lg font-extrabold">{live}</p>
           <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">Live</p>
         </Link>
       </div>
 
-      <div className="surface-card mt-6 space-y-1 rounded-[28px] p-3">
+      <div className="surface-card mt-4 space-y-0.5 rounded-2xl p-2">
         <SettingsRow
           icon={<ShoppingBag size={18} />}
           iconClassName="bg-purple/10 text-purple"

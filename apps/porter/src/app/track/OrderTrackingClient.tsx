@@ -59,7 +59,7 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
 
   return (
     <div>
-      <div className="relative h-64 overflow-hidden md:h-80 lg:h-[22rem]">
+      <div className="relative h-52 overflow-hidden md:h-72 lg:h-[20rem]">
         <MapView
           center={location}
           markers={[
@@ -87,11 +87,11 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
         </div>
       </div>
 
-      <div className="-mt-8 px-4 pb-8 lg:mx-auto lg:max-w-xl">
-        <div className="rounded-[28px] bg-[var(--surface-elevated)] p-5 shadow-runr-card ring-1 ring-[var(--border)]">
+      <div className="-mt-6 px-5 pb-8 lg:mx-auto lg:max-w-xl">
+        <div className="rounded-2xl bg-[var(--surface-elevated)] p-4 shadow-runr-card ring-1 ring-[var(--border)]">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h1 className="text-xl font-extrabold text-[var(--foreground)]">{business.name}</h1>
+              <h1 className="text-[1.25rem] font-extrabold text-[var(--foreground)]">{business.name}</h1>
               <p className="mt-1 text-sm text-[var(--muted)]">
                 Order #{order.id.slice(-4)} · {formatCurrency(order.total)}
               </p>
@@ -107,7 +107,7 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
             <StatusBadge label={order.status.replace(/_/g, " ")} variant="primary" />
           </div>
 
-          <div className="mt-6 space-y-3">
+          <div className="mt-4 space-y-2.5">
             {statusSteps.map((step, i) => (
               <div key={step.key} className="flex items-center gap-3">
                 <div className={`h-3 w-3 rounded-full ${i <= currentStep ? "bg-purple" : "bg-[var(--border)]"}`} />

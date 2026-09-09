@@ -66,7 +66,7 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
   return (
     <div className="pb-8">
       <div className="relative">
-        <DishPhoto cuisine={business.cuisine} className="h-56 w-full md:h-72" />
+        <DishPhoto cuisine={business.cuisine} className="h-44 w-full md:h-64" />
         <div className="absolute inset-x-4 top-4 flex items-center justify-between">
           <IconButton href="/" label="Back to Discover">
             <ArrowLeft size={18} />
@@ -81,11 +81,11 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
       </div>
 
       <div className="px-5 lg:px-8">
-        <div className="-mt-8 rounded-[28px] bg-[var(--surface-elevated)] p-5 shadow-runr-card ring-1 ring-[var(--border)]">
+        <div className="-mt-6 rounded-2xl bg-[var(--surface-elevated)] p-4 shadow-runr-card ring-1 ring-[var(--border)]">
           <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">{business.cuisine}</p>
-          <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-[var(--foreground)]">{business.name}</h1>
+          <h1 className="mt-0.5 text-[1.375rem] font-extrabold tracking-tight text-[var(--foreground)]">{business.name}</h1>
           <p className="mt-1 text-sm text-[var(--muted)]">{business.address}</p>
-          <div className="mt-4 grid grid-cols-3 gap-2">
+          <div className="mt-3 grid grid-cols-3 gap-2">
             <Stat icon={<Star size={14} />} label="Rating" value={String(business.rating)} />
             <Stat icon={<Clock size={14} />} label="ETA" value={`${business.etaMinutes} min`} />
             <Stat label="Delivery" value={formatCurrency(business.deliveryFee)} />
@@ -98,8 +98,8 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
           </div>
         ) : (
           Object.entries(groupedMenu).map(([category, items]) => (
-            <section key={category} className="mt-8">
-              <h2 className="text-lg font-extrabold text-[var(--foreground)]">{category}</h2>
+            <section key={category} className="mt-6">
+              <h2 className="text-base font-extrabold text-[var(--foreground)]">{category}</h2>
               <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3">
                 {items.map((item) => (
                   <DishCard
@@ -127,7 +127,7 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
       {cartCount > 0 && (
         <Link
           href="/cart"
-          className="sticky-cta flex h-14 items-center justify-center rounded-full bg-ink text-sm font-extrabold text-white shadow-runr-card"
+          className="sticky-cta flex h-12 items-center justify-center rounded-full bg-ink text-sm font-extrabold text-white shadow-runr-card"
         >
           View cart ({cartCount})
         </Link>
@@ -157,7 +157,7 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
       >
         {selected ? (
           <div>
-            <DishPhoto cuisine={selected.category || business.cuisine} className="h-40 w-full rounded-[24px]" />
+            <DishPhoto cuisine={selected.category || business.cuisine} className="h-36 w-full rounded-2xl" />
             <p className="mt-4 text-sm leading-6 text-[var(--muted)]">{selected.description}</p>
             <p className="mt-3 text-lg font-extrabold">{formatCurrency(selected.price)}</p>
           </div>
@@ -169,7 +169,7 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
 
 function Stat({ icon, label, value }: { icon?: ReactNode; label: string; value: string }) {
   return (
-    <div className="rounded-2xl bg-[var(--background)] px-3 py-2 text-center">
+    <div className="rounded-2xl bg-[var(--background)] px-2 py-2 text-center">
       <p className="flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">
         {icon}
         {label}

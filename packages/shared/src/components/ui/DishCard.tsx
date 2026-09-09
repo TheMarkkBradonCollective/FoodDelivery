@@ -33,7 +33,7 @@ export function DishCard({
   onToggleFavorite,
 }: Props) {
   return (
-    <article className="surface-card overflow-hidden rounded-[24px]">
+    <article className="surface-card overflow-hidden rounded-2xl">
       <div className="relative">
         <button type="button" onClick={onOpen} className="block w-full text-left" aria-label={name}>
           <DishPhoto cuisine={cuisine} className="aspect-[3/2] w-full" />
@@ -48,7 +48,7 @@ export function DishCard({
             type="button"
             aria-label={favorite ? `Unsave ${name}` : `Save ${name}`}
             onClick={onToggleFavorite}
-            className="tap-target absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-full bg-[var(--surface-elevated)]/90 shadow-sm"
+            className="tap-target absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-[var(--surface-elevated)]/90 shadow-sm"
           >
             <Heart size={14} className={clsx(favorite ? "fill-purple text-purple" : "text-[var(--muted)]")} />
           </button>
@@ -57,24 +57,24 @@ export function DishCard({
       <div className="p-3">
         <p className="truncate text-sm font-bold text-[var(--foreground)]">{name}</p>
         {description ? <p className="mt-0.5 truncate text-xs text-[var(--muted)]">{description}</p> : null}
-        <div className="mt-3 flex items-center justify-between gap-2">
-          <p className="text-sm font-extrabold text-[var(--foreground)]">{formatCurrency(price)}</p>
+        <div className="mt-2 flex items-center justify-between gap-2">
+          <p className="text-sm font-extrabold tabular-nums text-[var(--foreground)]">{formatCurrency(price)}</p>
           {qty > 0 ? (
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5 rounded-full bg-[var(--background)] p-0.5 ring-1 ring-[var(--border)]">
               <button
                 type="button"
                 aria-label={`Remove ${name}`}
                 onClick={onRemove}
-                className="tap-target flex h-9 w-9 items-center justify-center rounded-full bg-[var(--background)] text-[var(--foreground)]"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--foreground)]"
               >
                 <Minus size={14} />
               </button>
-              <span className="min-w-4 text-center text-xs font-bold">{qty}</span>
+              <span className="min-w-4 text-center text-xs font-bold tabular-nums">{qty}</span>
               <button
                 type="button"
                 aria-label={`Add ${name}`}
                 onClick={onAdd}
-                className="tap-target flex h-9 w-9 items-center justify-center rounded-full bg-purple text-white"
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-purple text-white"
               >
                 <Plus size={14} />
               </button>
@@ -84,9 +84,9 @@ export function DishCard({
               type="button"
               aria-label={`Add ${name}`}
               onClick={onAdd}
-              className="tap-target flex h-9 w-9 items-center justify-center rounded-full bg-ink text-white"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-white"
             >
-              <Plus size={16} />
+              <Plus size={14} />
             </button>
           )}
         </div>

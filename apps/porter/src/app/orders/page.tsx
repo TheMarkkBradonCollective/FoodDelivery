@@ -32,7 +32,7 @@ export default function CustomerOrdersPage() {
               <Link
                 key={order.id}
                 href={`/track/?id=${order.id}`}
-                className="surface-card flex items-center gap-3 rounded-[24px] p-4"
+                className="surface-card flex items-center gap-3 rounded-2xl p-3.5"
               >
                 <CuisinePlate cuisine={business?.cuisine ?? "Restaurant"} size={48} />
                 <div className="min-w-0 flex-1">

@@ -25,7 +25,7 @@ export function RunCard({ run, businessName, className, onClick }: RunCardProps)
       type="button"
       onClick={onClick}
       className={cn(
-        "w-full rounded-runr-lg border border-[var(--border)] bg-[var(--surface-elevated)] p-4 text-left shadow-runr-card",
+        "w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] p-3.5 text-left",
         className
       )}
     >

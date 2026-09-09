@@ -23,24 +23,24 @@ export default function StaffStatusPage() {
     .filter((x) => x.coverage.gap > 0);
 
   return (
-    <div className="p-4 lg:p-8">
+    <div className="px-5 pb-8 pt-4 lg:p-8">
       <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">STAFF</p>
-      <h1 className="mt-1 text-2xl font-extrabold">Status</h1>
+      <h1 className="mt-0.5 text-[1.375rem] font-extrabold">Status</h1>
       <p className="mt-1 text-sm text-[var(--muted)]">Quick read of the marketplace</p>
 
-      <div className="mt-5 space-y-3">
+      <div className="mt-4 space-y-3">
         <CatalogPreviewBanner />
         <DesktopManageBanner />
       </div>
 
-      <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-4">
         <Stat label="Live orders" value={String(liveOrders.length)} />
         <Stat label="Coverage gaps" value={String(gaps.length)} alert={gaps.length > 0} />
         <Stat label="Scheduled RUNs" value={String(platformRuns.length)} />
         <Stat label="Kitchens" value={String(businesses.length)} />
       </div>
 
-      <Panel title="Coverage gaps" className="mt-6">
+      <Panel title="Coverage gaps" className="mt-4">
         {gaps.length === 0 ? (
           <p className="text-sm text-[var(--muted)]">All kitchens are covered.</p>
         ) : (

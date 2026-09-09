@@ -17,7 +17,7 @@ import { IconButton } from "@runr/shared/components/ui/IconButton";
 import { useAppStore } from "@/store";
 import { cuisineCategories } from "@runr/shared/data/constants";
 import { JobLoop } from "@runr/shared/components/ui/JobLoop";
-import { APP_COPY, displayFirstName } from "@runr/shared/lib/apps";
+import { APP_COPY } from "@runr/shared/lib/apps";
 import { getBusinessCoverageSummary, getMarkerColor } from "@runr/shared/lib/coverage-engine";
 import type { MenuItem } from "@runr/shared/types";
 
@@ -30,7 +30,6 @@ export default function PorterDiscoverPage() {
     searchQuery,
     setSearchQuery,
     theme,
-    user,
     favoriteBusinessIds,
     toggleFavorite,
     cart,
@@ -89,7 +88,6 @@ export default function PorterDiscoverPage() {
   });
 
   const cartCount = cart.reduce((s, i) => s + i.quantity, 0);
-  const firstName = displayFirstName(user?.name, "PORTER");
   const categories = ["All", ...cuisineCategories];
 
   function qtyFor(itemId: string) {
@@ -121,19 +119,18 @@ export default function PorterDiscoverPage() {
 
   return (
     <div className="px-5 pb-6 pt-4 lg:px-8">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="flex items-center gap-1.5 text-xs font-semibold text-[var(--muted)]">
-            <MapPin size={14} className="text-purple" />
+            <MapPin size={14} className="shrink-0 text-purple" />
             <span className="truncate">{deliveryAddress}</span>
           </p>
-          <h1 className="mt-1 font-display text-[1.55rem] font-extrabold leading-tight tracking-tight text-[var(--foreground)]">
+          <h1 className="mt-1 font-display text-[1.375rem] font-extrabold leading-tight tracking-tight text-[var(--foreground)]">
             {APP_COPY.porter.tagline}
           </h1>
           <JobLoop app="porter" className="mt-1" />
-          <p className="mt-1 text-sm text-[var(--muted)]">Hey {firstName} — nearby businesses are ready to order.</p>
         </div>
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1.5">
           <IconButton href="/activity" label="Notifications">
             <Bell size={18} />
           </IconButton>
@@ -141,16 +138,16 @@ export default function PorterDiscoverPage() {
             <IconButton href="/cart" label="Cart" variant="dark">
               <ShoppingBag size={18} />
             </IconButton>
-              {cartCount > 0 ? (
-                <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-lime px-1 text-[10px] font-extrabold text-ink">
-                  {cartCount}
-                </span>
-              ) : null}
-            </span>
+            {cartCount > 0 ? (
+              <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-lime px-1 text-[9px] font-extrabold text-ink">
+                {cartCount}
+              </span>
+            ) : null}
+          </span>
         </div>
       </div>
 
-      <div className="mt-5">
+      <div className="mt-4">
         <SearchBar
           value={searchQuery}
           onChange={setSearchQuery}
@@ -160,7 +157,7 @@ export default function PorterDiscoverPage() {
               type="button"
               aria-label="Filters"
               onClick={() => setFiltersOpen(true)}
-              className="tap-target flex h-9 w-9 items-center justify-center rounded-full bg-[var(--background)] text-[var(--foreground)]"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--background)] text-[var(--foreground)]"
             >
               <SlidersHorizontal size={16} />
             </button>
@@ -168,7 +165,7 @@ export default function PorterDiscoverPage() {
         />
       </div>
 
-      <div className="mt-4 flex gap-4 overflow-x-auto pb-2">
+      <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
         {categories.map((cat) => {
           const active = cat === "All" ? !selectedCategory : selectedCategory === cat;
           return (
@@ -176,10 +173,10 @@ export default function PorterDiscoverPage() {
               key={cat}
               type="button"
               onClick={() => setSelectedCategory(cat === "All" ? null : cat)}
-              className="flex w-16 shrink-0 flex-col items-center gap-1.5"
+              className="flex w-14 shrink-0 flex-col items-center gap-1"
             >
               <span className={`rounded-full p-0.5 ${active ? "ring-2 ring-[var(--foreground)]" : ""}`}>
-                <CuisinePlate cuisine={cat} size={56} />
+                <CuisinePlate cuisine={cat} size={48} />
               </span>
               <span className={`w-full text-center text-[10px] font-bold leading-tight ${active ? "text-[var(--foreground)]" : "text-[var(--muted)]"}`}>
                 {cat}
@@ -193,8 +190,8 @@ export default function PorterDiscoverPage() {
         <div>
           <div className="flex items-end justify-between">
             <div>
-              <h2 className="text-lg font-extrabold text-[var(--foreground)]">Popular dishes</h2>
-              <p className="text-sm text-[var(--muted)]">Tap + to add, or open a business for the full catalog</p>
+              <h2 className="text-base font-extrabold text-[var(--foreground)]">Popular dishes</h2>
+              <p className="text-xs text-[var(--muted)]">Tap + to add</p>
             </div>
           </div>
 
@@ -225,12 +222,12 @@ export default function PorterDiscoverPage() {
           )}
         </div>
 
-        <div className="mt-8 hidden overflow-hidden rounded-[28px] shadow-runr-card md:sticky md:top-6 md:mt-0 md:block md:h-[22rem] lg:h-[28rem]">
+        <div className="mt-8 hidden overflow-hidden rounded-2xl md:sticky md:top-6 md:mt-0 md:block md:h-[22rem] lg:h-[28rem]">
           <MapView center={location} markers={markers} dark={theme === "dark"} className="h-full" />
         </div>
       </div>
 
-      <div className="mt-5 flex items-center justify-between gap-3 overflow-hidden rounded-[24px] bg-purple px-4 py-3 text-white shadow-runr-card">
+      <div className="mt-5 flex items-center justify-between gap-3 overflow-hidden rounded-2xl bg-purple px-4 py-2.5 text-white">
         <div className="min-w-0">
           <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-lime">Tonight · RUNR5</p>
           <p className="truncate text-sm font-extrabold">$5 off · or PORTER10 for 10%</p>
@@ -247,8 +244,8 @@ export default function PorterDiscoverPage() {
 
       <div className="mt-6 flex items-end justify-between">
         <div>
-          <h2 className="text-lg font-extrabold text-[var(--foreground)]">Nearby businesses</h2>
-          <p className="text-sm text-[var(--muted)]">Fulfilled by VENDR · moved by RUNRs</p>
+          <h2 className="text-base font-extrabold text-[var(--foreground)]">Nearby businesses</h2>
+          <p className="text-xs text-[var(--muted)]">Fulfilled by VENDR · moved by RUNRs</p>
         </div>
       </div>
       <div className="mt-3 space-y-3">
@@ -284,14 +281,14 @@ export default function PorterDiscoverPage() {
         )}
       </div>
 
-      <div className="relative mt-6 h-48 overflow-hidden rounded-[28px] shadow-runr-card md:hidden">
+      <div className="relative mt-5 h-44 overflow-hidden rounded-2xl md:hidden">
         <MapView center={location} markers={markers} dark={theme === "dark"} className="h-full" />
       </div>
 
       {cartCount > 0 && (
         <Link
           href="/cart"
-          className="sticky-cta flex h-14 items-center justify-center rounded-full bg-ink text-sm font-extrabold text-white shadow-runr-card"
+          className="sticky-cta flex h-12 items-center justify-center rounded-full bg-ink text-sm font-extrabold text-white shadow-runr-card"
         >
           View cart ({cartCount})
         </Link>
