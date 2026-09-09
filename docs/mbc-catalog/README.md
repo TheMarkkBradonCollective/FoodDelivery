@@ -12,6 +12,16 @@ In `scripts/sync-apk-catalog.mjs`, replace `pickBestGithubApk` with the version 
 
 ## 3. Sync the catalog
 
+From this repo (after `npm run publish:apk`):
+
+```bash
+GITHUB_TOKEN=ghp_your_token_with_main_push_access npm run sync:mbc-catalog
+```
+
+Or add `MBC_MAIN_REPO_TOKEN` as a repo secret and run the **Sync MBC catalog** workflow.
+
+Manual alternative on the `main` repo:
+
 ```bash
 cd /path/to/main
 npm install

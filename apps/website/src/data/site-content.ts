@@ -16,7 +16,8 @@ export interface AppDownload {
 }
 
 const MBC_STORE = "https://themarkkbradoncollective.github.io/main/download";
-const GITHUB_RELEASES = "https://github.com/TheMarkkBradonCollective/Runr/releases/download";
+/** Public MBC mirror — works without GitHub auth (private Runr releases 404). */
+const MBC_APKS = "https://themarkkbradoncollective.github.io/main/apks";
 const BRAND_BLUE = "#0066FF";
 
 export const apps: AppDownload[] = [
@@ -32,7 +33,7 @@ export const apps: AppDownload[] = [
     color: BRAND_BLUE,
     colorClass: "bg-[#0066FF]",
     storeUrl: `${MBC_STORE}/#download-porter`,
-    apkUrl: `${GITHUB_RELEASES}/v0.2.3-porter/porter-v0.2.3.apk`,
+    apkUrl: `${MBC_APKS}/porter/porter-v0.2.3.apk`,
     version: "0.2.3",
   },
   {
@@ -47,7 +48,7 @@ export const apps: AppDownload[] = [
     color: BRAND_BLUE,
     colorClass: "bg-[#0066FF]",
     storeUrl: `${MBC_STORE}/#download-runr`,
-    apkUrl: `${GITHUB_RELEASES}/v0.2.3-runr/runr-v0.2.3.apk`,
+    apkUrl: `${MBC_APKS}/runr/runr-v0.2.3.apk`,
     version: "0.2.3",
   },
   {
@@ -62,7 +63,7 @@ export const apps: AppDownload[] = [
     color: BRAND_BLUE,
     colorClass: "bg-[#0066FF]",
     storeUrl: `${MBC_STORE}/#download-vendr`,
-    apkUrl: `${GITHUB_RELEASES}/v0.2.3-vendr/vendr-v0.2.3.apk`,
+    apkUrl: `${MBC_APKS}/vendr/vendr-v0.2.3.apk`,
     version: "0.2.3",
   },
 ];

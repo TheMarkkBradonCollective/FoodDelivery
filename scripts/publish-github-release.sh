@@ -69,12 +69,12 @@ gh release create "$platform_tag" \
   release/runr-v"${platform_version}".apk#runr-v"${platform_version}".apk \
   release/vendr-v"${platform_version}".apk#vendr-v"${platform_version}".apk
 
-zip_path="release/runr-apps-apks-v${platform_version}.zip"
-rm -f "$zip_path"
-(cd release && zip -j "runr-apps-apks-v${platform_version}.zip" \
+zip_path="release/runr-apps-apks.zip"
+rm -f "$zip_path" "release/runr-apps-apks-v${platform_version}.zip"
+(cd release && zip -j "runr-apps-apks.zip" \
   "porter-v${platform_version}.apk" \
   "runr-v${platform_version}.apk" \
   "vendr-v${platform_version}.apk")
-gh release upload "$platform_tag" --repo "$REPO" "$zip_path#runr-apps-apks.zip" --clobber
+gh release upload "$platform_tag" --repo "$REPO" "$zip_path" --clobber
 
 echo "Published platform release $platform_tag (includes runr-apps-apks.zip)"

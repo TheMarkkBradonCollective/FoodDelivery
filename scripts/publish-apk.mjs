@@ -14,6 +14,7 @@ const root = join(import.meta.dirname, '..');
 const releaseDir = join(root, 'release');
 const args = process.argv.slice(2);
 const GITHUB_REPO = 'TheMarkkBradonCollective/Runr';
+const MBC_PUBLIC_BASE = 'https://themarkkbradoncollective.github.io/main/apks';
 
 const apps = [
   {
@@ -54,7 +55,12 @@ function versionCodeFromSemver(version) {
 }
 
 function githubReleaseUrl(appId, version) {
-  return `https://github.com/${GITHUB_REPO}/releases/download/v${version}-${appId}/${appId}-v${version}.apk`;
+  // Public MBC App Store mirror (works without GitHub auth). Run sync on main after each release.
+  return `${MBC_PUBLIC_BASE}/${appId}/${appId}-v${version}.apk`;
+}
+
+function githubReleaseFallbackUrl(appId, version) {
+  return `https://github.com/${GITHUB_REPO}/releases/download/v${version}/${appId}-v${version}.apk`;
 }
 
 function resolveApkSrc(appId) {
