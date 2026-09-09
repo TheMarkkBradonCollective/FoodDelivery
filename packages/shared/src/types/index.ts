@@ -130,6 +130,7 @@ export interface Order {
   status: OrderStatus;
   runrId?: string;
   createdAt: string;
+  deliveryAddress?: string;
 }
 
 export interface Delivery {

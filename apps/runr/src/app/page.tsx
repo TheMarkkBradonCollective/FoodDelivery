@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { MapView } from "@runr/shared/components/map";
 import { MapControls, ActiveRunBanner } from "@runr/shared/components/map/MapControls";
 import { SearchBar } from "@runr/shared/components/ui/SearchBar";
@@ -24,6 +24,7 @@ import {
 } from "@runr/shared/lib/utils";
 import { Flame, Star } from "lucide-react";
 import { EmptyState } from "@runr/shared/components/ui/EmptyState";
+import { CatalogPreviewBanner } from "@runr/shared/components/ui/CatalogPreviewBanner";
 
 export default function RunrMapPage() {
   const {
@@ -51,6 +52,11 @@ export default function RunrMapPage() {
   const [runStart, setRunStart] = useState("17:30");
   const [runEnd, setRunEnd] = useState("20:15");
   const [coverageAvailable, setCoverageAvailable] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("kitchen");
+    if (id) setSelectedBusinessId(id);
+  }, []);
 
   const selectedBusiness = businesses.find((b) => b.id === selectedBusinessId);
 
@@ -171,7 +177,8 @@ export default function RunrMapPage() {
           </p>
           <p className="text-sm font-extrabold tracking-tight">Pick it up. Run it there.</p>
         </div>
-        <SearchBar value={searchQuery} onChange={setSearchQuery} />
+        <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Search businesses" />
+        <CatalogPreviewBanner />
         {openOpportunities > 0 && (
           <div className="flex items-center gap-2 rounded-full bg-runr-primary px-4 py-2.5 text-sm font-semibold text-white shadow-runr-card">
             <Flame className="h-4 w-4" />

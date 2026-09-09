@@ -4,6 +4,7 @@ import { useAppStore } from "@/store";
 import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
 import { Panel, Stat } from "@/components/StaffUi";
 import { DesktopManageBanner } from "@/components/DesktopManageBanner";
+import { CatalogPreviewBanner } from "@runr/shared/components/ui/CatalogPreviewBanner";
 
 export default function StaffStatusPage() {
   const { businesses, orders } = useAppStore();
@@ -23,11 +24,12 @@ export default function StaffStatusPage() {
       <h1 className="mt-1 text-2xl font-extrabold">Status</h1>
       <p className="mt-1 text-sm text-[var(--muted)]">Quick read of the marketplace</p>
 
-      <div className="mt-5">
+      <div className="mt-5 space-y-3">
+        <CatalogPreviewBanner />
         <DesktopManageBanner />
       </div>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+      <div className="mt-6 grid gap-4">
         <Stat label="Live orders" value={String(liveOrders.length)} />
         <Stat label="Coverage gaps" value={String(gaps.length)} alert={gaps.length > 0} />
         <Stat label="Scheduled RUNs" value={String(platformRuns.length)} />

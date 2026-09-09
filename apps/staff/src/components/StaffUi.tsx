@@ -14,7 +14,7 @@ export function Stat({
       }`}
     >
       <p className="text-xs text-[var(--muted)]">{label}</p>
-      <p className="mt-1 text-2xl font-bold">{value}</p>
+      <p className="mt-1 text-2xl font-extrabold text-white">{value}</p>
     </div>
   );
 }

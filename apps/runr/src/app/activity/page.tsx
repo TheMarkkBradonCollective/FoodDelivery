@@ -1,6 +1,7 @@
 "use client";
 
 import { useAppStore } from "@/store";
+import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 
 export default function RunrActivityPage() {
   const { notifications, markNotificationRead } = useAppStore();
@@ -13,24 +14,31 @@ export default function RunrActivityPage() {
         <p className="mt-1 text-sm text-white/75">Notifications and delivery updates</p>
       </div>
       <div className="space-y-3 px-4 pt-2">
-        {notifications.map((n) => (
-          <button
-            key={n.id}
-            type="button"
-            onClick={() => markNotificationRead(n.id)}
-            className={`w-full rounded-runr-lg border p-4 text-left transition-colors ${
-              n.read
-                ? "border-[var(--border)] bg-[var(--surface-elevated)] opacity-70"
-                : "border-runr-primary/20 bg-runr-primary-muted"
-            }`}
-          >
-            <p className="font-semibold text-[var(--foreground)]">{n.title}</p>
-            <p className="mt-1 text-sm text-[var(--muted)]">{n.body}</p>
-            <p className="mt-2 text-xs text-[var(--muted)]">
-              {new Date(n.createdAt).toLocaleString()}
-            </p>
-          </button>
-        ))}
+        {notifications.length === 0 ? (
+          <EmptyState
+            title="No activity yet"
+            description="Coverage gaps, delivery offers, and payouts show up here."
+          />
+        ) : (
+          notifications.map((n) => (
+            <button
+              key={n.id}
+              type="button"
+              onClick={() => markNotificationRead(n.id)}
+              className={`w-full rounded-runr-lg border p-4 text-left transition-colors ${
+                n.read
+                  ? "border-[var(--border)] bg-[var(--surface-elevated)] opacity-70"
+                  : "border-runr-primary/20 bg-runr-primary-muted"
+              }`}
+            >
+              <p className="font-semibold text-[var(--foreground)]">{n.title}</p>
+              <p className="mt-1 text-sm text-[var(--muted)]">{n.body}</p>
+              <p className="mt-2 text-xs text-[var(--muted)]">
+                {new Date(n.createdAt).toLocaleString()}
+              </p>
+            </button>
+          ))
+        )}
       </div>
     </div>
   );

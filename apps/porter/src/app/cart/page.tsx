@@ -16,6 +16,7 @@ export default function CartPage() {
     useAppStore();
   const router = useRouter();
   const [tip, setTip] = useState(5);
+  const [address, setAddress] = useState("1 Market St, San Francisco");
 
   const business = businesses.find((b) => b.id === cartBusinessId);
   const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
@@ -25,7 +26,7 @@ export default function CartPage() {
   const total = subtotal + deliveryFee + serviceFee + tax + tip;
 
   function handlePlaceOrder() {
-    const order = placeOrder();
+    const order = placeOrder({ tip, address });
     if (order) router.push(`/orders/${order.id}`);
   }
 
@@ -82,6 +83,13 @@ export default function CartPage() {
       </div>
 
       <div className="mt-8 space-y-2 rounded-runr-lg border border-[var(--border)] p-4 text-sm">
+        <label className="block text-[var(--muted)]">Deliver to</label>
+        <input
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          className="input-brand"
+          placeholder="Delivery address"
+        />
         <Row label="Subtotal" value={subtotal} />
         <Row label="Delivery fee" value={deliveryFee} />
         <Row label="Service fee" value={serviceFee} />

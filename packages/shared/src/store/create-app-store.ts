@@ -51,6 +51,7 @@ export interface AppState {
   staffMessages: StaffMessage[];
   searchQuery: string;
   mapFilter: "all" | "open" | "gap" | "high_demand";
+  catalogPreview: boolean;
 
   setUser: (user: User | null) => void;
   logout: () => void;
@@ -69,9 +70,9 @@ export interface AppState {
   removeFromCart: (menuItemId: string) => void;
   updateCartQuantity: (menuItemId: string, quantity: number) => void;
   clearCart: () => void;
-  placeOrder: () => Order | null;
+  placeOrder: (options?: { tip?: number; address?: string }) => Order | null;
   updateOrderStatus: (orderId: string, status: Order["status"]) => void;
-  hydrateMarketplace: (snapshot: MarketplaceSnapshot) => void;
+  hydrateMarketplace: (snapshot: MarketplaceSnapshot, preview?: boolean) => void;
   updateBusinessCapacity: (businessId: string, ruleId: string, maxRunrs: number) => void;
   markNotificationRead: (id: string) => void;
   sendStaffMessage: (body: string) => void;
@@ -101,6 +102,7 @@ function buildStore(
     staffMessages: [] as StaffMessage[],
     searchQuery: "",
     mapFilter: "all" as const,
+    catalogPreview: false,
 
     setUser: (user: User | null) => set({ user }),
     logout: () => {
@@ -231,6 +233,14 @@ function buildStore(
       const { activeDelivery, earnings, user } = get();
       if (!activeDelivery || !user) return;
 
+      if (activeDelivery.status === "accepted" || activeDelivery.status === "pickup") {
+        const next = { ...activeDelivery, status: "delivering" as const };
+        set({ activeDelivery: next });
+        void persistDelivery(next);
+        void persistOrderStatus(activeDelivery.orderId, "picked_up", user.id);
+        return;
+      }
+
       const record = {
         id: crypto.randomUUID(),
         runrId: user.id,
@@ -291,15 +301,16 @@ function buildStore(
 
     clearCart: () => set({ cart: [], cartBusinessId: null }),
 
-    placeOrder: () => {
-      const { cart, cartBusinessId, user } = get();
+    placeOrder: (options) => {
+      const { cart, cartBusinessId, user, businesses } = get();
       if (!cart.length || !cartBusinessId || !user) return null;
 
+      const kitchen = businesses.find((b) => b.id === cartBusinessId);
       const subtotal = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
-      const deliveryFee = 2.99;
+      const deliveryFee = kitchen?.deliveryFee ?? 2.99;
       const serviceFee = 1.5;
       const tax = subtotal * 0.0875;
-      const tip = 5.0;
+      const tip = options?.tip ?? 5.0;
       const total = subtotal + deliveryFee + serviceFee + tax + tip;
 
       const order: Order = {
@@ -315,6 +326,7 @@ function buildStore(
         total,
         status: "new",
         createdAt: new Date().toISOString(),
+        deliveryAddress: options?.address,
       };
 
       const note: Notification = {
@@ -345,26 +357,52 @@ function buildStore(
 
     updateOrderStatus: (orderId: string, status: Order["status"]) => {
       const order = get().orders.find((o) => o.id === orderId);
+      const business = order
+        ? get().businesses.find((b) => b.id === order.businessId)
+        : undefined;
+      const customer = get().marketplaceUsers.find((u) => u.id === order?.customerId);
       set((s) => ({
         orders: s.orders.map((o) => (o.id === orderId ? { ...o, status } : o)),
       }));
       void persistOrderStatus(orderId, status, order?.runrId);
+      if (order && business && (status === "ready" || status === "runr_assigned")) {
+        const already =
+          get().pendingDelivery?.orderId === order.id || get().activeDelivery?.orderId === order.id;
+        if (!already) {
+          void offerDeliveryForOrder(order, business, customer?.name ?? "Customer").then(
+            (delivery) => {
+              if (delivery && !get().activeDelivery && !get().pendingDelivery) {
+                set({ pendingDelivery: delivery });
+              }
+            }
+          );
+        }
+      }
     },
 
-    hydrateMarketplace: (snapshot: MarketplaceSnapshot) =>
-      set({
-        businesses: snapshot.businesses,
-        orders: snapshot.orders,
-        scheduledRuns: snapshot.scheduledRuns,
-        runHistory: snapshot.runHistory,
-        activeRun: snapshot.activeRun,
-        pendingDelivery: snapshot.pendingDelivery,
-        activeDelivery: snapshot.activeDelivery,
-        earnings: snapshot.earnings,
-        notifications: snapshot.notifications,
-        favoriteBusinessIds: snapshot.favoriteBusinessIds,
-        marketplaceUsers: snapshot.profiles,
-        staffMessages: snapshot.staffMessages ?? [],
+    hydrateMarketplace: (snapshot: MarketplaceSnapshot, preview = false) =>
+      set((s) => {
+        if (preview && s.businesses.length > 0 && s.catalogPreview) {
+          return {
+            businesses: s.businesses,
+            catalogPreview: true,
+          };
+        }
+        return {
+          catalogPreview: preview,
+          businesses: snapshot.businesses,
+          orders: snapshot.orders,
+          scheduledRuns: snapshot.scheduledRuns,
+          runHistory: snapshot.runHistory,
+          activeRun: snapshot.activeRun,
+          pendingDelivery: snapshot.pendingDelivery,
+          activeDelivery: snapshot.activeDelivery,
+          earnings: snapshot.earnings,
+          notifications: snapshot.notifications,
+          favoriteBusinessIds: snapshot.favoriteBusinessIds,
+          marketplaceUsers: snapshot.profiles,
+          staffMessages: snapshot.staffMessages ?? [],
+        };
       }),
 
     updateBusinessCapacity: (businessId: string, ruleId: string, maxRunrs: number) => {

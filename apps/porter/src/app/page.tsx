@@ -7,6 +7,8 @@ import { SearchBar } from "@runr/shared/components/ui/SearchBar";
 import { BusinessCard } from "@runr/shared/components/ui/BusinessCard";
 import { useAppStore } from "@/store";
 import { cuisineCategories } from "@runr/shared/data/constants";
+import { CatalogPreviewBanner } from "@runr/shared/components/ui/CatalogPreviewBanner";
+import { BrandMark } from "@runr/shared/components/ui/BrandMark";
 import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 import { getBusinessCoverageSummary, getMarkerColor } from "@runr/shared/lib/coverage-engine";
 
@@ -59,8 +61,8 @@ export default function PorterDiscoverPage() {
             </h1>
             <p className="mt-1 text-sm text-white/75">Get what you need nearby.</p>
           </div>
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-runr-accent-bright text-lg font-extrabold text-runr-ink">
-            {firstName.charAt(0)}
+          <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full">
+            <BrandMark size="sm" />
           </div>
         </div>
         <div className="relative z-10 mt-5">
@@ -84,6 +86,7 @@ export default function PorterDiscoverPage() {
       </div>
 
       <div className="px-4 py-5">
+        <CatalogPreviewBanner className="mb-3" />
         <div className="flex gap-2 overflow-x-auto pb-2">
           <button
             type="button"

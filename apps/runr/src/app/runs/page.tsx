@@ -8,6 +8,7 @@ import { useAppStore } from "@/store";
 import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
 import { calculateDistanceMiles, formatCurrency } from "@runr/shared/lib/utils";
 import { Bike } from "lucide-react";
+import { CatalogPreviewBanner } from "@runr/shared/components/ui/CatalogPreviewBanner";
 
 export default function RunrRunsPage() {
   const {
@@ -39,6 +40,7 @@ export default function RunrRunsPage() {
         <p className="mt-1 text-sm text-white/75">Pick a kitchen. Run your window. Earn per drop.</p>
       </div>
       <div className="px-4 pt-2">
+        <CatalogPreviewBanner className="mb-3" />
         <section className="mt-2">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[var(--muted)]">
             Available RUNs
@@ -53,7 +55,7 @@ export default function RunrRunsPage() {
               {available.map(({ business, coverage, miles, payout }) => (
                 <Link
                   key={business.id}
-                  href="/"
+                  href={`/?kitchen=${business.id}`}
                   className="flex items-center gap-3 rounded-runr-xl border border-[var(--border)] bg-[var(--surface-elevated)] p-4 shadow-runr-card"
                 >
                   <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#A0F878]">

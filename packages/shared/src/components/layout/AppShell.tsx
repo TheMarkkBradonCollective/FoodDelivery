@@ -35,7 +35,7 @@ export function AppShell({
 }) {
   return (
     <ThemeProvider>
-      <NativeSafeArea darkChrome={role === "business" || role === "staff"}>
+      <NativeSafeArea darkChrome={role === "staff"}>
         <SupabaseAuthSync role={role} />
         <MarketplaceSync />
         <AuthGuard role={role}>{children}</AuthGuard>

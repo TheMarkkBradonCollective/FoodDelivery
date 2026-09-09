@@ -41,13 +41,17 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
 
   return (
     <div className="min-h-screen pb-24">
-      <div className="relative h-48 bg-gradient-to-br from-runr-primary/30 to-runr-navigation/20">
+      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[#7048F8] to-[#2A1478]">
+        <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-[#A0F878]/30" />
         <Link
           href="/"
           className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface)] shadow-runr-card"
         >
           <ArrowLeft className="h-5 w-5" />
         </Link>
+        <p className="absolute bottom-16 left-5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#A0F878]">
+          {business.cuisine}
+        </p>
       </div>
 
       <div className="px-4 -mt-8">

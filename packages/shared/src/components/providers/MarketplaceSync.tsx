@@ -19,7 +19,13 @@ export function MarketplaceSync() {
 
     async function load() {
       const snapshot = await fetchMarketplace(userId);
-      if (!cancelled) hydrateMarketplace(snapshot);
+      if (cancelled) return;
+      if (snapshot.businesses.length > 0) {
+        hydrateMarketplace(snapshot, false);
+        return;
+      }
+      const { buildPreviewSnapshot } = await import("../../data/demo-catalog");
+      hydrateMarketplace(buildPreviewSnapshot(userId), true);
     }
 
     void load();

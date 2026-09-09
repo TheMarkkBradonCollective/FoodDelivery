@@ -2,7 +2,7 @@
 @import "@runr/shared/styles/globals.css";
 @source "../../../packages/shared/src/**/*.{ts,tsx}";
 
-/* Sign-in stays cream. Immersive purple only after auth. */
+/* VENDR — cream operations surface, purple + lime brand */
 :root {
   --color-runr-primary: #7048f8;
   --color-runr-primary-hover: #5c36e0;
@@ -18,17 +18,6 @@
 }
 
 .vendr-app {
-  --color-runr-primary: #a0f878;
-  --color-runr-primary-hover: #8eef64;
-  --color-runr-primary-muted: #4a28c8;
-  --color-runr-navigation: #a0f878;
-  --on-primary: #1a1224;
-  --background: #7048f8;
-  --foreground: #fffdf9;
-  --surface: #5c36e0;
-  --surface-elevated: #4a28c8;
-  --border: #9b86ff;
-  --muted: #eee8ff;
   min-height: 100dvh;
   background: var(--background);
   color: var(--foreground);

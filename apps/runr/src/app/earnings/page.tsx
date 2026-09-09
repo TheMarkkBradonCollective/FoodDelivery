@@ -1,6 +1,7 @@
 "use client";
 
 import { EarningsCard } from "@runr/shared/components/ui/EarningsCard";
+import { EmptyState } from "@runr/shared/components/ui/EmptyState";
 import { useAppStore } from "@/store";
 import { formatCurrency } from "@runr/shared/lib/utils";
 
@@ -36,7 +37,13 @@ export default function RunrEarningsPage() {
           Delivery History
         </h2>
         <div className="space-y-3">
-          {earnings.map((e) => (
+          {earnings.length === 0 ? (
+            <EmptyState
+              title="No deliveries yet"
+              description="Accept a RUN, pick up an order, and completed drops land here with pay and tips."
+            />
+          ) : (
+            earnings.map((e) => (
             <div
               key={e.id}
               className="rounded-runr-lg border border-[var(--border)] bg-[var(--surface-elevated)] p-4"
@@ -55,7 +62,8 @@ export default function RunrEarningsPage() {
                 <span>Tip {formatCurrency(e.tip)}</span>
               </div>
             </div>
-          ))}
+            ))
+          )}
         </div>
       </section>
       </div>
