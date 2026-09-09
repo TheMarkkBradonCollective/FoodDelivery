@@ -556,8 +556,24 @@ button:active:not(:disabled),
   position: fixed;
   left: 1.25rem;
   right: 1.25rem;
-  bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 0.65rem);
+  bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 0.5rem);
   z-index: 25;
+}
+
+.sticky-cta-space {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .sticky-cta-space {
+    display: block;
+    flex-shrink: 0;
+    height: 5.5rem;
+  }
+
+  .sticky-cta-space--dock {
+    height: 8.75rem;
+  }
 }
 
 @media (min-width: 768px) {

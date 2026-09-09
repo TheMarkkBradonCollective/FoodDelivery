@@ -126,13 +126,12 @@ export default function CartPage() {
             { value: "pickup", label: "Pickup" },
           ]}
         />
-        <p className="mt-1 text-xs text-[var(--muted)]">
-          {fulfillment === "delivery"
-            ? "A RUNR covering this VENDR brings it to you."
-            : `Collect at ${business?.address ?? "the business"}. No RUNR needed.`}
-        </p>
-
-        <p className="field-label mt-3">When</p>
+        {fulfillment === "pickup" ? (
+          <p className="mt-1 text-xs text-[var(--muted)]">
+            Collect at {business?.address ?? "the business"}. No RUNR needed.
+          </p>
+        ) : null}
+        <p className="field-label mt-2.5">When</p>
         <SegmentedControl
           size="sm"
           value={when}
@@ -151,7 +150,7 @@ export default function CartPage() {
           />
         ) : null}
 
-        <p className="field-label mt-3">Tip · {formatCurrency(tip)}</p>
+        <p className="field-label mt-2.5">Tip · {formatCurrency(tip)}</p>
         <input
           type="range"
           min={0}
@@ -159,7 +158,7 @@ export default function CartPage() {
           step={1}
           value={tip}
           onChange={(e) => setTip(Number(e.target.value))}
-          className="mt-1 h-6 w-full range-slider"
+          className="mt-0.5 h-6 w-full range-slider"
           aria-label="Tip amount"
         />
         <div className="flex justify-between text-[11px] text-[var(--muted)]">
@@ -169,7 +168,7 @@ export default function CartPage() {
 
         {fulfillment === "delivery" ? (
           <>
-            <label className="field-label mt-3" htmlFor="delivery-address">
+            <label className="field-label mt-2.5" htmlFor="delivery-address">
               Deliver to
             </label>
             <input
@@ -183,19 +182,19 @@ export default function CartPage() {
           </>
         ) : null}
 
-        <p className="field-label mt-3">Promo code</p>
+        <p className="field-label mt-2.5">Promo code</p>
         <div className="flex items-center gap-2">
           <input
             value={promoInput}
             onChange={(e) => setPromoInput(e.target.value)}
-            className="input-brand"
+            className="input-brand h-11 py-0"
             placeholder="RUNR5"
             autoCapitalize="characters"
           />
           <button
             type="button"
             onClick={applyPromo}
-            className="h-10 shrink-0 rounded-full bg-ink px-4 text-sm font-bold text-white"
+            className="h-11 shrink-0 rounded-full bg-ink px-4 text-sm font-bold text-white"
           >
             Apply
           </button>
@@ -207,34 +206,37 @@ export default function CartPage() {
           </p>
         ) : null}
 
-        <div className="mt-3 space-y-1 text-sm">
+        <div className="mt-2.5 space-y-1 text-sm">
           <Row label="Subtotal" value={subtotal} />
           {fulfillment === "delivery" ? <Row label="Delivery fee" value={deliveryFee} /> : null}
           <Row label="Service fee" value={serviceFee} />
           <Row label="Tax" value={tax} />
           {discount > 0 ? <Row label="Promo" value={-discount} /> : null}
         </div>
-        <div className="mt-2.5 border-t border-[var(--border)] pt-2.5">
-          <Row label="Total" value={total} bold />
-        </div>
       </div>
 
-      <div className="h-16 md:hidden" aria-hidden />
-      <button
-        type="button"
-        onClick={handlePlaceOrder}
-        disabled={placing || (fulfillment === "delivery" && !deliveryAddress.trim())}
-        className="sticky-cta h-11 w-full rounded-full bg-purple text-sm font-extrabold text-white disabled:opacity-50"
-      >
-        {placing ? "Placing order…" : `Place order · ${formatCurrency(total)}`}
-      </button>
+      <div className="sticky-cta-space sticky-cta-space--dock" aria-hidden />
+      <div className="sticky-cta rounded-2xl bg-[var(--surface-elevated)] p-3 shadow-runr-sheet ring-1 ring-[var(--border)]">
+        <div className="mb-2 flex items-baseline justify-between">
+          <span className="text-sm font-extrabold">Total</span>
+          <span className="text-base font-extrabold tabular-nums">{formatCurrency(total)}</span>
+        </div>
+        <button
+          type="button"
+          onClick={handlePlaceOrder}
+          disabled={placing || (fulfillment === "delivery" && !deliveryAddress.trim())}
+          className="h-11 w-full rounded-full bg-purple text-sm font-extrabold text-white disabled:opacity-50"
+        >
+          {placing ? "Placing order…" : "Place order"}
+        </button>
+      </div>
     </div>
   );
 }
 
-function Row({ label, value, bold }: { label: string; value: number; bold?: boolean }) {
+function Row({ label, value }: { label: string; value: number }) {
   return (
-    <div className={`flex justify-between ${bold ? "text-base font-extrabold" : "text-[var(--muted)]"}`}>
+    <div className="flex justify-between text-[var(--muted)]">
       <span>{label}</span>
       <span>{formatCurrency(value)}</span>
     </div>
