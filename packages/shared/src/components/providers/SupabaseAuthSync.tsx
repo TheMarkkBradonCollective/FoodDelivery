@@ -21,19 +21,24 @@ export function SupabaseAuthSync({ role }: { role: UserRole }) {
     const supabase = getSupabaseClient();
 
     async function syncSession() {
-      const { data, error } = await supabase.auth.getSession();
-      if (error || !data.session) {
-        setUser(null);
-        setAuthReady(true);
-        return;
-      }
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error || !data.session) {
+          setUser(null);
+          return;
+        }
 
-      const session = await sessionToAuthSession(data.session);
-      setUser(session.user.role === role ? session.user : null);
-      setAuthReady(true);
+        const session = await sessionToAuthSession(data.session);
+        setUser(session.user.role === role ? session.user : null);
+      } catch {
+        setUser(null);
+      } finally {
+        setAuthReady(true);
+      }
     }
 
     void syncSession();
+    const timeout = window.setTimeout(() => setAuthReady(true), 2500);
 
     const {
       data: { subscription },
@@ -47,7 +52,10 @@ export function SupabaseAuthSync({ role }: { role: UserRole }) {
       setUser(authSession.user.role === role ? authSession.user : null);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      window.clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
   }, [role, setUser, setAuthReady]);
 
   return null;

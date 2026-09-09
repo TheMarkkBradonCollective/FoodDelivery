@@ -20,13 +20,24 @@ function useStoreHydrated() {
 
   useEffect(() => {
     const store = ensureStore() as unknown as {
-      persist: { hasHydrated: () => boolean; onFinishHydration: (cb: () => void) => () => void };
+      persist?: { hasHydrated: () => boolean; onFinishHydration: (cb: () => void) => () => void };
     };
-    if (store.persist.hasHydrated()) {
-      setHydrated(true);
+    const finish = () => setHydrated(true);
+    if (!store.persist) {
+      finish();
       return;
     }
-    return store.persist.onFinishHydration(() => setHydrated(true));
+    const unsub = store.persist.onFinishHydration(finish);
+    if (store.persist.hasHydrated()) finish();
+    const fallback = window.setTimeout(() => {
+      finish();
+      const state = (ensureStore() as unknown as { getState: () => { authReady: boolean; setAuthReady: (v: boolean) => void } }).getState();
+      if (!state.authReady) state.setAuthReady(true);
+    }, 1600);
+    return () => {
+      unsub?.();
+      window.clearTimeout(fallback);
+    };
   }, []);
 
   return hydrated;

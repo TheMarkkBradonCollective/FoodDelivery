@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { isSupabaseConfigured } from "../../lib/supabase/config";
 import { getSupabaseClient } from "../../lib/supabase/client";
 import { fetchMarketplace } from "../../lib/supabase/marketplace";
-import { useAppStore } from "../../store/create-app-store";
+import { ensureStore, useAppStore } from "../../store/create-app-store";
 
 export function MarketplaceSync() {
   const user = useAppStore((s) => s.user);
@@ -18,7 +18,9 @@ export function MarketplaceSync() {
     }
 
     let cancelled = false;
-    setMarketplaceReady(false);
+    if (ensureStore().getState().businesses.length === 0) {
+      setMarketplaceReady(false);
+    }
 
     const userId = user.id;
 

@@ -202,6 +202,7 @@ export function SignInPrompt({ role }: { role: UserRole }) {
           </p>
         ) : (
           <>
+            {mode !== "forgot" && (
             <div className="signin-tabs" role="tablist" aria-label="Account">
               <button
                 type="button"
@@ -230,6 +231,7 @@ export function SignInPrompt({ role }: { role: UserRole }) {
                 Create account
               </button>
             </div>
+            )}
 
             {mode === "signin" && (
               <>
