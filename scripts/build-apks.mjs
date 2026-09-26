@@ -128,7 +128,16 @@ async function ensureSigning(appId) {
   }
 
   let gradle = await readFile(buildGradle, 'utf8');
-  if (!gradle.includes('signingConfigs')) {
+  const expectedStore = `../${appId}-release.keystore`;
+  if (gradle.includes('signingConfigs')) {
+    gradle = gradle.replace(
+      /storeFile file\('\.\.\/[^']+'\)/,
+      `storeFile file('${expectedStore}')`,
+    );
+    gradle = gradle.replace(/storePassword '[^']+'/, `storePassword 'mbc${appId}'`);
+    gradle = gradle.replace(/keyAlias '[^']+'/, `keyAlias '${appId}'`);
+    gradle = gradle.replace(/keyPassword '[^']+'/, `keyPassword 'mbc${appId}'`);
+  } else if (!gradle.includes('signingConfigs')) {
     gradle = gradle.replace(
       'android {',
       `android {
@@ -192,3 +201,18 @@ console.log('\nBuilt release APKs:');
 for (const app of built) {
   console.log(`  ${app.id}: ${app.apkSrc}`);
 }
+
+const { copyFileSync, mkdirSync } = await import('node:fs');
+const { versionedApkPath, latestApkPath } = await import('./apk-paths.mjs');
+for (const app of built) {
+  const versioned = versionedApkPath(app.id, app.version);
+  mkdirSync(path.dirname(versioned), { recursive: true });
+  mkdirSync(path.dirname(latestApkPath(app.id)), { recursive: true });
+  copyFileSync(app.apkSrc, versioned);
+  copyFileSync(app.apkSrc, latestApkPath(app.id));
+  console.log(`  staged ${versioned}`);
+  console.log(`  staged ${latestApkPath(app.id)}`);
+}
+
+console.log('\nUpdating version.json…');
+run('node', ['scripts/publish-apk.mjs'], { cwd: root });
