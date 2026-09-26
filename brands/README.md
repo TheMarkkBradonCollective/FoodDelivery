@@ -1,8 +1,8 @@
 # Porter App Icons
 
-Wordless **lime rider** on electric purple (`rider-mark.png`).
+Wordless **lime rider** on electric purple (`rider-mark.png`), plus the original wordmark lockup.
 
-Android adaptive icons keep the rider and letter badge inside the **center 66dp safe zone** so circle / squircle / Samsung masks do not crop the helmet, wheels, or box.
+Android adaptive icons keep that **same lockup** inside the **center 66dp safe zone** so circle / squircle / Samsung masks do not crop the helmet, wheels, box, or name.
 
 | Token | Hex |
 |-------|-----|
@@ -13,11 +13,11 @@ Android adaptive icons keep the rider and letter badge inside the **center 66dp 
 
 | App | Treatment |
 |-----|-----------|
-| **Porter** | Lime rider on purple + **P** |
-| **Porter Runner** | Lime rider on purple + **R** |
-| **Porter Vendor** | Lime rider on purple + **V** |
-| **Porter Command** | Purple rider on lime + **C** |
-| **FastFood** | Yellow rider on red + **F** |
+| **Porter** | Lime rider on purple + **Porter** |
+| **Porter Runner** | Lime rider on purple + **Runr** |
+| **Porter Vendor** | Lime rider on purple + **Vendr** |
+| **Porter Command** | Purple rider on lime (wordless) |
+| **FastFood** | Yellow rider on red + **FastFood** |
 
 ## Regenerate all launcher + in-app icons
 
