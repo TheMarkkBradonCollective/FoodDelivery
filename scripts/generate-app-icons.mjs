@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
- * Generate launcher + in-app icons from the electric purple / lime rider mark.
+ * Generate Android adaptive + legacy launcher icons.
  *
- * Source: brands/rider-mark.png (lime rider on purple, wordless).
- * Brand: purple #7048F8 · lime #A0F878
+ * Adaptive icons are 108dp. Launchers only guarantee the center 66dp circle
+ * (the safe zone). Rider + badge stay inside that circle so helmet, wheels,
+ * and the letter are not cropped on Samsung/Pixel masks.
  *
  * Usage: npm run icons:generate
  */
@@ -18,28 +19,42 @@ const interBold = "/usr/share/fonts/truetype/macos/Inter-Bold.ttf";
 
 const PURPLE = "#7048F8";
 const LIME = "#A0F878";
+const RED = "#E31837";
+const YELLOW = "#FFC72C";
 const LIME_RGB = { r: 160, g: 248, b: 120 };
 const PURPLE_RGB = { r: 112, g: 72, b: 248 };
+const YELLOW_RGB = { r: 255, g: 199, b: 44 };
+const WHITE_RGB = { r: 255, g: 255, b: 255 };
 
-/** @type {Array<{ id: string; wordmark: string | null; background: string; mark: "lime" | "purple" }>} */
+/** 66dp visible / 108dp adaptive canvas */
+const SAFE = 66 / 108;
+/** Rider box as a fraction of the safe circle — leaves room so wheels stay in. */
+const RIDER_IN_SAFE = 0.72;
+
 const variants = [
-  { id: "porter", wordmark: "Porter", background: PURPLE, mark: "lime" },
-  { id: "runr", wordmark: "Runr", background: PURPLE, mark: "lime" },
-  { id: "vendr", wordmark: "Vendr", background: PURPLE, mark: "lime" },
-  { id: "staff", wordmark: null, background: LIME, mark: "purple" },
+  { id: "porter", badge: "P", background: PURPLE, mark: "lime" },
+  { id: "runr", badge: "R", background: PURPLE, mark: "lime" },
+  { id: "vendr", badge: "V", background: PURPLE, mark: "lime" },
+  { id: "staff", badge: "C", background: LIME, mark: "purple" },
+  { id: "fastfood", badge: "F", background: RED, mark: "yellow" },
 ];
 
-const densities = {
+/** Adaptive foreground is 108dp (not 48dp). */
+const adaptivePx = {
+  "mipmap-mdpi": 108,
+  "mipmap-hdpi": 162,
+  "mipmap-xhdpi": 216,
+  "mipmap-xxhdpi": 324,
+  "mipmap-xxxhdpi": 432,
+};
+
+/** Legacy launcher icons are 48dp. */
+const legacyPx = {
   "mipmap-mdpi": 48,
   "mipmap-hdpi": 72,
   "mipmap-xhdpi": 96,
   "mipmap-xxhdpi": 144,
   "mipmap-xxxhdpi": 192,
-};
-
-const MARK_RGB = {
-  lime: LIME_RGB,
-  purple: PURPLE_RGB,
 };
 
 function hexToRgb(hex) {
@@ -51,10 +66,18 @@ function hexToRgb(hex) {
   };
 }
 
-/**
- * Pull the lime rider off the purple field (and drop the black rounded frame).
- * Recolor to the locked lime so every size matches.
- */
+function markRgb(kind) {
+  if (kind === "purple") return PURPLE_RGB;
+  if (kind === "yellow") return YELLOW_RGB;
+  return LIME_RGB;
+}
+
+function markHex(kind) {
+  if (kind === "purple") return PURPLE;
+  if (kind === "yellow") return YELLOW;
+  return LIME;
+}
+
 async function extractRider() {
   const { data, info } = await sharp(markSource).ensureAlpha().raw().toBuffer({
     resolveWithObject: true,
@@ -100,13 +123,10 @@ async function extractRider() {
   maxX = Math.min(info.width - 1, maxX + pad);
   maxY = Math.min(info.height - 1, maxY + pad);
 
-  const cropW = maxX - minX + 1;
-  const cropH = maxY - minY + 1;
-
   return sharp(out, {
     raw: { width: info.width, height: info.height, channels: 4 },
   })
-    .extract({ left: minX, top: minY, width: cropW, height: cropH })
+    .extract({ left: minX, top: minY, width: maxX - minX + 1, height: maxY - minY + 1 })
     .png()
     .toBuffer();
 }
@@ -134,65 +154,44 @@ async function riderAt(riderPng, markW, markH) {
     .toBuffer();
 }
 
-function wordmarkSvg(size, label, fill) {
-  const fontSize = Math.round(size * 0.125);
-  const y = Math.round(size * 0.9);
-  const fontFace = existsSync(interBold)
+function fontFaceCss() {
+  return existsSync(interBold)
     ? `@font-face { font-family: "IconSans"; src: url("file://${interBold}"); }`
     : "";
+}
+
+function badgeSvg(size, letter, fill, bg) {
+  const safe = size * SAFE;
+  const r = Math.max(8, Math.round(safe * 0.16));
+  const cx = size / 2;
+  const cy = size / 2 + safe * 0.28;
+  const fontSize = Math.round(r * 1.15);
   return Buffer.from(`<?xml version="1.0" encoding="UTF-8"?>
 <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
   <defs><style><![CDATA[
-    ${fontFace}
-    text { font-family: "IconSans", "Inter", "Noto Sans", sans-serif; font-weight: 700; }
+    ${fontFaceCss()}
+    text { font-family: "IconSans", "Inter", "Noto Sans", sans-serif; font-weight: 800; }
   ]]></style></defs>
-  <text x="50%" y="${y}" text-anchor="middle" font-size="${fontSize}" fill="${fill}">${label}</text>
+  <circle cx="${cx}" cy="${cy}" r="${r}" fill="${bg}"/>
+  <text x="${cx}" y="${cy + fontSize * 0.36}" text-anchor="middle" font-size="${fontSize}" fill="${fill}">${letter}</text>
 </svg>`);
 }
 
-async function composeIcon(riderPng, size, variant) {
-  const bg = hexToRgb(variant.background);
-  const layers = [];
-  const markFill = variant.mark === "purple" ? PURPLE : LIME;
+/** Transparent 108dp-style layer: rider + badge inside the 66dp safe circle. */
+async function composeForeground(riderPng, size, variant, { monochrome = false } = {}) {
+  const safe = size * SAFE;
+  const riderBox = Math.round(safe * RIDER_IN_SAFE);
+  const left = Math.round((size - riderBox) / 2);
+  const top = Math.round(size / 2 - safe * 0.38);
 
-  if (variant.wordmark) {
-    const markW = Math.round(size * 0.72);
-    const markH = Math.round(size * 0.58);
-    const top = Math.round(size * 0.12);
-    const left = Math.round((size - markW) / 2);
-    layers.push({
-      input: await riderAt(riderPng, markW, markH),
-      left,
-      top,
-    });
-    layers.push({ input: wordmarkSvg(size, variant.wordmark, markFill), left: 0, top: 0 });
-  } else {
-    const pad = Math.round(size * 0.14);
-    const markSize = size - pad * 2;
-    layers.push({
-      input: await riderAt(riderPng, markSize, markSize),
-      left: pad,
-      top: pad,
-    });
-  }
+  const color = monochrome ? WHITE_RGB : markRgb(variant.mark);
+  const tinted = await tintRider(riderPng, color);
+  const rider = await riderAt(tinted, riderBox, riderBox);
 
-  return sharp({
-    create: {
-      width: size,
-      height: size,
-      channels: 4,
-      background: { ...bg, alpha: 255 },
-    },
-  })
-    .composite(layers)
-    .png()
-    .toBuffer();
-}
+  const badgeFill = monochrome ? "#FFFFFF" : variant.background;
+  const badgeBg = monochrome ? "#00000000" : markHex(variant.mark);
+  const badge = badgeSvg(size, variant.badge, badgeFill, badgeBg);
 
-async function foregroundMark(riderPng, size) {
-  const pad = Math.round(size * 0.18);
-  const markSize = size - pad * 2;
-  const rider = await riderAt(riderPng, markSize, markSize);
   return sharp({
     create: {
       width: size,
@@ -201,9 +200,58 @@ async function foregroundMark(riderPng, size) {
       background: { r: 0, g: 0, b: 0, alpha: 0 },
     },
   })
-    .composite([{ input: rider, left: pad, top: pad }])
+    .composite([
+      { input: rider, left, top },
+      { input: badge, left: 0, top: 0 },
+    ])
     .png()
     .toBuffer();
+}
+
+/** What the user sees after a circular mask: bg + safe-zone art. */
+async function composeLegacy(riderPng, size, variant) {
+  const fg = await composeForeground(riderPng, size, variant);
+  const bg = hexToRgb(variant.background);
+  return sharp({
+    create: {
+      width: size,
+      height: size,
+      channels: 4,
+      background: { ...bg, alpha: 255 },
+    },
+  })
+    .composite([{ input: fg, left: 0, top: 0 }])
+    .png()
+    .toBuffer();
+}
+
+async function roundMask(png, size) {
+  const r = Math.round(size / 2);
+  return sharp(png)
+    .composite([
+      {
+        input: Buffer.from(
+          `<svg width="${size}" height="${size}"><circle cx="${r}" cy="${r}" r="${r}" fill="white"/></svg>`
+        ),
+        blend: "dest-in",
+      },
+    ])
+    .png()
+    .toBuffer();
+}
+
+function writeAdaptiveXml(appId) {
+  const dir = join(root, "apps", appId, "android", "app", "src", "main", "res", "mipmap-anydpi-v26");
+  mkdirSync(dir, { recursive: true });
+  const xml = `<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background"/>
+    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
+    <monochrome android:drawable="@mipmap/ic_launcher_monochrome"/>
+</adaptive-icon>
+`;
+  writeFileSync(join(dir, "ic_launcher.xml"), xml);
+  writeFileSync(join(dir, "ic_launcher_round.xml"), xml);
 }
 
 function writeLauncherBackground(appId, color) {
@@ -219,48 +267,71 @@ async function generateForApp(variant, riderPng) {
   const resRoot = join(root, "apps", variant.id, "android", "app", "src", "main", "res");
   const publicIconDir = join(root, "apps", variant.id, "public", "icons");
   const websiteIconDir = join(root, "apps", "website", "public", "icons", "apps");
+  const storeDir = join(root, "brands", "store");
 
   mkdirSync(publicIconDir, { recursive: true });
   mkdirSync(websiteIconDir, { recursive: true });
+  mkdirSync(storeDir, { recursive: true });
 
-  const master = await composeIcon(riderPng, 1024, variant);
-  await sharp(master).toFile(join(publicIconDir, "app-icon.png"));
-  await sharp(master).toFile(join(websiteIconDir, `${variant.id}.png`));
+  const preview = await composeLegacy(riderPng, 512, variant);
+  const squircle = await sharp(preview)
+    .composite([
+      {
+        input: Buffer.from(
+          `<svg width="512" height="512"><rect width="512" height="512" rx="112" fill="white"/></svg>`
+        ),
+        blend: "dest-in",
+      },
+    ])
+    .png()
+    .toBuffer();
 
-  for (const [folder, size] of Object.entries(densities)) {
+  await sharp(squircle).toFile(join(publicIconDir, "app-icon.png"));
+  await sharp(squircle).toFile(join(websiteIconDir, `${variant.id}.png`));
+  await sharp(preview).toFile(join(storeDir, `${variant.id}-512.png`));
+
+  for (const [folder, size] of Object.entries(adaptivePx)) {
     const outDir = join(resRoot, folder);
     mkdirSync(outDir, { recursive: true });
-
-    const launcher = await composeIcon(riderPng, size, variant);
-    const foreground = await foregroundMark(riderPng, size);
-
-    await sharp(launcher).toFile(join(outDir, "ic_launcher.png"));
-    await sharp(launcher).toFile(join(outDir, "ic_launcher_round.png"));
+    const foreground = await composeForeground(riderPng, size, variant);
+    const mono = await composeForeground(riderPng, size, variant, { monochrome: true });
     await sharp(foreground).toFile(join(outDir, "ic_launcher_foreground.png"));
+    await sharp(mono).toFile(join(outDir, "ic_launcher_monochrome.png"));
+  }
+
+  for (const [folder, size] of Object.entries(legacyPx)) {
+    const outDir = join(resRoot, folder);
+    mkdirSync(outDir, { recursive: true });
+    const launcher = await composeLegacy(riderPng, size, variant);
+    await sharp(launcher).toFile(join(outDir, "ic_launcher.png"));
+    await sharp(await roundMask(launcher, size)).toFile(join(outDir, "ic_launcher_round.png"));
   }
 
   writeLauncherBackground(variant.id, variant.background);
-  const label = variant.wordmark ? `"${variant.wordmark}" lockup` : "wordless rider";
-  console.log(`Generated icons for ${variant.id} (${variant.background} + ${variant.mark} ${label})`);
+  writeAdaptiveXml(variant.id);
+  console.log(`Generated safe-zone icons for ${variant.id} (badge ${variant.badge})`);
 }
 
-async function generateShowcase(coloredRiders) {
-  const gap = 48;
-  const cell = 420;
-  const width = gap * 3 + cell * 2;
-  const height = gap * 3 + cell * 2;
-  const positions = [
-    { id: "porter", x: gap, y: gap },
-    { id: "runr", x: gap * 2 + cell, y: gap },
-    { id: "vendr", x: gap, y: gap * 2 + cell },
-    { id: "staff", x: gap * 2 + cell, y: gap * 2 + cell },
-  ];
-
+async function generateMaskPreview(coloredRiders) {
+  const cell = 240;
+  const gap = 24;
+  const cols = variants.length;
+  const rows = 3;
+  const width = gap + cols * (cell + gap);
+  const height = gap + rows * (cell + gap) + 36;
   const tiles = [];
-  for (const item of positions) {
-    const variant = variants.find((v) => v.id === item.id);
-    const icon = await composeIcon(coloredRiders[item.id], cell, variant);
-    const rounded = await sharp(icon)
+
+  for (let i = 0; i < variants.length; i++) {
+    const variant = variants[i];
+    const icon = await composeLegacy(coloredRiders[variant.id], cell, variant);
+    const x = gap + i * (cell + gap);
+
+    tiles.push({ input: icon, left: x, top: gap });
+
+    const circle = await roundMask(icon, cell);
+    tiles.push({ input: circle, left: x, top: gap * 2 + cell });
+
+    const squircle = await sharp(icon)
       .composite([
         {
           input: Buffer.from(
@@ -271,25 +342,22 @@ async function generateShowcase(coloredRiders) {
       ])
       .png()
       .toBuffer();
-    tiles.push({ input: rounded, left: item.x, top: item.y });
+    tiles.push({ input: squircle, left: x, top: gap * 3 + cell * 2 });
   }
 
-  const bg = hexToRgb("#2A1478");
-  const out = join(root, "apps", "website", "public", "icons", "showcase.png");
+  const out = join(root, "brands", "icon-safe-preview.png");
   await sharp({
     create: {
       width,
       height,
       channels: 4,
-      background: { ...bg, alpha: 255 },
+      background: { r: 26, g: 18, b: 36, alpha: 255 },
     },
   })
     .composite(tiles)
     .png()
     .toFile(out);
-
-  await sharp(out).toFile(join(root, "brands", "showcase.png"));
-  console.log(`Generated showcase at ${out}`);
+  console.log(`Wrote mask preview ${out}`);
 }
 
 async function main() {
@@ -301,15 +369,18 @@ async function main() {
   await sharp(limeRider).toFile(join(root, "brands", "rider-mark-lime.png"));
   const purpleRider = await tintRider(limeRider, PURPLE_RGB);
   await sharp(purpleRider).toFile(join(root, "brands", "rider-mark-purple.png"));
+  const yellowRider = await tintRider(limeRider, YELLOW_RGB);
+  await sharp(yellowRider).toFile(join(root, "brands", "rider-mark-yellow.png"));
 
   const coloredRiders = {};
   for (const variant of variants) {
-    const rider = variant.mark === "purple" ? purpleRider : limeRider;
+    const rider =
+      variant.mark === "purple" ? purpleRider : variant.mark === "yellow" ? yellowRider : limeRider;
     coloredRiders[variant.id] = rider;
     await generateForApp(variant, rider);
   }
 
-  await generateShowcase(coloredRiders);
+  await generateMaskPreview(coloredRiders);
   console.log("Done.");
 }
 
