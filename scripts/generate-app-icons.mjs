@@ -2,9 +2,9 @@
 /**
  * Generate Android adaptive + legacy launcher icons.
  *
- * Adaptive icons are 108dp. Launchers only guarantee the center 66dp circle
- * (the safe zone). Rider + badge stay inside that circle so helmet, wheels,
- * and the letter are not cropped on Samsung/Pixel masks.
+ * Same rider + wordmark lockup as the original logos. Adaptive icons are
+ * 108dp and launchers only guarantee the center 66dp circle, so the lockup
+ * is scaled into that safe zone instead of being redesigned.
  *
  * Usage: npm run icons:generate
  */
@@ -28,15 +28,15 @@ const WHITE_RGB = { r: 255, g: 255, b: 255 };
 
 /** 66dp visible / 108dp adaptive canvas */
 const SAFE = 66 / 108;
-/** Rider box as a fraction of the safe circle — leaves room so wheels stay in. */
-const RIDER_IN_SAFE = 0.72;
+/** Original square lockup, inset so wheels + wordmark stay inside a circle. */
+const LOCKUP_IN_CIRCLE = 0.88;
 
 const variants = [
-  { id: "porter", badge: "P", background: PURPLE, mark: "lime" },
-  { id: "runr", badge: "R", background: PURPLE, mark: "lime" },
-  { id: "vendr", badge: "V", background: PURPLE, mark: "lime" },
-  { id: "staff", badge: "C", background: LIME, mark: "purple" },
-  { id: "fastfood", badge: "F", background: RED, mark: "yellow" },
+  { id: "porter", wordmark: "Porter", background: PURPLE, mark: "lime" },
+  { id: "runr", wordmark: "Runr", background: PURPLE, mark: "lime" },
+  { id: "vendr", wordmark: "Vendr", background: PURPLE, mark: "lime" },
+  { id: "staff", wordmark: null, background: LIME, mark: "purple" },
+  { id: "fastfood", wordmark: "FastFood", background: RED, mark: "yellow" },
 ];
 
 /** Adaptive foreground is 108dp (not 48dp). */
@@ -160,37 +160,42 @@ function fontFaceCss() {
     : "";
 }
 
-function badgeSvg(size, letter, fill, bg) {
-  const safe = size * SAFE;
-  const r = Math.max(8, Math.round(safe * 0.16));
-  const cx = size / 2;
-  const cy = size / 2 + safe * 0.28;
-  const fontSize = Math.round(r * 1.15);
+/** Original wordmark placement: baseline at 90%, type at 12.5% of the lockup square. */
+function wordmarkSvg(size, label, fill) {
+  const long = label.length > 6;
+  const fontSize = Math.max(8, Math.round(size * (long ? 0.1 : 0.125)));
+  const y = Math.round(size * 0.9);
   return Buffer.from(`<?xml version="1.0" encoding="UTF-8"?>
 <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
   <defs><style><![CDATA[
     ${fontFaceCss()}
-    text { font-family: "IconSans", "Inter", "Noto Sans", sans-serif; font-weight: 800; }
+    text { font-family: "IconSans", "Inter", "Noto Sans", sans-serif; font-weight: 700; }
   ]]></style></defs>
-  <circle cx="${cx}" cy="${cy}" r="${r}" fill="${bg}"/>
-  <text x="${cx}" y="${cy + fontSize * 0.36}" text-anchor="middle" font-size="${fontSize}" fill="${fill}">${letter}</text>
+  <text x="50%" y="${y}" text-anchor="middle" font-size="${fontSize}" fill="${fill}">${label}</text>
 </svg>`);
 }
 
-/** Transparent 108dp-style layer: rider + badge inside the 66dp safe circle. */
-async function composeForeground(riderPng, size, variant, { monochrome = false } = {}) {
-  const safe = size * SAFE;
-  const riderBox = Math.round(safe * RIDER_IN_SAFE);
-  const left = Math.round((size - riderBox) / 2);
-  const top = Math.round(size / 2 - safe * 0.38);
+/**
+ * Original lockup on a square of `size`: rider 72×58% at top 12%, wordmark at 90%.
+ * Staff is the wordless rider with 14% pad.
+ */
+async function composeLockup(riderPng, size, variant, { monochrome = false } = {}) {
+  const rider = monochrome ? await tintRider(riderPng, WHITE_RGB) : riderPng;
+  const fill = monochrome ? "#FFFFFF" : markHex(variant.mark);
+  const layers = [];
 
-  const color = monochrome ? WHITE_RGB : markRgb(variant.mark);
-  const tinted = await tintRider(riderPng, color);
-  const rider = await riderAt(tinted, riderBox, riderBox);
-
-  const badgeFill = monochrome ? "#FFFFFF" : variant.background;
-  const badgeBg = monochrome ? "#00000000" : markHex(variant.mark);
-  const badge = badgeSvg(size, variant.badge, badgeFill, badgeBg);
+  if (variant.wordmark) {
+    const markW = Math.round(size * 0.72);
+    const markH = Math.round(size * 0.58);
+    const top = Math.round(size * 0.12);
+    const left = Math.round((size - markW) / 2);
+    layers.push({ input: await riderAt(rider, markW, markH), left, top });
+    layers.push({ input: wordmarkSvg(size, variant.wordmark, fill), left: 0, top: 0 });
+  } else {
+    const pad = Math.round(size * 0.14);
+    const markSize = size - pad * 2;
+    layers.push({ input: await riderAt(rider, markSize, markSize), left: pad, top: pad });
+  }
 
   return sharp({
     create: {
@@ -200,16 +205,78 @@ async function composeForeground(riderPng, size, variant, { monochrome = false }
       background: { r: 0, g: 0, b: 0, alpha: 0 },
     },
   })
-    .composite([
-      { input: rider, left, top },
-      { input: badge, left: 0, top: 0 },
-    ])
+    .composite(layers)
     .png()
     .toBuffer();
 }
 
-/** What the user sees after a circular mask: bg + safe-zone art. */
-async function composeLegacy(riderPng, size, variant) {
+async function placeCentered(art, canvas) {
+  const meta = await sharp(art).metadata();
+  const left = Math.round((canvas - (meta.width || 0)) / 2);
+  const top = Math.round((canvas - (meta.height || 0)) / 2);
+  return sharp({
+    create: {
+      width: canvas,
+      height: canvas,
+      channels: 4,
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    },
+  })
+    .composite([{ input: art, left, top }])
+    .png()
+    .toBuffer();
+}
+
+/** Original lockup scaled to sit inside a circle of diameter `circle`. */
+async function fitLockupInCircle(riderPng, circle, variant, opts = {}) {
+  const lockupSize = Math.max(8, Math.round(circle * LOCKUP_IN_CIRCLE));
+  const lockup = await composeLockup(riderPng, lockupSize, variant, opts);
+  return placeCentered(lockup, circle);
+}
+
+/** Transparent 108dp-style layer: original lockup inside the 66dp safe circle. */
+async function composeForeground(riderPng, size, variant, opts = {}) {
+  const safe = Math.round(size * SAFE);
+  const fitted = await fitLockupInCircle(riderPng, safe, variant, opts);
+  return placeCentered(fitted, size);
+}
+
+/** Full-bleed original lockup (store / website / legacy square). */
+async function composeFull(riderPng, size, variant) {
+  const lockup = await composeLockup(riderPng, size, variant);
+  const bg = hexToRgb(variant.background);
+  return sharp({
+    create: {
+      width: size,
+      height: size,
+      channels: 4,
+      background: { ...bg, alpha: 255 },
+    },
+  })
+    .composite([{ input: lockup, left: 0, top: 0 }])
+    .png()
+    .toBuffer();
+}
+
+/** What a circular launcher shows: bg + lockup fitted to the visible circle. */
+async function composeCircleIcon(riderPng, size, variant) {
+  const fg = await fitLockupInCircle(riderPng, size, variant);
+  const bg = hexToRgb(variant.background);
+  return sharp({
+    create: {
+      width: size,
+      height: size,
+      channels: 4,
+      background: { ...bg, alpha: 255 },
+    },
+  })
+    .composite([{ input: fg, left: 0, top: 0 }])
+    .png()
+    .toBuffer();
+}
+
+/** Adaptive icon after a launcher mask of `size` (simulates the 108dp canvas). */
+async function composeAdaptivePreview(riderPng, size, variant) {
   const fg = await composeForeground(riderPng, size, variant);
   const bg = hexToRgb(variant.background);
   return sharp({
@@ -232,6 +299,20 @@ async function roundMask(png, size) {
       {
         input: Buffer.from(
           `<svg width="${size}" height="${size}"><circle cx="${r}" cy="${r}" r="${r}" fill="white"/></svg>`
+        ),
+        blend: "dest-in",
+      },
+    ])
+    .png()
+    .toBuffer();
+}
+
+async function squircleMask(png, size) {
+  return sharp(png)
+    .composite([
+      {
+        input: Buffer.from(
+          `<svg width="${size}" height="${size}"><rect width="${size}" height="${size}" rx="${Math.round(size * 0.22)}" fill="white"/></svg>`
         ),
         blend: "dest-in",
       },
@@ -273,22 +354,10 @@ async function generateForApp(variant, riderPng) {
   mkdirSync(websiteIconDir, { recursive: true });
   mkdirSync(storeDir, { recursive: true });
 
-  const preview = await composeLegacy(riderPng, 512, variant);
-  const squircle = await sharp(preview)
-    .composite([
-      {
-        input: Buffer.from(
-          `<svg width="512" height="512"><rect width="512" height="512" rx="112" fill="white"/></svg>`
-        ),
-        blend: "dest-in",
-      },
-    ])
-    .png()
-    .toBuffer();
-
-  await sharp(squircle).toFile(join(publicIconDir, "app-icon.png"));
-  await sharp(squircle).toFile(join(websiteIconDir, `${variant.id}.png`));
-  await sharp(preview).toFile(join(storeDir, `${variant.id}-512.png`));
+  const full = await composeFull(riderPng, 512, variant);
+  await sharp(await squircleMask(full, 512)).toFile(join(publicIconDir, "app-icon.png"));
+  await sharp(await squircleMask(full, 512)).toFile(join(websiteIconDir, `${variant.id}.png`));
+  await sharp(full).toFile(join(storeDir, `${variant.id}-512.png`));
 
   for (const [folder, size] of Object.entries(adaptivePx)) {
     const outDir = join(resRoot, folder);
@@ -302,14 +371,16 @@ async function generateForApp(variant, riderPng) {
   for (const [folder, size] of Object.entries(legacyPx)) {
     const outDir = join(resRoot, folder);
     mkdirSync(outDir, { recursive: true });
-    const launcher = await composeLegacy(riderPng, size, variant);
-    await sharp(launcher).toFile(join(outDir, "ic_launcher.png"));
-    await sharp(await roundMask(launcher, size)).toFile(join(outDir, "ic_launcher_round.png"));
+    const square = await composeFull(riderPng, size, variant);
+    const round = await composeCircleIcon(riderPng, size, variant);
+    await sharp(square).toFile(join(outDir, "ic_launcher.png"));
+    await sharp(await roundMask(round, size)).toFile(join(outDir, "ic_launcher_round.png"));
   }
 
   writeLauncherBackground(variant.id, variant.background);
   writeAdaptiveXml(variant.id);
-  console.log(`Generated safe-zone icons for ${variant.id} (badge ${variant.badge})`);
+  const label = variant.wordmark ? `"${variant.wordmark}" lockup` : "wordless rider";
+  console.log(`Generated original lockup icons for ${variant.id} (${label})`);
 }
 
 async function generateMaskPreview(coloredRiders) {
@@ -323,26 +394,12 @@ async function generateMaskPreview(coloredRiders) {
 
   for (let i = 0; i < variants.length; i++) {
     const variant = variants[i];
-    const icon = await composeLegacy(coloredRiders[variant.id], cell, variant);
     const x = gap + i * (cell + gap);
+    const adaptive = await composeAdaptivePreview(coloredRiders[variant.id], cell, variant);
 
-    tiles.push({ input: icon, left: x, top: gap });
-
-    const circle = await roundMask(icon, cell);
-    tiles.push({ input: circle, left: x, top: gap * 2 + cell });
-
-    const squircle = await sharp(icon)
-      .composite([
-        {
-          input: Buffer.from(
-            `<svg width="${cell}" height="${cell}"><rect width="${cell}" height="${cell}" rx="${Math.round(cell * 0.22)}" fill="white"/></svg>`
-          ),
-          blend: "dest-in",
-        },
-      ])
-      .png()
-      .toBuffer();
-    tiles.push({ input: squircle, left: x, top: gap * 3 + cell * 2 });
+    tiles.push({ input: adaptive, left: x, top: gap });
+    tiles.push({ input: await roundMask(adaptive, cell), left: x, top: gap * 2 + cell });
+    tiles.push({ input: await squircleMask(adaptive, cell), left: x, top: gap * 3 + cell * 2 });
   }
 
   const out = join(root, "brands", "icon-safe-preview.png");
