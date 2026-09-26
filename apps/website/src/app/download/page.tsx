@@ -8,10 +8,10 @@ export default function DownloadPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#7048F8]">
           Official downloads
         </p>
-        <h1 className="mt-3 text-4xl font-extrabold tracking-tight">Get the RUNR apps</h1>
+        <h1 className="mt-3 text-4xl font-extrabold tracking-tight">Get the Porter apps</h1>
         <p className="mt-3 max-w-2xl text-[var(--muted)]">
-          This website is the place to install PORTER, RUNR, VENDR, and STAFF. Each Android
-          APK includes the full app. Staff work from the STAFF app or this site. Other
+          This website is the place to install Porter, Porter Runner, Porter Vendor, and Porter Command. Each Android
+          APK includes the full app. Ops work from Porter Command or this site. Other
           accounts sign in here for billing, profile, preferences, and ratings.
         </p>
 
@@ -24,8 +24,8 @@ export default function DownloadPage() {
         <div className="mx-auto mt-10 max-w-2xl rounded-2xl border border-[#E8E0D4] bg-white p-5 text-sm text-[var(--muted)]">
           <p>
             <strong className="text-[var(--foreground)]">Android only.</strong> Uninstall any older
-            build first so the new purple/green launcher icons appear. Staff work in the STAFF
-            app or Staff Portal. PORTER, RUNR, and VENDR accounts use this site for settings only.
+            build first so the new purple/green launcher icons appear. Ops work in the Porter Command
+            app or Porter Command Portal. Porter, Porter Runner, and Porter Vendor accounts use this site for settings only.
           </p>
         </div>
       </div>

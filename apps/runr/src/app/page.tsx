@@ -105,7 +105,7 @@ export default function RunrMapPage() {
           title: b.name,
           subtitle:
             coverage.gap > 0
-              ? `${coverage.gap} RUNR${coverage.gap > 1 ? "s" : ""} needed`
+              ? `${coverage.gap} Runner${coverage.gap > 1 ? "s" : ""} needed`
               : "FULL",
           onClick: () => setSelectedBusinessId(b.id),
         };
@@ -319,7 +319,7 @@ export default function RunrMapPage() {
             <div>
               <h3 className="text-base font-extrabold">I&apos;m covering {selectedBusiness.name}</h3>
               <p className="text-sm text-[var(--muted)]">
-                Choose your window. The marketplace matches PORTER orders to this RUN — you don&apos;t wait on random pings.
+                Choose your window. The marketplace matches Porter orders to this RUN — you don&apos;t wait on random pings.
               </p>
             </div>
 

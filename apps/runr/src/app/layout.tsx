@@ -8,10 +8,10 @@ import { RunrLayoutClient } from "./RunrLayoutClient";
 const font = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "RUNR — Pick it up. Run it there.",
+  title: "Porter Runner — Pick it up. Run it there.",
   description:
-    "Choose your business, choose your time, deliver and earn on the RUNR marketplace.",
-  applicationName: "RUNR",
+    "Choose your business, choose your time, deliver and earn on the Porter marketplace.",
+  applicationName: "Porter Runner",
 };
 
 export const viewport: Viewport = {

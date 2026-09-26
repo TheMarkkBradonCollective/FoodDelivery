@@ -13,8 +13,8 @@ const deliverySteps = [
   { key: "new", label: "Order placed" },
   { key: "accepted", label: "Business accepted" },
   { key: "preparing", label: "Preparing" },
-  { key: "ready", label: "Ready for RUNR" },
-  { key: "runr_assigned", label: "RUNR assigned" },
+  { key: "ready", label: "Ready for Runner" },
+  { key: "runr_assigned", label: "Runner assigned" },
   { key: "picked_up", label: "Picked up" },
   { key: "delivering", label: "On the way" },
   { key: "delivered", label: "Received" },
@@ -127,7 +127,7 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
           <p className="mt-5 text-sm text-[var(--muted)]">
             {order.fulfillment === "pickup"
               ? `Collect at the business. Estimated ready in ${business.etaMinutes} minutes.`
-              : `Watch your RUNR on the map. Estimated ${business.etaMinutes} minutes after pickup.`}
+              : `Watch your Runner on the map. Estimated ${business.etaMinutes} minutes after pickup.`}
           </p>
 
           {canConfirmReceive ? (

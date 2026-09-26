@@ -245,7 +245,7 @@ export default function PorterDiscoverPage() {
       <div className="mt-6 flex items-end justify-between">
         <div>
           <h2 className="text-base font-extrabold text-[var(--foreground)]">Nearby businesses</h2>
-          <p className="text-xs text-[var(--muted)]">Fulfilled by VENDR · moved by RUNRs</p>
+          <p className="text-xs text-[var(--muted)]">Fulfilled by Porter Vendor · moved by Runners</p>
         </div>
       </div>
       <div className="mt-3 space-y-3">

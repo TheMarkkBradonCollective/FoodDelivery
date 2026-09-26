@@ -10,12 +10,12 @@ export default function CustomerActivityPage() {
 
   return (
     <div>
-      <ScreenHeader title="Activity" subtitle="Order updates and alerts" eyebrow="PORTER" />
+      <ScreenHeader title="Activity" subtitle="Order updates and alerts" eyebrow="Porter" />
       <div className="space-y-3 px-5 pb-8 lg:mx-auto lg:max-w-2xl lg:px-8">
         {notifications.length === 0 ? (
           <EmptyState
             title="No activity yet"
-            description="Place an order and VENDR or RUNR updates will show up here."
+            description="Place an order and Porter Vendor or Runner updates will show up here."
             action={
               <Link href="/" className="inline-flex h-11 items-center rounded-full bg-purple px-5 text-sm font-bold text-white">
                 Discover businesses

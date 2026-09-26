@@ -8,7 +8,7 @@ export default function StaffAlertsPage() {
 
   return (
     <div className="px-5 pb-8 pt-4 lg:p-8">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">STAFF</p>
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">Porter Command</p>
       <h1 className="mt-0.5 text-[1.375rem] font-extrabold">Alerts</h1>
       <p className="mt-1 text-sm text-[var(--muted)]">Order and coverage pings</p>
       <div className="mt-4 space-y-2">

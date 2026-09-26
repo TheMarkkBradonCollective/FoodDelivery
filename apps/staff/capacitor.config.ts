@@ -2,7 +2,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
   appId: "com.runr.staff",
-  appName: "STAFF",
+  appName: "Porter Command",
   webDir: "out",
   server: { androidScheme: "https" },
   android: { allowMixedContent: true },

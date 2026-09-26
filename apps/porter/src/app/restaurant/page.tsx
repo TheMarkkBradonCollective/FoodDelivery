@@ -11,7 +11,7 @@ function RestaurantFromQuery() {
 
 export default function RestaurantPage() {
   return (
-    <Suspense fallback={<div className="p-6 text-sm text-[var(--muted)]">Loading kitchen…</div>}>
+    <Suspense fallback={<div className="p-6 text-sm text-[var(--muted)]">Loading vendor…</div>}>
       <RestaurantFromQuery />
     </Suspense>
   );

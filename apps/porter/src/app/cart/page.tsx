@@ -93,7 +93,7 @@ export default function CartPage() {
           <ArrowLeft size={18} />
         </IconButton>
         <div>
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">PORTER</p>
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">Porter</p>
           <h1 className="text-[1.375rem] font-extrabold text-[var(--foreground)]">Cart</h1>
         </div>
       </div>
@@ -128,7 +128,7 @@ export default function CartPage() {
         />
         {fulfillment === "pickup" ? (
           <p className="mt-1 text-xs text-[var(--muted)]">
-            Collect at {business?.address ?? "the business"}. No RUNR needed.
+            Collect at {business?.address ?? "the business"}. No Runner needed.
           </p>
         ) : null}
         <p className="field-label mt-2.5">When</p>

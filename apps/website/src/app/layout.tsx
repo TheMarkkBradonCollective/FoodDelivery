@@ -9,12 +9,12 @@ import { MarketplaceSync } from "@runr/shared/components/providers/MarketplaceSy
 const font = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "RUNR Platform — Pick Your Place. Run Your Time.",
+  title: "Porter — Pick Your Place. Run Your Time.",
   description:
-    "RUNR is a coverage-driven delivery marketplace. Download PORTER, RUNR, VENDR, or STAFF. Staff work from the STAFF app or this site.",
+    "Porter is a coverage-driven delivery marketplace. Download Porter, Porter Runner, Porter Vendor, or Porter Command. Ops work from Porter Command or this site.",
   openGraph: {
-    title: "RUNR Platform",
-    description: "Three apps. One marketplace. PORTER · RUNR · VENDR",
+    title: "Porter",
+    description: "Four apps. One marketplace. Porter · Porter Runner · Porter Vendor",
   },
 };
 

@@ -54,12 +54,12 @@ export default function BusinessOperationsPage() {
 
   return (
     <div className="px-5 pb-8 pt-4">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">VENDR</p>
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">Porter Vendor</p>
       <h1 className="mt-0.5 text-[1.375rem] font-extrabold tracking-tight text-[var(--foreground)]">
         {business.name}
       </h1>
       <JobLoop app="vendr" className="mt-1" />
-      <p className="mt-1 text-sm text-[var(--muted)]">Needed · Covered · Gap. PORTER orders in. RUNRs fill windows.</p>
+      <p className="mt-1 text-sm text-[var(--muted)]">Needed · Covered · Gap. Porter orders in. Runners fill windows.</p>
 
       <div className="mt-3">
         <CatalogPreviewBanner />
@@ -97,7 +97,7 @@ export default function BusinessOperationsPage() {
           {liveOrders.length === 0 ? (
             <EmptyState
               title="No orders yet"
-              description="PORTER orders appear here when customers place them."
+              description="Porter orders appear here when customers place them."
             />
           ) : (
             <div className="space-y-2">

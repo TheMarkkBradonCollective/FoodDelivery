@@ -64,9 +64,9 @@ export function getCoverageStatusLabel(status: string, gap: number): string {
     case "full":
       return "FULL";
     case "low":
-      return gap === 1 ? "1 RUNR NEEDED" : `${gap} RUNRS NEEDED`;
+      return gap === 1 ? "1 RUNNER NEEDED" : `${gap} RUNNERS NEEDED`;
     case "gap":
-      return gap === 1 ? "1 RUNR GAP" : `${gap} RUNR GAP`;
+      return gap === 1 ? "1 RUNNER GAP" : `${gap} RUNNER GAP`;
     default:
       return status.toUpperCase();
   }

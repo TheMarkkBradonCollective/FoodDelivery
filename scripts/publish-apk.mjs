@@ -19,25 +19,25 @@ const MBC_PUBLIC_BASE = 'https://themarkkbradoncollective.github.io/main/apks';
 const apps = [
   {
     id: 'porter',
-    name: 'PORTER',
+    name: 'Porter',
     packageId: 'com.runr.porter',
     tagline: 'Get what you need.',
   },
   {
     id: 'runr',
-    name: 'RUNR',
+    name: 'Porter Runner',
     packageId: 'com.runr.runr',
     tagline: 'Pick it up. Run it there.',
   },
   {
     id: 'vendr',
-    name: 'VENDR',
+    name: 'Porter Vendor',
     packageId: 'com.runr.vendr',
     tagline: 'Sell. Manage. Grow.',
   },
   {
     id: 'staff',
-    name: 'STAFF',
+    name: 'Porter Command',
     packageId: 'com.runr.staff',
     tagline: 'Platform management.',
   },
@@ -142,7 +142,7 @@ const archives = published
   }));
 
 const versionJson = {
-  name: 'RUNR Platform',
+  name: 'Porter',
   app: primary.name,
   version: primary.version,
   updatedAt: new Date().toISOString(),

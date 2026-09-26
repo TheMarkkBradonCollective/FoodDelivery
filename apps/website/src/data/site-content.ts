@@ -24,11 +24,11 @@ const BRAND_PLUM = "#2A1478";
 export const apps: AppDownload[] = [
   {
     id: "porter",
-    name: "PORTER",
+    name: "Porter",
     iconUrl: "/icons/apps/porter.png",
     tagline: "Get what you need.",
     description:
-      "Discover nearby businesses, order food and products, track deliveries live, and see your RUNR on the map.",
+      "Discover nearby businesses, order food and products, track deliveries live, and see your Runner on the map.",
     flow: "Discover → Order → Track → Receive",
     packageId: "com.runr.porter",
     color: BRAND_PURPLE,
@@ -39,7 +39,7 @@ export const apps: AppDownload[] = [
   },
   {
     id: "runr",
-    name: "RUNR",
+    name: "Porter Runner",
     iconUrl: "/icons/apps/runr.png",
     tagline: "Pick it up. Run it there.",
     description:
@@ -54,11 +54,11 @@ export const apps: AppDownload[] = [
   },
   {
     id: "vendr",
-    name: "VENDR",
+    name: "Porter Vendor",
     iconUrl: "/icons/apps/vendr.png",
     tagline: "Sell. Manage. Grow.",
     description:
-      "Run your business on the PORTER marketplace. Manage orders, set RUNR coverage, and monitor live deliveries.",
+      "Run your business on the Porter marketplace. Manage orders, set Runner coverage, and monitor live deliveries.",
     flow: "Sell → Prepare → Dispatch → Fulfill → Grow",
     packageId: "com.runr.vendr",
     color: BRAND_PURPLE,
@@ -69,11 +69,11 @@ export const apps: AppDownload[] = [
   },
   {
     id: "staff",
-    name: "STAFF",
+    name: "Porter Command",
     iconUrl: "/icons/apps/staff.png",
     tagline: "Run the marketplace.",
     description:
-      "Advance orders, set coverage, look up users, and chat from the phone. Same ops as the desktop Staff Portal.",
+      "Advance orders, set coverage, look up users, and chat from the phone. Same ops as the desktop Porter Command Portal.",
     flow: "Status → Orders → Coverage → Users",
     packageId: "com.runr.staff",
     color: BRAND_PLUM,
@@ -87,19 +87,19 @@ export const apps: AppDownload[] = [
 export const howItWorks = [
   {
     title: "Coverage-driven, not order-driven",
-    body: "Traditional platforms send drivers hunting for random orders. RUNR lets businesses define how many delivery workers they need — and lets RUNRs choose where and when they work.",
+    body: "Traditional platforms send drivers hunting for random orders. Runner lets businesses define how many delivery workers they need — and lets Runners choose where and when they work.",
   },
   {
     title: "Businesses set capacity",
-    body: "Through VENDR, businesses say \"I need 6 RUNRs between 5–8 PM\" — not \"send me a driver.\" Coverage gaps appear in real time on the map.",
+    body: "Through Porter Vendor, businesses say \"I need 6 Runners between 5–8 PM\" — not \"send me a driver.\" Coverage gaps appear in real time on the map.",
   },
   {
-    title: "RUNRs choose their RUN",
+    title: "Runners choose their run",
     body: "Delivery workers pick a business and a custom time window — like 5:37 PM to 8:12 PM. The platform handles matching and dispatch.",
   },
   {
     title: "Customers order normally",
-    body: "PORTER works like the delivery apps you know: discover, browse menus, order, pay, and track — with live RUNR location on the map.",
+    body: "Porter works like the delivery apps you know: discover, browse menus, order, pay, and track — with live Runner location on the map.",
   },
 ];
 
@@ -110,7 +110,7 @@ export const companyValues = [
   },
   {
     title: "Fair earnings",
-    body: "RUNRs are paid per completed delivery — base pay, distance, tips, and incentives. No false guaranteed income promises.",
+    body: "Runners are paid per completed delivery — base pay, distance, tips, and incentives. No false guaranteed income promises.",
   },
   {
     title: "Business control",
@@ -118,6 +118,6 @@ export const companyValues = [
   },
   {
     title: "One network",
-    body: "PORTER, RUNR, and VENDR connect to the same marketplace. Orders, coverage, and deliveries stay in sync.",
+    body: "Porter, Porter Runner, and Porter Vendor connect to the same marketplace. Orders, coverage, and deliveries stay in sync.",
   },
 ];

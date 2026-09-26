@@ -9,7 +9,7 @@ export default function RunrActivityPage() {
 
   return (
     <div>
-      <ScreenHeader eyebrow="RUNR" title="Activity" subtitle="Notifications and delivery updates" />
+      <ScreenHeader eyebrow="Porter Runner" title="Activity" subtitle="Notifications and delivery updates" />
       <div className="space-y-2 px-5 pb-8">
         {notifications.length === 0 ? (
           <EmptyState

@@ -8,10 +8,10 @@ import { VendrLayoutClient } from "./VendrLayoutClient";
 const font = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "VENDR — Sell. Manage. Grow.",
+  title: "Porter Vendor — Sell. Manage. Grow.",
   description:
-    "Run your business on the PORTER marketplace — orders, coverage, deliveries, and growth.",
-  applicationName: "VENDR",
+    "Run your business on the Porter marketplace — orders, coverage, deliveries, and growth.",
+  applicationName: "Porter Vendor",
 };
 
 export const viewport: Viewport = {

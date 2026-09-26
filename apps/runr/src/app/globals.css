@@ -2,7 +2,7 @@
 @import "@runr/shared/styles/globals.css";
 @source "../../../packages/shared/src/**/*.{ts,tsx}";
 
-/* RUNR — cream map chrome, purple brand */
+/* Porter Runner — cream map chrome, purple brand */
 :root {
   --color-runr-primary: #7048f8;
   --color-runr-primary-hover: #5c36e0;

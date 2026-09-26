@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">VENDR</string>
-    <string name="title_activity_main">VENDR</string>
+    <string name="app_name">Porter Vendor</string>
+    <string name="title_activity_main">Porter Vendor</string>
     <string name="package_name">com.runr.vendr</string>
     <string name="custom_url_scheme">com.runr.vendr</string>
 </resources>

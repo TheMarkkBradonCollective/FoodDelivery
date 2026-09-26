@@ -44,7 +44,7 @@ const WELCOME: Record<
     pills: APP_COPY.vendr.flow.slice(0, 4).map((label, i) => ({ label, lime: i % 2 === 0 })),
   },
   staff: {
-    brand: "STAFF",
+    brand: APP_COPY.staff.shortName,
     line: "Run the",
     highlight: "marketplace.",
     pills: APP_COPY.staff.flow.map((label, i) => ({ label, lime: i % 2 === 0 })),
@@ -74,7 +74,7 @@ function friendlyAuthError(message: string) {
 }
 
 export function SignInPrompt({ role }: { role: UserRole }) {
-  const appName = role === "staff" ? "Staff Portal" : getAppForRole(role);
+  const appName = role === "staff" ? "Porter Command Portal" : getAppForRole(role);
   const copy = WELCOME[role];
   const setUser = useAppStore((s) => s.setUser);
   const showToast = useAppStore((s) => s.showToast);
@@ -216,7 +216,7 @@ export function SignInPrompt({ role }: { role: UserRole }) {
             {mode === "signin" && (
               <>
                 <p className="signin-title">Sign in to continue</p>
-                <p className="signin-copy">Use your RUNR account. Marketplace data loads after sign-in.</p>
+                <p className="signin-copy">Use your Porter account. Marketplace data loads after sign-in.</p>
                 <form onSubmit={handleSignIn} className="signin-form">
                   <label className="field-label" htmlFor="auth-email">
                     Email
@@ -277,7 +277,7 @@ export function SignInPrompt({ role }: { role: UserRole }) {
             {mode === "signup" && (
               <>
                 <p className="signin-title">Create your {appName} account</p>
-                <p className="signin-copy">Same RUNR login, scoped to this app. You will stay signed in on this device.</p>
+                <p className="signin-copy">Same Runner login, scoped to this app. You will stay signed in on this device.</p>
                 <form onSubmit={handleSignUp} className="signin-form">
                   <label className="field-label" htmlFor="signup-name">
                     Name
@@ -340,7 +340,7 @@ export function SignInPrompt({ role }: { role: UserRole }) {
             {mode === "forgot" && (
               <>
                 <p className="signin-title">Reset your password</p>
-                <p className="signin-copy">We will email a reset link if this address has a RUNR account.</p>
+                <p className="signin-copy">We will email a reset link if this address has a Porter account.</p>
                 <form onSubmit={handleForgot} className="signin-form">
                   <label className="field-label" htmlFor="reset-email">
                     Email

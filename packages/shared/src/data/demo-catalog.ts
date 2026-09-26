@@ -214,7 +214,7 @@ export const DEMO_NOTIFICATIONS: Notification[] = [
   {
     id: "n1000000-0000-4000-8000-000000000001",
     title: "Coverage gap",
-    body: "Golden Gate Burgers needs 3 RUNRs right now.",
+    body: "Golden Gate Burgers needs 3 Runners right now.",
     type: "coverage",
     read: false,
     createdAt: now(),

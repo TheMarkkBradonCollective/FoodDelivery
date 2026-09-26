@@ -33,8 +33,8 @@ export function CoverageBadge({
       ? "FULL"
       : status === "gap" || status === "low"
         ? gap === 1
-          ? "1 RUNR NEEDED"
-          : `${gap} RUNRS NEEDED`
+          ? "1 RUNNER NEEDED"
+          : `${gap} RUNNERS NEEDED`
         : statusLabels[status];
 
   return (

@@ -13,12 +13,12 @@ export default function CustomerOrdersPage() {
 
   return (
     <div>
-      <ScreenHeader title="Orders" subtitle="Track, receive, and keep receipts" eyebrow="PORTER" />
+      <ScreenHeader title="Orders" subtitle="Track, receive, and keep receipts" eyebrow="Porter" />
       <div className="space-y-3 px-5 pb-8 lg:mx-auto lg:max-w-2xl lg:px-8">
         {orders.length === 0 ? (
           <EmptyState
             title="No orders yet"
-            description="Add items from Discover, check out, then follow your RUNR here."
+            description="Add items from Discover, check out, then follow your Runner here."
             action={
               <Link href="/" className="inline-flex h-11 items-center rounded-full bg-purple px-5 text-sm font-bold text-white">
                 Start an order

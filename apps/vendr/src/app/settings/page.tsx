@@ -20,7 +20,7 @@ export default function BusinessSettingsPage() {
 
   return (
     <div className="px-5 pb-8 pt-4 lg:mx-auto lg:max-w-xl">
-      <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">VENDR</p>
+      <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">Porter Vendor</p>
       <h1 className="mt-0.5 text-[1.375rem] font-extrabold text-[var(--foreground)]">Settings</h1>
       <JobLoop app="vendr" className="mt-1" />
 
@@ -36,13 +36,13 @@ export default function BusinessSettingsPage() {
         <SettingsRow
           icon={<Store size={18} />}
           title="Operations"
-          subtitle="Coverage, orders, and RUNRs"
+          subtitle="Coverage, orders, and Runners"
           onClick={() => router.push("/")}
         />
         <SettingsRow
           icon={<UtensilsCrossed size={18} />}
           title="Catalog"
-          subtitle="Products PORTER customers browse"
+          subtitle="Products Porter customers browse"
           onClick={() => router.push("/catalog")}
         />
         <SettingsRow
@@ -58,12 +58,12 @@ export default function BusinessSettingsPage() {
           icon={<Tag size={18} />}
           title="Promotions"
           subtitle="RUNR5 and PORTER10 run on the network"
-          onClick={() => showToast("Promos are live for PORTER checkout")}
+          onClick={() => showToast("Promos are live for Porter checkout")}
         />
         <SettingsRow
           icon={<DollarSign size={18} />}
           title="Payouts"
-          subtitle="Sales settle to this VENDR account"
+          subtitle="Sales settle to this Porter Vendor account"
           onClick={() => showToast("Payouts use the signed-in business account")}
         />
         <SettingsRow
@@ -74,7 +74,7 @@ export default function BusinessSettingsPage() {
       </div>
 
       <BottomSheet open={hoursOpen} onClose={() => setHoursOpen(false)} title="Business hours">
-        <p className="text-sm text-[var(--muted)]">Shown on PORTER when customers open this business.</p>
+        <p className="text-sm text-[var(--muted)]">Shown on Porter when customers open this business.</p>
         <input className="input-brand mt-4" value={hours} onChange={(e) => setHours(e.target.value)} />
         <button
           type="button"
@@ -99,7 +99,7 @@ export default function BusinessSettingsPage() {
 
       <ConfirmDialog
         open={confirmOut}
-        title="Sign out of VENDR?"
+        title="Sign out of Porter Vendor?"
         description="You will need your business email and password to get back in."
         confirmLabel="Sign out"
         destructive

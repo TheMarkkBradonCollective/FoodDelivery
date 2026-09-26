@@ -2,7 +2,7 @@
 @import "@runr/shared/styles/globals.css";
 @source "../../../packages/shared/src/**/*.{ts,tsx}";
 
-/* STAFF — deep plum console with lime highlights */
+/* Porter Command — deep plum console with lime highlights */
 :root {
   --color-runr-primary: #7048f8;
   --color-runr-primary-hover: #8b6bff;

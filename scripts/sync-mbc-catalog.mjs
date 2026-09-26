@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Publish RUNR platform APKs to the public MBC App Store repo (TheMarkkBradonCollective/main).
+ * Publish Porter platform APKs to the public MBC App Store repo (TheMarkkBradonCollective/main).
  *
  * Requires a GitHub token with push access to main:
  *   GITHUB_TOKEN=ghp_... npm run sync:mbc-catalog
@@ -18,9 +18,9 @@ const MAIN_REPO = 'TheMarkkBradonCollective/main';
 const MBC_PUBLIC_BASE = 'https://themarkkbradoncollective.github.io/main/apks';
 
 const apps = [
-  { id: 'porter', name: 'PORTER', tagline: 'Get what you need.', packageId: 'com.runr.porter' },
-  { id: 'runr', name: 'RUNR', tagline: 'Pick it up. Run it there.', packageId: 'com.runr.runr' },
-  { id: 'vendr', name: 'VENDR', tagline: 'Sell. Manage. Grow.', packageId: 'com.runr.vendr' },
+  { id: 'porter', name: 'Porter', tagline: 'Get what you need.', packageId: 'com.runr.porter' },
+  { id: 'runr', name: 'Porter Runner', tagline: 'Pick it up. Run it there.', packageId: 'com.runr.runr' },
+  { id: 'vendr', name: 'Porter Vendor', tagline: 'Sell. Manage. Grow.', packageId: 'com.runr.vendr' },
 ];
 
 function sha256File(filePath) {
@@ -137,7 +137,7 @@ try {
   writeFileSync(join(repoDir, 'public', 'apk-catalog.json'), `${JSON.stringify(catalog, null, 2)}\n`);
 
   run('git add apk-catalog.json public/apk-catalog.json apks icons/apps/porter.png icons/apps/runr.png icons/apps/vendr.png', repoDir);
-  run(`git commit -m "Publish RUNR platform v${version} APKs to public catalog"`, repoDir);
+  run(`git commit -m "Publish Porter platform v${version} APKs to public catalog"`, repoDir);
   run('git push origin main', repoDir);
 
   console.log('\nPublished to MBC App Store. Verify:');

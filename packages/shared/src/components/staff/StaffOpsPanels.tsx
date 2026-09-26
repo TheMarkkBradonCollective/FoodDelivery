@@ -82,7 +82,7 @@ export function StaffCoveragePanel() {
   const { businesses, updateBusinessCapacity } = useAppStore();
 
   if (businesses.length === 0) {
-    return <p className="text-sm text-[var(--muted)]">No kitchens yet.</p>;
+    return <p className="text-sm text-[var(--muted)]">No vendors yet.</p>;
   }
 
   return (
@@ -95,7 +95,7 @@ export function StaffCoveragePanel() {
               <div>
                 <p className="font-semibold">{b.name}</p>
                 <p className="text-xs text-[var(--muted)]">
-                  {b.city} · {c.scheduledRunrs}/{c.maxRunrs} RUNRs
+                  {b.city} · {c.scheduledRunrs}/{c.maxRunrs} Runners
                   {c.gap > 0 ? ` · ${c.gap} needed` : " · full"}
                 </p>
               </div>

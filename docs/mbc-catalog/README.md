@@ -1,6 +1,6 @@
 # MBC App Store catalog setup
 
-The RUNR platform (`porter`, `runr`, `vendr`) must be registered in `TheMarkkBradonCollective/main` before the apps appear in the MBC App Store.
+The Porter platform (`porter`, `runr`, `vendr`) must be registered in `TheMarkkBradonCollective/main` before the apps appear in the MBC App Store.
 
 ## 1. Add catalog entries
 
@@ -28,7 +28,7 @@ npm install
 GITHUB_TOKEN=... npm run sync-app-icons
 GITHUB_TOKEN=... npm run sync-apk-catalog
 git add My-Projects.json scripts/sync-apk-catalog.mjs icons/apps/porter.png icons/apps/runr.png icons/apps/vendr.png apk-catalog.json public/apk-catalog.json
-git commit -m "Add RUNR platform apps to MBC App Store catalog"
+git commit -m "Add Porter platform apps to MBC App Store catalog"
 git push
 ```
 

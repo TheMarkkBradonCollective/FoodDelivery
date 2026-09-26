@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Publish RUNR platform APKs to GitHub Releases (one tag per app version).
+# Publish Porter platform APKs to GitHub Releases (one tag per app version).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 REPO="TheMarkkBradonCollective/Runr"
@@ -24,10 +24,10 @@ publish_app() {
   local apk="release/${app}-v${version}.apk"
   local title
   case "$app" in
-    porter) title="PORTER v${version}" ;;
-    runr) title="RUNR v${version}" ;;
-    vendr) title="VENDR v${version}" ;;
-    staff) title="STAFF v${version}" ;;
+    porter) title="Porter v${version}" ;;
+    runr) title="Porter Runner v${version}" ;;
+    vendr) title="Porter Vendor v${version}" ;;
+    staff) title="Porter Command v${version}" ;;
     *) title="${app} v${version}" ;;
   esac
 
@@ -64,8 +64,8 @@ fi
 
 gh release create "$platform_tag" \
   --repo "$REPO" \
-  --title "RUNR Platform v${platform_version}" \
-  --notes "RUNR Platform v${platform_version} — signed Capacitor APKs for PORTER, RUNR, VENDR, and STAFF." \
+  --title "Porter v${platform_version}" \
+  --notes "Porter v${platform_version} — signed Capacitor APKs for Porter, Porter Runner, Porter Vendor, and Porter Command." \
   release/porter-v"${platform_version}".apk#porter-v"${platform_version}".apk \
   release/runr-v"${platform_version}".apk#runr-v"${platform_version}".apk \
   release/vendr-v"${platform_version}".apk#vendr-v"${platform_version}".apk \

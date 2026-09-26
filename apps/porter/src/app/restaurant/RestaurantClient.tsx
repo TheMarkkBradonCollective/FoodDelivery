@@ -72,7 +72,7 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
             <ArrowLeft size={18} />
           </IconButton>
           <IconButton
-            label={saved ? "Remove favorite" : "Save kitchen"}
+            label={saved ? "Remove favorite" : "Save business"}
             onClick={() => toggleFavorite(business.id)}
           >
             <Heart size={18} className={saved ? "fill-purple text-purple" : ""} />
@@ -94,7 +94,7 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
 
         {menuItems.length === 0 ? (
           <div className="mt-8">
-            <EmptyState title="No menu items yet" description="This kitchen hasn’t published a menu yet." />
+            <EmptyState title="No menu items yet" description="This business hasn’t published a menu yet." />
           </div>
         ) : (
           Object.entries(groupedMenu).map(([category, items]) => (

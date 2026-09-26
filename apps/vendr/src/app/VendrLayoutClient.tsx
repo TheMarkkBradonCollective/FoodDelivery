@@ -6,7 +6,7 @@ import { LayoutDashboard, ListOrdered, Map, Settings, Users } from "lucide-react
 export const vendrNav = [
   { href: "/", label: "Operations", icon: LayoutDashboard },
   { href: "/orders", label: "Orders", icon: ListOrdered },
-  { href: "/runrs", label: "RUNRs", icon: Users },
+  { href: "/runrs", label: "Runners", icon: Users },
   { href: "/coverage", label: "Coverage", icon: Map },
   { href: "/settings", label: "Settings", icon: Settings },
 ];

@@ -13,7 +13,7 @@ export default function CustomerFavoritesPage() {
 
   return (
     <div>
-      <ScreenHeader title="Favorites" subtitle="Businesses you saved" eyebrow="PORTER" />
+      <ScreenHeader title="Favorites" subtitle="Businesses you saved" eyebrow="Porter" />
       <div className="px-5 pb-8 lg:px-8">
         {saved.length === 0 ? (
           <EmptyState

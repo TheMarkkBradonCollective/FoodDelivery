@@ -79,7 +79,7 @@ export function StaffConsole() {
 
       <div className="mx-auto max-w-6xl px-6 py-8">
         <p className="mb-4 text-sm text-zinc-400">
-          Same tools as the STAFF phone app. Only staff accounts can work here.
+          Same tools as Porter Command. Only staff accounts can work here.
         </p>
         <nav className="flex flex-wrap gap-2">
           {tabs.map(({ id, label, icon: Icon }) => (
@@ -114,7 +114,7 @@ export function StaffConsole() {
                     {gaps.map(({ business, coverage }) => (
                       <li key={business.id}>
                         <button type="button" className="text-[#A0F878] hover:underline" onClick={() => setTab("coverage")}>
-                          {business.name} needs {coverage.gap} RUNR{coverage.gap === 1 ? "" : "s"}
+                          {business.name} needs {coverage.gap} Runner{coverage.gap === 1 ? "" : "s"}
                         </button>
                       </li>
                     ))}
@@ -133,14 +133,14 @@ export function StaffConsole() {
 
           {tab === "orders" && (
             <Panel title="Order operations">
-              <p className="mb-4 text-sm text-zinc-400">Advance or cancel marketplace orders. Same actions as STAFF on phone.</p>
+              <p className="mb-4 text-sm text-zinc-400">Advance or cancel marketplace orders. Same actions as Porter Command on phone.</p>
               <StaffOrdersPanel />
             </Panel>
           )}
 
           {tab === "coverage" && (
             <Panel title="Coverage capacity">
-              <p className="mb-4 text-sm text-zinc-400">Raise or lower RUNR slots per kitchen. Writes to the live marketplace.</p>
+              <p className="mb-4 text-sm text-zinc-400">Raise or lower Runner slots per vendor. Writes to the live marketplace.</p>
               <StaffCoveragePanel />
             </Panel>
           )}
@@ -154,7 +154,7 @@ export function StaffConsole() {
 
           {tab === "chat" && (
             <Panel title="Staff status chat">
-              <p className="mb-4 text-sm text-zinc-400">Shared with the STAFF phone app.</p>
+              <p className="mb-4 text-sm text-zinc-400">Shared with Porter Command.</p>
               <StaffChat />
             </Panel>
           )}

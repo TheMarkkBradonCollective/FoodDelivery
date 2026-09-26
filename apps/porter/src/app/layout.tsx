@@ -8,10 +8,10 @@ import { PorterLayoutClient } from "./PorterLayoutClient";
 const font = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "PORTER — Get what you need.",
+  title: "Porter — Get what you need.",
   description:
-    "Discover, order, track, and receive from nearby businesses on the RUNR marketplace.",
-  applicationName: "PORTER",
+    "Discover, order, track, and receive from nearby businesses on the Porter marketplace.",
+  applicationName: "Porter",
 };
 
 export const viewport: Viewport = {

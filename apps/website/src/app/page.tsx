@@ -17,7 +17,7 @@ export default function HomePage() {
             <span className="text-[#7048F8]">Run Your Time.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-[var(--muted)]">
-            PORTER creates the demand. VENDR fulfills the business side. RUNR moves it.
+            Porter creates the demand. Porter Vendor fulfills the business side. Porter Runner moves it.
             One coverage-driven marketplace — not three disconnected apps.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -38,23 +38,23 @@ export default function HomePage() {
 
           <img
             src="/images/runr-app-showcase.png"
-            alt="PORTER, RUNR, and VENDR app screens"
+            alt="Porter, Porter Runner, and Porter Vendor app screens"
             className="mx-auto mt-16 w-full max-w-5xl"
           />
           <div className="mx-auto mt-10 grid max-w-3xl grid-cols-3 gap-4 text-center">
             <div>
               <p className="text-2xl">🛍️</p>
-              <p className="mt-1 text-sm font-semibold text-[#7048F8]">PORTER</p>
+              <p className="mt-1 text-sm font-semibold text-[#7048F8]">Porter</p>
               <p className="text-xs text-[var(--muted)]">Customer</p>
             </div>
             <div>
               <p className="text-2xl">🚗</p>
-              <p className="mt-1 text-sm font-semibold text-[#7048F8]">RUNR</p>
+              <p className="mt-1 text-sm font-semibold text-[#7048F8]">Porter Runner</p>
               <p className="text-xs text-[var(--muted)]">Delivery</p>
             </div>
             <div>
               <p className="text-2xl">🏪</p>
-              <p className="mt-1 text-sm font-semibold text-[#7048F8]">VENDR</p>
+              <p className="mt-1 text-sm font-semibold text-[#7048F8]">Porter Vendor</p>
               <p className="text-xs text-[var(--muted)]">Business</p>
             </div>
           </div>
@@ -68,7 +68,7 @@ export default function HomePage() {
             <h2 className="text-3xl font-bold tracking-tight">Download the Apps</h2>
             <p className="mx-auto mt-3 max-w-xl text-[var(--muted)]">
               This website is the official install page. Download the app for your role —
-              PORTER, RUNR, VENDR, or STAFF. Staff work the live marketplace from the STAFF
+              Porter, Porter Runner, Porter Vendor, or Porter Command. Ops work the live marketplace from the Porter Command
               app or this site. Everyone else signs in here for account settings.
             </p>
           </div>
@@ -81,7 +81,7 @@ export default function HomePage() {
 
           <div className="mx-auto mt-10 max-w-2xl rounded-xl border border-amber-200 bg-amber-50 p-4 text-center text-sm text-amber-900">
             <strong>Android APKs</strong> — Install from this site or the MBC App Store. Each app
-            bundles its full UI. Staff can advance orders and coverage from the STAFF app
+            bundles its full UI. Porter Command can advance orders and coverage from Porter Command
             or this site. Other accounts use the website for billing and profile only.
           </div>
         </div>
@@ -93,7 +93,7 @@ export default function HomePage() {
           <div className="max-w-2xl">
             <h2 className="text-3xl font-bold tracking-tight">How We Operate</h2>
             <p className="mt-3 text-[var(--muted)]">
-              RUNR is different from traditional delivery platforms. We&apos;re
+              Runner is different from traditional delivery platforms. We&apos;re
               coverage-driven — not order-driven.
             </p>
           </div>
@@ -121,9 +121,9 @@ export default function HomePage() {
       <section id="ecosystem" className="scroll-mt-20 border-y border-[var(--border)] bg-[var(--surface)] py-20">
         <div className="mx-auto max-w-6xl px-6">
           <div className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight">One Marketplace. Three Apps.</h2>
+            <h2 className="text-3xl font-bold tracking-tight">One Marketplace. Four Apps.</h2>
             <p className="mx-auto mt-3 max-w-xl text-[var(--muted)]">
-              PORTER creates demand. VENDR fulfills the business side. RUNR moves it.
+              Porter creates demand. Porter Vendor fulfills the business side. Porter Runner moves it.
             </p>
           </div>
 
@@ -134,24 +134,24 @@ export default function HomePage() {
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div className="rounded-2xl bg-brand-muted p-3">
                   <Store className="mx-auto h-5 w-5 text-[#7048F8]" />
-                  <p className="mt-1 font-semibold text-[#7048F8]">PORTER</p>
+                  <p className="mt-1 font-semibold text-[#7048F8]">Porter</p>
                   <p className="text-[10px] text-[var(--muted)]">Customer</p>
                 </div>
                 <div className="rounded-2xl bg-brand-muted p-3">
                   <MapPin className="mx-auto h-5 w-5 text-[#7048F8]" />
-                  <p className="mt-1 font-semibold text-[#7048F8]">VENDR</p>
+                  <p className="mt-1 font-semibold text-[#7048F8]">Porter Vendor</p>
                   <p className="text-[10px] text-[var(--muted)]">Business</p>
                 </div>
                 <div className="rounded-2xl bg-brand-muted p-3">
                   <Truck className="mx-auto h-5 w-5 text-[#7048F8]" />
-                  <p className="mt-1 font-semibold text-[#7048F8]">RUNR</p>
+                  <p className="mt-1 font-semibold text-[#7048F8]">Porter Runner</p>
                   <p className="text-[10px] text-[var(--muted)]">Delivery</p>
                 </div>
               </div>
               <div className="mt-4 space-y-1 text-center text-xs text-[var(--muted)]">
-                <p>PORTER ──order──► VENDR</p>
-                <p>VENDR ──dispatch──► RUNR</p>
-                <p>RUNR ──delivery──► PORTER</p>
+                <p>Porter ──order──► Porter Vendor</p>
+                <p>Porter Vendor ──dispatch──► Porter Runner</p>
+                <p>Porter Runner ──delivery──► Porter</p>
               </div>
             </div>
           </div>
@@ -162,11 +162,11 @@ export default function HomePage() {
       <section id="company" className="scroll-mt-20 py-20">
         <div className="mx-auto max-w-6xl px-6">
           <div className="max-w-2xl">
-            <h2 className="text-3xl font-bold tracking-tight">About RUNR</h2>
+            <h2 className="text-3xl font-bold tracking-tight">About Porter</h2>
             <p className="mt-3 text-[var(--muted)]">
               We&apos;re building a delivery marketplace that respects everyone in
               the chain — customers who want reliability, businesses who need
-              coverage control, and RUNRs who choose where and when they work.
+              coverage control, and Runners who choose where and when they work.
             </p>
           </div>
 
@@ -184,7 +184,7 @@ export default function HomePage() {
           <div className="mt-12 rounded-[2rem] bg-[#2A1478] p-8 text-white md:p-12">
             <h3 className="text-xl font-bold">The Markk Brandon Collective</h3>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-400">
-              RUNR is developed by The Markk Brandon Collective — a team focused on
+              Runner is developed by The Markk Brandon Collective — a team focused on
               building technology that gives people control over how they shop, sell,
               and earn. Our platform is map-first, real-time, and designed to scale
               from local restaurants to full retail networks.
