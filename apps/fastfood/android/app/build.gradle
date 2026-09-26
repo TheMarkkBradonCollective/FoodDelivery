@@ -3,10 +3,10 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         release {
-            storeFile file('../porter-release.keystore')
-            storePassword 'mbcporter'
-            keyAlias 'porter'
-            keyPassword 'mbcporter'
+            storeFile file('../fastfood-release.keystore')
+            storePassword 'mbcfastfood'
+            keyAlias 'fastfood'
+            keyPassword 'mbcfastfood'
         }
     }
     namespace "com.porter.fastfood"
