@@ -10,6 +10,7 @@
     "./data/*": "./src/data/*",
     "./store/*": "./src/store/*",
     "./components/ui/*": "./src/components/ui/*",
+    "./lib/customer-skin": "./src/lib/customer-skin.ts",
     "./components/map": "./src/components/map/index.tsx",
     "./components/map/*": "./src/components/map/*",
     "./components/layout/*": "./src/components/layout/*",

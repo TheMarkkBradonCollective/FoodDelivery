@@ -22,6 +22,7 @@ const javaHome =
     : undefined);
 
 const apps = [
+  { id: 'fastfood', workspace: '@porter/fastfood', packageId: 'com.porter.fastfood', name: 'FastFood' },
   { id: 'porter', workspace: '@porter/porter', packageId: 'com.porter.porter', name: 'Porter' },
   { id: 'runr', workspace: '@porter/runner', packageId: 'com.porter.runner', name: 'Porter Runner' },
   { id: 'vendr', workspace: '@porter/vendr', packageId: 'com.porter.vendor', name: 'Porter Vendor' },

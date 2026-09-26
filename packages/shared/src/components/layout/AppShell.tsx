@@ -11,6 +11,8 @@ import { Onboarding } from "../auth/Onboarding";
 import { ToastHost } from "../ui/ToastHost";
 import { BrandMark } from "../ui/BrandMark";
 import { APP_COPY, roleToApp } from "../../lib/apps";
+import type { CustomerSkinId } from "../../lib/customer-skin";
+import { CustomerSkinProvider, useCustomerSkin } from "../providers/CustomerSkinProvider";
 import type { UserRole } from "../../types/index";
 
 type AppShellRole = Exclude<UserRole, never>;
@@ -44,7 +46,8 @@ function useStoreHydrated() {
 }
 
 function Splash({ role }: { role: AppShellRole }) {
-  const copy = APP_COPY[roleToApp(role)];
+  const skin = useCustomerSkin();
+  const copy = role === "customer" ? skin : APP_COPY[roleToApp(role)];
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center bg-[var(--background)] px-6">
       <BrandMark size="lg" inverted={role === "staff"} />
@@ -73,9 +76,12 @@ export function AuthGuard({
 export function AppShell({
   children,
   role,
+  customerSkin = "porter",
 }: {
   children: React.ReactNode;
   role: AppShellRole;
+  /** Customer-only alternate brand (e.g. FastFood). */
+  customerSkin?: CustomerSkinId;
 }) {
   const hydrated = useStoreHydrated();
   const authReady = useAppStore((s) => s.authReady);
@@ -92,7 +98,7 @@ export function AppShell({
     body = <SignInPrompt role={role} />;
   }
 
-  return (
+  const shell = (
     <ThemeProvider forceDark={role === "staff"}>
       <NativeSafeArea darkChrome={role === "staff"}>
         <SupabaseAuthSync role={role} />
@@ -102,4 +108,9 @@ export function AppShell({
       </NativeSafeArea>
     </ThemeProvider>
   );
+
+  if (role === "customer") {
+    return <CustomerSkinProvider skinId={customerSkin}>{shell}</CustomerSkinProvider>;
+  }
+  return shell;
 }

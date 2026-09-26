@@ -24,6 +24,7 @@ publish_app() {
   local apk="release/${app}-v${version}.apk"
   local title
   case "$app" in
+    fastfood) title="FastFood v${version}" ;;
     porter) title="Porter v${version}" ;;
     runr) title="Porter Runner v${version}" ;;
     vendr) title="Porter Vendor v${version}" ;;
@@ -49,7 +50,7 @@ publish_app() {
   echo "Published $tag → https://github.com/$REPO/releases/tag/$tag"
 }
 
-for app in porter runr vendr staff; do
+for app in fastfood porter runr vendr staff; do
   publish_app "$app"
 done
 

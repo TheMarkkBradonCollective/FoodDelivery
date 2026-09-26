@@ -8,28 +8,23 @@ import { signOut } from "../../lib/supabase/auth";
 import { isSupabaseConfigured } from "../../lib/supabase/config";
 import { useAppStore } from "../../store/create-app-store";
 import { APP_COPY } from "../../lib/apps";
+import { useCustomerSkin } from "../providers/CustomerSkinProvider";
 import { BrandMark } from "../ui/BrandMark";
 
-const WELCOME: Record<
-  UserRole,
-  {
-    brand: string;
-    line: string;
-    stack?: string[];
-    highlight: string;
-    pills: { label: string; lime: boolean }[];
-    grid?: boolean;
-    showMark?: boolean;
-  }
+const WELCOME: Partial<
+  Record<
+    UserRole,
+    {
+      brand: string;
+      line: string;
+      stack?: string[];
+      highlight: string;
+      pills: { label: string; lime: boolean }[];
+      grid?: boolean;
+      showMark?: boolean;
+    }
+  >
 > = {
-  customer: {
-    brand: APP_COPY.porter.shortName,
-    line: "Get what you",
-    highlight: "need.",
-    pills: APP_COPY.porter.flow.map((label, i) => ({ label, lime: i % 2 === 0 })),
-    grid: true,
-    showMark: true,
-  },
   runr: {
     brand: APP_COPY.runr.shortName,
     line: "Choose your window.",
@@ -74,8 +69,24 @@ function friendlyAuthError(message: string) {
 }
 
 export function SignInPrompt({ role }: { role: UserRole }) {
-  const appName = role === "staff" ? "Porter Command Portal" : getAppForRole(role);
-  const copy = WELCOME[role];
+  const skin = useCustomerSkin();
+  const appName =
+    role === "customer"
+      ? skin.shortName
+      : role === "staff"
+        ? "Porter Command Portal"
+        : getAppForRole(role);
+  const copy =
+    role === "customer"
+      ? {
+          brand: skin.shortName,
+          line: skin.signInLine,
+          highlight: skin.signInHighlight,
+          pills: APP_COPY.porter.flow.map((label, i) => ({ label, lime: i % 2 === 0 })),
+          grid: true,
+          showMark: true,
+        }
+      : WELCOME[role]!;
   const setUser = useAppStore((s) => s.setUser);
   const showToast = useAppStore((s) => s.showToast);
   const [mode, setMode] = useState<Mode>("signin");
@@ -216,7 +227,11 @@ export function SignInPrompt({ role }: { role: UserRole }) {
             {mode === "signin" && (
               <>
                 <p className="signin-title">Sign in to continue</p>
-                <p className="signin-copy">Use your Porter account. Marketplace data loads after sign-in.</p>
+                <p className="signin-copy">
+                  {skin.id === "fastfood"
+                    ? "Same customer login as Porter — one account, two apps."
+                    : "Use your Porter account. Marketplace data loads after sign-in."}
+                </p>
                 <form onSubmit={handleSignIn} className="signin-form">
                   <label className="field-label" htmlFor="auth-email">
                     Email
@@ -340,7 +355,9 @@ export function SignInPrompt({ role }: { role: UserRole }) {
             {mode === "forgot" && (
               <>
                 <p className="signin-title">Reset your password</p>
-                <p className="signin-copy">We will email a reset link if this address has a Porter account.</p>
+                <p className="signin-copy">
+                  We will email a reset link if this address has a customer account on the network.
+                </p>
                 <form onSubmit={handleForgot} className="signin-form">
                   <label className="field-label" htmlFor="reset-email">
                     Email

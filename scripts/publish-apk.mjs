@@ -18,6 +18,12 @@ const MBC_PUBLIC_BASE = 'https://themarkkbradoncollective.github.io/main/apks';
 
 const apps = [
   {
+    id: 'fastfood',
+    name: 'FastFood',
+    packageId: 'com.porter.fastfood',
+    tagline: 'Hot food. Fast drop.',
+  },
+  {
     id: 'porter',
     name: 'Porter',
     packageId: 'com.porter.porter',

@@ -15,7 +15,7 @@ npm run publish:release # Create GitHub Releases
 Release artifacts:
 
 - `release/porter-v0.1.0.apk` — Porter customer app (`com.porter.porter`)
-- `release/runr-v0.1.0.apk` — Porter Runner delivery app (`com.porter.runr`)
-- `release/vendr-v0.1.0.apk` — Porter Vendor business app (`com.porter.vendr`)
+- `release/runr-v0.1.0.apk` — Porter Runner delivery app (`com.porter.runner`)
+- `release/vendr-v0.1.0.apk` — Porter Vendor business app (`com.porter.vendor`)
 
 Install from the MBC App Store: https://themarkkbradoncollective.github.io/main/download/

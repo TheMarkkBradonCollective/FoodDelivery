@@ -10,6 +10,7 @@ Monorepo for the Porter coverage-driven delivery marketplace.
 |------|---------|
 | **`apps/website`** | **Main company website** — downloads, company info, how we operate |
 | `apps/porter` | Porter customer Android app |
+| `apps/fastfood` | **FastFood** — alternate red/yellow customer skin (same marketplace as Porter) |
 | `apps/runr` | Porter Runner delivery Android app |
 | `apps/vendr` | Porter Vendor business Android app |
 | `apps/staff` | Porter Command ops Android app — orders, coverage, users, chat |

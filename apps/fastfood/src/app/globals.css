@@ -1,0 +1,32 @@
+@import "tailwindcss";
+@import "@porter/shared/styles/globals.css";
+@source "../../../packages/shared/src/**/*.{ts,tsx}";
+
+/* FastFood — warm yellow surfaces, red brand, golden accents (separate from Porter purple) */
+:root {
+  --color-porter-primary: #e31837;
+  --color-porter-primary-hover: #c41230;
+  --color-porter-primary-muted: #ffe8ec;
+  --color-porter-primary-deep: #7f1d1d;
+  --color-porter-navigation: #e31837;
+  --color-porter-accent: #d97706;
+  --color-porter-accent-bright: #ffc72c;
+  --color-porter-accent-muted: #fff4cc;
+  --color-purple: #e31837;
+  --color-lime: #ffc72c;
+  --background: #fffbeb;
+  --foreground: #450a0a;
+  --surface: #fffdf5;
+  --surface-elevated: #ffffff;
+  --border: #fde68a;
+  --muted: #92400e;
+}
+
+html.dark {
+  --background: #450a0a;
+  --foreground: #fffbeb;
+  --surface: #7f1d1d;
+  --surface-elevated: #991b1b;
+  --border: #b91c1c;
+  --muted: #fde68a;
+}
