@@ -1,5 +1,5 @@
 import { DownloadCard } from "@/components/DownloadCard";
-import { apps, companyValues, howItWorks, PORTER_BRAND, ecosystemTagline } from "@/data/site-content";
+import { apps, companyValues, howItWorks, PORTER_BRAND } from "@/data/site-content";
 import { ArrowDown, MapPin, Store, Truck } from "lucide-react";
 
 export default function HomePage() {
@@ -17,7 +17,7 @@ export default function HomePage() {
             <span className="text-[#7048F8]">{PORTER_BRAND.headline[1]}</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-[var(--muted)]">
-            {ecosystemTagline()} {PORTER_BRAND.promise}
+            {PORTER_BRAND.promise}
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
@@ -87,8 +87,8 @@ export default function HomePage() {
           <div className="max-w-2xl">
             <h2 className="text-3xl font-bold tracking-tight">How We Operate</h2>
             <p className="mt-3 text-[var(--muted)]">
-              {PORTER_BRAND.name} is coverage-driven — not order-driven. Vendors plan
-              capacity; Runners choose windows; customers order like any delivery app.
+              Porter is different from traditional delivery platforms. We&apos;re
+              coverage-driven — not order-driven.
             </p>
           </div>
 

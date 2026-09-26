@@ -3,17 +3,15 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import "@/store";
 import { AppShell } from "@porter/shared/components/layout/AppShell";
-import { getCustomerSkin } from "@porter/shared/lib/customer-skin";
 import { FastFoodLayoutClient } from "./FastFoodLayoutClient";
 
 const font = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
-const skin = getCustomerSkin("fastfood");
 
 export const metadata: Metadata = {
-  title: `${skin.shortName} — ${skin.tagline}`,
+  title: "FastFood — Get what you need.",
   description:
-    "Order burgers, pizza, tacos, and more with the FastFood app — same restaurants and delivery network as Porter, with its own look.",
-  applicationName: skin.shortName,
+    "Discover, order, track, and receive from nearby businesses on the Porter marketplace.",
+  applicationName: "FastFood",
 };
 
 export const viewport: Viewport = {
@@ -22,7 +20,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: "cover",
-  themeColor: skin.themeColor,
+  themeColor: "#E31837",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

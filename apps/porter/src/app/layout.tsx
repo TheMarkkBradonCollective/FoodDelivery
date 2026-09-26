@@ -8,7 +8,7 @@ import { PorterLayoutClient } from "./PorterLayoutClient";
 const font = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Porter — Shop nearby. Track every step.",
+  title: "Porter — Get what you need.",
   description:
     "Discover, order, track, and receive from nearby businesses on the Porter marketplace.",
   applicationName: "Porter",
@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${font.variable} antialiased`}>
-        <AppShell role="customer">
+        <AppShell role="customer" customerSkin="porter">
           <PorterLayoutClient>{children}</PorterLayoutClient>
         </AppShell>
       </body>

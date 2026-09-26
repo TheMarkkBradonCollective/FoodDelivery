@@ -14,7 +14,7 @@
     "downloadName": "runr-v0.3.4.apk",
     "fileSize": 3823675,
     "sha256": "be6ed16b7c739002b5bcfdd34efe65c980681a87db36f13809e559b42d3ead12",
-    "releaseNotes": "Porter Runner v0.3.4 — Choose your window. Earn per drop. Full Capacitor build with embedded web shell.",
+    "releaseNotes": "Porter Runner v0.3.4 — Pick it up. Run it there. Full Capacitor build with embedded web shell.",
     "archives": [
       {
         "label": "FastFood",
@@ -35,7 +35,7 @@
         "downloadName": "porter-v0.3.4.apk",
         "fileSize": 3856353,
         "sha256": "b6ef53016d5208c0d3ba9f13d55eb997611a9a3099cd9291d4a42f00f60c69ea",
-        "releaseNotes": "Porter v0.3.4 — Shop nearby. Track every step. Full Capacitor build with embedded web shell.",
+        "releaseNotes": "Porter v0.3.4 — Get what you need. Full Capacitor build with embedded web shell.",
         "packageId": "com.porter.porter"
       },
       {
@@ -46,7 +46,7 @@
         "downloadName": "vendr-v0.3.4.apk",
         "fileSize": 3775294,
         "sha256": "7d92c347ea5931c157d8da12e7fa506adfebf3d23df008aff4836909b14a3b1c",
-        "releaseNotes": "Porter Vendor v0.3.4 — Set capacity. Serve your queue. Full Capacitor build with embedded web shell.",
+        "releaseNotes": "Porter Vendor v0.3.4 — Sell. Manage. Grow. Full Capacitor build with embedded web shell.",
         "packageId": "com.porter.vendor"
       },
       {
@@ -57,7 +57,7 @@
         "downloadName": "staff-v0.3.4.apk",
         "fileSize": 3781520,
         "sha256": "7eec088e609c14d404ad1db52b73c87b73e75df8757574945cd8514a35a4f992",
-        "releaseNotes": "Porter Command v0.3.4 — Operate the network. Full Capacitor build with embedded web shell.",
+        "releaseNotes": "Porter Command v0.3.4 — Run the marketplace. Full Capacitor build with embedded web shell.",
         "packageId": "com.porter.command"
       }
     ]

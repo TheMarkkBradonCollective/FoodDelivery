@@ -5,15 +5,17 @@ import { useAppStore } from "@/store";
 import { DishPhoto } from "@porter/shared/components/ui/CuisinePlate";
 import { EmptyState } from "@porter/shared/components/ui/EmptyState";
 import { ScreenHeader } from "@porter/shared/components/layout/ScreenHeader";
+import { useCustomerSkin } from "@porter/shared/components/providers/CustomerSkinProvider";
 import { Heart } from "lucide-react";
 
 export default function CustomerFavoritesPage() {
+  const skin = useCustomerSkin();
   const { businesses, favoriteBusinessIds, toggleFavorite } = useAppStore();
   const saved = businesses.filter((b) => favoriteBusinessIds.includes(b.id));
 
   return (
     <div>
-      <ScreenHeader title="Favorites" subtitle="Businesses you saved" eyebrow="Porter" />
+      <ScreenHeader title="Favorites" subtitle="Businesses you saved" eyebrow={skin.shortName} />
       <div className="px-5 pb-8 lg:px-8">
         {saved.length === 0 ? (
           <EmptyState

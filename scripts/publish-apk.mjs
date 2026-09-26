@@ -21,31 +21,31 @@ const apps = [
     id: 'fastfood',
     name: 'FastFood',
     packageId: 'com.porter.fastfood',
-    tagline: 'Hot food. Fast drop.',
+    tagline: 'Get what you need.',
   },
   {
     id: 'porter',
     name: 'Porter',
     packageId: 'com.porter.porter',
-    tagline: 'Shop nearby. Track every step.',
+    tagline: 'Get what you need.',
   },
   {
     id: 'runr',
     name: 'Porter Runner',
     packageId: 'com.porter.runner',
-    tagline: 'Choose your window. Earn per drop.',
+    tagline: 'Pick it up. Run it there.',
   },
   {
     id: 'vendr',
     name: 'Porter Vendor',
     packageId: 'com.porter.vendor',
-    tagline: 'Set capacity. Serve your queue.',
+    tagline: 'Sell. Manage. Grow.',
   },
   {
     id: 'staff',
     name: 'Porter Command',
     packageId: 'com.porter.command',
-    tagline: 'Operate the network.',
+    tagline: 'Run the marketplace.',
   },
 ];
 

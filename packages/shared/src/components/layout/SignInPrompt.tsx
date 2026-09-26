@@ -27,15 +27,15 @@ const WELCOME: Partial<
 > = {
   runr: {
     brand: APP_COPY.runr.shortName,
-    line: "Choose your window.",
-    highlight: "Earn per drop.",
+    line: "Pick it up.",
+    highlight: "Run it there.",
     pills: APP_COPY.runr.flow.map((label, i) => ({ label, lime: i % 2 === 0 })),
     showMark: true,
   },
   business: {
     brand: APP_COPY.vendr.shortName,
-    line: "Set capacity.",
-    highlight: "Serve your queue.",
+    line: "Sell. Manage.",
+    highlight: "Grow.",
     pills: APP_COPY.vendr.flow.slice(0, 4).map((label, i) => ({ label, lime: i % 2 === 0 })),
   },
   staff: {

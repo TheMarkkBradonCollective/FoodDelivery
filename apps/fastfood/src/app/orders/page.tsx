@@ -6,14 +6,16 @@ import { formatCurrency } from "@porter/shared/lib/utils";
 import { StatusBadge } from "@porter/shared/components/ui/StatusBadge";
 import { EmptyState } from "@porter/shared/components/ui/EmptyState";
 import { ScreenHeader } from "@porter/shared/components/layout/ScreenHeader";
+import { useCustomerSkin } from "@porter/shared/components/providers/CustomerSkinProvider";
 import { CuisinePlate } from "@porter/shared/components/ui/CuisinePlate";
 
 export default function CustomerOrdersPage() {
+  const skin = useCustomerSkin();
   const { orders, businesses } = useAppStore();
 
   return (
     <div>
-      <ScreenHeader title="Orders" subtitle="Track, receive, and keep receipts" eyebrow="FastFood" />
+      <ScreenHeader title="Orders" subtitle="Track, receive, and keep receipts" eyebrow={skin.shortName} />
       <div className="space-y-3 px-5 pb-8 lg:mx-auto lg:max-w-2xl lg:px-8">
         {orders.length === 0 ? (
           <EmptyState

@@ -13,11 +13,12 @@ export type CustomerSkin = {
   networkHint: string;
 };
 
+/** FastFood is Porter with a different name and palette — same copy and flows. */
 export const CUSTOMER_SKINS: Record<CustomerSkinId, CustomerSkin> = {
   porter: {
     id: "porter",
     shortName: "Porter",
-    tagline: "Shop nearby. Track every step.",
+    tagline: "Get what you need.",
     signInLine: "Get what you",
     signInHighlight: "need.",
     themeColor: "#7048F8",
@@ -28,13 +29,13 @@ export const CUSTOMER_SKINS: Record<CustomerSkinId, CustomerSkin> = {
   fastfood: {
     id: "fastfood",
     shortName: "FastFood",
-    tagline: "Hot food. Fast drop.",
-    signInLine: "Crave it.",
-    signInHighlight: "Get it delivered.",
+    tagline: "Get what you need.",
+    signInLine: "Get what you",
+    signInHighlight: "need.",
     themeColor: "#E31837",
     markBackground: "#FFC72C",
     markForeground: "#7F1D1D",
-    networkHint: "Powered by the Porter marketplace — same restaurants, same runners.",
+    networkHint: "Fulfilled by Porter Vendor · moved by Runners",
   },
 };
 

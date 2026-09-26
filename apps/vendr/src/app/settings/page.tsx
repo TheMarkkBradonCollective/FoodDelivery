@@ -57,7 +57,7 @@ export default function BusinessSettingsPage() {
         <SettingsRow
           icon={<Tag size={18} />}
           title="Promotions"
-          subtitle="PORTER5 and PORTER10 run on the network"
+          subtitle="RUNR5 and PORTER10 run on the network"
           onClick={() => showToast("Promos are live for Porter checkout")}
         />
         <SettingsRow

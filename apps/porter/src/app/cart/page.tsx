@@ -11,6 +11,7 @@ import { useAppStore } from "@/store";
 import { formatCurrency } from "@porter/shared/lib/utils";
 import { SegmentedControl } from "@porter/shared/components/ui/SegmentedControl";
 import { PROMO_CODES } from "@porter/shared/data/constants";
+import { CustomerEyebrow } from "@porter/shared/components/ui/CustomerEyebrow";
 
 export default function CartPage() {
   const {
@@ -48,7 +49,7 @@ export default function CartPage() {
   function applyPromo() {
     const code = promoInput.trim().toUpperCase();
     if (!PROMO_CODES[code]) {
-      setPromoError("That code isn’t valid. Try PORTER5 or PORTER10.");
+      setPromoError("That code isn’t valid. Try RUNR5 or PORTER10.");
       setPromoCode(null);
       return;
     }
@@ -93,7 +94,7 @@ export default function CartPage() {
           <ArrowLeft size={18} />
         </IconButton>
         <div>
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">Porter</p>
+          <CustomerEyebrow />
           <h1 className="text-[1.375rem] font-extrabold text-[var(--foreground)]">Cart</h1>
         </div>
       </div>
@@ -188,7 +189,7 @@ export default function CartPage() {
             value={promoInput}
             onChange={(e) => setPromoInput(e.target.value)}
             className="input-brand h-11 py-0"
-            placeholder="PORTER5"
+            placeholder="RUNR5"
             autoCapitalize="characters"
           />
           <button

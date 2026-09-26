@@ -1,6 +1,6 @@
 "use client";
 
-import { Bike, UtensilsCrossed } from "lucide-react";
+import { Bike } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { APP_COPY, type AppId } from "../../lib/apps";
 import { useCustomerSkin } from "../providers/CustomerSkinProvider";
@@ -16,7 +16,6 @@ export function BrandMark({
 }) {
   const skin = useCustomerSkin();
   const dim = size === "lg" ? "h-16 w-16" : size === "sm" ? "h-10 w-10" : "h-14 w-14";
-  const Icon = skin.id === "fastfood" ? UtensilsCrossed : Bike;
   return (
     <div
       className={cn("flex items-center justify-center rounded-full shadow-porter-card", dim, className)}
@@ -27,7 +26,7 @@ export function BrandMark({
       }
       aria-hidden
     >
-      <Icon className={size === "lg" ? "h-8 w-8" : size === "sm" ? "h-5 w-5" : "h-7 w-7"} strokeWidth={2.2} />
+      <Bike className={size === "lg" ? "h-8 w-8" : size === "sm" ? "h-5 w-5" : "h-7 w-7"} strokeWidth={2.2} />
     </div>
   );
 }

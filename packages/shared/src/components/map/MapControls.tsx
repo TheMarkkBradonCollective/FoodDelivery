@@ -45,7 +45,7 @@ export function ActiveRunBanner({
       className="map-dock rounded-2xl border border-[var(--border)] bg-[var(--surface)]/95 p-3.5 text-left shadow-porter-sheet backdrop-blur-md"
     >
       <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-porter-success">
-        Active shift · Checked in
+        Active RUN · Checked in
       </p>
       <h3 className="mt-0.5 text-base font-extrabold text-[var(--foreground)]">{businessName}</h3>
       <p className="text-xs text-[var(--muted)]">
