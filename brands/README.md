@@ -2,17 +2,22 @@
 
 Wordless **lime rider** on electric purple (`rider-mark.png`).
 
+Android adaptive icons keep the rider and letter badge inside the **center 66dp safe zone** so circle / squircle / Samsung masks do not crop the helmet, wheels, or box.
+
 | Token | Hex |
 |-------|-----|
 | Purple | `#7048F8` |
 | Lime | `#A0F878` |
+| Red (FastFood) | `#E31837` |
+| Yellow (FastFood) | `#FFC72C` |
 
 | App | Treatment |
 |-----|-----------|
-| **Porter** | Lime rider + "Porter" wordmark |
-| **Porter Runner** | Lime rider + "Runner" wordmark |
-| **Porter Vendor** | Lime rider + "Vendor" wordmark |
-| **Porter Command** | Purple rider on lime, wordless |
+| **Porter** | Lime rider on purple + **P** |
+| **Porter Runner** | Lime rider on purple + **R** |
+| **Porter Vendor** | Lime rider on purple + **V** |
+| **Porter Command** | Purple rider on lime + **C** |
+| **FastFood** | Yellow rider on red + **F** |
 
 ## Regenerate all launcher + in-app icons
 
@@ -20,8 +25,6 @@ Wordless **lime rider** on electric purple (`rider-mark.png`).
 npm run icons:generate
 ```
 
-Updates Android mipmaps, `apps/*/public/icons/app-icon.png`, and `apps/website/public/icons/apps/*.png`.
+Updates Android mipmaps (108dp adaptive foreground + 48dp legacy), `apps/*/public/icons/app-icon.png`, `apps/website/public/icons/apps/*.png`, and `brands/store/*-512.png`.
 
-## Marketing showcase
-
-Three-phone mockup (`marketing-showcase.png`, also at `apps/website/public/images/runr-app-showcase.png`) — Porter login, Porter Runner available runs, Porter Vendor live operations. Used on the website hero.
+Preview masks: `brands/icon-safe-preview.png` (square / circle / squircle).
