@@ -3,6 +3,14 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 REPO="TheMarkkBradonCollective/Runr"
+ROOT="$PWD"
+
+apk_path() {
+  local app="$1"
+  local version
+  version=$(node -p "require('./apps/${app}/package.json').version")
+  echo "${ROOT}/release/apks/${app}/${app}-v${version}.apk"
+}
 
 if ! command -v gh >/dev/null; then
   echo "gh CLI required"
@@ -21,7 +29,8 @@ publish_app() {
   local version
   version=$(node -p "require('./apps/${app}/package.json').version")
   local tag="v${version}-${app}"
-  local apk="release/${app}-v${version}.apk"
+  local apk
+  apk=$(apk_path "$app")
   local title
   case "$app" in
     fastfood) title="FastFood v${version}" ;;
@@ -54,10 +63,8 @@ for app in fastfood porter runr vendr staff; do
   publish_app "$app"
 done
 
-# Platform umbrella release (primary catalog tag)
 platform_version=$(node -p "require('./apps/runr/package.json').version")
 platform_tag="v${platform_version}"
-platform_apk="release/runr-v${platform_version}.apk"
 
 if gh release view "$platform_tag" --repo "$REPO" &>/dev/null; then
   gh release delete "$platform_tag" --repo "$REPO" --yes
@@ -66,19 +73,21 @@ fi
 gh release create "$platform_tag" \
   --repo "$REPO" \
   --title "Porter v${platform_version}" \
-  --notes "Porter v${platform_version} — signed Capacitor APKs for Porter, Porter Runner, Porter Vendor, and Porter Command." \
-  release/porter-v"${platform_version}".apk#porter-v"${platform_version}".apk \
-  release/runr-v"${platform_version}".apk#runr-v"${platform_version}".apk \
-  release/vendr-v"${platform_version}".apk#vendr-v"${platform_version}".apk \
-  release/staff-v"${platform_version}".apk#staff-v"${platform_version}".apk
+  --notes "Porter v${platform_version} — signed Capacitor APKs for Porter, Porter Runner, Porter Vendor, Porter Command, and FastFood." \
+  "$(apk_path fastfood)#fastfood-v${platform_version}.apk" \
+  "$(apk_path porter)#porter-v${platform_version}.apk" \
+  "$(apk_path runr)#runr-v${platform_version}.apk" \
+  "$(apk_path vendr)#vendr-v${platform_version}.apk" \
+  "$(apk_path staff)#staff-v${platform_version}.apk"
 
-zip_path="release/runr-apps-apks.zip"
-rm -f "$zip_path" "release/runr-apps-apks-v${platform_version}.zip"
-(cd release && zip -j "runr-apps-apks.zip" \
-  "porter-v${platform_version}.apk" \
-  "runr-v${platform_version}.apk" \
-  "vendr-v${platform_version}.apk" \
-  "staff-v${platform_version}.apk")
+zip_path="${ROOT}/release/latest/porter-platform-apks.zip"
+rm -f "$zip_path"
+zip -j "$zip_path" \
+  "$(apk_path fastfood)" \
+  "$(apk_path porter)" \
+  "$(apk_path runr)" \
+  "$(apk_path vendr)" \
+  "$(apk_path staff)"
 gh release upload "$platform_tag" --repo "$REPO" "$zip_path" --clobber
 
-echo "Published platform release $platform_tag (includes runr-apps-apks.zip)"
+echo "Published platform release $platform_tag (includes porter-platform-apks.zip)"
