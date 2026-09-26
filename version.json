@@ -2,7 +2,7 @@
   "name": "Porter",
   "app": "Porter Runner",
   "version": "0.3.4",
-  "updatedAt": "2026-09-26T02:12:34.888Z",
+  "updatedAt": "2026-09-26T02:40:37.748Z",
   "apk": {
     "ready": true,
     "packageId": "com.porter.runner",
@@ -12,8 +12,8 @@
     "versionCode": 304,
     "url": "https://themarkkbradoncollective.github.io/main/apks/runr/runr-v0.3.4.apk",
     "downloadName": "runr-v0.3.4.apk",
-    "fileSize": 3823675,
-    "sha256": "be6ed16b7c739002b5bcfdd34efe65c980681a87db36f13809e559b42d3ead12",
+    "fileSize": 3773744,
+    "sha256": "31d38c75aa4fd09bfdd211ee52bb49a2caaee2e504a531e3a77edd55dc4fa797",
     "releaseNotes": "Porter Runner v0.3.4 — Pick it up. Run it there. Full Capacitor build with embedded web shell.",
     "archives": [
       {
@@ -22,9 +22,9 @@
         "versionCode": 304,
         "url": "https://themarkkbradoncollective.github.io/main/apks/fastfood/fastfood-v0.3.4.apk",
         "downloadName": "fastfood-v0.3.4.apk",
-        "fileSize": 3858990,
-        "sha256": "77ce8b2115cddc526d621cc53156562837c341a5e029c403e7a92c5e7d7a502d",
-        "releaseNotes": "FastFood v0.3.4 — Hot food. Fast drop. Full Capacitor build with embedded web shell.",
+        "fileSize": 3786997,
+        "sha256": "34368971556077fe04eed5160e27cd96aaa3dde92f747d2b73b288d679ef3ad4",
+        "releaseNotes": "FastFood v0.3.4 — Get what you need. Full Capacitor build with embedded web shell.",
         "packageId": "com.porter.fastfood"
       },
       {
@@ -33,8 +33,8 @@
         "versionCode": 304,
         "url": "https://themarkkbradoncollective.github.io/main/apks/porter/porter-v0.3.4.apk",
         "downloadName": "porter-v0.3.4.apk",
-        "fileSize": 3856353,
-        "sha256": "b6ef53016d5208c0d3ba9f13d55eb997611a9a3099cd9291d4a42f00f60c69ea",
+        "fileSize": 3803156,
+        "sha256": "5e29b87fc22e28bb0bf8d10091fc2e166a36ce94cecbbcbeed2f41e33665286b",
         "releaseNotes": "Porter v0.3.4 — Get what you need. Full Capacitor build with embedded web shell.",
         "packageId": "com.porter.porter"
       },
@@ -44,8 +44,8 @@
         "versionCode": 304,
         "url": "https://themarkkbradoncollective.github.io/main/apks/vendr/vendr-v0.3.4.apk",
         "downloadName": "vendr-v0.3.4.apk",
-        "fileSize": 3775294,
-        "sha256": "7d92c347ea5931c157d8da12e7fa506adfebf3d23df008aff4836909b14a3b1c",
+        "fileSize": 3722088,
+        "sha256": "c99aacc0a0397df9a0c1b5d10eec1457f0aa3b90a50ba631074d72b53ff10012",
         "releaseNotes": "Porter Vendor v0.3.4 — Sell. Manage. Grow. Full Capacitor build with embedded web shell.",
         "packageId": "com.porter.vendor"
       },
@@ -55,8 +55,8 @@
         "versionCode": 304,
         "url": "https://themarkkbradoncollective.github.io/main/apks/staff/staff-v0.3.4.apk",
         "downloadName": "staff-v0.3.4.apk",
-        "fileSize": 3781520,
-        "sha256": "7eec088e609c14d404ad1db52b73c87b73e75df8757574945cd8514a35a4f992",
+        "fileSize": 3728042,
+        "sha256": "da57bd39edab591c6a186728940b6e6cd02bd43aea2ff60e3c3b64813a614be8",
         "releaseNotes": "Porter Command v0.3.4 — Run the marketplace. Full Capacitor build with embedded web shell.",
         "packageId": "com.porter.command"
       }
@@ -70,8 +70,8 @@
       "version": "0.3.4",
       "url": "https://themarkkbradoncollective.github.io/main/apks/fastfood/fastfood-v0.3.4.apk",
       "downloadName": "fastfood-v0.3.4.apk",
-      "fileSize": 3858990,
-      "sha256": "77ce8b2115cddc526d621cc53156562837c341a5e029c403e7a92c5e7d7a502d"
+      "fileSize": 3786997,
+      "sha256": "34368971556077fe04eed5160e27cd96aaa3dde92f747d2b73b288d679ef3ad4"
     },
     {
       "id": "porter",
@@ -80,8 +80,8 @@
       "version": "0.3.4",
       "url": "https://themarkkbradoncollective.github.io/main/apks/porter/porter-v0.3.4.apk",
       "downloadName": "porter-v0.3.4.apk",
-      "fileSize": 3856353,
-      "sha256": "b6ef53016d5208c0d3ba9f13d55eb997611a9a3099cd9291d4a42f00f60c69ea"
+      "fileSize": 3803156,
+      "sha256": "5e29b87fc22e28bb0bf8d10091fc2e166a36ce94cecbbcbeed2f41e33665286b"
     },
     {
       "id": "runr",
@@ -90,8 +90,8 @@
       "version": "0.3.4",
       "url": "https://themarkkbradoncollective.github.io/main/apks/runr/runr-v0.3.4.apk",
       "downloadName": "runr-v0.3.4.apk",
-      "fileSize": 3823675,
-      "sha256": "be6ed16b7c739002b5bcfdd34efe65c980681a87db36f13809e559b42d3ead12"
+      "fileSize": 3773744,
+      "sha256": "31d38c75aa4fd09bfdd211ee52bb49a2caaee2e504a531e3a77edd55dc4fa797"
     },
     {
       "id": "vendr",
@@ -100,8 +100,8 @@
       "version": "0.3.4",
       "url": "https://themarkkbradoncollective.github.io/main/apks/vendr/vendr-v0.3.4.apk",
       "downloadName": "vendr-v0.3.4.apk",
-      "fileSize": 3775294,
-      "sha256": "7d92c347ea5931c157d8da12e7fa506adfebf3d23df008aff4836909b14a3b1c"
+      "fileSize": 3722088,
+      "sha256": "c99aacc0a0397df9a0c1b5d10eec1457f0aa3b90a50ba631074d72b53ff10012"
     },
     {
       "id": "staff",
@@ -110,8 +110,8 @@
       "version": "0.3.4",
       "url": "https://themarkkbradoncollective.github.io/main/apks/staff/staff-v0.3.4.apk",
       "downloadName": "staff-v0.3.4.apk",
-      "fileSize": 3781520,
-      "sha256": "7eec088e609c14d404ad1db52b73c87b73e75df8757574945cd8514a35a4f992"
+      "fileSize": 3728042,
+      "sha256": "da57bd39edab591c6a186728940b6e6cd02bd43aea2ff60e3c3b64813a614be8"
     }
   ]
 }
