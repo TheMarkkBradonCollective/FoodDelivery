@@ -1,9 +1,9 @@
 "use client";
 
 import { useAppStore } from "@/store";
-import { StatusBadge } from "@runr/shared/components/ui/StatusBadge";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { selectVendorBusiness } from "@runr/shared/lib/utils";
+import { StatusBadge } from "@porter/shared/components/ui/StatusBadge";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { selectVendorBusiness } from "@porter/shared/lib/utils";
 
 export default function BusinessRunrsPage() {
   const { businesses, user } = useAppStore();

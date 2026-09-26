@@ -4,10 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Bell, CreditCard, Heart, LifeBuoy, LogOut, MapPin, Moon, ShoppingBag, Sun } from "lucide-react";
-import { SettingsRow, ToggleSwitch } from "@runr/shared/components/ui/SettingsRow";
-import { ConfirmDialog } from "@runr/shared/components/ui/ConfirmDialog";
-import { BottomSheet } from "@runr/shared/components/ui/BottomSheet";
-import { JobLoop } from "@runr/shared/components/ui/JobLoop";
+import { SettingsRow, ToggleSwitch } from "@porter/shared/components/ui/SettingsRow";
+import { ConfirmDialog } from "@porter/shared/components/ui/ConfirmDialog";
+import { BottomSheet } from "@porter/shared/components/ui/BottomSheet";
+import { JobLoop } from "@porter/shared/components/ui/JobLoop";
 import { useAppStore } from "@/store";
 
 export default function CustomerProfilePage() {

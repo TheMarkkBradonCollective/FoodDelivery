@@ -18,9 +18,9 @@ const MAIN_REPO = 'TheMarkkBradonCollective/main';
 const MBC_PUBLIC_BASE = 'https://themarkkbradoncollective.github.io/main/apks';
 
 const apps = [
-  { id: 'porter', name: 'Porter', tagline: 'Get what you need.', packageId: 'com.runr.porter' },
-  { id: 'runr', name: 'Porter Runner', tagline: 'Pick it up. Run it there.', packageId: 'com.runr.runr' },
-  { id: 'vendr', name: 'Porter Vendor', tagline: 'Sell. Manage. Grow.', packageId: 'com.runr.vendr' },
+  { id: 'porter', name: 'Porter', tagline: 'Shop nearby. Track every step.', packageId: 'com.porter.porter' },
+  { id: 'runr', name: 'Porter Runner', tagline: 'Choose your window. Earn per drop.', packageId: 'com.porter.runner' },
+  { id: 'vendr', name: 'Porter Vendor', tagline: 'Set capacity. Serve your queue.', packageId: 'com.porter.vendor' },
 ];
 
 function sha256File(filePath) {
@@ -89,8 +89,8 @@ try {
     copyFileSync(app.apkPath, join(destDir, app.apkName));
   }
 
-  mkdirSync(join(repoDir, 'apks', 'runr-platform'), { recursive: true });
-  copyFileSync(zipPath, join(repoDir, 'apks', 'runr-platform', zipName));
+  mkdirSync(join(repoDir, 'apks', 'porter-platform'), { recursive: true });
+  copyFileSync(zipPath, join(repoDir, 'apks', 'porter-platform', zipName));
 
   for (const app of published) {
     const iconSrc = join(root, 'apps', 'website', 'public', 'icons', 'apps', `${app.id}.png`);
@@ -144,7 +144,7 @@ try {
   for (const app of published) {
     console.log(`  ${app.name}: ${MBC_PUBLIC_BASE}/${app.id}/${app.apkName}`);
   }
-  console.log(`  Zip: ${MBC_PUBLIC_BASE}/runr-platform/${zipName}`);
+  console.log(`  Zip: ${MBC_PUBLIC_BASE}/porter-platform/${zipName}`);
 } finally {
   rmSync(workDir, { recursive: true, force: true });
 }

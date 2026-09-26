@@ -8,7 +8,7 @@ import { APP_COPY, type AppId } from "../../lib/apps";
 const STEPS: Record<AppId, { title: string; body: string; visual: string }[]> = {
   porter: [
     {
-      title: "Get what you need.",
+      title: APP_COPY.porter.tagline,
       body: "Find nearby restaurants, stores, and more. Browse catalogs, save favorites, and check out in one place.",
       visual: "🛍️",
     },

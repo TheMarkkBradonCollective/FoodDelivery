@@ -5,7 +5,7 @@
   "updatedAt": "2026-09-09T10:43:12.361Z",
   "apk": {
     "ready": true,
-    "packageId": "com.runr.runr",
+    "packageId": "com.porter.runner",
     "name": "Porter Runner",
     "label": "Porter Runner v0.3.4",
     "version": "0.3.4",
@@ -14,7 +14,7 @@
     "downloadName": "runr-v0.3.4.apk",
     "fileSize": 3822990,
     "sha256": "f2f07e031e22c0ddf29a9ff6c402516b708011cebb75bd91dc8c4c3803a339f9",
-    "releaseNotes": "Porter Runner v0.3.4 — Pick it up. Run it there. Full Capacitor build with embedded web shell.",
+    "releaseNotes": "Porter Runner v0.3.4 — Choose your window. Earn per drop. Full Capacitor build with embedded web shell.",
     "archives": [
       {
         "label": "Porter",
@@ -24,8 +24,8 @@
         "downloadName": "porter-v0.3.4.apk",
         "fileSize": 3855718,
         "sha256": "f2e7381ff9f6aee52693731cd04fc3e4e1035d837d9a11151fc8f31b16209be5",
-        "releaseNotes": "Porter v0.3.4 — Get what you need. Full Capacitor build with embedded web shell.",
-        "packageId": "com.runr.porter"
+        "releaseNotes": "Porter v0.3.4 — Shop nearby. Track every step. Full Capacitor build with embedded web shell.",
+        "packageId": "com.porter.porter"
       },
       {
         "label": "Porter Vendor",
@@ -35,8 +35,8 @@
         "downloadName": "vendr-v0.3.4.apk",
         "fileSize": 3774342,
         "sha256": "3441440e411846c04bb6a56ebf40aeb700544f333021fa50481173ef50b3395e",
-        "releaseNotes": "Porter Vendor v0.3.4 — Sell. Manage. Grow. Full Capacitor build with embedded web shell.",
-        "packageId": "com.runr.vendr"
+        "releaseNotes": "Porter Vendor v0.3.4 — Set capacity. Serve your queue. Full Capacitor build with embedded web shell.",
+        "packageId": "com.porter.vendor"
       },
       {
         "label": "Porter Command",
@@ -47,7 +47,7 @@
         "fileSize": 3780593,
         "sha256": "33f53a57621f8c402a91b5d4c7a133710d0bcf44ff8a18e5f7b05a6486a70384",
         "releaseNotes": "Porter Command v0.3.4 — Platform management. Full Capacitor build with embedded web shell.",
-        "packageId": "com.runr.staff"
+        "packageId": "com.porter.command"
       }
     ]
   },
@@ -55,7 +55,7 @@
     {
       "id": "porter",
       "name": "Porter",
-      "packageId": "com.runr.porter",
+      "packageId": "com.porter.porter",
       "version": "0.3.4",
       "url": "https://themarkkbradoncollective.github.io/main/apks/porter/porter-v0.3.4.apk",
       "downloadName": "porter-v0.3.4.apk",
@@ -65,7 +65,7 @@
     {
       "id": "runr",
       "name": "Porter Runner",
-      "packageId": "com.runr.runr",
+      "packageId": "com.porter.runner",
       "version": "0.3.4",
       "url": "https://themarkkbradoncollective.github.io/main/apks/runr/runr-v0.3.4.apk",
       "downloadName": "runr-v0.3.4.apk",
@@ -75,7 +75,7 @@
     {
       "id": "vendr",
       "name": "Porter Vendor",
-      "packageId": "com.runr.vendr",
+      "packageId": "com.porter.vendor",
       "version": "0.3.4",
       "url": "https://themarkkbradoncollective.github.io/main/apks/vendr/vendr-v0.3.4.apk",
       "downloadName": "vendr-v0.3.4.apk",
@@ -85,7 +85,7 @@
     {
       "id": "staff",
       "name": "Porter Command",
-      "packageId": "com.runr.staff",
+      "packageId": "com.porter.command",
       "version": "0.3.4",
       "url": "https://themarkkbradoncollective.github.io/main/apks/staff/staff-v0.3.4.apk",
       "downloadName": "staff-v0.3.4.apk",

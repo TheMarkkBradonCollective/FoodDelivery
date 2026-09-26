@@ -1,6 +1,6 @@
 # Porter
 
-**Pick Your Place. Run Your Time.**
+**Order local. Staff by coverage.**
 
 Monorepo for the Porter coverage-driven delivery marketplace.
 
@@ -37,10 +37,10 @@ Sign-in uses Supabase. Run `docs/supabase/schema.sql` in the SQL Editor to creat
 
 | App | Role | Tagline |
 |-----|------|---------|
-| **Porter** | Customer | Get what you need. |
-| **Porter Runner** | Delivery | Pick it up. Run it there. |
-| **Porter Vendor** | Business | Sell. Manage. Grow. |
-| **Porter Command** | Ops | Run the marketplace. |
+| **Porter** | Customer | Shop nearby. Track every step. |
+| **Porter Runner** | Delivery | Choose your window. Earn per drop. |
+| **Porter Vendor** | Business | Set capacity. Serve your queue. |
+| **Porter Command** | Ops | Operate the network. |
 
 > Porter creates the demand. Porter Vendor fulfills the business side. Porter Runner moves it.
 

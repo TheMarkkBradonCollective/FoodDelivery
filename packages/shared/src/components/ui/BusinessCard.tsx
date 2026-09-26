@@ -40,7 +40,7 @@ export function BusinessCard({
         <span
           className={cn(
             "pill mb-1.5 !px-2 !py-0.5 text-[10px]",
-            featured ? "bg-ink text-white" : "bg-runr-primary-muted text-runr-primary",
+            featured ? "bg-ink text-white" : "bg-porter-primary-muted text-porter-primary",
           )}
         >
           {business.cuisine}
@@ -49,7 +49,7 @@ export function BusinessCard({
           <h3
             className={cn(
               "truncate text-[15px] font-extrabold tracking-tight",
-              featured ? "text-runr-ink" : "text-[var(--foreground)]"
+              featured ? "text-porter-ink" : "text-[var(--foreground)]"
             )}
           >
             {business.name}
@@ -69,16 +69,16 @@ export function BusinessCard({
                 className={cn(
                   "h-4 w-4",
                   isFavorite
-                    ? "fill-runr-warning text-runr-warning"
+                    ? "fill-porter-warning text-porter-warning"
                     : featured
-                      ? "text-runr-ink/40"
-                      : "text-runr-neutral-300"
+                      ? "text-porter-ink/40"
+                      : "text-porter-neutral-300"
                 )}
               />
             </button>
           )}
         </div>
-        <p className={cn("mt-1 text-sm", featured ? "text-runr-ink/75" : "text-[var(--muted)]")}>
+        <p className={cn("mt-1 text-sm", featured ? "text-porter-ink/75" : "text-[var(--muted)]")}>
           ★ {business.rating} · {distance.toFixed(1)} mi · {business.etaMinutes} min ·{" "}
           {formatCurrency(business.deliveryFee)}
         </p>
@@ -90,7 +90,7 @@ export function BusinessCard({
   const classes = cn(
     "block w-full rounded-2xl p-4 text-left transition-transform active:scale-[0.99]",
     featured
-      ? "bg-runr-accent-bright text-runr-ink"
+      ? "bg-porter-accent-bright text-porter-ink"
       : "border border-[var(--border)] bg-[var(--surface-elevated)]",
     className
   );

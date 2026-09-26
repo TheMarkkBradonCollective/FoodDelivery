@@ -24,7 +24,7 @@ export function ScreenHeader({
         <div className="relative z-10 flex items-start justify-between gap-3">
           <div className="min-w-0">
             {eyebrow && (
-              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">{eyebrow}</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-porter-accent-bright">{eyebrow}</p>
             )}
             <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-white">{title}</h1>
             {subtitle && <p className="mt-1 text-sm text-white/75">{subtitle}</p>}

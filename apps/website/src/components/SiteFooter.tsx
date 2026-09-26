@@ -13,7 +13,7 @@ export function SiteFooter() {
               <span className="font-bold">Porter</span>
             </div>
             <p className="mt-3 text-sm text-[var(--muted)]">
-              Pick Your Place. Run Your Time.
+              Order local. Staff by coverage.
             </p>
             <p className="mt-2 text-sm text-[var(--muted)]">
               © {new Date().getFullYear()} The Markk Brandon Collective

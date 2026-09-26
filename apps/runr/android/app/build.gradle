@@ -9,10 +9,10 @@ android {
             keyPassword 'mbcrunr'
         }
     }
-    namespace "com.runr.runr"
+    namespace "com.porter.runner"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.runr.runr"
+        applicationId "com.porter.runner"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 304

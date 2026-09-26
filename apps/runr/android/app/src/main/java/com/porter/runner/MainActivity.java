@@ -1,4 +1,4 @@
-package com.runr.staff;
+package com.porter.runr;
 
 import android.os.Bundle;
 import androidx.core.view.WindowCompat;

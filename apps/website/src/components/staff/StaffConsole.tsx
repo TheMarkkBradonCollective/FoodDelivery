@@ -4,14 +4,14 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/components/AuthProvider";
 import { useAppStore } from "@/store";
-import { StaffChat } from "@runr/shared/components/staff/StaffChat";
+import { StaffChat } from "@porter/shared/components/staff/StaffChat";
 import {
   StaffAppsPanel,
   StaffCoveragePanel,
   StaffOrdersPanel,
   StaffUsersPanel,
-} from "@runr/shared/components/staff/StaffOpsPanels";
-import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
+} from "@porter/shared/components/staff/StaffOpsPanels";
+import { getBusinessCoverageSummary } from "@porter/shared/lib/coverage-engine";
 import {
   Building2,
   LayoutDashboard,

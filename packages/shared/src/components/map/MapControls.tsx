@@ -14,7 +14,7 @@ export function MapControls({ onRecenter, className }: MapControlsProps) {
       <button
         type="button"
         onClick={onRecenter}
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface-elevated)] text-purple shadow-runr-card ring-1 ring-[var(--border)]"
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface-elevated)] text-purple shadow-porter-card ring-1 ring-[var(--border)]"
         aria-label="Recenter map"
       >
         <Navigation2 className="h-4 w-4 text-[var(--foreground)]" />
@@ -42,10 +42,10 @@ export function ActiveRunBanner({
     <button
       type="button"
       onClick={onViewRun}
-      className="map-dock rounded-2xl border border-[var(--border)] bg-[var(--surface)]/95 p-3.5 text-left shadow-runr-sheet backdrop-blur-md"
+      className="map-dock rounded-2xl border border-[var(--border)] bg-[var(--surface)]/95 p-3.5 text-left shadow-porter-sheet backdrop-blur-md"
     >
-      <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-runr-success">
-        Active RUN · Checked in
+      <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-porter-success">
+        Active shift · Checked in
       </p>
       <h3 className="mt-0.5 text-base font-extrabold text-[var(--foreground)]">{businessName}</h3>
       <p className="text-xs text-[var(--muted)]">

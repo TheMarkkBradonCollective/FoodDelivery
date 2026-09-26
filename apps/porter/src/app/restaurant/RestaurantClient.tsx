@@ -4,15 +4,15 @@ import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Clock, Heart, Star } from "lucide-react";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { DishCard } from "@runr/shared/components/ui/DishCard";
-import { DishPhoto } from "@runr/shared/components/ui/CuisinePlate";
-import { IconButton } from "@runr/shared/components/ui/IconButton";
-import { QuantityStepper } from "@runr/shared/components/ui/QuantityStepper";
-import { BottomSheet } from "@runr/shared/components/ui/BottomSheet";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { DishCard } from "@porter/shared/components/ui/DishCard";
+import { DishPhoto } from "@porter/shared/components/ui/CuisinePlate";
+import { IconButton } from "@porter/shared/components/ui/IconButton";
+import { QuantityStepper } from "@porter/shared/components/ui/QuantityStepper";
+import { BottomSheet } from "@porter/shared/components/ui/BottomSheet";
 import { useAppStore } from "@/store";
-import { formatCurrency } from "@runr/shared/lib/utils";
-import type { MenuItem } from "@runr/shared/types";
+import { formatCurrency } from "@porter/shared/lib/utils";
+import type { MenuItem } from "@porter/shared/types";
 
 export function RestaurantClient({ businessId }: { businessId: string }) {
   const { businesses, addToCart, cart, favoriteBusinessIds, toggleFavorite, updateCartQuantity } = useAppStore();
@@ -81,7 +81,7 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
       </div>
 
       <div className="px-5 lg:px-8">
-        <div className="-mt-6 rounded-2xl bg-[var(--surface-elevated)] p-4 shadow-runr-card ring-1 ring-[var(--border)]">
+        <div className="-mt-6 rounded-2xl bg-[var(--surface-elevated)] p-4 shadow-porter-card ring-1 ring-[var(--border)]">
           <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">{business.cuisine}</p>
           <h1 className="mt-0.5 text-[1.375rem] font-extrabold tracking-tight text-[var(--foreground)]">{business.name}</h1>
           <p className="mt-1 text-sm text-[var(--muted)]">{business.address}</p>
@@ -129,7 +129,7 @@ export function RestaurantClient({ businessId }: { businessId: string }) {
           <div className="sticky-cta-space" aria-hidden />
           <Link
             href="/cart"
-            className="sticky-cta flex h-12 items-center justify-center rounded-full bg-ink text-sm font-extrabold text-white shadow-runr-card"
+            className="sticky-cta flex h-12 items-center justify-center rounded-full bg-ink text-sm font-extrabold text-white shadow-porter-card"
           >
             View cart ({cartCount})
           </Link>

@@ -29,11 +29,11 @@ export function DeliveryCard({
     <div
       className={cn(
         "rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] p-3.5",
-        variant === "offer" && "border-runr-primary/30 ring-2 ring-runr-primary/10",
+        variant === "offer" && "border-porter-primary/30 ring-2 ring-porter-primary/10",
         className
       )}
     >
-      <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-runr-primary">
+      <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-porter-primary">
         {variant === "offer" && "New Delivery"}
         {variant === "pickup" && "Pickup"}
         {variant === "dropoff" && "Deliver To"}
@@ -51,7 +51,7 @@ export function DeliveryCard({
       </p>
 
       {delivery.instructions && variant === "dropoff" && (
-        <p className="mt-2 rounded-runr-md bg-[var(--background)] px-3 py-2 text-sm">
+        <p className="mt-2 rounded-porter-md bg-[var(--background)] px-3 py-2 text-sm">
           {delivery.instructions}
         </p>
       )}

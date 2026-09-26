@@ -2,13 +2,13 @@ import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import "@/store";
-import { AppShell } from "@runr/shared/components/layout/AppShell";
+import { AppShell } from "@porter/shared/components/layout/AppShell";
 import { VendrLayoutClient } from "./VendrLayoutClient";
 
 const font = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Porter Vendor — Sell. Manage. Grow.",
+  title: "Porter Vendor — Set capacity. Serve your queue.",
   description:
     "Run your business on the Porter marketplace — orders, coverage, deliveries, and growth.",
   applicationName: "Porter Vendor",

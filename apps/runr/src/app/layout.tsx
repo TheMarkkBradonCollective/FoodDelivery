@@ -2,13 +2,13 @@ import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import "@/store";
-import { AppShell } from "@runr/shared/components/layout/AppShell";
+import { AppShell } from "@porter/shared/components/layout/AppShell";
 import { RunrLayoutClient } from "./RunrLayoutClient";
 
 const font = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Porter Runner — Pick it up. Run it there.",
+  title: "Porter Runner — Choose your window. Earn per drop.",
   description:
     "Choose your business, choose your time, deliver and earn on the Porter marketplace.",
   applicationName: "Porter Runner",

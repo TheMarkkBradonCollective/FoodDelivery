@@ -1,4 +1,4 @@
-package com.runr.porter;
+package com.porter.vendr;
 
 import android.os.Bundle;
 import androidx.core.view.WindowCompat;

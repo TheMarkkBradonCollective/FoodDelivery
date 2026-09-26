@@ -1,31 +1,31 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
-import { MapView } from "@runr/shared/components/map";
-import { MapControls, ActiveRunBanner } from "@runr/shared/components/map/MapControls";
-import { SearchBar } from "@runr/shared/components/ui/SearchBar";
-import { SegmentedControl } from "@runr/shared/components/ui/SegmentedControl";
-import { BottomSheet } from "@runr/shared/components/ui/BottomSheet";
-import { PrimaryButton } from "@runr/shared/components/ui/PrimaryButton";
-import { CoverageBadge } from "@runr/shared/components/ui/CoverageBadge";
-import { CoverageTimeline } from "@runr/shared/components/ui/CoverageTimeline";
-import { DeliveryCard } from "@runr/shared/components/ui/DeliveryCard";
+import { MapView } from "@porter/shared/components/map";
+import { MapControls, ActiveRunBanner } from "@porter/shared/components/map/MapControls";
+import { SearchBar } from "@porter/shared/components/ui/SearchBar";
+import { SegmentedControl } from "@porter/shared/components/ui/SegmentedControl";
+import { BottomSheet } from "@porter/shared/components/ui/BottomSheet";
+import { PrimaryButton } from "@porter/shared/components/ui/PrimaryButton";
+import { CoverageBadge } from "@porter/shared/components/ui/CoverageBadge";
+import { CoverageTimeline } from "@porter/shared/components/ui/CoverageTimeline";
+import { DeliveryCard } from "@porter/shared/components/ui/DeliveryCard";
 import { useAppStore } from "@/store";
 import {
   calculateCoverageTimeline,
   canScheduleRun,
   getBusinessCoverageSummary,
   getMarkerColor,
-} from "@runr/shared/lib/coverage-engine";
+} from "@porter/shared/lib/coverage-engine";
 import {
   calculateDistanceMiles,
   formatTimeRange,
   getCoverageStatusLabel,
   getDemandLabel,
-} from "@runr/shared/lib/utils";
+} from "@porter/shared/lib/utils";
 import { Star } from "lucide-react";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { CatalogPreviewBanner } from "@runr/shared/components/ui/CatalogPreviewBanner";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { CatalogPreviewBanner } from "@porter/shared/components/ui/CatalogPreviewBanner";
 
 export default function RunrMapPage() {
   const {
@@ -319,7 +319,7 @@ export default function RunrMapPage() {
             <div>
               <h3 className="text-base font-extrabold">I&apos;m covering {selectedBusiness.name}</h3>
               <p className="text-sm text-[var(--muted)]">
-                Choose your window. The marketplace matches Porter orders to this RUN — you don&apos;t wait on random pings.
+                Choose your window. The marketplace matches Porter orders to this shift — you don&apos;t wait on random pings.
               </p>
             </div>
 
@@ -347,8 +347,8 @@ export default function RunrMapPage() {
             </p>
 
             {coverageAvailable === true && (
-              <div className="rounded-2xl border border-runr-success/30 bg-runr-success-muted p-3 text-center">
-                <p className="font-semibold text-runr-success">COVERAGE AVAILABLE</p>
+              <div className="rounded-2xl border border-porter-success/30 bg-porter-success-muted p-3 text-center">
+                <p className="font-semibold text-porter-success">COVERAGE AVAILABLE</p>
                 <p className="mt-1 text-sm text-[var(--muted)]">
                   Your requested RUN period has open capacity
                 </p>
@@ -356,8 +356,8 @@ export default function RunrMapPage() {
             )}
 
             {coverageAvailable === false && (
-              <div className="rounded-2xl border border-runr-critical/30 bg-runr-critical-muted p-3 text-center">
-                <p className="font-semibold text-runr-critical">NOT AVAILABLE</p>
+              <div className="rounded-2xl border border-porter-critical/30 bg-porter-critical-muted p-3 text-center">
+                <p className="font-semibold text-porter-critical">NOT AVAILABLE</p>
                 <p className="mt-1 text-sm text-[var(--muted)]">
                   Coverage is full for part of your selected period. Try adjusting times.
                 </p>
@@ -399,7 +399,7 @@ function BusinessSheetContent({
             <button type="button" onClick={onFavoriteToggle} aria-label="Toggle favorite">
               <Star
                 className={`h-5 w-5 ${
-                  isFavorite ? "fill-runr-warning text-runr-warning" : "text-runr-neutral-300"
+                  isFavorite ? "fill-porter-warning text-porter-warning" : "text-porter-neutral-300"
                 }`}
               />
             </button>
@@ -408,7 +408,7 @@ function BusinessSheetContent({
             ★ {business.rating} · {distance.toFixed(1)} miles away
           </p>
           {business.demandLevel === "high" && (
-            <p className="mt-2 text-xs font-bold uppercase tracking-wider text-runr-primary">
+            <p className="mt-2 text-xs font-bold uppercase tracking-wider text-porter-primary">
               High Demand
             </p>
           )}
@@ -428,7 +428,7 @@ function BusinessSheetContent({
           <span className="text-sm text-[var(--muted)]">covered</span>
         </div>
         {coverage.gap > 0 && (
-          <p className="mt-2 text-sm font-semibold text-runr-critical">
+          <p className="mt-2 text-sm font-semibold text-porter-critical">
             {getCoverageStatusLabel(coverage.status, coverage.gap)}
           </p>
         )}
@@ -441,7 +441,7 @@ function BusinessSheetContent({
 
       <div>
         <p className="mb-2 text-sm font-semibold">Estimated Delivery Activity</p>
-        <p className="text-lg font-bold uppercase text-runr-primary">
+        <p className="text-lg font-bold uppercase text-porter-primary">
           {getDemandLabel(business.demandLevel)}
         </p>
         <p className="mt-2 text-xs text-[var(--muted)]">

@@ -26,7 +26,7 @@
       "@/*": [
         "./src/*"
       ],
-      "@runr/shared/*": [
+      "@porter/shared/*": [
         "../../packages/shared/src/*"
       ]
     }

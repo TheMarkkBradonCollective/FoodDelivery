@@ -1,6 +1,6 @@
 "use client";
 
-import { AppFrame } from "@runr/shared/components/layout/AppFrame";
+import { AppFrame } from "@porter/shared/components/layout/AppFrame";
 import { Activity, DollarSign, List, Map, User } from "lucide-react";
 
 export const runrNav = [

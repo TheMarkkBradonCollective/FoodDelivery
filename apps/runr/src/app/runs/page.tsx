@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { RunCard } from "@runr/shared/components/ui/RunCard";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { ConfirmDialog } from "@runr/shared/components/ui/ConfirmDialog";
-import { SlideToConfirm } from "@runr/shared/components/ui/SlideToConfirm";
+import { RunCard } from "@porter/shared/components/ui/RunCard";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { ConfirmDialog } from "@porter/shared/components/ui/ConfirmDialog";
+import { SlideToConfirm } from "@porter/shared/components/ui/SlideToConfirm";
 import { useAppStore } from "@/store";
-import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
-import { calculateDistanceMiles, formatCurrency } from "@runr/shared/lib/utils";
+import { getBusinessCoverageSummary } from "@porter/shared/lib/coverage-engine";
+import { calculateDistanceMiles, formatCurrency } from "@porter/shared/lib/utils";
 import { Bike } from "lucide-react";
-import { CatalogPreviewBanner } from "@runr/shared/components/ui/CatalogPreviewBanner";
+import { CatalogPreviewBanner } from "@porter/shared/components/ui/CatalogPreviewBanner";
 
 export default function RunrRunsPage() {
   const {
@@ -79,7 +79,7 @@ export default function RunrRunsPage() {
 
       {activeRun && (
         <section className="mt-6">
-          <h2 className="mb-2 text-base font-extrabold text-runr-success">Active RUN</h2>
+          <h2 className="mb-2 text-base font-extrabold text-porter-success">Active shift</h2>
           <RunCard
             run={activeRun}
             businessName={
@@ -149,7 +149,7 @@ export default function RunrRunsPage() {
       </div>
       <ConfirmDialog
         open={Boolean(cancelId)}
-        title="Cancel this RUN?"
+        title="Cancel this shift?"
         description="The coverage window will open back up for other Runners. You can book another vendor from the map."
         confirmLabel="Cancel RUN"
         destructive

@@ -19,11 +19,11 @@ export function PrimaryButton({
 }: PrimaryButtonProps) {
   const variants = {
     primary:
-      "bg-runr-primary text-[var(--on-primary,#ffffff)] hover:bg-runr-primary-hover shadow-runr-card",
+      "bg-porter-primary text-[var(--on-primary,#ffffff)] hover:bg-porter-primary-hover shadow-porter-card",
     secondary:
-      "bg-[var(--surface-elevated)] text-[var(--foreground)] border border-[var(--border)] hover:bg-runr-neutral-100 dark:hover:bg-runr-neutral-800",
-    ghost: "bg-transparent text-[var(--foreground)] hover:bg-runr-neutral-100 dark:hover:bg-runr-neutral-800",
-    danger: "bg-runr-critical text-white hover:opacity-90",
+      "bg-[var(--surface-elevated)] text-[var(--foreground)] border border-[var(--border)] hover:bg-porter-neutral-100 dark:hover:bg-porter-neutral-800",
+    ghost: "bg-transparent text-[var(--foreground)] hover:bg-porter-neutral-100 dark:hover:bg-porter-neutral-800",
+    danger: "bg-porter-critical text-white hover:opacity-90",
   };
 
   const sizes = {

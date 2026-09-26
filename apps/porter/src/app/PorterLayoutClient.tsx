@@ -1,6 +1,6 @@
 "use client";
 
-import { AppFrame } from "@runr/shared/components/layout/AppFrame";
+import { AppFrame } from "@porter/shared/components/layout/AppFrame";
 import { Heart, Home, List, Activity, User } from "lucide-react";
 
 export const porterNav = [

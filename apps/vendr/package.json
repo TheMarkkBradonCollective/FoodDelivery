@@ -1,5 +1,5 @@
 {
-  "name": "@runr/vendr",
+  "name": "@porter/vendr",
   "version": "0.3.4",
   "private": true,
   "scripts": {
@@ -15,7 +15,7 @@
     "@capacitor/android": "^7.2.0",
     "@capacitor/core": "^7.2.0",
     "@capacitor/status-bar": "^7.0.6",
-    "@runr/shared": "*",
+    "@porter/shared": "*",
     "next": "^15.2.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

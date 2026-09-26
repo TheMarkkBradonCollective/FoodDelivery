@@ -4,13 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { QuantityStepper } from "@runr/shared/components/ui/QuantityStepper";
-import { IconButton } from "@runr/shared/components/ui/IconButton";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { QuantityStepper } from "@porter/shared/components/ui/QuantityStepper";
+import { IconButton } from "@porter/shared/components/ui/IconButton";
 import { useAppStore } from "@/store";
-import { formatCurrency } from "@runr/shared/lib/utils";
-import { SegmentedControl } from "@runr/shared/components/ui/SegmentedControl";
-import { PROMO_CODES } from "@runr/shared/data/constants";
+import { formatCurrency } from "@porter/shared/lib/utils";
+import { SegmentedControl } from "@porter/shared/components/ui/SegmentedControl";
+import { PROMO_CODES } from "@porter/shared/data/constants";
 
 export default function CartPage() {
   const {
@@ -48,7 +48,7 @@ export default function CartPage() {
   function applyPromo() {
     const code = promoInput.trim().toUpperCase();
     if (!PROMO_CODES[code]) {
-      setPromoError("That code isn’t valid. Try RUNR5 or PORTER10.");
+      setPromoError("That code isn’t valid. Try PORTER5 or PORTER10.");
       setPromoCode(null);
       return;
     }
@@ -188,7 +188,7 @@ export default function CartPage() {
             value={promoInput}
             onChange={(e) => setPromoInput(e.target.value)}
             className="input-brand h-11 py-0"
-            placeholder="RUNR5"
+            placeholder="PORTER5"
             autoCapitalize="characters"
           />
           <button
@@ -216,7 +216,7 @@ export default function CartPage() {
       </div>
 
       <div className="sticky-cta-space sticky-cta-space--dock" aria-hidden />
-      <div className="sticky-cta rounded-2xl bg-[var(--surface-elevated)] p-3 shadow-runr-sheet ring-1 ring-[var(--border)]">
+      <div className="sticky-cta rounded-2xl bg-[var(--surface-elevated)] p-3 shadow-porter-sheet ring-1 ring-[var(--border)]">
         <div className="mb-2 flex items-baseline justify-between">
           <span className="text-sm font-extrabold">Total</span>
           <span className="text-base font-extrabold tabular-nums">{formatCurrency(total)}</span>

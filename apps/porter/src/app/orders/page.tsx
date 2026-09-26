@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useAppStore } from "@/store";
-import { formatCurrency } from "@runr/shared/lib/utils";
-import { StatusBadge } from "@runr/shared/components/ui/StatusBadge";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { ScreenHeader } from "@runr/shared/components/layout/ScreenHeader";
-import { CuisinePlate } from "@runr/shared/components/ui/CuisinePlate";
+import { formatCurrency } from "@porter/shared/lib/utils";
+import { StatusBadge } from "@porter/shared/components/ui/StatusBadge";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { ScreenHeader } from "@porter/shared/components/layout/ScreenHeader";
+import { CuisinePlate } from "@porter/shared/components/ui/CuisinePlate";
 
 export default function CustomerOrdersPage() {
   const { orders, businesses } = useAppStore();

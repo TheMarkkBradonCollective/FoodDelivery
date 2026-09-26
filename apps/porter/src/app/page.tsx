@@ -4,22 +4,22 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Bell, MapPin, ShoppingBag, SlidersHorizontal } from "lucide-react";
-import { MapView } from "@runr/shared/components/map";
-import { SearchBar } from "@runr/shared/components/ui/SearchBar";
-import { BusinessCard } from "@runr/shared/components/ui/BusinessCard";
-import { DishCard } from "@runr/shared/components/ui/DishCard";
-import { CuisinePlate } from "@runr/shared/components/ui/CuisinePlate";
-import { BottomSheet } from "@runr/shared/components/ui/BottomSheet";
-import { CatalogPreviewBanner } from "@runr/shared/components/ui/CatalogPreviewBanner";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { LoadingState, SkeletonCard } from "@runr/shared/components/ui/ScreenState";
-import { IconButton } from "@runr/shared/components/ui/IconButton";
+import { MapView } from "@porter/shared/components/map";
+import { SearchBar } from "@porter/shared/components/ui/SearchBar";
+import { BusinessCard } from "@porter/shared/components/ui/BusinessCard";
+import { DishCard } from "@porter/shared/components/ui/DishCard";
+import { CuisinePlate } from "@porter/shared/components/ui/CuisinePlate";
+import { BottomSheet } from "@porter/shared/components/ui/BottomSheet";
+import { CatalogPreviewBanner } from "@porter/shared/components/ui/CatalogPreviewBanner";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { LoadingState, SkeletonCard } from "@porter/shared/components/ui/ScreenState";
+import { IconButton } from "@porter/shared/components/ui/IconButton";
 import { useAppStore } from "@/store";
-import { cuisineCategories } from "@runr/shared/data/constants";
-import { JobLoop } from "@runr/shared/components/ui/JobLoop";
-import { APP_COPY } from "@runr/shared/lib/apps";
-import { getBusinessCoverageSummary, getMarkerColor } from "@runr/shared/lib/coverage-engine";
-import type { MenuItem } from "@runr/shared/types";
+import { cuisineCategories } from "@porter/shared/data/constants";
+import { JobLoop } from "@porter/shared/components/ui/JobLoop";
+import { APP_COPY } from "@porter/shared/lib/apps";
+import { getBusinessCoverageSummary, getMarkerColor } from "@porter/shared/lib/coverage-engine";
+import type { MenuItem } from "@porter/shared/types";
 
 type PopularDish = MenuItem & { businessId: string; cuisine: string; businessName: string };
 
@@ -229,7 +229,7 @@ export default function PorterDiscoverPage() {
 
       <div className="mt-5 flex items-center justify-between gap-3 overflow-hidden rounded-2xl bg-purple px-4 py-2.5 text-white">
         <div className="min-w-0">
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-lime">Tonight · RUNR5</p>
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-lime">Tonight · PORTER5</p>
           <p className="truncate text-sm font-extrabold">$5 off · or PORTER10 for 10%</p>
         </div>
         <Link
@@ -290,7 +290,7 @@ export default function PorterDiscoverPage() {
           <div className="sticky-cta-space" aria-hidden />
           <Link
             href="/cart"
-            className="sticky-cta flex h-12 items-center justify-center rounded-full bg-ink text-sm font-extrabold text-white shadow-runr-card"
+            className="sticky-cta flex h-12 items-center justify-center rounded-full bg-ink text-sm font-extrabold text-white shadow-porter-card"
           >
             View cart ({cartCount})
           </Link>

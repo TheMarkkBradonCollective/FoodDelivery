@@ -1,5 +1,5 @@
 {
-  "name": "@runr/shared",
+  "name": "@porter/shared",
   "version": "0.1.0",
   "private": true,
   "type": "module",

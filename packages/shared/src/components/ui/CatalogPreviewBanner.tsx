@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import { useAppStore } from "../../store/create-app-store";
 import { cn } from "../../lib/utils";
 
-const DISMISS_KEY = "runr-preview-banner-dismissed";
+const DISMISS_KEY = "porter-preview-banner-dismissed";
 
 export function CatalogPreviewBanner({ className }: { className?: string }) {
   const catalogPreview = useAppStore((s) => s.catalogPreview);

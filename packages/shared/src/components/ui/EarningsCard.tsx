@@ -19,7 +19,7 @@ export function EarningsCard({
     <div
       className={cn(
         "rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] p-3",
-        highlight && "border-runr-primary/20 bg-runr-primary-muted",
+        highlight && "border-porter-primary/20 bg-porter-primary-muted",
         className
       )}
     >
@@ -29,7 +29,7 @@ export function EarningsCard({
       <p
         className={cn(
           "mt-0.5 text-lg font-extrabold tabular-nums",
-          highlight ? "text-runr-primary" : "text-[var(--foreground)]"
+          highlight ? "text-porter-primary" : "text-[var(--foreground)]"
         )}
       >
         {formatCurrency(amount)}

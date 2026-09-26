@@ -1,9 +1,9 @@
 "use client";
 
 import { useAppStore } from "@/store";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { selectVendorBusiness } from "@runr/shared/lib/utils";
-import { JobLoop } from "@runr/shared/components/ui/JobLoop";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { selectVendorBusiness } from "@porter/shared/lib/utils";
+import { JobLoop } from "@porter/shared/components/ui/JobLoop";
 
 export default function BusinessCatalogPage() {
   const { businesses, user, updateMenuItem } = useAppStore();

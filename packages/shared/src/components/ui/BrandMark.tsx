@@ -17,7 +17,7 @@ export function BrandMark({
   return (
     <div
       className={cn(
-        "flex items-center justify-center rounded-full shadow-runr-card",
+        "flex items-center justify-center rounded-full shadow-porter-card",
         inverted ? "bg-[#7048F8] text-[#A0F878]" : "bg-[#A0F878] text-[#1A1224]",
         dim,
         className

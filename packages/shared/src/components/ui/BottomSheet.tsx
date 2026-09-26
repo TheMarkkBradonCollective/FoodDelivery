@@ -48,7 +48,7 @@ export function BottomSheet({
       />
       <div
         className={cn(
-          "fixed inset-x-0 bottom-0 z-50 flex flex-col rounded-t-runr-xl bg-[var(--surface)] shadow-runr-sheet animate-slide-up transition-[height] duration-300",
+          "fixed inset-x-0 bottom-0 z-50 flex flex-col rounded-t-porter-xl bg-[var(--surface)] shadow-porter-sheet animate-slide-up transition-[height] duration-300",
           snapHeights[currentSnap],
           className
         )}
@@ -70,7 +70,7 @@ export function BottomSheet({
             }
           }}
         >
-          <div className="h-1 w-10 rounded-full bg-runr-neutral-300 dark:bg-runr-neutral-600" />
+          <div className="h-1 w-10 rounded-full bg-porter-neutral-300 dark:bg-porter-neutral-600" />
           {title && (
             <h2 className="mt-2.5 text-base font-extrabold text-[var(--foreground)]">
               {title}

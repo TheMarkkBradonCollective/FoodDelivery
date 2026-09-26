@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
-import { getCurrentAuthSession, signOut } from "@runr/shared/lib/supabase/auth";
-import { sendPasswordReset } from "@runr/shared/lib/auth";
+import { getCurrentAuthSession, signOut } from "@porter/shared/lib/supabase/auth";
+import { sendPasswordReset } from "@porter/shared/lib/auth";
 import { Eye, EyeOff, LogIn, Shield, Smartphone } from "lucide-react";
 
 export default function LoginPage() {

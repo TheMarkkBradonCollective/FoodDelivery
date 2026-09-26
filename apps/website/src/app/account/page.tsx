@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useAuth } from "@/components/AuthProvider";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { useAppStore } from "@/store";
-import { getAppForRole, getRoleLabel } from "@runr/shared/lib/auth";
-import { formatCurrency, formatTimeRange, selectVendorBusiness } from "@runr/shared/lib/utils";
-import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
+import { getAppForRole, getRoleLabel } from "@porter/shared/lib/auth";
+import { formatCurrency, formatTimeRange, selectVendorBusiness } from "@porter/shared/lib/utils";
+import { getBusinessCoverageSummary } from "@porter/shared/lib/coverage-engine";
 import {
   Bell,
   CreditCard,
@@ -226,8 +226,8 @@ function BillingPanel() {
   const totalEarnings = earnings.reduce((s, e) => s + e.total, 0);
 
   useEffect(() => {
-    setCardLabel(loadPref("runr-web-card-label", "Visa ••4242"));
-    setPayoutEmail(loadPref("runr-web-payout-email", user.email));
+    setCardLabel(loadPref("porter-web-card-label", "Visa ••4242"));
+    setPayoutEmail(loadPref("porter-web-payout-email", user.email));
   }, [user.email]);
 
   return (
@@ -247,7 +247,7 @@ function BillingPanel() {
               type="button"
               className="mt-3 rounded-full bg-[#7048F8] px-4 py-2 text-sm font-semibold text-white hover:bg-[#5C36E0]"
               onClick={() => {
-                window.localStorage.setItem("runr-web-card-label", cardLabel);
+                window.localStorage.setItem("porter-web-card-label", cardLabel);
                 showToast("Payment method saved");
               }}
             >
@@ -290,7 +290,7 @@ function BillingPanel() {
               type="button"
               className="mt-3 rounded-full bg-[#7048F8] px-4 py-2 text-sm font-semibold text-white hover:bg-[#5C36E0]"
               onClick={() => {
-                window.localStorage.setItem("runr-web-payout-email", payoutEmail);
+                window.localStorage.setItem("porter-web-payout-email", payoutEmail);
                 showToast("Payout email saved");
               }}
             >
@@ -319,8 +319,8 @@ function PreferencesPanel() {
   const [notifyLive, setNotifyLive] = useState(true);
 
   useEffect(() => {
-    setNotifyOffers(loadPref("runr-web-notify-offers", "1") === "1");
-    setNotifyLive(loadPref("runr-web-notify-live", "1") === "1");
+    setNotifyOffers(loadPref("porter-web-notify-offers", "1") === "1");
+    setNotifyLive(loadPref("porter-web-notify-live", "1") === "1");
   }, []);
 
   function persistNotify(key: string, value: boolean, setter: (v: boolean) => void) {
@@ -336,13 +336,13 @@ function PreferencesPanel() {
           label="Promotions"
           hint="Offers and marketplace news"
           on={notifyOffers}
-          onChange={(v) => persistNotify("runr-web-notify-offers", v, setNotifyOffers)}
+          onChange={(v) => persistNotify("porter-web-notify-offers", v, setNotifyOffers)}
         />
         <ToggleRow
-          label={user.role === "customer" ? "Live order updates" : user.role === "runr" ? "RUN and drop alerts" : "Vendor order alerts"}
+          label={user.role === "customer" ? "Live order updates" : user.role === "runr" ? "Shift and drop alerts" : "Vendor order alerts"}
           hint="Synced with your app notifications"
           on={notifyLive}
-          onChange={(v) => persistNotify("runr-web-notify-live", v, setNotifyLive)}
+          onChange={(v) => persistNotify("porter-web-notify-live", v, setNotifyLive)}
         />
         <ToggleRow
           label="Dark mode"

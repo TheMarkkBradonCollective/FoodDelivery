@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useAppStore } from "@/store";
-import { DishPhoto } from "@runr/shared/components/ui/CuisinePlate";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { ScreenHeader } from "@runr/shared/components/layout/ScreenHeader";
+import { DishPhoto } from "@porter/shared/components/ui/CuisinePlate";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { ScreenHeader } from "@porter/shared/components/layout/ScreenHeader";
 import { Heart } from "lucide-react";
 
 export default function CustomerFavoritesPage() {

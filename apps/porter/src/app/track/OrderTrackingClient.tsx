@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { MapView } from "@runr/shared/components/map";
+import { MapView } from "@porter/shared/components/map";
 import { useAppStore } from "@/store";
-import { formatCurrency } from "@runr/shared/lib/utils";
-import { StatusBadge } from "@runr/shared/components/ui/StatusBadge";
-import { IconButton } from "@runr/shared/components/ui/IconButton";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
+import { formatCurrency } from "@porter/shared/lib/utils";
+import { StatusBadge } from "@porter/shared/components/ui/StatusBadge";
+import { IconButton } from "@porter/shared/components/ui/IconButton";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
 import { ArrowLeft } from "lucide-react";
 
 const deliverySteps = [
@@ -94,7 +94,7 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
       </div>
 
       <div className="-mt-6 px-5 pb-8 lg:mx-auto lg:max-w-xl">
-        <div className="rounded-2xl bg-[var(--surface-elevated)] p-4 shadow-runr-card ring-1 ring-[var(--border)]">
+        <div className="rounded-2xl bg-[var(--surface-elevated)] p-4 shadow-porter-card ring-1 ring-[var(--border)]">
           <div className="flex items-start justify-between gap-3">
             <div>
               <h1 className="text-[1.25rem] font-extrabold text-[var(--foreground)]">{business.name}</h1>

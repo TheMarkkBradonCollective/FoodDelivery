@@ -9,10 +9,10 @@ interface CoverageBadgeProps {
 }
 
 const statusStyles: Record<CoverageStatus, string> = {
-  full: "bg-runr-success-muted text-runr-success border-runr-success/20",
-  low: "bg-runr-warning-muted text-runr-warning border-runr-warning/20",
-  gap: "bg-runr-critical-muted text-runr-critical border-runr-critical/20",
-  over_capacity: "bg-runr-neutral-100 text-runr-neutral-600 border-runr-neutral-200",
+  full: "bg-porter-success-muted text-porter-success border-porter-success/20",
+  low: "bg-porter-warning-muted text-porter-warning border-porter-warning/20",
+  gap: "bg-porter-critical-muted text-porter-critical border-porter-critical/20",
+  over_capacity: "bg-porter-neutral-100 text-porter-neutral-600 border-porter-neutral-200",
 };
 
 const statusLabels: Record<CoverageStatus, string> = {

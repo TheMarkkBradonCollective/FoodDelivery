@@ -34,6 +34,6 @@ export const CUISINE_PLATES: Record<string, { emoji: string; from: string; to: s
 export const DEFAULT_ADDRESS = "1 Market St, San Francisco";
 
 export const PROMO_CODES: Record<string, { label: string; amount: number; percent?: boolean }> = {
-  RUNR5: { label: "$5 off", amount: 5 },
+  PORTER5: { label: "$5 off", amount: 5 },
   PORTER10: { label: "10% off", amount: 10, percent: true },
 };

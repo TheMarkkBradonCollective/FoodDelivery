@@ -1,11 +1,11 @@
 "use client";
 
 import { useAppStore } from "@/store";
-import { CoverageTimeline } from "@runr/shared/components/ui/CoverageTimeline";
-import { calculateCoverageTimeline } from "@runr/shared/lib/coverage-engine";
-import { formatTimeRange } from "@runr/shared/lib/utils";
-import { selectVendorBusiness } from "@runr/shared/lib/utils";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
+import { CoverageTimeline } from "@porter/shared/components/ui/CoverageTimeline";
+import { calculateCoverageTimeline } from "@porter/shared/lib/coverage-engine";
+import { formatTimeRange } from "@porter/shared/lib/utils";
+import { selectVendorBusiness } from "@porter/shared/lib/utils";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
 
 export default function BusinessCoveragePage() {
   const { businesses, updateBusinessCapacity, user } = useAppStore();

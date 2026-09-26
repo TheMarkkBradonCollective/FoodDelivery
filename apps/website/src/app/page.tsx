@@ -1,5 +1,5 @@
 import { DownloadCard } from "@/components/DownloadCard";
-import { apps, companyValues, howItWorks } from "@/data/site-content";
+import { apps, companyValues, howItWorks, PORTER_BRAND, ecosystemTagline } from "@/data/site-content";
 import { ArrowDown, MapPin, Store, Truck } from "lucide-react";
 
 export default function HomePage() {
@@ -9,16 +9,15 @@ export default function HomePage() {
       <section className="gradient-mesh border-b border-[var(--border)]">
         <div className="mx-auto max-w-6xl px-6 py-24 text-center md:py-32">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#7048F8]">
-            Coverage-Driven Delivery Marketplace
+            {PORTER_BRAND.descriptor}
           </p>
           <h1 className="mx-auto mt-4 max-w-4xl text-4xl font-bold tracking-tight md:text-6xl">
-            Pick Your Place.
+            {PORTER_BRAND.headline[0]}
             <br />
-            <span className="text-[#7048F8]">Run Your Time.</span>
+            <span className="text-[#7048F8]">{PORTER_BRAND.headline[1]}</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-[var(--muted)]">
-            Porter creates the demand. Porter Vendor fulfills the business side. Porter Runner moves it.
-            One coverage-driven marketplace — not three disconnected apps.
+            {ecosystemTagline()} {PORTER_BRAND.promise}
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
@@ -36,11 +35,6 @@ export default function HomePage() {
             </a>
           </div>
 
-          <img
-            src="/images/runr-app-showcase.png"
-            alt="Porter, Porter Runner, and Porter Vendor app screens"
-            className="mx-auto mt-16 w-full max-w-5xl"
-          />
           <div className="mx-auto mt-10 grid max-w-3xl grid-cols-3 gap-4 text-center">
             <div>
               <p className="text-2xl">🛍️</p>
@@ -93,8 +87,8 @@ export default function HomePage() {
           <div className="max-w-2xl">
             <h2 className="text-3xl font-bold tracking-tight">How We Operate</h2>
             <p className="mt-3 text-[var(--muted)]">
-              Runner is different from traditional delivery platforms. We&apos;re
-              coverage-driven — not order-driven.
+              {PORTER_BRAND.name} is coverage-driven — not order-driven. Vendors plan
+              capacity; Runners choose windows; customers order like any delivery app.
             </p>
           </div>
 

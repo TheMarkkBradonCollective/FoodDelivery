@@ -2,18 +2,18 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
-import { CoverageTimeline } from "@runr/shared/components/ui/CoverageTimeline";
-import { CoverageBadge } from "@runr/shared/components/ui/CoverageBadge";
-import { CoverageRing } from "@runr/shared/components/ui/CoverageRing";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { CatalogPreviewBanner } from "@runr/shared/components/ui/CatalogPreviewBanner";
-import { JobLoop } from "@runr/shared/components/ui/JobLoop";
+import { CoverageTimeline } from "@porter/shared/components/ui/CoverageTimeline";
+import { CoverageBadge } from "@porter/shared/components/ui/CoverageBadge";
+import { CoverageRing } from "@porter/shared/components/ui/CoverageRing";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { CatalogPreviewBanner } from "@porter/shared/components/ui/CatalogPreviewBanner";
+import { JobLoop } from "@porter/shared/components/ui/JobLoop";
 import { useAppStore } from "@/store";
 import {
   calculateCoverageTimeline,
   getBusinessCoverageSummary,
-} from "@runr/shared/lib/coverage-engine";
-import { selectVendorBusiness } from "@runr/shared/lib/utils";
+} from "@porter/shared/lib/coverage-engine";
+import { selectVendorBusiness } from "@porter/shared/lib/utils";
 
 export default function BusinessOperationsPage() {
   const { businesses, orders, user } = useAppStore();

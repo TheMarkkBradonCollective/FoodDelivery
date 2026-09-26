@@ -22,7 +22,7 @@ export function BottomNavigation({ items, className }: BottomNavigationProps) {
   return (
     <nav
       className={cn(
-        "fixed inset-x-3 bottom-3 z-30 rounded-full border border-[var(--border)] bg-[var(--surface)]/95 pb-[max(0.25rem,env(safe-area-inset-bottom))] shadow-runr-sheet backdrop-blur-md",
+        "fixed inset-x-3 bottom-3 z-30 rounded-full border border-[var(--border)] bg-[var(--surface)]/95 pb-[max(0.25rem,env(safe-area-inset-bottom))] shadow-porter-sheet backdrop-blur-md",
         className
       )}
     >
@@ -36,14 +36,14 @@ export function BottomNavigation({ items, className }: BottomNavigationProps) {
               className={cn(
                 "flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-semibold transition-colors",
                 active
-                  ? "text-runr-primary"
+                  ? "text-porter-primary"
                   : "text-[var(--muted)] hover:text-[var(--foreground)]"
               )}
             >
               <span
                 className={cn(
                   "flex h-8 w-8 items-center justify-center rounded-full",
-                  active && "bg-runr-primary-muted"
+                  active && "bg-porter-primary-muted"
                 )}
               >
                 <Icon className={cn("h-5 w-5", active && "stroke-[2.5]")} />

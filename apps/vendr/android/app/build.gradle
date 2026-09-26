@@ -9,10 +9,10 @@ android {
             keyPassword 'mbcvendr'
         }
     }
-    namespace "com.runr.vendr"
+    namespace "com.porter.vendor"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.runr.vendr"
+        applicationId "com.porter.vendor"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 304

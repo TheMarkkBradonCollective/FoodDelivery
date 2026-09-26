@@ -3,7 +3,7 @@
     "slug": "porter",
     "theme": "porter",
     "name": "Porter",
-    "tagline": "Get what you need.",
+    "tagline": "Shop nearby. Track every step.",
     "url": "https://raw.githubusercontent.com/TheMarkkBradonCollective/Runr/main",
     "section": "marketplace",
     "listing": "Listing #009",
@@ -53,7 +53,7 @@
       "phone"
     ],
     "readDetails": [
-      "Porter is part of the Porter coverage-driven delivery marketplace \u2014 Get what you need.",
+      "Porter is part of the Porter coverage-driven delivery marketplace \u2014 Shop nearby. Track every step.",
       "Porter creates demand, Porter Vendor fulfills the business side, and Porter Runner moves it.",
       "Install from The MBC App Store. Updates ship through the same catalog as every other Collective app."
     ],
@@ -67,7 +67,7 @@
     "slug": "runr",
     "theme": "runr",
     "name": "Porter Runner",
-    "tagline": "Pick it up. Run it there.",
+    "tagline": "Choose your window. Earn per drop.",
     "url": "https://raw.githubusercontent.com/TheMarkkBradonCollective/Runr/main",
     "section": "marketplace",
     "listing": "Listing #010",
@@ -117,7 +117,7 @@
       "phone"
     ],
     "readDetails": [
-      "Porter Runner is part of the Porter coverage-driven delivery marketplace \u2014 Pick it up. Run it there.",
+      "Porter Runner is part of the Porter coverage-driven delivery marketplace \u2014 Choose your window. Earn per drop.",
       "Porter creates demand, Porter Vendor fulfills the business side, and Porter Runner moves it.",
       "Install from The MBC App Store. Updates ship through the same catalog as every other Collective app."
     ],
@@ -131,7 +131,7 @@
     "slug": "vendr",
     "theme": "vendr",
     "name": "Porter Vendor",
-    "tagline": "Sell. Manage. Grow.",
+    "tagline": "Set capacity. Serve your queue.",
     "url": "https://raw.githubusercontent.com/TheMarkkBradonCollective/Runr/main",
     "section": "marketplace",
     "listing": "Listing #011",
@@ -181,7 +181,7 @@
       "phone"
     ],
     "readDetails": [
-      "Porter Vendor is part of the Porter coverage-driven delivery marketplace \u2014 Sell. Manage. Grow.",
+      "Porter Vendor is part of the Porter coverage-driven delivery marketplace \u2014 Set capacity. Serve your queue.",
       "Porter creates demand, Porter Vendor fulfills the business side, and Porter Runner moves it.",
       "Install from The MBC App Store. Updates ship through the same catalog as every other Collective app."
     ],

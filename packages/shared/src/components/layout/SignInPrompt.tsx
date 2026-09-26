@@ -32,15 +32,15 @@ const WELCOME: Record<
   },
   runr: {
     brand: APP_COPY.runr.shortName,
-    line: "Pick it up.",
-    highlight: "Run it there.",
+    line: "Choose your window.",
+    highlight: "Earn per drop.",
     pills: APP_COPY.runr.flow.map((label, i) => ({ label, lime: i % 2 === 0 })),
     showMark: true,
   },
   business: {
     brand: APP_COPY.vendr.shortName,
-    line: "Sell. Manage.",
-    highlight: "Grow.",
+    line: "Set capacity.",
+    highlight: "Serve your queue.",
     pills: APP_COPY.vendr.flow.slice(0, 4).map((label, i) => ({ label, lime: i % 2 === 0 })),
   },
   staff: {

@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Clock, DollarSign, LogOut, Moon, Store, Sun, Tag, UtensilsCrossed } from "lucide-react";
-import { SettingsRow, ToggleSwitch } from "@runr/shared/components/ui/SettingsRow";
-import { ConfirmDialog } from "@runr/shared/components/ui/ConfirmDialog";
-import { BottomSheet } from "@runr/shared/components/ui/BottomSheet";
-import { JobLoop } from "@runr/shared/components/ui/JobLoop";
+import { SettingsRow, ToggleSwitch } from "@porter/shared/components/ui/SettingsRow";
+import { ConfirmDialog } from "@porter/shared/components/ui/ConfirmDialog";
+import { BottomSheet } from "@porter/shared/components/ui/BottomSheet";
+import { JobLoop } from "@porter/shared/components/ui/JobLoop";
 import { useAppStore } from "@/store";
-import { selectVendorBusiness } from "@runr/shared/lib/utils";
+import { selectVendorBusiness } from "@porter/shared/lib/utils";
 
 export default function BusinessSettingsPage() {
   const { user, logout, businesses, theme, toggleTheme, updateBusinessHours, showToast } = useAppStore();
@@ -57,7 +57,7 @@ export default function BusinessSettingsPage() {
         <SettingsRow
           icon={<Tag size={18} />}
           title="Promotions"
-          subtitle="RUNR5 and PORTER10 run on the network"
+          subtitle="PORTER5 and PORTER10 run on the network"
           onClick={() => showToast("Promos are live for Porter checkout")}
         />
         <SettingsRow

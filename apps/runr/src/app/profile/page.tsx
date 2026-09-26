@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bike, DollarSign, List, LogOut, Map, Moon, ShieldCheck, Sun } from "lucide-react";
-import { SettingsRow, ToggleSwitch } from "@runr/shared/components/ui/SettingsRow";
-import { ConfirmDialog } from "@runr/shared/components/ui/ConfirmDialog";
-import { BottomSheet } from "@runr/shared/components/ui/BottomSheet";
-import { JobLoop } from "@runr/shared/components/ui/JobLoop";
-import { SegmentedControl } from "@runr/shared/components/ui/SegmentedControl";
+import { SettingsRow, ToggleSwitch } from "@porter/shared/components/ui/SettingsRow";
+import { ConfirmDialog } from "@porter/shared/components/ui/ConfirmDialog";
+import { BottomSheet } from "@porter/shared/components/ui/BottomSheet";
+import { JobLoop } from "@porter/shared/components/ui/JobLoop";
+import { SegmentedControl } from "@porter/shared/components/ui/SegmentedControl";
 import { useAppStore } from "@/store";
 
 export default function RunrProfilePage() {

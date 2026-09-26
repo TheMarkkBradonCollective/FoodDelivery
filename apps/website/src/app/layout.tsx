@@ -4,17 +4,17 @@ import "./globals.css";
 import "@/store";
 import { AuthProvider } from "@/components/AuthProvider";
 import { SiteChrome } from "@/components/SiteChrome";
-import { MarketplaceSync } from "@runr/shared/components/providers/MarketplaceSync";
+import { MarketplaceSync } from "@porter/shared/components/providers/MarketplaceSync";
+import { PORTER_BRAND, APP_COPY } from "@porter/shared/lib/apps";
 
 const font = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Porter — Pick Your Place. Run Your Time.",
-  description:
-    "Porter is a coverage-driven delivery marketplace. Download Porter, Porter Runner, Porter Vendor, or Porter Command. Ops work from Porter Command or this site.",
+  title: `${PORTER_BRAND.name} — ${PORTER_BRAND.footerLine}`,
+  description: `${PORTER_BRAND.promise} Download ${APP_COPY.porter.shortName}, ${APP_COPY.runr.shortName}, ${APP_COPY.vendr.shortName}, or ${APP_COPY.staff.shortName}.`,
   openGraph: {
-    title: "Porter",
-    description: "Four apps. One marketplace. Porter · Porter Runner · Porter Vendor",
+    title: PORTER_BRAND.name,
+    description: `${APP_COPY.porter.shortName} · ${APP_COPY.runr.shortName} · ${APP_COPY.vendr.shortName} · ${APP_COPY.staff.shortName}`,
   },
 };
 

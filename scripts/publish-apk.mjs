@@ -20,26 +20,26 @@ const apps = [
   {
     id: 'porter',
     name: 'Porter',
-    packageId: 'com.runr.porter',
-    tagline: 'Get what you need.',
+    packageId: 'com.porter.porter',
+    tagline: 'Shop nearby. Track every step.',
   },
   {
     id: 'runr',
     name: 'Porter Runner',
-    packageId: 'com.runr.runr',
-    tagline: 'Pick it up. Run it there.',
+    packageId: 'com.porter.runner',
+    tagline: 'Choose your window. Earn per drop.',
   },
   {
     id: 'vendr',
     name: 'Porter Vendor',
-    packageId: 'com.runr.vendr',
-    tagline: 'Sell. Manage. Grow.',
+    packageId: 'com.porter.vendor',
+    tagline: 'Set capacity. Serve your queue.',
   },
   {
     id: 'staff',
     name: 'Porter Command',
-    packageId: 'com.runr.staff',
-    tagline: 'Platform management.',
+    packageId: 'com.porter.command',
+    tagline: 'Operate the network.',
   },
 ];
 

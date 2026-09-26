@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useAuth } from "./AuthProvider";
-import { getAppForRole } from "@runr/shared/lib/auth";
+import { getAppForRole } from "@porter/shared/lib/auth";
 import { LogIn, User, Shield } from "lucide-react";
 
 const nav = [

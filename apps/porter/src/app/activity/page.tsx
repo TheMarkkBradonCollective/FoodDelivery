@@ -1,8 +1,8 @@
 "use client";
 
 import { useAppStore } from "@/store";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { ScreenHeader } from "@runr/shared/components/layout/ScreenHeader";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { ScreenHeader } from "@porter/shared/components/layout/ScreenHeader";
 import Link from "next/link";
 
 export default function CustomerActivityPage() {
@@ -29,7 +29,7 @@ export default function CustomerActivityPage() {
               type="button"
               onClick={() => markNotificationRead(n.id)}
               className={`w-full rounded-2xl p-3.5 text-left ring-1 ${
-                n.read ? "bg-[var(--surface-elevated)] ring-[var(--border)] opacity-70" : "bg-runr-primary-muted ring-purple/20"
+                n.read ? "bg-[var(--surface-elevated)] ring-[var(--border)] opacity-70" : "bg-porter-primary-muted ring-purple/20"
               }`}
             >
               <p className="font-extrabold text-[var(--foreground)]">{n.title}</p>

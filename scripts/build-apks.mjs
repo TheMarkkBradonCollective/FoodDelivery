@@ -22,10 +22,10 @@ const javaHome =
     : undefined);
 
 const apps = [
-  { id: 'porter', workspace: '@runr/porter', packageId: 'com.runr.porter', name: 'Porter' },
-  { id: 'runr', workspace: '@runr/runr-app', packageId: 'com.runr.runr', name: 'Porter Runner' },
-  { id: 'vendr', workspace: '@runr/vendr', packageId: 'com.runr.vendr', name: 'Porter Vendor' },
-  { id: 'staff', workspace: '@runr/staff', packageId: 'com.runr.staff', name: 'Porter Command' },
+  { id: 'porter', workspace: '@porter/porter', packageId: 'com.porter.porter', name: 'Porter' },
+  { id: 'runr', workspace: '@porter/runner', packageId: 'com.porter.runner', name: 'Porter Runner' },
+  { id: 'vendr', workspace: '@porter/vendr', packageId: 'com.porter.vendor', name: 'Porter Vendor' },
+  { id: 'staff', workspace: '@porter/staff', packageId: 'com.porter.command', name: 'Porter Command' },
 ];
 
 function env() {

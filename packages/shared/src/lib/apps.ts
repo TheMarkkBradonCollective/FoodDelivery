@@ -2,10 +2,21 @@ import type { UserRole } from "../types/index";
 
 export type AppId = "porter" | "runr" | "vendr" | "staff";
 
-/** Parent brand (website, account, release catalog). */
+/** Parent brand — website, releases, and shared marketing. */
 export const PLATFORM_NAME = "Porter";
 
-export const MARKETPLACE_TAGLINE = "Pick Your Place. Run Your Time.";
+/** Full Porter marketplace signature (replaces RUNR-era “Order local. Staff by coverage.”). */
+export const PORTER_BRAND = {
+  name: PLATFORM_NAME,
+  descriptor: "Coverage-first delivery marketplace",
+  headline: ["Order local.", "Staff by coverage."] as const,
+  promise:
+    "One network for customers, vendors, runners, and ops — capacity is planned in advance, not chased order by order.",
+  footerLine: "Order local. Staff by coverage.",
+} as const;
+
+/** @deprecated Use PORTER_BRAND.footerLine or headline */
+export const MARKETPLACE_TAGLINE = PORTER_BRAND.footerLine;
 
 export const APP_COPY: Record<
   AppId,
@@ -21,38 +32,38 @@ export const APP_COPY: Record<
   porter: {
     shortName: "Porter",
     role: "Customer",
-    tagline: "Get what you need.",
-    greeting: "Discover nearby businesses, order, and track your Runner.",
+    tagline: "Shop nearby. Track every step.",
+    greeting: "Discover local vendors, order, and follow your Runner on the map.",
     flow: ["Discover", "Order", "Track", "Receive"],
     job: "Porter creates the demand.",
   },
   runr: {
     shortName: "Porter Runner",
     role: "Delivery",
-    tagline: "Pick it up. Run it there.",
-    greeting: "Choose a business and a window. The marketplace matches the rest.",
-    flow: ["Choose", "Run", "Deliver", "Earn"],
+    tagline: "Choose your window. Earn per drop.",
+    greeting: "Pick a vendor and a time window. The marketplace matches orders to your coverage.",
+    flow: ["Choose", "Cover", "Deliver", "Earn"],
     job: "Porter Runner moves it.",
   },
   vendr: {
     shortName: "Porter Vendor",
     role: "Business",
-    tagline: "Sell. Manage. Grow.",
-    greeting: "Sell on Porter. Set how many Runners you need.",
-    flow: ["Sell", "Prepare", "Dispatch", "Fulfill", "Grow"],
+    tagline: "Set capacity. Serve your queue.",
+    greeting: "Sell on Porter. Set how many Runners you need for each window.",
+    flow: ["List", "Prepare", "Dispatch", "Fulfill", "Grow"],
     job: "Porter Vendor fulfills the business side.",
   },
   staff: {
     shortName: "Porter Command",
     role: "Ops",
-    tagline: "Run the marketplace.",
+    tagline: "Operate the network.",
     greeting: "Advance orders, coverage, and users from this phone — same tools as desktop.",
     flow: ["Status", "Orders", "Coverage", "Users"],
     job: "Porter Command runs the network.",
   },
 };
 
-/** Marketing / README one-liner for the four-app ecosystem. */
+/** Marketing one-liner for the four-app ecosystem. */
 export function ecosystemTagline(): string {
   const { porter, vendr, runr } = APP_COPY;
   return `${porter.job} ${vendr.job} ${runr.job}`;

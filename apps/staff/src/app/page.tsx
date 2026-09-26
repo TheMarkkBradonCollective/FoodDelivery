@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useAppStore } from "@/store";
-import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
+import { getBusinessCoverageSummary } from "@porter/shared/lib/coverage-engine";
 import { Panel, Stat } from "@/components/StaffUi";
-import { CatalogPreviewBanner } from "@runr/shared/components/ui/CatalogPreviewBanner";
-import { ConfirmDialog } from "@runr/shared/components/ui/ConfirmDialog";
+import { CatalogPreviewBanner } from "@porter/shared/components/ui/CatalogPreviewBanner";
+import { ConfirmDialog } from "@porter/shared/components/ui/ConfirmDialog";
 import { Bell, LogOut } from "lucide-react";
 
 export default function StaffStatusPage() {
@@ -26,7 +26,7 @@ export default function StaffStatusPage() {
 
   return (
     <div className="px-5 pb-8 pt-4 lg:p-8">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-runr-accent-bright">Porter Command</p>
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-porter-accent-bright">Porter Command</p>
       <h1 className="mt-0.5 text-[1.375rem] font-extrabold">Status</h1>
       <p className="mt-1 text-sm text-[var(--muted)]">Live marketplace — work from this phone</p>
 
