@@ -18,10 +18,10 @@ export const NEXT_ORDER_STATUS: Partial<Record<Order["status"], Order["status"]>
 };
 
 const APP_PACKAGES: Record<AppId, string> = {
-  porter: "com.runr.porter",
-  runr: "com.runr.runr",
-  vendr: "com.runr.vendr",
-  staff: "com.runr.staff",
+  porter: "com.porter.porter",
+  runr: "com.porter.runner",
+  vendr: "com.porter.vendor",
+  staff: "com.porter.command",
 };
 
 export function StaffOrdersPanel() {
@@ -82,7 +82,7 @@ export function StaffCoveragePanel() {
   const { businesses, updateBusinessCapacity } = useAppStore();
 
   if (businesses.length === 0) {
-    return <p className="text-sm text-[var(--muted)]">No kitchens yet.</p>;
+    return <p className="text-sm text-[var(--muted)]">No vendors yet.</p>;
   }
 
   return (
@@ -95,7 +95,7 @@ export function StaffCoveragePanel() {
               <div>
                 <p className="font-semibold">{b.name}</p>
                 <p className="text-xs text-[var(--muted)]">
-                  {b.city} · {c.scheduledRunrs}/{c.maxRunrs} RUNRs
+                  {b.city} · {c.scheduledRunrs}/{c.maxRunrs} Runners
                   {c.gap > 0 ? ` · ${c.gap} needed` : " · full"}
                 </p>
               </div>

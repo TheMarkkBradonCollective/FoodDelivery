@@ -101,7 +101,7 @@ export function MapView({
       <MapContainer
         center={[center.lat, center.lng]}
         zoom={zoom}
-        className={`runr-map h-full w-full ${dark ? "runr-map--dark" : "runr-map--light"}`}
+        className={`porter-map h-full w-full ${dark ? "porter-map--dark" : "porter-map--light"}`}
         zoomControl={false}
         attributionControl={false}
         preferCanvas
@@ -160,7 +160,7 @@ export function MapView({
               click: () => marker.onClick?.(),
             }}
           >
-            <Popup className="runr-map-popup">
+            <Popup className="porter-map-popup">
               <div>
                 <p className="font-extrabold">{marker.title}</p>
                 {marker.subtitle ? <p className="mt-0.5 text-xs opacity-75">{marker.subtitle}</p> : null}

@@ -9,10 +9,10 @@ android {
             keyPassword 'mbcporter'
         }
     }
-    namespace "com.runr.porter"
+    namespace "com.porter.porter"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.runr.porter"
+        applicationId "com.porter.porter"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 304

@@ -2,15 +2,15 @@ import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import "@/store";
-import { AppShell } from "@runr/shared/components/layout/AppShell";
+import { AppShell } from "@porter/shared/components/layout/AppShell";
 import { StaffLayoutClient } from "./StaffLayoutClient";
 
 const font = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "STAFF — Platform Management",
-  description: "RUNR platform staff console for founders and operations.",
-  applicationName: "STAFF",
+  title: "Porter Command — Marketplace ops",
+  description: "Porter platform Porter Command console for founders and marketplace operations.",
+  applicationName: "Porter Command",
 };
 
 export const viewport: Viewport = {

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useAuth } from "./AuthProvider";
-import { getAppForRole } from "@runr/shared/lib/auth";
+import { getAppForRole } from "@porter/shared/lib/auth";
 import { LogIn, User, Shield } from "lucide-react";
 
 const nav = [
@@ -20,11 +20,11 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#7048F8] text-sm font-black text-white">
-            R
+            P
           </div>
           <div>
-            <p className="text-sm font-bold tracking-tight">RUNR</p>
-            <p className="text-[10px] text-[var(--muted)]">Platform</p>
+            <p className="text-sm font-bold tracking-tight">Porter</p>
+            <p className="text-[10px] text-[var(--muted)]">Marketplace</p>
           </div>
         </Link>
 
@@ -43,7 +43,7 @@ export function SiteHeader() {
               href="/staff"
               className="text-sm font-medium text-[var(--muted)] hover:text-[var(--foreground)]"
             >
-              Staff Portal
+              Porter Command Portal
             </Link>
           )}
         </nav>

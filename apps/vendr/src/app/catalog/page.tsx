@@ -1,9 +1,9 @@
 "use client";
 
 import { useAppStore } from "@/store";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { selectVendorBusiness } from "@runr/shared/lib/utils";
-import { JobLoop } from "@runr/shared/components/ui/JobLoop";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { selectVendorBusiness } from "@porter/shared/lib/utils";
+import { JobLoop } from "@porter/shared/components/ui/JobLoop";
 
 export default function BusinessCatalogPage() {
   const { businesses, user, updateMenuItem } = useAppStore();
@@ -13,18 +13,18 @@ export default function BusinessCatalogPage() {
   if (!business) {
     return (
       <div className="px-5 py-8">
-        <EmptyState title="No business connected" description="Sign in with your VENDR account." />
+        <EmptyState title="No business connected" description="Sign in with your Porter Vendor account." />
       </div>
     );
   }
 
   return (
     <div className="px-5 pb-8 pt-4">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">VENDR</p>
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">Porter Vendor</p>
       <h1 className="mt-0.5 text-[1.375rem] font-extrabold">Catalog</h1>
       <JobLoop app="vendr" className="mt-1" />
       <p className="mt-1 text-sm text-[var(--muted)]">
-        What PORTER customers browse. Prices here are what the marketplace sells.
+        What Porter customers browse. Prices here are what the marketplace sells.
       </p>
 
       <div className="mt-4 space-y-2">

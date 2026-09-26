@@ -1,10 +1,10 @@
 "use client";
 
-import { EarningsCard } from "@runr/shared/components/ui/EarningsCard";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { ScreenHeader } from "@runr/shared/components/layout/ScreenHeader";
+import { EarningsCard } from "@porter/shared/components/ui/EarningsCard";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { ScreenHeader } from "@porter/shared/components/layout/ScreenHeader";
 import { useAppStore } from "@/store";
-import { formatCurrency } from "@runr/shared/lib/utils";
+import { formatCurrency } from "@porter/shared/lib/utils";
 
 export default function RunrEarningsPage() {
   const { earnings } = useAppStore();
@@ -16,7 +16,7 @@ export default function RunrEarningsPage() {
   return (
     <div>
       <ScreenHeader
-        eyebrow="RUNR"
+        eyebrow="Porter Runner"
         title="Earnings"
         subtitle="Per-delivery pay — base, distance, and tips. Not hourly."
       />
@@ -43,7 +43,7 @@ export default function RunrEarningsPage() {
                     <p className="truncate font-extrabold">{e.businessName}</p>
                     <p className="text-xs text-[var(--muted)]">{new Date(e.completedAt).toLocaleTimeString()}</p>
                   </div>
-                  <p className="shrink-0 font-extrabold text-runr-success">{formatCurrency(e.total)}</p>
+                  <p className="shrink-0 font-extrabold text-porter-success">{formatCurrency(e.total)}</p>
                 </div>
                 <div className="mt-1.5 flex gap-4 text-xs text-[var(--muted)]">
                   <span>Pay {formatCurrency(e.basePay + e.distancePay)}</span>

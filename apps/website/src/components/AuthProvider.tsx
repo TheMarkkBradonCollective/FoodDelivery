@@ -8,16 +8,16 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { AuthSession } from "@runr/shared/lib/auth";
-import { authenticate } from "@runr/shared/lib/auth";
-import { getSupabaseClient } from "@runr/shared/lib/supabase/client";
-import { isSupabaseConfigured } from "@runr/shared/lib/supabase/config";
+import type { AuthSession } from "@porter/shared/lib/auth";
+import { authenticate } from "@porter/shared/lib/auth";
+import { getSupabaseClient } from "@porter/shared/lib/supabase/client";
+import { isSupabaseConfigured } from "@porter/shared/lib/supabase/config";
 import {
   getCurrentAuthSession,
   sessionToAuthSession,
   signOut as supabaseSignOut,
-} from "@runr/shared/lib/supabase/auth";
-import type { User } from "@runr/shared/types";
+} from "@porter/shared/lib/supabase/auth";
+import type { User } from "@porter/shared/types";
 import { useAppStore } from "@/store";
 
 interface AuthContextValue {

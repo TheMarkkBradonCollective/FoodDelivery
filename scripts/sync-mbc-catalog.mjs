@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Publish RUNR platform APKs to the public MBC App Store repo (TheMarkkBradonCollective/main).
+ * Publish Porter platform APKs to the public MBC App Store repo (TheMarkkBradonCollective/main).
  *
  * Requires a GitHub token with push access to main:
  *   GITHUB_TOKEN=ghp_... npm run sync:mbc-catalog
@@ -18,9 +18,9 @@ const MAIN_REPO = 'TheMarkkBradonCollective/main';
 const MBC_PUBLIC_BASE = 'https://themarkkbradoncollective.github.io/main/apks';
 
 const apps = [
-  { id: 'porter', name: 'PORTER', tagline: 'Get what you need.', packageId: 'com.runr.porter' },
-  { id: 'runr', name: 'RUNR', tagline: 'Pick it up. Run it there.', packageId: 'com.runr.runr' },
-  { id: 'vendr', name: 'VENDR', tagline: 'Sell. Manage. Grow.', packageId: 'com.runr.vendr' },
+  { id: 'porter', name: 'Porter', tagline: 'Shop nearby. Track every step.', packageId: 'com.porter.porter' },
+  { id: 'runr', name: 'Porter Runner', tagline: 'Choose your window. Earn per drop.', packageId: 'com.porter.runner' },
+  { id: 'vendr', name: 'Porter Vendor', tagline: 'Set capacity. Serve your queue.', packageId: 'com.porter.vendor' },
 ];
 
 function sha256File(filePath) {
@@ -89,8 +89,8 @@ try {
     copyFileSync(app.apkPath, join(destDir, app.apkName));
   }
 
-  mkdirSync(join(repoDir, 'apks', 'runr-platform'), { recursive: true });
-  copyFileSync(zipPath, join(repoDir, 'apks', 'runr-platform', zipName));
+  mkdirSync(join(repoDir, 'apks', 'porter-platform'), { recursive: true });
+  copyFileSync(zipPath, join(repoDir, 'apks', 'porter-platform', zipName));
 
   for (const app of published) {
     const iconSrc = join(root, 'apps', 'website', 'public', 'icons', 'apps', `${app.id}.png`);
@@ -137,14 +137,14 @@ try {
   writeFileSync(join(repoDir, 'public', 'apk-catalog.json'), `${JSON.stringify(catalog, null, 2)}\n`);
 
   run('git add apk-catalog.json public/apk-catalog.json apks icons/apps/porter.png icons/apps/runr.png icons/apps/vendr.png', repoDir);
-  run(`git commit -m "Publish RUNR platform v${version} APKs to public catalog"`, repoDir);
+  run(`git commit -m "Publish Porter platform v${version} APKs to public catalog"`, repoDir);
   run('git push origin main', repoDir);
 
   console.log('\nPublished to MBC App Store. Verify:');
   for (const app of published) {
     console.log(`  ${app.name}: ${MBC_PUBLIC_BASE}/${app.id}/${app.apkName}`);
   }
-  console.log(`  Zip: ${MBC_PUBLIC_BASE}/runr-platform/${zipName}`);
+  console.log(`  Zip: ${MBC_PUBLIC_BASE}/porter-platform/${zipName}`);
 } finally {
   rmSync(workDir, { recursive: true, force: true });
 }

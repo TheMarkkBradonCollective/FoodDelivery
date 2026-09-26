@@ -4,10 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Bell, CreditCard, Heart, LifeBuoy, LogOut, MapPin, Moon, ShoppingBag, Sun } from "lucide-react";
-import { SettingsRow, ToggleSwitch } from "@runr/shared/components/ui/SettingsRow";
-import { ConfirmDialog } from "@runr/shared/components/ui/ConfirmDialog";
-import { BottomSheet } from "@runr/shared/components/ui/BottomSheet";
-import { JobLoop } from "@runr/shared/components/ui/JobLoop";
+import { SettingsRow, ToggleSwitch } from "@porter/shared/components/ui/SettingsRow";
+import { ConfirmDialog } from "@porter/shared/components/ui/ConfirmDialog";
+import { BottomSheet } from "@porter/shared/components/ui/BottomSheet";
+import { JobLoop } from "@porter/shared/components/ui/JobLoop";
 import { useAppStore } from "@/store";
 
 export default function CustomerProfilePage() {
@@ -33,7 +33,7 @@ export default function CustomerProfilePage() {
 
   return (
     <div className="px-5 pb-8 pt-4 lg:mx-auto lg:max-w-xl lg:px-8">
-      <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">PORTER</p>
+      <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">Porter</p>
       <h1 className="mt-0.5 text-[1.375rem] font-extrabold text-[var(--foreground)]">Profile</h1>
       <JobLoop app="porter" className="mt-1" />
 
@@ -122,7 +122,7 @@ export default function CustomerProfilePage() {
       </button>
 
       <BottomSheet open={sheet === "address"} onClose={() => setSheet(null)} title="Saved address">
-        <p className="text-sm text-[var(--muted)]">Used for PORTER delivery. Pickup orders use the business address.</p>
+        <p className="text-sm text-[var(--muted)]">Used for Porter delivery. Pickup orders use the business address.</p>
         <input
           className="input-brand mt-4"
           value={addressDraft}
@@ -169,7 +169,7 @@ export default function CustomerProfilePage() {
             <ToggleSwitch on={notifyOffers} onChange={setNotifyOffers} label="Promotions" />
           </div>
           <div className="flex items-center justify-between">
-            <p className="text-sm font-bold">Live order & RUNR updates</p>
+            <p className="text-sm font-bold">Live order & Runner updates</p>
             <ToggleSwitch on={notifyLive} onChange={setNotifyLive} label="Live order updates" />
           </div>
         </div>
@@ -203,7 +203,7 @@ export default function CustomerProfilePage() {
 
       <ConfirmDialog
         open={confirmOut}
-        title="Sign out of PORTER?"
+        title="Sign out of Porter?"
         description="You will need your email and password to get back in. Your cart on this device is saved."
         confirmLabel="Sign out"
         destructive

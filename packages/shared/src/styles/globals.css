@@ -2,45 +2,45 @@
 @source "../**/*.{ts,tsx}";
 
 @theme {
-  --color-runr-primary: #7048f8;
-  --color-runr-primary-hover: #5c36e0;
-  --color-runr-primary-muted: #eee8ff;
-  --color-runr-primary-deep: #2a1478;
-  --color-runr-accent: #6b8f5a;
-  --color-runr-accent-bright: #a0f878;
-  --color-runr-accent-muted: #e8f0e4;
-  --color-runr-cream: #f6f1e8;
-  --color-runr-ink: #1a1224;
-  --color-runr-success: #6b8f5a;
-  --color-runr-success-muted: #e8f0e4;
-  --color-runr-warning: #d97706;
-  --color-runr-warning-muted: #fff7ed;
-  --color-runr-critical: #dc2626;
-  --color-runr-critical-muted: #fef2f2;
-  --color-runr-navigation: #7048f8;
-  --color-runr-neutral-50: #faf7f2;
-  --color-runr-neutral-100: #f3eee6;
-  --color-runr-neutral-200: #e8e0d4;
-  --color-runr-neutral-300: #d4cbbd;
-  --color-runr-neutral-400: #a89fb0;
-  --color-runr-neutral-500: #6f6678;
-  --color-runr-neutral-600: #534b5c;
-  --color-runr-neutral-700: #3d3550;
-  --color-runr-neutral-800: #2a1b3d;
-  --color-runr-neutral-900: #1a1224;
-  --color-runr-neutral-950: #100814;
+  --color-porter-primary: #7048f8;
+  --color-porter-primary-hover: #5c36e0;
+  --color-porter-primary-muted: #eee8ff;
+  --color-porter-primary-deep: #2a1478;
+  --color-porter-accent: #6b8f5a;
+  --color-porter-accent-bright: #a0f878;
+  --color-porter-accent-muted: #e8f0e4;
+  --color-porter-cream: #f6f1e8;
+  --color-porter-ink: #1a1224;
+  --color-porter-success: #6b8f5a;
+  --color-porter-success-muted: #e8f0e4;
+  --color-porter-warning: #d97706;
+  --color-porter-warning-muted: #fff7ed;
+  --color-porter-critical: #dc2626;
+  --color-porter-critical-muted: #fef2f2;
+  --color-porter-navigation: #7048f8;
+  --color-porter-neutral-50: #faf7f2;
+  --color-porter-neutral-100: #f3eee6;
+  --color-porter-neutral-200: #e8e0d4;
+  --color-porter-neutral-300: #d4cbbd;
+  --color-porter-neutral-400: #a89fb0;
+  --color-porter-neutral-500: #6f6678;
+  --color-porter-neutral-600: #534b5c;
+  --color-porter-neutral-700: #3d3550;
+  --color-porter-neutral-800: #2a1b3d;
+  --color-porter-neutral-900: #1a1224;
+  --color-porter-neutral-950: #100814;
   --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
   --color-cream: #f6f1e8;
   --color-ink: #1a1224;
   --color-purple: #7048f8;
   --color-lime: #a0f878;
-  --radius-runr-sm: 0.875rem;
-  --radius-runr-md: 1.25rem;
-  --radius-runr-lg: 1.75rem;
-  --radius-runr-xl: 2.25rem;
-  --shadow-runr-card: 0 10px 28px rgb(61 36 88 / 0.1);
-  --shadow-runr-sheet: 0 -8px 32px rgb(61 36 88 / 0.14);
+  --radius-porter-sm: 0.875rem;
+  --radius-porter-md: 1.25rem;
+  --radius-porter-lg: 1.75rem;
+  --radius-porter-xl: 2.25rem;
+  --shadow-porter-card: 0 10px 28px rgb(61 36 88 / 0.1);
+  --shadow-porter-sheet: 0 -8px 32px rgb(61 36 88 / 0.14);
 }
 
 :root {
@@ -106,37 +106,37 @@ body {
   font-family: var(--font-sans);
 }
 
-.runr-map {
+.porter-map {
   background: #f6f1e8;
 }
 
-.runr-map--dark {
+.porter-map--dark {
   background: #100814;
 }
 
-.runr-map--light .leaflet-tile-pane {
+.porter-map--light .leaflet-tile-pane {
   filter: sepia(0.42) saturate(0.62) hue-rotate(238deg) brightness(1.05) contrast(0.95);
 }
 
-.runr-map--dark .leaflet-tile-pane {
+.porter-map--dark .leaflet-tile-pane {
   filter: hue-rotate(258deg) saturate(1.4) brightness(0.9) contrast(1.06);
 }
 
-.runr-map .leaflet-control-attribution {
+.porter-map .leaflet-control-attribution {
   display: none;
 }
 
-.runr-pin {
+.porter-pin {
   background: none !important;
   border: 0 !important;
 }
 
-.runr-puck {
+.porter-puck {
   background: none !important;
   border: 0 !important;
 }
 
-.runr-puck-core {
+.porter-puck-core {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -149,7 +149,7 @@ body {
   box-shadow: 0 0 0 2px #7048f8;
 }
 
-.runr-puck-pulse {
+.porter-puck-pulse {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -158,10 +158,10 @@ body {
   margin: -7px 0 0 -7px;
   border-radius: 999px;
   background: rgb(112 72 248 / 0.35);
-  animation: runr-puck-pulse 2.1s ease-out infinite;
+  animation: porter-puck-pulse 2.1s ease-out infinite;
 }
 
-@keyframes runr-puck-pulse {
+@keyframes porter-puck-pulse {
   0% {
     transform: scale(1);
     opacity: 0.55;
@@ -176,26 +176,26 @@ body {
   }
 }
 
-.runr-map .leaflet-popup-content-wrapper {
+.porter-map .leaflet-popup-content-wrapper {
   border-radius: 1rem;
   background: #1a1224;
   color: #f6f1e8;
   padding: 0.15rem 0.1rem;
-  box-shadow: var(--shadow-runr-sheet);
+  box-shadow: var(--shadow-porter-sheet);
 }
 
-.runr-map .leaflet-popup-content {
+.porter-map .leaflet-popup-content {
   margin: 0.65rem 0.85rem;
   font-family: var(--font-sans);
   font-size: 0.8125rem;
   line-height: 1.3;
 }
 
-.runr-map .leaflet-popup-tip {
+.porter-map .leaflet-popup-tip {
   background: #1a1224;
 }
 
-.runr-map .leaflet-popup-close-button {
+.porter-map .leaflet-popup-close-button {
   color: #f6f1e8 !important;
 }
 
@@ -236,7 +236,7 @@ body {
 }
 
 .input-brand:focus {
-  border-color: var(--color-runr-primary);
+  border-color: var(--color-porter-primary);
   box-shadow: 0 0 0 4px rgb(112 72 248 / 0.12);
 }
 
@@ -335,7 +335,7 @@ body {
   background: #f6f1e8;
   color: #1a1224;
   padding: 1.75rem 1.5rem max(1.75rem, env(safe-area-inset-bottom, 0px));
-  box-shadow: var(--shadow-runr-sheet);
+  box-shadow: var(--shadow-porter-sheet);
 }
 
 .signin-title {
@@ -517,9 +517,9 @@ body {
 .skeleton {
   background: linear-gradient(
     90deg,
-    var(--color-runr-neutral-100) 25%,
-    var(--color-runr-neutral-200) 50%,
-    var(--color-runr-neutral-100) 75%
+    var(--color-porter-neutral-100) 25%,
+    var(--color-porter-neutral-200) 50%,
+    var(--color-porter-neutral-100) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
@@ -528,9 +528,9 @@ body {
 .dark .skeleton {
   background: linear-gradient(
     90deg,
-    var(--color-runr-neutral-800) 25%,
-    var(--color-runr-neutral-700) 50%,
-    var(--color-runr-neutral-800) 75%
+    var(--color-porter-neutral-800) 25%,
+    var(--color-porter-neutral-700) 50%,
+    var(--color-porter-neutral-800) 75%
   );
   background-size: 200% 100%;
 }
@@ -739,7 +739,7 @@ button:active:not(:disabled),
   padding: 0.75rem 1.1rem;
   font-size: 0.875rem;
   font-weight: 700;
-  box-shadow: var(--shadow-runr-sheet);
+  box-shadow: var(--shadow-porter-sheet);
 }
 
 .overlay-safe {

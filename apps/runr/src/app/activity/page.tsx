@@ -1,15 +1,15 @@
 "use client";
 
 import { useAppStore } from "@/store";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { ScreenHeader } from "@runr/shared/components/layout/ScreenHeader";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { ScreenHeader } from "@porter/shared/components/layout/ScreenHeader";
 
 export default function RunrActivityPage() {
   const { notifications, markNotificationRead } = useAppStore();
 
   return (
     <div>
-      <ScreenHeader eyebrow="RUNR" title="Activity" subtitle="Notifications and delivery updates" />
+      <ScreenHeader eyebrow="Porter Runner" title="Activity" subtitle="Notifications and delivery updates" />
       <div className="space-y-2 px-5 pb-8">
         {notifications.length === 0 ? (
           <EmptyState
@@ -25,7 +25,7 @@ export default function RunrActivityPage() {
               className={`w-full rounded-2xl p-3.5 text-left ring-1 ${
                 n.read
                   ? "bg-[var(--surface-elevated)] ring-[var(--border)] opacity-70"
-                  : "bg-runr-primary-muted ring-purple/20"
+                  : "bg-porter-primary-muted ring-purple/20"
               }`}
             >
               <p className="font-extrabold text-[var(--foreground)]">{n.title}</p>

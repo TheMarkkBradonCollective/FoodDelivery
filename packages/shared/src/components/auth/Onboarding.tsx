@@ -8,25 +8,25 @@ import { APP_COPY, type AppId } from "../../lib/apps";
 const STEPS: Record<AppId, { title: string; body: string; visual: string }[]> = {
   porter: [
     {
-      title: "Get what you need.",
+      title: APP_COPY.porter.tagline,
       body: "Find nearby restaurants, stores, and more. Browse catalogs, save favorites, and check out in one place.",
       visual: "🛍️",
     },
     {
       title: "Order, then track.",
-      body: "Request delivery or pick it up. Watch your RUNR on the map from the business to your door.",
+      body: "Request delivery or pick it up. Watch your Runner on the map from the business to your door.",
       visual: "📍",
     },
     {
-      title: "Receive on the PORTER marketplace.",
-      body: "Tip, rate, keep receipts, and reorder. VENDR prepares it. RUNR moves it.",
+      title: "Receive on the Porter marketplace.",
+      body: "Tip, rate, keep receipts, and reorder. Porter Vendor prepares it. Porter Runner moves it.",
       visual: "📦",
     },
   ],
   runr: [
     {
       title: "Choose where you work.",
-      body: "RUNRs don’t sit and wait for random pings. Pick a business that needs coverage.",
+      body: "Runners don’t sit and wait for random pings. Pick a business that needs coverage.",
       visual: "🗺️",
     },
     {
@@ -42,18 +42,18 @@ const STEPS: Record<AppId, { title: string; body: string; visual: string }[]> = 
   ],
   vendr: [
     {
-      title: "Sell on PORTER.",
+      title: "Sell on Porter.",
       body: "Your catalog, hours, and location are what customers discover. Orders land here to accept and prepare.",
       visual: "🏪",
     },
     {
-      title: "Set how many RUNRs you need.",
-      body: "Don’t ask for “a driver.” Set Needed vs Covered by time. Gaps show so RUNRs can fill them.",
+      title: "Set how many Runners you need.",
+      body: "Don’t ask for “a driver.” Set Needed vs Covered by time. Gaps show so Runners can fill them.",
       visual: "📡",
     },
     {
       title: "Dispatch stays on the network.",
-      body: "Mark orders ready. Matching goes to RUNRs covering your window — then you grow from sales and ratings.",
+      body: "Mark orders ready. Matching goes to Runners covering your window — then you grow from sales and ratings.",
       visual: "🚚",
     },
   ],
@@ -65,7 +65,7 @@ const STEPS: Record<AppId, { title: string; body: string; visual: string }[]> = 
     },
     {
       title: "Same marketplace",
-      body: "Chat, alerts, and ops write to the live network. Desktop Staff Portal stays in sync.",
+      body: "Chat, alerts, and ops write to the live network. Desktop Porter Command Portal stays in sync.",
       visual: "💬",
     },
     {

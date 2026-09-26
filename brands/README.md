@@ -1,4 +1,4 @@
-# RUNR App Icons
+# Porter App Icons
 
 Wordless **lime rider** on electric purple (`rider-mark.png`).
 
@@ -9,10 +9,10 @@ Wordless **lime rider** on electric purple (`rider-mark.png`).
 
 | App | Treatment |
 |-----|-----------|
-| **PORTER** | Lime rider + "Porter" wordmark |
-| **RUNR** | Lime rider + "Runr" wordmark |
-| **VENDR** | Lime rider + "Vendr" wordmark |
-| **STAFF** | Purple rider on lime, wordless |
+| **Porter** | Lime rider + "Porter" wordmark |
+| **Porter Runner** | Lime rider + "Runner" wordmark |
+| **Porter Vendor** | Lime rider + "Vendor" wordmark |
+| **Porter Command** | Purple rider on lime, wordless |
 
 ## Regenerate all launcher + in-app icons
 
@@ -24,4 +24,4 @@ Updates Android mipmaps, `apps/*/public/icons/app-icon.png`, and `apps/website/p
 
 ## Marketing showcase
 
-Three-phone mockup (`marketing-showcase.png`, also at `apps/website/public/images/runr-app-showcase.png`) — PORTER login, RUNR available RUNs, VENDR live operations. Used on the website hero.
+Three-phone mockup (`marketing-showcase.png`, also at `apps/website/public/images/runr-app-showcase.png`) — Porter login, Porter Runner available runs, Porter Vendor live operations. Used on the website hero.

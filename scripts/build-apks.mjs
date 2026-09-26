@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Build signed release APKs for PORTER, RUNR, and VENDR.
+ * Build signed release APKs for Porter, Porter Runner, and Porter Vendor.
  * Bundles the Next.js static export inside the Capacitor shell (no remote URL).
  */
 import { spawnSync } from 'node:child_process';
@@ -22,10 +22,11 @@ const javaHome =
     : undefined);
 
 const apps = [
-  { id: 'porter', workspace: '@runr/porter', packageId: 'com.runr.porter', name: 'PORTER' },
-  { id: 'runr', workspace: '@runr/runr-app', packageId: 'com.runr.runr', name: 'RUNR' },
-  { id: 'vendr', workspace: '@runr/vendr', packageId: 'com.runr.vendr', name: 'VENDR' },
-  { id: 'staff', workspace: '@runr/staff', packageId: 'com.runr.staff', name: 'STAFF' },
+  { id: 'fastfood', workspace: '@porter/fastfood', packageId: 'com.porter.fastfood', name: 'FastFood' },
+  { id: 'porter', workspace: '@porter/porter', packageId: 'com.porter.porter', name: 'Porter' },
+  { id: 'runr', workspace: '@porter/runner', packageId: 'com.porter.runner', name: 'Porter Runner' },
+  { id: 'vendr', workspace: '@porter/vendr', packageId: 'com.porter.vendor', name: 'Porter Vendor' },
+  { id: 'staff', workspace: '@porter/staff', packageId: 'com.porter.command', name: 'Porter Command' },
 ];
 
 function env() {

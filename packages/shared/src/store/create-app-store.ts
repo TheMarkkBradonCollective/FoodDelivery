@@ -595,7 +595,7 @@ function buildStore(
 export type AppStoreHook = UseBoundStore<StoreApi<AppState>>;
 
 let activeStore: AppStoreHook | null = null;
-let activeStorageKey = "runr-platform-marketplace";
+let activeStorageKey = "porter-platform-marketplace";
 
 function initStore(storageKey: string): AppStoreHook {
   const store = create<AppState>()(

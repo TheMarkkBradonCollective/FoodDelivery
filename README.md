@@ -1,17 +1,19 @@
-# RUNR Platform
+# Porter
 
-**Pick Your Place. Run Your Time.**
+**Order local. Staff by coverage.**
 
-Monorepo for the RUNR coverage-driven delivery marketplace.
+Monorepo for the Porter coverage-driven delivery marketplace.
 
 ## What's in this repo
 
 | Path | Purpose |
 |------|---------|
 | **`apps/website`** | **Main company website** — downloads, company info, how we operate |
-| `apps/porter` | PORTER customer Android app |
-| `apps/runr` | RUNR delivery Android app |
-| `apps/staff` | STAFF ops Android app — orders, coverage, users, chat |
+| `apps/porter` | Porter customer Android app |
+| `apps/fastfood` | **FastFood** — alternate red/yellow customer skin (same marketplace as Porter) |
+| `apps/runr` | Porter Runner delivery Android app |
+| `apps/vendr` | Porter Vendor business Android app |
+| `apps/staff` | Porter Command ops Android app — orders, coverage, users, chat |
 | `packages/shared` | Shared marketplace logic, UI, coverage engine |
 
 ## Quick start — Company website
@@ -26,25 +28,26 @@ The marketing site includes APK download links, ecosystem overview, company info
 
 | Route | Purpose |
 |-------|---------|
-| `/login` | Sign in — app users (PORTER/RUNR/VENDR) or staff |
-| `/account` | Billing, profile, preferences, and ratings for PORTER / RUNR / VENDR |
-| `/staff` | Staff-only marketplace ops (also in the STAFF app) |
+| `/login` | Sign in — app users (Porter / Porter Runner / Porter Vendor) or staff |
+| `/account` | Billing, profile, preferences, and ratings for Porter / Porter Runner / Porter Vendor |
+| `/staff` | Porter Command marketplace ops (also in the Porter Command app) |
 
-Sign-in uses Supabase. Run `docs/supabase/schema.sql` in the SQL Editor to create profiles, marketplace tables, and seed restaurants. After that, PORTER/RUNR/VENDR/STAFF load live data (orders, RUNs, coverage, menus).
+Sign-in uses Supabase. Run `docs/supabase/schema.sql` in the SQL Editor to create profiles, marketplace tables, and seed restaurants. After that, Porter, Porter Runner, Porter Vendor, and Porter Command load live data (orders, runs, coverage, menus).
 
-## The 3-App Ecosystem
+## The Porter app family
 
 | App | Role | Tagline |
 |-----|------|---------|
-| **PORTER** | Customer | Get what you need. |
-| **RUNR** | Delivery | Pick it up. Run it there. |
-| **STAFF** | Ops | Run the marketplace. |
+| **Porter** | Customer | Shop nearby. Track every step. |
+| **Porter Runner** | Delivery | Choose your window. Earn per drop. |
+| **Porter Vendor** | Business | Set capacity. Serve your queue. |
+| **Porter Command** | Ops | Operate the network. |
 
-> PORTER creates the demand. VENDR fulfills the business side. RUNR moves it.
+> Porter creates the demand. Porter Vendor fulfills the business side. Porter Runner moves it.
 
 ## Build & distribute APKs
 
-All three apps ship as **signed Capacitor APKs** with the Next.js UI bundled inside the APK (`assetPrefix: './'`). No Vercel or external website is required to run the apps.
+All four apps ship as **signed Capacitor APKs** with the Next.js UI bundled inside the APK (`assetPrefix: './'`). No Vercel or external website is required to run the apps.
 
 ```bash
 npm run build:apks       # Build signed release APKs
@@ -54,9 +57,10 @@ npm run release:apk      # Build, publish, and create GitHub Releases
 
 APKs live in `release/` and are listed in the **MBC App Store**:
 
-- [PORTER](https://themarkkbradoncollective.github.io/main/download/#download-porter)
-- [RUNR](https://themarkkbradoncollective.github.io/main/download/#download-runr)
-- [VENDR](https://themarkkbradoncollective.github.io/main/download/#download-vendr)
+- [Porter](https://themarkkbradoncollective.github.io/main/download/#download-porter)
+- [Porter Runner](https://themarkkbradoncollective.github.io/main/download/#download-runr)
+- [Porter Vendor](https://themarkkbradoncollective.github.io/main/download/#download-vendr)
+- [Porter Command](https://themarkkbradoncollective.github.io/main/download/#download-staff)
 
 The company website (`apps/website`) links to the MBC App Store for installs. GitHub Releases provide direct APK downloads as a fallback.
 

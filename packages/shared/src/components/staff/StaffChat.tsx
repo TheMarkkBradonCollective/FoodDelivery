@@ -36,7 +36,7 @@ export function StaffChat({ compact }: { compact?: boolean }) {
                 <div
                   className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm ${
                     mine
-                      ? "bg-runr-primary text-[var(--on-primary,#fff)]"
+                      ? "bg-porter-primary text-[var(--on-primary,#fff)]"
                       : "bg-[var(--surface-elevated)] text-[var(--foreground)]"
                   }`}
                 >
@@ -59,7 +59,7 @@ export function StaffChat({ compact }: { compact?: boolean }) {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Status update or handoff…"
-          className="min-w-0 flex-1 rounded-full border border-[var(--border)] bg-[var(--surface-elevated)] px-4 py-2.5 text-sm outline-none focus:border-runr-primary"
+          className="min-w-0 flex-1 rounded-full border border-[var(--border)] bg-[var(--surface-elevated)] px-4 py-2.5 text-sm outline-none focus:border-porter-primary"
         />
         <PrimaryButton type="submit" disabled={!draft.trim()}>
           Send

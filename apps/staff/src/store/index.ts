@@ -1,6 +1,6 @@
 "use client";
 
-import { createAppStore } from "@runr/shared/store/create-app-store";
+import { createAppStore } from "@porter/shared/store/create-app-store";
 
-/** STAFF platform app — connected to shared marketplace state */
-export const useAppStore = createAppStore("runr-platform-marketplace");
+/** Porter Command platform app — connected to shared marketplace state */
+export const useAppStore = createAppStore("porter-platform-marketplace");

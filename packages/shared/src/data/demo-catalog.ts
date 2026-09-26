@@ -50,7 +50,7 @@ export const DEMO_BUSINESSES: Business[] = [
       }),
       run({
         id: "r1000000-0000-4000-8000-000000000002",
-        runrId: "preview-runr-2",
+        runrId: "preview-porter-2",
         businessId: TONY,
         startTime: "00:00",
         endTime: "23:59",
@@ -214,7 +214,7 @@ export const DEMO_NOTIFICATIONS: Notification[] = [
   {
     id: "n1000000-0000-4000-8000-000000000001",
     title: "Coverage gap",
-    body: "Golden Gate Burgers needs 3 RUNRs right now.",
+    body: "Golden Gate Burgers needs 3 Runners right now.",
     type: "coverage",
     read: false,
     createdAt: now(),

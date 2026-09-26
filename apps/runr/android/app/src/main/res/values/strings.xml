@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">RUNR</string>
-    <string name="title_activity_main">RUNR</string>
-    <string name="package_name">com.runr.runr</string>
-    <string name="custom_url_scheme">com.runr.runr</string>
+    <string name="app_name">Porter Runner</string>
+    <string name="title_activity_main">Porter Runner</string>
+    <string name="package_name">com.porter.runner</string>
+    <string name="custom_url_scheme">com.porter.runner</string>
 </resources>

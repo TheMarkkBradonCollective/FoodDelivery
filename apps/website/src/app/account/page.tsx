@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useAuth } from "@/components/AuthProvider";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { useAppStore } from "@/store";
-import { getAppForRole, getRoleLabel } from "@runr/shared/lib/auth";
-import { formatCurrency, formatTimeRange, selectVendorBusiness } from "@runr/shared/lib/utils";
-import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
+import { getAppForRole, getRoleLabel } from "@porter/shared/lib/auth";
+import { formatCurrency, formatTimeRange, selectVendorBusiness } from "@porter/shared/lib/utils";
+import { getBusinessCoverageSummary } from "@porter/shared/lib/coverage-engine";
 import {
   Bell,
   CreditCard,
@@ -78,7 +78,7 @@ function AccountHub() {
           </p>
           <p className="mt-1 text-xs text-[var(--muted)]">
             This site is for billing, profile, preferences, and ratings. Day-to-day work stays in
-            the {appName} app. Only staff can run marketplace ops from the website.
+            the {appName} app. Only Porter Command users can run marketplace ops from the website.
           </p>
         </div>
 
@@ -112,7 +112,7 @@ function AccountHub() {
         <div className="mt-8 rounded-xl border border-[var(--border)] bg-white p-6">
           <h2 className="font-semibold">Your App</h2>
           <p className="mt-1 text-sm text-[var(--muted)]">
-            Download {appName} for ordering, RUNs, or kitchen work.
+            Download {appName} for ordering, RUNs, or vendor ops.
           </p>
           <Link
             href="/download"
@@ -160,7 +160,7 @@ function ProfilePanel() {
         <>
           <Section title="Recent orders" icon={Package}>
             {orders.length === 0 ? (
-              <p className="text-sm text-[var(--muted)]">No orders yet. Place them in PORTER.</p>
+              <p className="text-sm text-[var(--muted)]">No orders yet. Place them in Porter.</p>
             ) : (
               <div className="space-y-3">
                 {orders.slice(0, 6).map((order) => {
@@ -185,7 +185,7 @@ function ProfilePanel() {
           </Section>
           <Section title="Saved businesses" icon={Heart}>
             <p className="text-sm text-[var(--muted)]">
-              {favoriteBusinessIds.length} saved — synced with PORTER
+              {favoriteBusinessIds.length} saved — synced with Porter
             </p>
           </Section>
         </>
@@ -198,7 +198,7 @@ function ProfilePanel() {
             <StatCard label="Upcoming" value={String(scheduledRuns.length)} />
             <StatCard label="Next window" value={scheduledRuns[0] ? formatTimeRange(scheduledRuns[0].startTime, scheduledRuns[0].endTime) : "—"} />
           </div>
-          <p className="mt-3 text-sm text-[var(--muted)]">Cover windows and accept drops in the RUNR app.</p>
+          <p className="mt-3 text-sm text-[var(--muted)]">Cover windows and accept drops in the Runner app.</p>
         </Section>
       )}
 
@@ -208,7 +208,7 @@ function ProfilePanel() {
             {kitchen.address}, {kitchen.city}
           </p>
           <p className="mt-2 text-sm text-[var(--muted)]">
-            Hours {kitchen.operatingHours || "not set"}. Catalog, orders, and coverage are managed in VENDR.
+            Hours {kitchen.operatingHours || "not set"}. Catalog, orders, and coverage are managed in Porter Vendor.
           </p>
         </Section>
       )}
@@ -226,8 +226,8 @@ function BillingPanel() {
   const totalEarnings = earnings.reduce((s, e) => s + e.total, 0);
 
   useEffect(() => {
-    setCardLabel(loadPref("runr-web-card-label", "Visa ••4242"));
-    setPayoutEmail(loadPref("runr-web-payout-email", user.email));
+    setCardLabel(loadPref("porter-web-card-label", "Visa ••4242"));
+    setPayoutEmail(loadPref("porter-web-payout-email", user.email));
   }, [user.email]);
 
   return (
@@ -236,7 +236,7 @@ function BillingPanel() {
         <>
           <Section title="Payment method" icon={CreditCard}>
             <p className="text-sm text-[var(--muted)]">
-              Label shown at checkout in PORTER. Live card capture stays on the processor.
+              Label shown at checkout in Porter. Live card capture stays on the processor.
             </p>
             <input
               className="mt-3 w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm outline-none focus:border-[#7048F8]"
@@ -247,7 +247,7 @@ function BillingPanel() {
               type="button"
               className="mt-3 rounded-full bg-[#7048F8] px-4 py-2 text-sm font-semibold text-white hover:bg-[#5C36E0]"
               onClick={() => {
-                window.localStorage.setItem("runr-web-card-label", cardLabel);
+                window.localStorage.setItem("porter-web-card-label", cardLabel);
                 showToast("Payment method saved");
               }}
             >
@@ -290,7 +290,7 @@ function BillingPanel() {
               type="button"
               className="mt-3 rounded-full bg-[#7048F8] px-4 py-2 text-sm font-semibold text-white hover:bg-[#5C36E0]"
               onClick={() => {
-                window.localStorage.setItem("runr-web-payout-email", payoutEmail);
+                window.localStorage.setItem("porter-web-payout-email", payoutEmail);
                 showToast("Payout email saved");
               }}
             >
@@ -303,7 +303,7 @@ function BillingPanel() {
       {user.role === "business" && (
         <Section title="Business payouts" icon={CreditCard}>
           <p className="text-sm text-[var(--muted)]">
-            Sales settle to this VENDR account ({user.email}). Catalog and coverage stay in the VENDR app.
+            Sales settle to this Porter Vendor account ({user.email}). Catalog and coverage stay in the Porter Vendor app.
           </p>
         </Section>
       )}
@@ -319,8 +319,8 @@ function PreferencesPanel() {
   const [notifyLive, setNotifyLive] = useState(true);
 
   useEffect(() => {
-    setNotifyOffers(loadPref("runr-web-notify-offers", "1") === "1");
-    setNotifyLive(loadPref("runr-web-notify-live", "1") === "1");
+    setNotifyOffers(loadPref("porter-web-notify-offers", "1") === "1");
+    setNotifyLive(loadPref("porter-web-notify-live", "1") === "1");
   }, []);
 
   function persistNotify(key: string, value: boolean, setter: (v: boolean) => void) {
@@ -336,13 +336,13 @@ function PreferencesPanel() {
           label="Promotions"
           hint="Offers and marketplace news"
           on={notifyOffers}
-          onChange={(v) => persistNotify("runr-web-notify-offers", v, setNotifyOffers)}
+          onChange={(v) => persistNotify("porter-web-notify-offers", v, setNotifyOffers)}
         />
         <ToggleRow
-          label={user.role === "customer" ? "Live order updates" : user.role === "runr" ? "RUN and drop alerts" : "Kitchen order alerts"}
+          label={user.role === "customer" ? "Live order updates" : user.role === "runr" ? "Shift and drop alerts" : "Vendor order alerts"}
           hint="Synced with your app notifications"
           on={notifyLive}
-          onChange={(v) => persistNotify("runr-web-notify-live", v, setNotifyLive)}
+          onChange={(v) => persistNotify("porter-web-notify-live", v, setNotifyLive)}
         />
         <ToggleRow
           label="Dark mode"
@@ -362,17 +362,17 @@ function RatingsPanel() {
   const kitchen = selectVendorBusiness(businesses, user.id);
   const reliability = runHistory.length === 0 ? "—" : `${Math.min(99, 90 + runHistory.length)}%`;
   const orderedBizIds = [...new Set(orders.map((o) => o.businessId))];
-  const ratedKitchens = businesses.filter((b) => orderedBizIds.includes(b.id));
+  const ratedVendors = businesses.filter((b) => orderedBizIds.includes(b.id));
 
   return (
     <div className="space-y-6">
       {user.role === "customer" && (
         <Section title="Business ratings" icon={Star}>
-          {ratedKitchens.length === 0 ? (
-            <p className="text-sm text-[var(--muted)]">Ratings show up after you order in PORTER.</p>
+          {ratedVendors.length === 0 ? (
+            <p className="text-sm text-[var(--muted)]">Ratings show up after you order in Porter.</p>
           ) : (
             <ul className="space-y-3">
-              {ratedKitchens.map((b) => (
+              {ratedVendors.map((b) => (
                 <li key={b.id} className="flex items-center justify-between rounded-lg border border-[var(--border)] p-3">
                   <div>
                     <p className="font-medium">{b.name}</p>
@@ -400,7 +400,7 @@ function RatingsPanel() {
       )}
 
       {user.role === "business" && (
-        <Section title="Kitchen rating" icon={Star}>
+        <Section title="Vendor rating" icon={Star}>
           {kitchen ? (
             <>
               <div className="grid gap-3 sm:grid-cols-3">
@@ -412,7 +412,7 @@ function RatingsPanel() {
                 />
               </div>
               <p className="mt-3 text-sm text-[var(--muted)]">
-                Grow ratings from PORTER orders. Coverage and catalog stay in VENDR.
+                Grow ratings from Porter orders. Coverage and catalog stay in Porter Vendor.
               </p>
             </>
           ) : (

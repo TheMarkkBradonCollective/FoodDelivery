@@ -1,8 +1,8 @@
 "use client";
 
 import { useAppStore } from "@/store";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { ScreenHeader } from "@runr/shared/components/layout/ScreenHeader";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { ScreenHeader } from "@porter/shared/components/layout/ScreenHeader";
 import Link from "next/link";
 
 export default function CustomerActivityPage() {
@@ -10,12 +10,12 @@ export default function CustomerActivityPage() {
 
   return (
     <div>
-      <ScreenHeader title="Activity" subtitle="Order updates and alerts" eyebrow="PORTER" />
+      <ScreenHeader title="Activity" subtitle="Order updates and alerts" eyebrow="Porter" />
       <div className="space-y-3 px-5 pb-8 lg:mx-auto lg:max-w-2xl lg:px-8">
         {notifications.length === 0 ? (
           <EmptyState
             title="No activity yet"
-            description="Place an order and VENDR or RUNR updates will show up here."
+            description="Place an order and Porter Vendor or Runner updates will show up here."
             action={
               <Link href="/" className="inline-flex h-11 items-center rounded-full bg-purple px-5 text-sm font-bold text-white">
                 Discover businesses
@@ -29,7 +29,7 @@ export default function CustomerActivityPage() {
               type="button"
               onClick={() => markNotificationRead(n.id)}
               className={`w-full rounded-2xl p-3.5 text-left ring-1 ${
-                n.read ? "bg-[var(--surface-elevated)] ring-[var(--border)] opacity-70" : "bg-runr-primary-muted ring-purple/20"
+                n.read ? "bg-[var(--surface-elevated)] ring-[var(--border)] opacity-70" : "bg-porter-primary-muted ring-purple/20"
               }`}
             >
               <p className="font-extrabold text-[var(--foreground)]">{n.title}</p>

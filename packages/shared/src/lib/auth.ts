@@ -1,4 +1,5 @@
 import type { User, UserRole } from "../types/index";
+import { APP_COPY, roleToApp } from "./apps";
 import { signInWithEmail as supabaseSignIn, signUpWithEmail, requestPasswordReset } from "./supabase/auth";
 
 export interface AuthSession {
@@ -28,21 +29,10 @@ export async function sendPasswordReset(email: string) {
 }
 
 export function getRoleLabel(role: UserRole): string {
-  const labels: Record<UserRole, string> = {
-    customer: "PORTER Customer",
-    runr: "RUNR Delivery",
-    business: "VENDR Business",
-    staff: "Platform Staff",
-  };
-  return labels[role];
+  const copy = APP_COPY[roleToApp(role)];
+  return `${copy.shortName} · ${copy.role}`;
 }
 
 export function getAppForRole(role: UserRole): string {
-  const apps: Record<UserRole, string> = {
-    customer: "PORTER",
-    runr: "RUNR",
-    business: "VENDR",
-    staff: "STAFF",
-  };
-  return apps[role];
+  return APP_COPY[roleToApp(role)].shortName;
 }

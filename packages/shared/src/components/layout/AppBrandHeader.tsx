@@ -18,7 +18,7 @@ export function AppBrandHeader({
   tagline,
   emoji,
   iconUrl,
-  accentClass = "bg-runr-primary",
+  accentClass = "bg-porter-primary",
   compact,
   className,
 }: AppBrandProps) {
@@ -57,7 +57,7 @@ export function FlowBadge({ label, className }: { label: string; className?: str
   return (
     <span
       className={cn(
-        "inline-flex rounded-full bg-runr-accent-bright px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-runr-ink",
+        "inline-flex rounded-full bg-porter-accent-bright px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-porter-ink",
         className
       )}
     >

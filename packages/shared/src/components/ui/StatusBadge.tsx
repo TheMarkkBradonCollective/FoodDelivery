@@ -7,11 +7,11 @@ interface StatusBadgeProps {
 }
 
 const variants = {
-  success: "bg-runr-success-muted text-runr-success",
-  warning: "bg-runr-warning-muted text-runr-warning",
-  critical: "bg-runr-critical-muted text-runr-critical",
-  neutral: "bg-runr-neutral-100 text-runr-neutral-600 dark:bg-runr-neutral-800 dark:text-runr-neutral-300",
-  primary: "bg-runr-primary-muted text-runr-primary",
+  success: "bg-porter-success-muted text-porter-success",
+  warning: "bg-porter-warning-muted text-porter-warning",
+  critical: "bg-porter-critical-muted text-porter-critical",
+  neutral: "bg-porter-neutral-100 text-porter-neutral-600 dark:bg-porter-neutral-800 dark:text-porter-neutral-300",
+  primary: "bg-porter-primary-muted text-porter-primary",
 };
 
 export function StatusBadge({

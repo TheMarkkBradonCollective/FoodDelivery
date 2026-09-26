@@ -1,0 +1,41 @@
+{
+  "name": "@porter/fastfood",
+  "version": "0.3.4",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3006",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "cap:sync": "npm run build && npx cap sync android",
+    "android:build": "npm run cap:sync && cd android && ./gradlew assembleDebug",
+    "android:release": "npm run cap:sync && cd android && ./gradlew assembleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.2.0",
+    "@capacitor/core": "^7.2.0",
+    "@capacitor/status-bar": "^7.0.6",
+    "@porter/shared": "*",
+    "next": "^15.2.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "lucide-react": "^0.487.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.2.0",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "^15.2.4",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "@eslint/eslintrc": "^3"
+  },
+  "capacitor": {
+    "platforms": [
+      "android"
+    ]
+  }
+}

@@ -39,7 +39,7 @@ export function createPlaceIcon(color: string, label?: string) {
     : `<circle cx="16" cy="16" r="4.5" fill="${ink}"/>`;
 
   return L.divIcon({
-    className: "runr-pin",
+    className: "porter-pin",
     html: `<svg width="32" height="40" viewBox="0 0 32 40" aria-hidden="true">
       <path d="M16 1.6c7.6 0 13.8 6 13.8 13.4 0 9.6-13.8 23-13.8 23S2.2 24.6 2.2 15C2.2 7.6 8.4 1.6 16 1.6z" fill="${color}" stroke="#F6F1E8" stroke-width="2.2"/>
       ${text}
@@ -52,8 +52,8 @@ export function createPlaceIcon(color: string, label?: string) {
 
 export function createUserIcon() {
   return L.divIcon({
-    className: "runr-puck",
-    html: `<span class="runr-puck-pulse"></span><span class="runr-puck-core"></span>`,
+    className: "porter-puck",
+    html: `<span class="porter-puck-pulse"></span><span class="porter-puck-core"></span>`,
     iconSize: [22, 22],
     iconAnchor: [11, 11],
   });

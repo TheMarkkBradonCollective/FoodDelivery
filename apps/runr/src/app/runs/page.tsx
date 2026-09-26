@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { RunCard } from "@runr/shared/components/ui/RunCard";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { ConfirmDialog } from "@runr/shared/components/ui/ConfirmDialog";
-import { SlideToConfirm } from "@runr/shared/components/ui/SlideToConfirm";
+import { RunCard } from "@porter/shared/components/ui/RunCard";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { ConfirmDialog } from "@porter/shared/components/ui/ConfirmDialog";
+import { SlideToConfirm } from "@porter/shared/components/ui/SlideToConfirm";
 import { useAppStore } from "@/store";
-import { getBusinessCoverageSummary } from "@runr/shared/lib/coverage-engine";
-import { calculateDistanceMiles, formatCurrency } from "@runr/shared/lib/utils";
+import { getBusinessCoverageSummary } from "@porter/shared/lib/coverage-engine";
+import { calculateDistanceMiles, formatCurrency } from "@porter/shared/lib/utils";
 import { Bike } from "lucide-react";
-import { CatalogPreviewBanner } from "@runr/shared/components/ui/CatalogPreviewBanner";
+import { CatalogPreviewBanner } from "@porter/shared/components/ui/CatalogPreviewBanner";
 
 export default function RunrRunsPage() {
   const {
@@ -38,10 +38,10 @@ export default function RunrRunsPage() {
   return (
     <div>
       <div className="px-5 pt-4">
-        <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">RUNR</p>
+        <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">Porter Runner</p>
         <h1 className="mt-0.5 text-[1.375rem] font-extrabold text-[var(--foreground)]">RUNs</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">
-          Cover a VENDR from a time you pick. PORTER orders match to that window.
+          Cover a Porter Vendor from a time you pick. Porter orders match to that window.
         </p>
       </div>
       <div className="px-5 pb-8 pt-3">
@@ -67,7 +67,7 @@ export default function RunrRunsPage() {
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-extrabold">{business.name}</p>
                     <p className="text-xs text-[var(--muted)]">
-                      {miles.toFixed(1)} mi · {coverage.gap} RUNR{coverage.gap === 1 ? "" : "s"} needed
+                      {miles.toFixed(1)} mi · {coverage.gap} Runner{coverage.gap === 1 ? "" : "s"} needed
                     </p>
                   </div>
                   <p className="text-sm font-extrabold text-[#6B8F5A]">{formatCurrency(payout)}</p>
@@ -79,7 +79,7 @@ export default function RunrRunsPage() {
 
       {activeRun && (
         <section className="mt-6">
-          <h2 className="mb-2 text-base font-extrabold text-runr-success">Active RUN</h2>
+          <h2 className="mb-2 text-base font-extrabold text-porter-success">Active shift</h2>
           <RunCard
             run={activeRun}
             businessName={
@@ -149,8 +149,8 @@ export default function RunrRunsPage() {
       </div>
       <ConfirmDialog
         open={Boolean(cancelId)}
-        title="Cancel this RUN?"
-        description="The coverage window will open back up for other RUNRs. You can book another kitchen from the map."
+        title="Cancel this shift?"
+        description="The coverage window will open back up for other Runners. You can book another vendor from the map."
         confirmLabel="Cancel RUN"
         destructive
         onCancel={() => setCancelId(null)}

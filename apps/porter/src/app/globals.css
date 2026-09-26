@@ -1,13 +1,13 @@
 @import "tailwindcss";
-@import "@runr/shared/styles/globals.css";
+@import "@porter/shared/styles/globals.css";
 @source "../../../packages/shared/src/**/*.{ts,tsx}";
 
-/* PORTER — cream surfaces, purple brand, lime accents */
+/* Porter — cream surfaces, purple brand, lime accents */
 :root {
-  --color-runr-primary: #7048f8;
-  --color-runr-primary-hover: #5c36e0;
-  --color-runr-primary-muted: #eee8ff;
-  --color-runr-navigation: #7048f8;
+  --color-porter-primary: #7048f8;
+  --color-porter-primary-hover: #5c36e0;
+  --color-porter-primary-muted: #eee8ff;
+  --color-porter-navigation: #7048f8;
   --background: #f6f1e8;
   --foreground: #1a1224;
   --surface: #fffdf9;

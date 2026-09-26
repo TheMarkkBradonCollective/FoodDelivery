@@ -40,7 +40,7 @@ export function MarketplaceSync() {
 
     const supabase = getSupabaseClient();
     const channel = supabase
-      .channel("runr-marketplace")
+      .channel("porter-marketplace")
       .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, () => {
         void load();
       })

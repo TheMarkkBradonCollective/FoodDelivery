@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { AppFrame } from "@runr/shared/components/layout/AppFrame";
-import { ConfirmDialog } from "@runr/shared/components/ui/ConfirmDialog";
+import { AppFrame } from "@porter/shared/components/layout/AppFrame";
+import { ConfirmDialog } from "@porter/shared/components/ui/ConfirmDialog";
 import { useAppStore } from "@/store";
 import { Building2, LayoutDashboard, LogOut, MessageSquare, Package, Users } from "lucide-react";
 
@@ -40,7 +40,7 @@ export function StaffLayoutClient({ children }: { children: React.ReactNode }) {
       </AppFrame>
       <ConfirmDialog
         open={confirmOut}
-        title="Sign out of STAFF?"
+        title="Sign out of Porter Command?"
         description="You will need your staff email and password to get back in."
         confirmLabel="Sign out"
         destructive

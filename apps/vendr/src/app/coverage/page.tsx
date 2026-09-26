@@ -1,11 +1,11 @@
 "use client";
 
 import { useAppStore } from "@/store";
-import { CoverageTimeline } from "@runr/shared/components/ui/CoverageTimeline";
-import { calculateCoverageTimeline } from "@runr/shared/lib/coverage-engine";
-import { formatTimeRange } from "@runr/shared/lib/utils";
-import { selectVendorBusiness } from "@runr/shared/lib/utils";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
+import { CoverageTimeline } from "@porter/shared/components/ui/CoverageTimeline";
+import { calculateCoverageTimeline } from "@porter/shared/lib/coverage-engine";
+import { formatTimeRange } from "@porter/shared/lib/utils";
+import { selectVendorBusiness } from "@porter/shared/lib/utils";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
 
 export default function BusinessCoveragePage() {
   const { businesses, updateBusinessCapacity, user } = useAppStore();
@@ -20,17 +20,17 @@ export default function BusinessCoveragePage() {
   if (!business) {
     return (
       <div className="px-5 py-8">
-        <EmptyState title="No business connected" description="Sign in with your VENDR account." />
+        <EmptyState title="No business connected" description="Sign in with your Porter Vendor account." />
       </div>
     );
   }
 
   return (
     <div className="px-5 pb-8 pt-4">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">VENDR</p>
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">Porter Vendor</p>
       <h1 className="mt-0.5 text-[1.375rem] font-extrabold">Coverage</h1>
       <p className="mt-1 text-sm text-[var(--muted)]">
-        Slide Needed per window. Covered updates as RUNRs book.
+        Slide Needed per window. Covered updates as Runners book.
       </p>
 
       <section className="mt-5">
@@ -51,7 +51,7 @@ export default function BusinessCoveragePage() {
                 max={12}
                 step={1}
                 value={rule.maxRunrs}
-                aria-label={`Needed RUNRs ${formatTimeRange(rule.startTime, rule.endTime)}`}
+                aria-label={`Needed Runners ${formatTimeRange(rule.startTime, rule.endTime)}`}
                 onChange={(e) => updateBusinessCapacity(business.id, rule.id, Number(e.target.value))}
                 className="mt-2 h-8 w-full range-slider"
               />

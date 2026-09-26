@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
-import { getCurrentAuthSession, signOut } from "@runr/shared/lib/supabase/auth";
-import { sendPasswordReset } from "@runr/shared/lib/auth";
+import { getCurrentAuthSession, signOut } from "@porter/shared/lib/supabase/auth";
+import { sendPasswordReset } from "@porter/shared/lib/auth";
 import { Eye, EyeOff, LogIn, Shield, Smartphone } from "lucide-react";
 
 export default function LoginPage() {
@@ -59,10 +59,10 @@ export default function LoginPage() {
     <div className="min-h-[80vh] bg-[var(--surface)] py-16">
       <div className="mx-auto max-w-md px-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">Sign in to RUNR</h1>
+          <h1 className="text-2xl font-bold">Sign in to Porter</h1>
           <p className="mt-2 text-sm text-[var(--muted)]">
-            Customers, RUNRs, and businesses sign in for billing, profile, preferences, and
-            ratings. Only staff can work the marketplace from this site — or from the STAFF app.
+            Customers, Runners, and businesses sign in for billing, profile, preferences, and
+            ratings. Only Porter Command users can work the marketplace from this site — or from Porter Command.
           </p>
         </div>
 
@@ -85,14 +85,14 @@ export default function LoginPage() {
             }`}
           >
             <Shield className="h-4 w-4" />
-            Staff Portal
+            Porter Command Portal
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] p-6">
           {mode === "staff" && (
             <p className="rounded-lg bg-zinc-100 px-3 py-2 text-xs text-zinc-600">
-              Staff sign in to manage orders, coverage, and users here or in the STAFF app.
+              Porter Command sign in to manage orders, coverage, and users here or in Porter Command.
             </p>
           )}
 

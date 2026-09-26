@@ -1,11 +1,11 @@
 "use client";
 
 import { useAppStore } from "@/store";
-import { StatusBadge } from "@runr/shared/components/ui/StatusBadge";
-import { EmptyState } from "@runr/shared/components/ui/EmptyState";
-import { selectVendorBusiness } from "@runr/shared/lib/utils";
-import { SlideToConfirm } from "@runr/shared/components/ui/SlideToConfirm";
-import { JobLoop } from "@runr/shared/components/ui/JobLoop";
+import { StatusBadge } from "@porter/shared/components/ui/StatusBadge";
+import { EmptyState } from "@porter/shared/components/ui/EmptyState";
+import { selectVendorBusiness } from "@porter/shared/lib/utils";
+import { SlideToConfirm } from "@porter/shared/components/ui/SlideToConfirm";
+import { JobLoop } from "@porter/shared/components/ui/JobLoop";
 
 export default function BusinessOrdersPage() {
   const { orders, businesses, user, updateOrderStatus } = useAppStore();
@@ -14,17 +14,17 @@ export default function BusinessOrdersPage() {
 
   return (
     <div className="px-5 pb-8 pt-4">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">VENDR</p>
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">Porter Vendor</p>
       <h1 className="mt-0.5 text-[1.375rem] font-extrabold">Orders</h1>
       <JobLoop app="vendr" className="mt-1" />
       <p className="mt-1 text-sm text-[var(--muted)]">
-        Accept, prepare, mark ready. Matching goes to RUNRs covering your window.
+        Accept, prepare, mark ready. Matching goes to Runners covering your window.
       </p>
       <div className="mt-4 space-y-2">
         {visible.length === 0 ? (
           <EmptyState
             title="No orders yet"
-            description="PORTER orders from the marketplace show up here in real time."
+            description="Porter orders from the marketplace show up here in real time."
           />
         ) : (
           visible.map((order) => (
@@ -76,7 +76,7 @@ export default function BusinessOrdersPage() {
                 <p className="mt-3 text-sm text-[var(--muted)]">
                   {order.fulfillment === "pickup"
                     ? "Waiting for the customer to collect."
-                    : "Waiting for a RUNR covering this window."}
+                    : "Waiting for a Runner covering this window."}
                 </p>
               )}
             </div>
