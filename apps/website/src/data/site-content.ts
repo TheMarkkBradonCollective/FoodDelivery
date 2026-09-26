@@ -84,19 +84,19 @@ export const apps: AppDownload[] = [
 export const howItWorks = [
   {
     title: "Coverage-driven, not order-driven",
-    body: `${PORTER_BRAND.name} lets vendors define how many Runners they need — and lets Runners choose where and when they work.`,
+    body: "Traditional platforms send drivers hunting for random orders. Porter lets businesses define how many delivery workers they need — and lets Runners choose where and when they work.",
   },
   {
-    title: "Vendors set capacity",
-    body: `Through ${APP_COPY.vendr.shortName}, businesses say "I need 6 Runners between 5–8 PM" — not "send me a driver." Coverage gaps appear in real time on the map.`,
+    title: "Businesses set capacity",
+    body: 'Through Porter Vendor, businesses say "I need 6 Runners between 5–8 PM" — not "send me a driver." Coverage gaps appear in real time on the map.',
   },
   {
-    title: "Runners choose their window",
-    body: "Delivery workers pick a vendor and a custom time window. The platform handles matching and dispatch.",
+    title: "Runners choose their RUN",
+    body: "Delivery workers pick a business and a custom time window — like 5:37 PM to 8:12 PM. The platform handles matching and dispatch.",
   },
   {
     title: "Customers order normally",
-    body: `${APP_COPY.porter.shortName} works like the delivery apps you know: discover, browse, order, pay, and track — with live Runner location on the map.`,
+    body: "Porter works like the delivery apps you know: discover, browse menus, order, pay, and track — with live Runner location on the map.",
   },
 ];
 
@@ -110,11 +110,11 @@ export const companyValues = [
     body: "Runners are paid per completed delivery — base pay, distance, tips, and incentives. No false guaranteed income promises.",
   },
   {
-    title: "Vendor control",
-    body: "Merchants control staffing by time period. They don't manually assign every delivery — the dispatch engine handles it.",
+    title: "Business control",
+    body: "Merchants control staffing needs by time period. They don't manually assign every delivery — the dispatch engine handles it.",
   },
   {
     title: "One network",
-    body: `${APP_COPY.porter.shortName}, ${APP_COPY.runr.shortName}, and ${APP_COPY.vendr.shortName} share one marketplace. Orders, coverage, and deliveries stay in sync.`,
+    body: "Porter, Porter Runner, and Porter Vendor connect to the same marketplace. Orders, coverage, and deliveries stay in sync.",
   },
 ];

@@ -45,8 +45,7 @@ export default function DownloadPage() {
               <h2 className="mt-4 text-2xl font-extrabold text-[#E31837]">{fastfood.shortName}</h2>
               <p className="mt-1 text-sm font-semibold text-[#92400E]">{fastfood.tagline}</p>
               <p className="mt-3 text-sm leading-relaxed text-[#78350F]">
-                Same menus, orders, and runners as Porter — red &amp; yellow branding for a fast-food feel. Install
-                alongside Porter; use the same customer login.
+                Porter with a red &amp; yellow color change. Same screens, same customer login, same marketplace.
               </p>
               <p className="mt-4 font-mono text-xs text-[#92400E]">com.porter.fastfood</p>
               <Link

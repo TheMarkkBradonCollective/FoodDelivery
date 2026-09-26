@@ -79,7 +79,7 @@ export default function RunrRunsPage() {
 
       {activeRun && (
         <section className="mt-6">
-          <h2 className="mb-2 text-base font-extrabold text-porter-success">Active shift</h2>
+          <h2 className="mb-2 text-base font-extrabold text-porter-success">Active RUN</h2>
           <RunCard
             run={activeRun}
             businessName={
@@ -149,7 +149,7 @@ export default function RunrRunsPage() {
       </div>
       <ConfirmDialog
         open={Boolean(cancelId)}
-        title="Cancel this shift?"
+        title="Cancel this RUN?"
         description="The coverage window will open back up for other Runners. You can book another vendor from the map."
         confirmLabel="Cancel RUN"
         destructive

@@ -3,14 +3,16 @@
 import { useAppStore } from "@/store";
 import { EmptyState } from "@porter/shared/components/ui/EmptyState";
 import { ScreenHeader } from "@porter/shared/components/layout/ScreenHeader";
+import { useCustomerSkin } from "@porter/shared/components/providers/CustomerSkinProvider";
 import Link from "next/link";
 
 export default function CustomerActivityPage() {
+  const skin = useCustomerSkin();
   const { notifications, markNotificationRead } = useAppStore();
 
   return (
     <div>
-      <ScreenHeader title="Activity" subtitle="Order updates and alerts" eyebrow="Porter" />
+      <ScreenHeader title="Activity" subtitle="Order updates and alerts" eyebrow={skin.shortName} />
       <div className="space-y-3 px-5 pb-8 lg:mx-auto lg:max-w-2xl lg:px-8">
         {notifications.length === 0 ? (
           <EmptyState

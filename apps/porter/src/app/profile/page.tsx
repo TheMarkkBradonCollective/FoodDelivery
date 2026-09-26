@@ -9,8 +9,11 @@ import { ConfirmDialog } from "@porter/shared/components/ui/ConfirmDialog";
 import { BottomSheet } from "@porter/shared/components/ui/BottomSheet";
 import { JobLoop } from "@porter/shared/components/ui/JobLoop";
 import { useAppStore } from "@/store";
+import { CustomerEyebrow } from "@porter/shared/components/ui/CustomerEyebrow";
+import { useCustomerSkin } from "@porter/shared/components/providers/CustomerSkinProvider";
 
 export default function CustomerProfilePage() {
+  const skin = useCustomerSkin();
   const {
     user,
     logout,
@@ -33,7 +36,7 @@ export default function CustomerProfilePage() {
 
   return (
     <div className="px-5 pb-8 pt-4 lg:mx-auto lg:max-w-xl lg:px-8">
-      <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">Porter</p>
+      <CustomerEyebrow />
       <h1 className="mt-0.5 text-[1.375rem] font-extrabold text-[var(--foreground)]">Profile</h1>
       <JobLoop app="porter" className="mt-1" />
 
@@ -122,7 +125,7 @@ export default function CustomerProfilePage() {
       </button>
 
       <BottomSheet open={sheet === "address"} onClose={() => setSheet(null)} title="Saved address">
-        <p className="text-sm text-[var(--muted)]">Used for Porter delivery. Pickup orders use the business address.</p>
+        <p className="text-sm text-[var(--muted)]">Used for {skin.shortName} delivery. Pickup orders use the business address.</p>
         <input
           className="input-brand mt-4"
           value={addressDraft}
@@ -203,7 +206,7 @@ export default function CustomerProfilePage() {
 
       <ConfirmDialog
         open={confirmOut}
-        title="Sign out of Porter?"
+        title={`Sign out of ${skin.shortName}?`}
         description="You will need your email and password to get back in. Your cart on this device is saved."
         confirmLabel="Sign out"
         destructive

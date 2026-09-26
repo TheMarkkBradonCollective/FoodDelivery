@@ -18,11 +18,11 @@ const MAIN_REPO = 'TheMarkkBradonCollective/main';
 const MBC_PUBLIC_BASE = 'https://themarkkbradoncollective.github.io/main/apks';
 
 const apps = [
-  { id: 'fastfood', name: 'FastFood', tagline: 'Hot food. Fast drop.', packageId: 'com.porter.fastfood' },
-  { id: 'porter', name: 'Porter', tagline: 'Shop nearby. Track every step.', packageId: 'com.porter.porter' },
-  { id: 'runr', name: 'Porter Runner', tagline: 'Choose your window. Earn per drop.', packageId: 'com.porter.runner' },
-  { id: 'vendr', name: 'Porter Vendor', tagline: 'Set capacity. Serve your queue.', packageId: 'com.porter.vendor' },
-  { id: 'staff', name: 'Porter Command', tagline: 'Operate the network.', packageId: 'com.porter.command' },
+  { id: 'fastfood', name: 'FastFood', tagline: 'Get what you need.', packageId: 'com.porter.fastfood' },
+  { id: 'porter', name: 'Porter', tagline: 'Get what you need.', packageId: 'com.porter.porter' },
+  { id: 'runr', name: 'Porter Runner', tagline: 'Pick it up. Run it there.', packageId: 'com.porter.runner' },
+  { id: 'vendr', name: 'Porter Vendor', tagline: 'Sell. Manage. Grow.', packageId: 'com.porter.vendor' },
+  { id: 'staff', name: 'Porter Command', tagline: 'Run the marketplace.', packageId: 'com.porter.command' },
 ];
 
 function sha256File(filePath) {

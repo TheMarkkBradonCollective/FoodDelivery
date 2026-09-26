@@ -1,6 +1,6 @@
 # Porter
 
-**Order local. Staff by coverage.**
+**Pick Your Place. Run Your Time.**
 
 Monorepo for the Porter coverage-driven delivery marketplace.
 
@@ -10,7 +10,7 @@ Monorepo for the Porter coverage-driven delivery marketplace.
 |------|---------|
 | **`apps/website`** | **Main company website** — downloads, company info, how we operate |
 | `apps/porter` | Porter customer Android app |
-| `apps/fastfood` | **FastFood** — alternate red/yellow customer skin (same marketplace as Porter) |
+| `apps/fastfood` | **FastFood** — Porter customer app with a red/yellow color change |
 | `apps/runr` | Porter Runner delivery Android app |
 | `apps/vendr` | Porter Vendor business Android app |
 | `apps/staff` | Porter Command ops Android app — orders, coverage, users, chat |
@@ -38,10 +38,10 @@ Sign-in uses Supabase. Run `docs/supabase/schema.sql` in the SQL Editor to creat
 
 | App | Role | Tagline |
 |-----|------|---------|
-| **Porter** | Customer | Shop nearby. Track every step. |
-| **Porter Runner** | Delivery | Choose your window. Earn per drop. |
-| **Porter Vendor** | Business | Set capacity. Serve your queue. |
-| **Porter Command** | Ops | Operate the network. |
+| **Porter** | Customer | Get what you need. |
+| **Porter Runner** | Delivery | Pick it up. Run it there. |
+| **Porter Vendor** | Business | Sell. Manage. Grow. |
+| **Porter Command** | Ops | Run the marketplace. |
 
 > Porter creates the demand. Porter Vendor fulfills the business side. Porter Runner moves it.
 

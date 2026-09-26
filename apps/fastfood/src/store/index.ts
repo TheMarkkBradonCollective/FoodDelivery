@@ -2,5 +2,5 @@
 
 import { createAppStore } from "@porter/shared/store/create-app-store";
 
-/** FastFood customer skin — same marketplace network as Porter */
+/** Customer app — connected to shared marketplace network */
 export const useAppStore = createAppStore("porter-platform-marketplace");

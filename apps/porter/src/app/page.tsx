@@ -17,13 +17,14 @@ import { IconButton } from "@porter/shared/components/ui/IconButton";
 import { useAppStore } from "@/store";
 import { cuisineCategories } from "@porter/shared/data/constants";
 import { JobLoop } from "@porter/shared/components/ui/JobLoop";
-import { APP_COPY } from "@porter/shared/lib/apps";
+import { useCustomerSkin } from "@porter/shared/components/providers/CustomerSkinProvider";
 import { getBusinessCoverageSummary, getMarkerColor } from "@porter/shared/lib/coverage-engine";
 import type { MenuItem } from "@porter/shared/types";
 
 type PopularDish = MenuItem & { businessId: string; cuisine: string; businessName: string };
 
 export default function PorterDiscoverPage() {
+  const skin = useCustomerSkin();
   const {
     businesses,
     location,
@@ -126,7 +127,7 @@ export default function PorterDiscoverPage() {
             <span className="truncate">{deliveryAddress}</span>
           </p>
           <h1 className="mt-1 font-display text-[1.375rem] font-extrabold leading-tight tracking-tight text-[var(--foreground)]">
-            {APP_COPY.porter.tagline}
+            {skin.tagline}
           </h1>
           <JobLoop app="porter" className="mt-1" />
         </div>
@@ -229,7 +230,7 @@ export default function PorterDiscoverPage() {
 
       <div className="mt-5 flex items-center justify-between gap-3 overflow-hidden rounded-2xl bg-purple px-4 py-2.5 text-white">
         <div className="min-w-0">
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-lime">Tonight · PORTER5</p>
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-lime">Tonight · RUNR5</p>
           <p className="truncate text-sm font-extrabold">$5 off · or PORTER10 for 10%</p>
         </div>
         <Link
@@ -245,7 +246,7 @@ export default function PorterDiscoverPage() {
       <div className="mt-6 flex items-end justify-between">
         <div>
           <h2 className="text-base font-extrabold text-[var(--foreground)]">Nearby businesses</h2>
-          <p className="text-xs text-[var(--muted)]">Fulfilled by Porter Vendor · moved by Runners</p>
+          <p className="text-xs text-[var(--muted)]">{skin.networkHint}</p>
         </div>
       </div>
       <div className="mt-3 space-y-3">

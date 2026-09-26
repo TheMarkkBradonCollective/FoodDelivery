@@ -23,7 +23,7 @@ import type { MenuItem } from "@porter/shared/types";
 
 type PopularDish = MenuItem & { businessId: string; cuisine: string; businessName: string };
 
-export default function FastFoodDiscoverPage() {
+export default function PorterDiscoverPage() {
   const skin = useCustomerSkin();
   const {
     businesses,
@@ -230,7 +230,7 @@ export default function FastFoodDiscoverPage() {
 
       <div className="mt-5 flex items-center justify-between gap-3 overflow-hidden rounded-2xl bg-purple px-4 py-2.5 text-white">
         <div className="min-w-0">
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-lime">Tonight · PORTER5</p>
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-lime">Tonight · RUNR5</p>
           <p className="truncate text-sm font-extrabold">$5 off · or PORTER10 for 10%</p>
         </div>
         <Link

@@ -49,7 +49,7 @@ export default function CartPage() {
   function applyPromo() {
     const code = promoInput.trim().toUpperCase();
     if (!PROMO_CODES[code]) {
-      setPromoError("That code isn’t valid. Try PORTER5 or PORTER10.");
+      setPromoError("That code isn’t valid. Try RUNR5 or PORTER10.");
       setPromoCode(null);
       return;
     }
@@ -189,7 +189,7 @@ export default function CartPage() {
             value={promoInput}
             onChange={(e) => setPromoInput(e.target.value)}
             className="input-brand h-11 py-0"
-            placeholder="PORTER5"
+            placeholder="RUNR5"
             autoCapitalize="characters"
           />
           <button
