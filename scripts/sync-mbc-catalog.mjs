@@ -11,16 +11,18 @@ import { join } from 'node:path';
 import { execSync } from 'node:child_process';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
+import { latestApkPath, releaseRoot, versionedApkPath } from './apk-paths.mjs';
 
 const root = join(import.meta.dirname, '..');
-const releaseDir = join(root, 'release');
 const MAIN_REPO = 'TheMarkkBradonCollective/main';
 const MBC_PUBLIC_BASE = 'https://themarkkbradoncollective.github.io/main/apks';
 
 const apps = [
+  { id: 'fastfood', name: 'FastFood', tagline: 'Hot food. Fast drop.', packageId: 'com.porter.fastfood' },
   { id: 'porter', name: 'Porter', tagline: 'Shop nearby. Track every step.', packageId: 'com.porter.porter' },
   { id: 'runr', name: 'Porter Runner', tagline: 'Choose your window. Earn per drop.', packageId: 'com.porter.runner' },
   { id: 'vendr', name: 'Porter Vendor', tagline: 'Set capacity. Serve your queue.', packageId: 'com.porter.vendor' },
+  { id: 'staff', name: 'Porter Command', tagline: 'Operate the network.', packageId: 'com.porter.command' },
 ];
 
 function sha256File(filePath) {
@@ -51,7 +53,7 @@ const version = readVersion('runr');
 const published = apps.map((app) => {
   const appVersion = readVersion(app.id);
   const apkName = `${app.id}-v${appVersion}.apk`;
-  const apkPath = join(releaseDir, apkName);
+  const apkPath = versionedApkPath(app.id, appVersion);
   if (!existsSync(apkPath)) {
     console.error(`Missing ${apkPath}. Run: npm run publish:apk`);
     process.exit(1);
@@ -70,10 +72,11 @@ const published = apps.map((app) => {
   };
 });
 
-const zipName = 'runr-apps-apks.zip';
-const zipPath = join(releaseDir, zipName);
+const zipName = 'porter-platform-apks.zip';
+const zipPath = join(releaseRoot(), 'latest', zipName);
 if (!existsSync(zipPath)) {
-  run(`cd "${releaseDir}" && zip -j "${zipName}" porter-v${version}.apk runr-v${version}.apk vendr-v${version}.apk`, root);
+  const apkList = apps.map((a) => `"${versionedApkPath(a.id, readVersion(a.id))}"`).join(' ');
+  run(`zip -j "${zipPath}" ${apkList}`, root);
 }
 
 const workDir = mkdtempSync(join(tmpdir(), 'mbc-sync-'));

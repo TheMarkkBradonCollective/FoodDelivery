@@ -51,11 +51,11 @@ All four apps ship as **signed Capacitor APKs** with the Next.js UI bundled insi
 
 ```bash
 npm run build:apks       # Build signed release APKs
-npm run publish:apk      # Copy to release/ + write version.json
+npm run publish:apk      # Copy to release/apks/* and release/latest/ + version.json
 npm run release:apk      # Build, publish, and create GitHub Releases
 ```
 
-APKs live in `release/` and are listed in the **MBC App Store**:
+Versioned APKs live under `release/apks/<app>/`; current builds are also at `release/latest/<app>.apk` (tracked in git). Listed in the **MBC App Store**:
 
 - [Porter](https://themarkkbradoncollective.github.io/main/download/#download-porter)
 - [Porter Runner](https://themarkkbradoncollective.github.io/main/download/#download-runr)

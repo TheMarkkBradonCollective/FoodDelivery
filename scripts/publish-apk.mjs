@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Publish signed release APKs to release/ and write version.json for MBC App Store sync.
+ * Publish signed release APKs to release/apks/<app>/ and release/latest/, then version.json.
  *
  * Usage:
  *   npm run publish:apk
@@ -9,9 +9,9 @@
 import { createHash } from 'node:crypto';
 import { copyFileSync, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { latestApkPath, releaseRoot, resolveBuiltApk, versionedApkPath } from './apk-paths.mjs';
 
 const root = join(import.meta.dirname, '..');
-const releaseDir = join(root, 'release');
 const args = process.argv.slice(2);
 const GITHUB_REPO = 'TheMarkkBradonCollective/Runr';
 const MBC_PUBLIC_BASE = 'https://themarkkbradoncollective.github.io/main/apks';
@@ -78,13 +78,7 @@ function githubReleaseFallbackUrl(appId, version) {
 function resolveApkSrc(appId) {
   const idx = args.indexOf('--apk');
   if (idx >= 0 && args[idx + 1]) return args[idx + 1];
-  const candidates = [
-    join(releaseDir, `${appId}-v${readVersion(appId)}.apk`),
-    join(root, 'apps', appId, 'android/app/build/outputs/apk/release/app-release.apk'),
-    join(root, 'apps', appId, 'android/app/build/outputs/apk/release/app-release-unsigned.apk'),
-    join(root, 'apps', appId, 'android/app/build/outputs/apk/debug/app-debug.apk'),
-  ];
-  return candidates.find((p) => existsSync(p));
+  return resolveBuiltApk(appId, readVersion(appId));
 }
 
 function publishOne(app) {
@@ -96,10 +90,13 @@ function publishOne(app) {
     process.exit(1);
   }
 
-  mkdirSync(releaseDir, { recursive: true });
   const releaseName = `${app.id}-v${version}.apk`;
-  const releasePath = join(releaseDir, releaseName);
+  const releasePath = versionedApkPath(app.id, version);
+  const latestPath = latestApkPath(app.id);
+  mkdirSync(join(releaseRoot(), 'apks', app.id), { recursive: true });
+  mkdirSync(join(releaseRoot(), 'latest'), { recursive: true });
   copyFileSync(apkSrc, releasePath);
+  copyFileSync(apkSrc, latestPath);
 
   const fileSize = statSync(releasePath).size;
   const sha256 = sha256File(releasePath);
@@ -182,6 +179,8 @@ writeFileSync(join(root, 'version.json'), `${JSON.stringify(versionJson, null, 2
 
 for (const app of published) {
   console.log(`Published ${app.releaseName} (${app.fileSize} bytes)`);
+  console.log(`  versioned=${app.releasePath}`);
+  console.log(`  latest=${latestApkPath(app.id)}`);
   console.log(`  url=${app.url}`);
   console.log(`  sha256=${app.sha256}`);
 }

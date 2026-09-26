@@ -44,4 +44,15 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 *.zip
-release/*.apk
+
+# Stray APKs at release root only (use release/apks/ and release/latest/)
+/release/*.apk
+/release/*.zip
+
+# Versioned + latest APK trees are committed
+!release/apks/
+!release/apks/**/
+!release/apks/**/*.apk
+!release/latest/
+!release/latest/*.apk
+!release/latest/*.zip
