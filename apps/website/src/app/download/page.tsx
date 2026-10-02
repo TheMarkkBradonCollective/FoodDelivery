@@ -12,10 +12,10 @@ export default function DownloadPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#7048F8]">
           Official downloads
         </p>
-        <h1 className="mt-3 text-4xl font-extrabold tracking-tight">Get the Porter apps</h1>
+        <h1 className="mt-3 text-4xl font-extrabold tracking-tight">Get the Portr apps</h1>
         <p className="mt-3 max-w-2xl text-[var(--muted)]">
-          This website is the place to install Porter, Porter Runner, Porter Vendor, and Porter Command. Each Android
-          APK includes the full app. Ops work from Porter Command or this site. Other accounts sign in here for billing,
+          This website is the place to install Portr, Portr Runner, Portr Vendor, and Portr Command. Each Android
+          APK includes the full app. Ops work from Portr Command or this site. Other accounts sign in here for billing,
           profile, preferences, and ratings.
         </p>
 
@@ -30,7 +30,7 @@ export default function DownloadPage() {
             <div className="mx-auto mt-10 max-w-2xl rounded-2xl border border-[#E8E0D4] bg-white p-5 text-sm text-[var(--muted)]">
               <p>
                 <strong className="text-[var(--foreground)]">Android only.</strong> Uninstall any older build first so
-                the new launcher icons appear. Porter Command handles marketplace ops. Customer and vendor accounts use
+                the new launcher icons appear. Portr Command handles marketplace ops. Customer and vendor accounts use
                 this site for settings.
               </p>
             </div>
@@ -45,7 +45,7 @@ export default function DownloadPage() {
               <h2 className="mt-4 text-2xl font-extrabold text-[#E31837]">{fastfood.shortName}</h2>
               <p className="mt-1 text-sm font-semibold text-[#92400E]">{fastfood.tagline}</p>
               <p className="mt-3 text-sm leading-relaxed text-[#78350F]">
-                Porter with a red &amp; yellow color change. Same screens, same customer login, same marketplace.
+                Portr with a red &amp; yellow color change. Same screens, same customer login, same marketplace.
               </p>
               <p className="mt-4 font-mono text-xs text-[#92400E]">com.porter.fastfood</p>
               <Link

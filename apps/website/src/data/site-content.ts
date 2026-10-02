@@ -84,11 +84,11 @@ export const apps: AppDownload[] = [
 export const howItWorks = [
   {
     title: "Coverage-driven, not order-driven",
-    body: "Traditional platforms send drivers hunting for random orders. Porter lets businesses define how many delivery workers they need — and lets Runners choose where and when they work.",
+    body: "Traditional platforms send drivers hunting for random orders. Portr lets businesses define how many delivery workers they need — and lets Runners choose where and when they work.",
   },
   {
     title: "Businesses set capacity",
-    body: 'Through Porter Vendor, businesses say "I need 6 Runners between 5–8 PM" — not "send me a driver." Coverage gaps appear in real time on the map.',
+    body: 'Through Portr Vendor, businesses say "I need 6 Runners between 5–8 PM" — not "send me a driver." Coverage gaps appear in real time on the map.',
   },
   {
     title: "Runners choose their RUN",
@@ -96,7 +96,7 @@ export const howItWorks = [
   },
   {
     title: "Customers order normally",
-    body: "Porter works like the delivery apps you know: discover, browse menus, order, pay, and track — with live Runner location on the map.",
+    body: "Portr works like the delivery apps you know: discover, browse menus, order, pay, and track — with live Runner location on the map.",
   },
 ];
 
@@ -115,6 +115,6 @@ export const companyValues = [
   },
   {
     title: "One network",
-    body: "Porter, Porter Runner, and Porter Vendor connect to the same marketplace. Orders, coverage, and deliveries stay in sync.",
+    body: "Portr, Portr Runner, and Portr Vendor connect to the same marketplace. Orders, coverage, and deliveries stay in sync.",
   },
 ];

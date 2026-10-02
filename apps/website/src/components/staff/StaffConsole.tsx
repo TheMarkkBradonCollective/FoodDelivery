@@ -79,7 +79,7 @@ export function StaffConsole() {
 
       <div className="mx-auto max-w-6xl px-6 py-8">
         <p className="mb-4 text-sm text-zinc-400">
-          Same tools as Porter Command. Only staff accounts can work here.
+          Same tools as Portr Command. Only staff accounts can work here.
         </p>
         <nav className="flex flex-wrap gap-2">
           {tabs.map(({ id, label, icon: Icon }) => (
@@ -133,7 +133,7 @@ export function StaffConsole() {
 
           {tab === "orders" && (
             <Panel title="Order operations">
-              <p className="mb-4 text-sm text-zinc-400">Advance or cancel marketplace orders. Same actions as Porter Command on phone.</p>
+              <p className="mb-4 text-sm text-zinc-400">Advance or cancel marketplace orders. Same actions as Portr Command on phone.</p>
               <StaffOrdersPanel />
             </Panel>
           )}
@@ -154,7 +154,7 @@ export function StaffConsole() {
 
           {tab === "chat" && (
             <Panel title="Staff status chat">
-              <p className="mb-4 text-sm text-zinc-400">Shared with Porter Command.</p>
+              <p className="mb-4 text-sm text-zinc-400">Shared with Portr Command.</p>
               <StaffChat />
             </Panel>
           )}

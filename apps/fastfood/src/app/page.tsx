@@ -23,7 +23,7 @@ import type { MenuItem } from "@porter/shared/types";
 
 type PopularDish = MenuItem & { businessId: string; cuisine: string; businessName: string };
 
-export default function PorterDiscoverPage() {
+export default function PortrDiscoverPage() {
   const skin = useCustomerSkin();
   const {
     businesses,

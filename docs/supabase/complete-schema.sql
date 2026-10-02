@@ -1,11 +1,11 @@
 -- =============================================================================
--- Porter — complete Supabase schema (idempotent)
+-- Portr — complete Supabase schema (idempotent)
 -- =============================================================================
 -- Run this in Supabase → SQL Editor for https://food-deliverytest.vercel.app/
 -- Safe to re-run. Creates tables, policies, triggers, staff, and dev test accounts.
 --
--- Staff is included here (role, is_staff(), Porter Command policies, staff chat,
--- and the staff@runr.com test account). Founders are not created in this file.
+-- Staff is included here (role, is_staff(), Portr Command policies, staff chat,
+-- and the staff@portr.com test account). Founders are not created in this file.
 -- After this succeeds, run docs/supabase/founders.sql to add the founders.
 --
 -- Requires: Email auth enabled (Authentication → Providers).
@@ -28,7 +28,10 @@ create table if not exists public.profiles (
   company_email text,
   name text,
   role text not null default 'customer'
-    check (role in ('customer', 'runr', 'business', 'staff')),
+    check (role in (
+      'customer', 'runr', 'business',
+      'staff', 'support', 'moderator', 'administrator', 'manager', 'director', 'founder'
+    )),
   is_founder boolean not null default false,
   avatar_url text,
   created_at timestamptz not null default now(),
@@ -44,9 +47,22 @@ alter table public.profiles add column if not exists is_founder boolean not null
 alter table public.profiles add column if not exists created_at timestamptz not null default now();
 alter table public.profiles add column if not exists updated_at timestamptz not null default now();
 
+-- Staff positions: support, moderator, administrator, manager, director, founder.
+-- Generic role 'staff' still counts. Founders use role 'founder'.
+alter table public.profiles drop constraint if exists profiles_role_check;
+alter table public.profiles add constraint profiles_role_check
+  check (role in (
+    'customer', 'runr', 'business',
+    'staff', 'support', 'moderator', 'administrator', 'manager', 'director', 'founder'
+  ));
+
+update public.profiles
+set role = 'founder'
+where is_founder and role is distinct from 'founder';
+
 alter table public.profiles drop constraint if exists profiles_founder_is_staff;
 alter table public.profiles add constraint profiles_founder_is_staff
-  check (not is_founder or role = 'staff');
+  check (is_founder = (role = 'founder'));
 
 -- ---------------------------------------------------------------------------
 -- Row level security
@@ -68,7 +84,10 @@ stable
 as $$
   select exists (
     select 1 from public.profiles p
-    where p.id = auth.uid() and p.role = 'staff'
+    where p.id = auth.uid()
+      and p.role in (
+        'staff', 'support', 'moderator', 'administrator', 'manager', 'director', 'founder'
+      )
   );
 $$;
 
@@ -106,7 +125,15 @@ language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+  v_role text := coalesce(new.raw_user_meta_data->>'role', 'customer');
+  v_founder boolean := v_role = 'founder'
+    or coalesce(new.raw_user_meta_data->>'is_founder', 'false') = 'true';
 begin
+  if v_founder then
+    v_role := 'founder';
+  end if;
+
   insert into public.profiles (id, email, personal_email, company_email, name, role, is_founder)
   values (
     new.id,
@@ -114,8 +141,8 @@ begin
     coalesce(new.raw_user_meta_data->>'personal_email', new.email),
     new.raw_user_meta_data->>'company_email',
     coalesce(new.raw_user_meta_data->>'name', split_part(new.email, '@', 1)),
-    coalesce(new.raw_user_meta_data->>'role', 'customer'),
-    coalesce(new.raw_user_meta_data->>'is_founder', 'false') = 'true'
+    v_role,
+    v_founder
   )
   on conflict (id) do update
     set email = excluded.email,
@@ -123,7 +150,7 @@ begin
         company_email = coalesce(excluded.company_email, public.profiles.company_email),
         name = excluded.name,
         role = excluded.role,
-        is_founder = excluded.is_founder or public.profiles.is_founder,
+        is_founder = excluded.is_founder,
         updated_at = now();
   return new;
 end;
@@ -136,8 +163,8 @@ create trigger on_auth_user_created
 
 -- ---------------------------------------------------------------------------
 -- Founder accounts (permanent — one auth user per founder, both emails on profile)
--- Login email = personal Gmail (works before @runr.com mail is configured).
--- Company @runr.com stored on profile; switch auth email in Supabase when ready.
+-- Login email = personal Gmail (works before @portr.com mail is configured).
+-- Company @portr.com stored on profile; switch auth email in Supabase when ready.
 -- ---------------------------------------------------------------------------
 create or replace function public.upsert_runr_founder(
   p_id uuid,
@@ -187,11 +214,11 @@ begin
     jsonb_build_object(
       'provider', 'email',
       'providers', array['email'],
-      'role', 'staff'
+      'role', 'founder'
     ),
     jsonb_build_object(
       'name', p_name,
-      'role', 'staff',
+      'role', 'founder',
       'is_founder', 'true',
       'personal_email', p_personal_email,
       'company_email', p_company_email
@@ -230,13 +257,13 @@ begin
   );
 
   insert into public.profiles (id, email, personal_email, company_email, name, role, is_founder)
-  values (p_id, p_personal_email, p_personal_email, p_company_email, p_name, 'staff', true)
+  values (p_id, p_personal_email, p_personal_email, p_company_email, p_name, 'founder', true)
   on conflict (id) do update
     set email = excluded.email,
         personal_email = excluded.personal_email,
         company_email = excluded.company_email,
         name = excluded.name,
-        role = 'staff',
+        role = 'founder',
         is_founder = true,
         updated_at = now();
 end;
@@ -282,7 +309,10 @@ security definer
 set search_path = public, auth, extensions
 as $$
 begin
-  if p_role not in ('customer', 'runr', 'business', 'staff') then
+  if p_role not in (
+    'customer', 'runr', 'business',
+    'staff', 'support', 'moderator', 'administrator', 'manager', 'director', 'founder'
+  ) then
     raise exception 'Invalid role: %', p_role;
   end if;
 
@@ -360,28 +390,29 @@ begin
     now()
   );
 
-  insert into public.profiles (id, email, personal_email, company_email, name, role)
-  values (p_id, p_email, p_email, null, p_name, p_role)
+  insert into public.profiles (id, email, personal_email, company_email, name, role, is_founder)
+  values (p_id, p_email, p_email, null, p_name, p_role, p_role = 'founder')
   on conflict (id) do update
     set email = excluded.email,
         personal_email = excluded.personal_email,
         name = excluded.name,
         role = excluded.role,
+        is_founder = excluded.is_founder,
         updated_at = now();
 end;
 $$;
 
 select public.create_runr_test_user(
   'b1000000-0000-4000-8000-000000000001',
-  'porter@test.runr.com',
+  'porter@test.portr.com',
   'RunrTest2026!',
   'customer',
-  'PORTER Tester'
+  'Portr Tester'
 );
 
 select public.create_runr_test_user(
   'b1000000-0000-4000-8000-000000000002',
-  'runr@test.runr.com',
+  'runr@test.portr.com',
   'RunrTest2026!',
   'runr',
   'RUNR Tester'
@@ -389,7 +420,7 @@ select public.create_runr_test_user(
 
 select public.create_runr_test_user(
   'b1000000-0000-4000-8000-000000000003',
-  'vendr@test.runr.com',
+  'vendr@test.portr.com',
   'RunrTest2026!',
   'business',
   'VENDR Tester'
@@ -397,7 +428,7 @@ select public.create_runr_test_user(
 
 select public.create_runr_test_user(
   'b1000000-0000-4000-8000-000000000004',
-  'staff@runr.com',
+  'staff@portr.com',
   'RunrTest2026!',
   'staff',
   'Staff Tester'
@@ -587,22 +618,22 @@ drop policy if exists "biz_select" on public.businesses;
 create policy "biz_select" on public.businesses for select to authenticated using (true);
 drop policy if exists "biz_write" on public.businesses;
 create policy "biz_write" on public.businesses for all to authenticated
-  using (owner_id = auth.uid() or public.current_role() = 'staff')
-  with check (owner_id = auth.uid() or public.current_role() = 'staff');
+  using (owner_id = auth.uid() or public.is_staff())
+  with check (owner_id = auth.uid() or public.is_staff());
 
 drop policy if exists "menu_select" on public.menu_items;
 create policy "menu_select" on public.menu_items for select to authenticated using (true);
 drop policy if exists "menu_write" on public.menu_items;
 create policy "menu_write" on public.menu_items for all to authenticated
-  using (public.owns_business(business_id) or public.current_role() = 'staff')
-  with check (public.owns_business(business_id) or public.current_role() = 'staff');
+  using (public.owns_business(business_id) or public.is_staff())
+  with check (public.owns_business(business_id) or public.is_staff());
 
 drop policy if exists "cov_select" on public.coverage_rules;
 create policy "cov_select" on public.coverage_rules for select to authenticated using (true);
 drop policy if exists "cov_write" on public.coverage_rules;
 create policy "cov_write" on public.coverage_rules for all to authenticated
-  using (public.owns_business(business_id) or public.current_role() = 'staff')
-  with check (public.owns_business(business_id) or public.current_role() = 'staff');
+  using (public.owns_business(business_id) or public.is_staff())
+  with check (public.owns_business(business_id) or public.is_staff());
 
 drop policy if exists "ord_select" on public.orders;
 create policy "ord_select" on public.orders for select to authenticated
@@ -610,28 +641,28 @@ create policy "ord_select" on public.orders for select to authenticated
     customer_id = auth.uid()
     or runr_id = auth.uid()
     or public.owns_business(business_id)
-    or public.current_role() in ('staff', 'runr')
+    or (public.is_staff() or public.current_role() = 'runr')
   );
 drop policy if exists "ord_insert" on public.orders;
 create policy "ord_insert" on public.orders for insert to authenticated
-  with check (customer_id = auth.uid() or public.current_role() = 'staff');
+  with check (customer_id = auth.uid() or public.is_staff());
 drop policy if exists "ord_update" on public.orders;
 create policy "ord_update" on public.orders for update to authenticated
   using (
     customer_id = auth.uid()
     or runr_id = auth.uid()
     or public.owns_business(business_id)
-    or public.current_role() in ('staff', 'runr')
+    or (public.is_staff() or public.current_role() = 'runr')
   );
 
 drop policy if exists "run_select" on public.runs;
 create policy "run_select" on public.runs for select to authenticated using (true);
 drop policy if exists "run_insert" on public.runs;
 create policy "run_insert" on public.runs for insert to authenticated
-  with check (runr_id = auth.uid() or public.current_role() = 'staff');
+  with check (runr_id = auth.uid() or public.is_staff());
 drop policy if exists "run_update" on public.runs;
 create policy "run_update" on public.runs for update to authenticated
-  using (runr_id = auth.uid() or public.owns_business(business_id) or public.current_role() = 'staff');
+  using (runr_id = auth.uid() or public.owns_business(business_id) or public.is_staff());
 
 drop policy if exists "del_select" on public.deliveries;
 create policy "del_select" on public.deliveries for select to authenticated using (true);
@@ -641,17 +672,17 @@ create policy "del_write" on public.deliveries for all to authenticated
 
 drop policy if exists "earn_select" on public.earnings;
 create policy "earn_select" on public.earnings for select to authenticated
-  using (runr_id = auth.uid() or public.current_role() = 'staff');
+  using (runr_id = auth.uid() or public.is_staff());
 drop policy if exists "earn_insert" on public.earnings;
 create policy "earn_insert" on public.earnings for insert to authenticated
-  with check (runr_id = auth.uid() or public.current_role() = 'staff');
+  with check (runr_id = auth.uid() or public.is_staff());
 
 drop policy if exists "noti_own" on public.notifications;
 create policy "noti_own" on public.notifications for all to authenticated
   using (user_id = auth.uid()) with check (user_id = auth.uid());
 drop policy if exists "noti_staff" on public.notifications;
 create policy "noti_staff" on public.notifications for select to authenticated
-  using (public.current_role() = 'staff');
+  using (public.is_staff());
 
 drop policy if exists "fav_own" on public.favorites;
 create policy "fav_own" on public.favorites for all to authenticated
@@ -670,12 +701,12 @@ alter table public.staff_messages enable row level security;
 drop policy if exists "staff_chat_read" on public.staff_messages;
 create policy "staff_chat_read" on public.staff_messages
   for select to authenticated
-  using (public.current_role() = 'staff');
+  using (public.is_staff());
 
 drop policy if exists "staff_chat_write" on public.staff_messages;
 create policy "staff_chat_write" on public.staff_messages
   for insert to authenticated
-  with check (public.current_role() = 'staff' and author_id = auth.uid());
+  with check (public.is_staff() and author_id = auth.uid());
 
 do $$
 begin
@@ -703,7 +734,7 @@ begin
 exception when duplicate_object then null;
 end $$;
 
--- Seed marketplace for vendr@test.runr.com (created above)
+-- Seed marketplace for vendr@test.portr.com (created above)
 insert into public.businesses (
   id, owner_id, name, cuisine, category, rating, review_count,
   lat, lng, address, city, zip, delivery_radius_miles, operating_hours,

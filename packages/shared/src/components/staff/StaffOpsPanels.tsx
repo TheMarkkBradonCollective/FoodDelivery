@@ -156,7 +156,7 @@ export function StaffUsersPanel() {
             <p className="truncate text-xs text-[var(--muted)]">{u.email}</p>
           </div>
           <span className="shrink-0 rounded-full bg-[#7048F8]/30 px-3 py-1 text-xs uppercase text-[#A0F878]">
-            {u.role}
+            {u.staffTitle ?? u.role}
           </span>
         </div>
       ))}

@@ -23,7 +23,7 @@ export default function RunrProfilePage() {
 
   return (
     <div className="px-5 pb-8 pt-4 lg:mx-auto lg:max-w-xl">
-      <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">Porter Runner</p>
+      <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">Portr Runner</p>
       <h1 className="mt-0.5 text-[1.375rem] font-extrabold text-[var(--foreground)]">Profile</h1>
       <JobLoop app="runr" className="mt-1" />
 
@@ -153,7 +153,7 @@ export default function RunrProfilePage() {
 
       <ConfirmDialog
         open={confirmOut}
-        title="Sign out of Porter Runner?"
+        title="Sign out of Portr Runner?"
         description="You will need your courier email and password to get back in."
         confirmLabel="Sign out"
         destructive

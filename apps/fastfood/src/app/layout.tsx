@@ -10,7 +10,7 @@ const font = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 export const metadata: Metadata = {
   title: "FastFood — Get what you need.",
   description:
-    "Discover, order, track, and receive from nearby businesses on the Porter marketplace.",
+    "Discover, order, track, and receive from nearby businesses on the Portr marketplace.",
   applicationName: "FastFood",
 };
 

@@ -40,7 +40,7 @@ export function StaffLayoutClient({ children }: { children: React.ReactNode }) {
       </AppFrame>
       <ConfirmDialog
         open={confirmOut}
-        title="Sign out of Porter Command?"
+        title="Sign out of Portr Command?"
         description="You will need your staff email and password to get back in."
         confirmLabel="Sign out"
         destructive

@@ -78,7 +78,7 @@ function AccountHub() {
           </p>
           <p className="mt-1 text-xs text-[var(--muted)]">
             This site is for billing, profile, preferences, and ratings. Day-to-day work stays in
-            the {appName} app. Only Porter Command users can run marketplace ops from the website.
+            the {appName} app. Only Portr Command users can run marketplace ops from the website.
           </p>
         </div>
 
@@ -160,7 +160,7 @@ function ProfilePanel() {
         <>
           <Section title="Recent orders" icon={Package}>
             {orders.length === 0 ? (
-              <p className="text-sm text-[var(--muted)]">No orders yet. Place them in Porter.</p>
+              <p className="text-sm text-[var(--muted)]">No orders yet. Place them in Portr.</p>
             ) : (
               <div className="space-y-3">
                 {orders.slice(0, 6).map((order) => {
@@ -185,7 +185,7 @@ function ProfilePanel() {
           </Section>
           <Section title="Saved businesses" icon={Heart}>
             <p className="text-sm text-[var(--muted)]">
-              {favoriteBusinessIds.length} saved — synced with Porter
+              {favoriteBusinessIds.length} saved — synced with Portr
             </p>
           </Section>
         </>
@@ -208,7 +208,7 @@ function ProfilePanel() {
             {kitchen.address}, {kitchen.city}
           </p>
           <p className="mt-2 text-sm text-[var(--muted)]">
-            Hours {kitchen.operatingHours || "not set"}. Catalog, orders, and coverage are managed in Porter Vendor.
+            Hours {kitchen.operatingHours || "not set"}. Catalog, orders, and coverage are managed in Portr Vendor.
           </p>
         </Section>
       )}
@@ -236,7 +236,7 @@ function BillingPanel() {
         <>
           <Section title="Payment method" icon={CreditCard}>
             <p className="text-sm text-[var(--muted)]">
-              Label shown at checkout in Porter. Live card capture stays on the processor.
+              Label shown at checkout in Portr. Live card capture stays on the processor.
             </p>
             <input
               className="mt-3 w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm outline-none focus:border-[#7048F8]"
@@ -303,7 +303,7 @@ function BillingPanel() {
       {user.role === "business" && (
         <Section title="Business payouts" icon={CreditCard}>
           <p className="text-sm text-[var(--muted)]">
-            Sales settle to this Porter Vendor account ({user.email}). Catalog and coverage stay in the Porter Vendor app.
+            Sales settle to this Portr Vendor account ({user.email}). Catalog and coverage stay in the Portr Vendor app.
           </p>
         </Section>
       )}
@@ -369,7 +369,7 @@ function RatingsPanel() {
       {user.role === "customer" && (
         <Section title="Business ratings" icon={Star}>
           {ratedVendors.length === 0 ? (
-            <p className="text-sm text-[var(--muted)]">Ratings show up after you order in Porter.</p>
+            <p className="text-sm text-[var(--muted)]">Ratings show up after you order in Portr.</p>
           ) : (
             <ul className="space-y-3">
               {ratedVendors.map((b) => (
@@ -412,7 +412,7 @@ function RatingsPanel() {
                 />
               </div>
               <p className="mt-3 text-sm text-[var(--muted)]">
-                Grow ratings from Porter orders. Coverage and catalog stay in Porter Vendor.
+                Grow ratings from Portr orders. Coverage and catalog stay in Portr Vendor.
               </p>
             </>
           ) : (

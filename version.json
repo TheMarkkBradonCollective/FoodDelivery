@@ -1,20 +1,20 @@
 {
-  "name": "Porter",
-  "app": "Porter Runner",
+  "name": "Portr",
+  "app": "Portr Runner",
   "version": "0.3.4",
   "updatedAt": "2026-09-26T03:31:12.009Z",
   "apk": {
     "ready": true,
     "packageId": "com.porter.runner",
-    "name": "Porter Runner",
-    "label": "Porter Runner v0.3.4",
+    "name": "Portr Runner",
+    "label": "Portr Runner v0.3.4",
     "version": "0.3.4",
     "versionCode": 304,
     "url": "https://themarkkbradoncollective.github.io/main/apks/runr/runr-v0.3.4.apk",
     "downloadName": "runr-v0.3.4.apk",
     "fileSize": 3801236,
     "sha256": "fb4a66f4292b7f84345009e485173027469186672587057c38a28c0bdfd88726",
-    "releaseNotes": "Porter Runner v0.3.4 — Pick it up. Run it there. Full Capacitor build with embedded web shell.",
+    "releaseNotes": "Portr Runner v0.3.4 — Pick it up. Run it there. Full Capacitor build with embedded web shell.",
     "archives": [
       {
         "label": "FastFood",
@@ -28,36 +28,36 @@
         "packageId": "com.porter.fastfood"
       },
       {
-        "label": "Porter",
+        "label": "Portr",
         "version": "0.3.4",
         "versionCode": 304,
         "url": "https://themarkkbradoncollective.github.io/main/apks/porter/porter-v0.3.4.apk",
         "downloadName": "porter-v0.3.4.apk",
         "fileSize": 3837388,
         "sha256": "53070bf5ab740e79a904c4a99e1b79368237afb04769611dbb69e51c2144078c",
-        "releaseNotes": "Porter v0.3.4 — Get what you need. Full Capacitor build with embedded web shell.",
+        "releaseNotes": "Portr v0.3.4 — Get what you need. Full Capacitor build with embedded web shell.",
         "packageId": "com.porter.porter"
       },
       {
-        "label": "Porter Vendor",
+        "label": "Portr Vendor",
         "version": "0.3.4",
         "versionCode": 304,
         "url": "https://themarkkbradoncollective.github.io/main/apks/vendr/vendr-v0.3.4.apk",
         "downloadName": "vendr-v0.3.4.apk",
         "fileSize": 3753526,
         "sha256": "09a6b2154efd9be8378815d8ca1e6a3a521dc768a3c52078d8830300bc9bf2be",
-        "releaseNotes": "Porter Vendor v0.3.4 — Sell. Manage. Grow. Full Capacitor build with embedded web shell.",
+        "releaseNotes": "Portr Vendor v0.3.4 — Sell. Manage. Grow. Full Capacitor build with embedded web shell.",
         "packageId": "com.porter.vendor"
       },
       {
-        "label": "Porter Command",
+        "label": "Portr Command",
         "version": "0.3.4",
         "versionCode": 304,
         "url": "https://themarkkbradoncollective.github.io/main/apks/staff/staff-v0.3.4.apk",
         "downloadName": "staff-v0.3.4.apk",
         "fileSize": 3757461,
         "sha256": "55754e574d9be21f5ddd6e2f73dc76b0cc73a132860e4d9d799db419e041b81c",
-        "releaseNotes": "Porter Command v0.3.4 — Run the marketplace. Full Capacitor build with embedded web shell.",
+        "releaseNotes": "Portr Command v0.3.4 — Run the marketplace. Full Capacitor build with embedded web shell.",
         "packageId": "com.porter.command"
       }
     ]
@@ -75,7 +75,7 @@
     },
     {
       "id": "porter",
-      "name": "Porter",
+      "name": "Portr",
       "packageId": "com.porter.porter",
       "version": "0.3.4",
       "url": "https://themarkkbradoncollective.github.io/main/apks/porter/porter-v0.3.4.apk",
@@ -85,7 +85,7 @@
     },
     {
       "id": "runr",
-      "name": "Porter Runner",
+      "name": "Portr Runner",
       "packageId": "com.porter.runner",
       "version": "0.3.4",
       "url": "https://themarkkbradoncollective.github.io/main/apks/runr/runr-v0.3.4.apk",
@@ -95,7 +95,7 @@
     },
     {
       "id": "vendr",
-      "name": "Porter Vendor",
+      "name": "Portr Vendor",
       "packageId": "com.porter.vendor",
       "version": "0.3.4",
       "url": "https://themarkkbradoncollective.github.io/main/apks/vendr/vendr-v0.3.4.apk",
@@ -105,7 +105,7 @@
     },
     {
       "id": "staff",
-      "name": "Porter Command",
+      "name": "Portr Command",
       "packageId": "com.porter.command",
       "version": "0.3.4",
       "url": "https://themarkkbradoncollective.github.io/main/apks/staff/staff-v0.3.4.apk",

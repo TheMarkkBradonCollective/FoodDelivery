@@ -38,17 +38,17 @@ export default function HomePage() {
           <div className="mx-auto mt-10 grid max-w-3xl grid-cols-3 gap-4 text-center">
             <div>
               <p className="text-2xl">🛍️</p>
-              <p className="mt-1 text-sm font-semibold text-[#7048F8]">Porter</p>
+              <p className="mt-1 text-sm font-semibold text-[#7048F8]">Portr</p>
               <p className="text-xs text-[var(--muted)]">Customer</p>
             </div>
             <div>
               <p className="text-2xl">🚗</p>
-              <p className="mt-1 text-sm font-semibold text-[#7048F8]">Porter Runner</p>
+              <p className="mt-1 text-sm font-semibold text-[#7048F8]">Portr Runner</p>
               <p className="text-xs text-[var(--muted)]">Delivery</p>
             </div>
             <div>
               <p className="text-2xl">🏪</p>
-              <p className="mt-1 text-sm font-semibold text-[#7048F8]">Porter Vendor</p>
+              <p className="mt-1 text-sm font-semibold text-[#7048F8]">Portr Vendor</p>
               <p className="text-xs text-[var(--muted)]">Business</p>
             </div>
           </div>
@@ -62,7 +62,7 @@ export default function HomePage() {
             <h2 className="text-3xl font-bold tracking-tight">Download the Apps</h2>
             <p className="mx-auto mt-3 max-w-xl text-[var(--muted)]">
               This website is the official install page. Download the app for your role —
-              Porter, Porter Runner, Porter Vendor, or Porter Command. Ops work the live marketplace from the Porter Command
+              Portr, Portr Runner, Portr Vendor, or Portr Command. Ops work the live marketplace from the Portr Command
               app or this site. Everyone else signs in here for account settings.
             </p>
           </div>
@@ -75,7 +75,7 @@ export default function HomePage() {
 
           <div className="mx-auto mt-10 max-w-2xl rounded-xl border border-amber-200 bg-amber-50 p-4 text-center text-sm text-amber-900">
             <strong>Android APKs</strong> — Install from this site or the MBC App Store. Each app
-            bundles its full UI. Porter Command can advance orders and coverage from Porter Command
+            bundles its full UI. Portr Command can advance orders and coverage from Portr Command
             or this site. Other accounts use the website for billing and profile only.
           </div>
         </div>
@@ -87,7 +87,7 @@ export default function HomePage() {
           <div className="max-w-2xl">
             <h2 className="text-3xl font-bold tracking-tight">How We Operate</h2>
             <p className="mt-3 text-[var(--muted)]">
-              Porter is different from traditional delivery platforms. We&apos;re
+              Portr is different from traditional delivery platforms. We&apos;re
               coverage-driven — not order-driven.
             </p>
           </div>
@@ -117,7 +117,7 @@ export default function HomePage() {
           <div className="text-center">
             <h2 className="text-3xl font-bold tracking-tight">One Marketplace. Four Apps.</h2>
             <p className="mx-auto mt-3 max-w-xl text-[var(--muted)]">
-              Porter creates demand. Porter Vendor fulfills the business side. Porter Runner moves it.
+              Portr creates demand. Portr Vendor fulfills the business side. Portr Runner moves it.
             </p>
           </div>
 
@@ -128,24 +128,24 @@ export default function HomePage() {
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div className="rounded-2xl bg-brand-muted p-3">
                   <Store className="mx-auto h-5 w-5 text-[#7048F8]" />
-                  <p className="mt-1 font-semibold text-[#7048F8]">Porter</p>
+                  <p className="mt-1 font-semibold text-[#7048F8]">Portr</p>
                   <p className="text-[10px] text-[var(--muted)]">Customer</p>
                 </div>
                 <div className="rounded-2xl bg-brand-muted p-3">
                   <MapPin className="mx-auto h-5 w-5 text-[#7048F8]" />
-                  <p className="mt-1 font-semibold text-[#7048F8]">Porter Vendor</p>
+                  <p className="mt-1 font-semibold text-[#7048F8]">Portr Vendor</p>
                   <p className="text-[10px] text-[var(--muted)]">Business</p>
                 </div>
                 <div className="rounded-2xl bg-brand-muted p-3">
                   <Truck className="mx-auto h-5 w-5 text-[#7048F8]" />
-                  <p className="mt-1 font-semibold text-[#7048F8]">Porter Runner</p>
+                  <p className="mt-1 font-semibold text-[#7048F8]">Portr Runner</p>
                   <p className="text-[10px] text-[var(--muted)]">Delivery</p>
                 </div>
               </div>
               <div className="mt-4 space-y-1 text-center text-xs text-[var(--muted)]">
-                <p>Porter ──order──► Porter Vendor</p>
-                <p>Porter Vendor ──dispatch──► Porter Runner</p>
-                <p>Porter Runner ──delivery──► Porter</p>
+                <p>Portr ──order──► Portr Vendor</p>
+                <p>Portr Vendor ──dispatch──► Portr Runner</p>
+                <p>Portr Runner ──delivery──► Portr</p>
               </div>
             </div>
           </div>
@@ -156,7 +156,7 @@ export default function HomePage() {
       <section id="company" className="scroll-mt-20 py-20">
         <div className="mx-auto max-w-6xl px-6">
           <div className="max-w-2xl">
-            <h2 className="text-3xl font-bold tracking-tight">About Porter</h2>
+            <h2 className="text-3xl font-bold tracking-tight">About Portr</h2>
             <p className="mt-3 text-[var(--muted)]">
               We&apos;re building a delivery marketplace that respects everyone in
               the chain — customers who want reliability, businesses who need

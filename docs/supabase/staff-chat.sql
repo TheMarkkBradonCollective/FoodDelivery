@@ -14,12 +14,12 @@ alter table public.staff_messages enable row level security;
 drop policy if exists "staff_chat_read" on public.staff_messages;
 create policy "staff_chat_read" on public.staff_messages
   for select to authenticated
-  using (public.current_role() = 'staff');
+  using (public.is_staff());
 
 drop policy if exists "staff_chat_write" on public.staff_messages;
 create policy "staff_chat_write" on public.staff_messages
   for insert to authenticated
-  with check (public.current_role() = 'staff' and author_id = auth.uid());
+  with check (public.is_staff() and author_id = auth.uid());
 
 do $$
 begin

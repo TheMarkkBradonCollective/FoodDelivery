@@ -1,4 +1,4 @@
-# Porter App Icons
+# Portr App Icons
 
 Wordless **lime rider** on electric purple (`rider-mark.png`), plus the original wordmark lockup.
 
@@ -13,10 +13,10 @@ Android adaptive icons keep that **same lockup** inside the **center 66dp safe z
 
 | App | Treatment |
 |-----|-----------|
-| **Porter** | Lime rider on purple + **Porter** |
-| **Porter Runner** | Lime rider on purple + **Runr** |
-| **Porter Vendor** | Lime rider on purple + **Vendr** |
-| **Porter Command** | Purple rider on lime (wordless) |
+| **Portr** | Lime rider on purple + **Portr** |
+| **Portr Runner** | Lime rider on purple + **Runr** |
+| **Portr Vendor** | Lime rider on purple + **Vendr** |
+| **Portr Command** | Purple rider on lime (wordless) |
 | **FastFood** | Yellow rider on red + **FastFood** |
 
 ## Regenerate all launcher + in-app icons

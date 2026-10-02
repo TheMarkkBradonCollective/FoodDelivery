@@ -11,7 +11,7 @@ export const porterNav = [
   { href: "/profile", label: "Profile", icon: User },
 ];
 
-export function PorterLayoutClient({ children }: { children: React.ReactNode }) {
+export function PortrLayoutClient({ children }: { children: React.ReactNode }) {
   return (
     <AppFrame app="porter" tabs={porterNav}>
       {children}

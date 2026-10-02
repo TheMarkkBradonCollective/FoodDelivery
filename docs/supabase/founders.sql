@@ -1,13 +1,12 @@
 -- =============================================================================
--- Add Porter founders (run after complete-schema.sql)
+-- Add Portr founders (run after complete-schema.sql)
 -- =============================================================================
--- Staff is already established by complete-schema.sql: role 'staff', is_staff(),
--- Porter Command policies, and staff chat. This snippet only adds the two
--- founders as staff accounts (is_founder = true).
+-- Staff positions already exist: support, moderator, administrator, manager,
+-- director, and founder. This snippet adds the two founders (role = founder).
+-- They sign in to Portr Command the same way as other staff.
 --
--- Sign in at https://food-deliverytest.vercel.app/login/ with the personal
--- Gmail and password RunrTest2026! Use Porter Command Portal (not App Users).
--- Change the password in Supabase → Authentication after the first sign-in.
+-- Portr — https://portr.com
+-- Password until changed: RunrTest2026!
 -- =============================================================================
 
 create extension if not exists pgcrypto;
@@ -16,9 +15,36 @@ alter table public.profiles add column if not exists personal_email text;
 alter table public.profiles add column if not exists company_email text;
 alter table public.profiles add column if not exists is_founder boolean not null default false;
 
+alter table public.profiles drop constraint if exists profiles_role_check;
+alter table public.profiles add constraint profiles_role_check
+  check (role in (
+    'customer', 'runr', 'business',
+    'staff', 'support', 'moderator', 'administrator', 'manager', 'director', 'founder'
+  ));
+
+update public.profiles
+set role = 'founder'
+where is_founder and role is distinct from 'founder';
+
 alter table public.profiles drop constraint if exists profiles_founder_is_staff;
 alter table public.profiles add constraint profiles_founder_is_staff
-  check (not is_founder or role = 'staff');
+  check (is_founder = (role = 'founder'));
+
+create or replace function public.is_staff()
+returns boolean
+language sql
+security definer
+set search_path = public
+stable
+as $$
+  select exists (
+    select 1 from public.profiles p
+    where p.id = auth.uid()
+      and p.role in (
+        'staff', 'support', 'moderator', 'administrator', 'manager', 'director', 'founder'
+      )
+  );
+$$;
 
 create or replace function public.upsert_runr_founder(
   p_id uuid,
@@ -68,11 +94,11 @@ begin
     jsonb_build_object(
       'provider', 'email',
       'providers', array['email'],
-      'role', 'staff'
+      'role', 'founder'
     ),
     jsonb_build_object(
       'name', p_name,
-      'role', 'staff',
+      'role', 'founder',
       'is_founder', 'true',
       'personal_email', lower(p_personal_email),
       'company_email', lower(p_company_email)
@@ -117,7 +143,7 @@ begin
     lower(p_personal_email),
     lower(p_company_email),
     p_name,
-    'staff',
+    'founder',
     true
   )
   on conflict (id) do update
@@ -125,26 +151,26 @@ begin
         personal_email = excluded.personal_email,
         company_email = excluded.company_email,
         name = excluded.name,
-        role = 'staff',
+        role = 'founder',
         is_founder = true,
         updated_at = now();
 end;
 $$;
 
--- Markeith White — founder, staff
+-- Markeith White — founder
 select public.upsert_runr_founder(
   'f0000000-0000-4000-8000-000000000001'::uuid,
   'Markeith White'::text,
   'RunrTest2026!'::text,
   'markkisstickz96@gmail.com'::text,
-  'markeith@runr.com'::text
+  'markeith@portr.com'::text
 );
 
--- Emmanuel Cury — founder, staff
+-- Emmanuel Cury — founder
 select public.upsert_runr_founder(
   'f0000000-0000-4000-8000-000000000002'::uuid,
   'Emmanuel Cury'::text,
   'RunrTest2026!'::text,
-  'immanuelcurry@gmail.com'::text,
-  'emmanuel@runr.com'::text
+  'ecurry@portr.com'::text,
+  'ecurry@portr.com'::text
 );

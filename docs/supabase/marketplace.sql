@@ -13,6 +13,22 @@ as $$
   select role from public.profiles where id = auth.uid()
 $$;
 
+create or replace function public.is_staff()
+returns boolean
+language sql
+security definer
+set search_path = public
+stable
+as $$
+  select exists (
+    select 1 from public.profiles p
+    where p.id = auth.uid()
+      and p.role in (
+        'staff', 'support', 'moderator', 'administrator', 'manager', 'director', 'founder'
+      )
+  );
+$$;
+
 create table if not exists public.businesses (
   id uuid primary key default gen_random_uuid(),
   owner_id uuid not null references auth.users (id) on delete cascade,
@@ -180,22 +196,22 @@ drop policy if exists "biz_select" on public.businesses;
 create policy "biz_select" on public.businesses for select to authenticated using (true);
 drop policy if exists "biz_write" on public.businesses;
 create policy "biz_write" on public.businesses for all to authenticated
-  using (owner_id = auth.uid() or public.current_role() = 'staff')
-  with check (owner_id = auth.uid() or public.current_role() = 'staff');
+  using (owner_id = auth.uid() or public.is_staff())
+  with check (owner_id = auth.uid() or public.is_staff());
 
 drop policy if exists "menu_select" on public.menu_items;
 create policy "menu_select" on public.menu_items for select to authenticated using (true);
 drop policy if exists "menu_write" on public.menu_items;
 create policy "menu_write" on public.menu_items for all to authenticated
-  using (public.owns_business(business_id) or public.current_role() = 'staff')
-  with check (public.owns_business(business_id) or public.current_role() = 'staff');
+  using (public.owns_business(business_id) or public.is_staff())
+  with check (public.owns_business(business_id) or public.is_staff());
 
 drop policy if exists "cov_select" on public.coverage_rules;
 create policy "cov_select" on public.coverage_rules for select to authenticated using (true);
 drop policy if exists "cov_write" on public.coverage_rules;
 create policy "cov_write" on public.coverage_rules for all to authenticated
-  using (public.owns_business(business_id) or public.current_role() = 'staff')
-  with check (public.owns_business(business_id) or public.current_role() = 'staff');
+  using (public.owns_business(business_id) or public.is_staff())
+  with check (public.owns_business(business_id) or public.is_staff());
 
 drop policy if exists "ord_select" on public.orders;
 create policy "ord_select" on public.orders for select to authenticated
@@ -203,28 +219,28 @@ create policy "ord_select" on public.orders for select to authenticated
     customer_id = auth.uid()
     or runr_id = auth.uid()
     or public.owns_business(business_id)
-    or public.current_role() in ('staff', 'runr')
+    or (public.is_staff() or public.current_role() = 'runr')
   );
 drop policy if exists "ord_insert" on public.orders;
 create policy "ord_insert" on public.orders for insert to authenticated
-  with check (customer_id = auth.uid() or public.current_role() = 'staff');
+  with check (customer_id = auth.uid() or public.is_staff());
 drop policy if exists "ord_update" on public.orders;
 create policy "ord_update" on public.orders for update to authenticated
   using (
     customer_id = auth.uid()
     or runr_id = auth.uid()
     or public.owns_business(business_id)
-    or public.current_role() in ('staff', 'runr')
+    or (public.is_staff() or public.current_role() = 'runr')
   );
 
 drop policy if exists "run_select" on public.runs;
 create policy "run_select" on public.runs for select to authenticated using (true);
 drop policy if exists "run_insert" on public.runs;
 create policy "run_insert" on public.runs for insert to authenticated
-  with check (runr_id = auth.uid() or public.current_role() = 'staff');
+  with check (runr_id = auth.uid() or public.is_staff());
 drop policy if exists "run_update" on public.runs;
 create policy "run_update" on public.runs for update to authenticated
-  using (runr_id = auth.uid() or public.owns_business(business_id) or public.current_role() = 'staff');
+  using (runr_id = auth.uid() or public.owns_business(business_id) or public.is_staff());
 
 drop policy if exists "del_select" on public.deliveries;
 create policy "del_select" on public.deliveries for select to authenticated using (true);
@@ -234,17 +250,17 @@ create policy "del_write" on public.deliveries for all to authenticated
 
 drop policy if exists "earn_select" on public.earnings;
 create policy "earn_select" on public.earnings for select to authenticated
-  using (runr_id = auth.uid() or public.current_role() = 'staff');
+  using (runr_id = auth.uid() or public.is_staff());
 drop policy if exists "earn_insert" on public.earnings;
 create policy "earn_insert" on public.earnings for insert to authenticated
-  with check (runr_id = auth.uid() or public.current_role() = 'staff');
+  with check (runr_id = auth.uid() or public.is_staff());
 
 drop policy if exists "noti_own" on public.notifications;
 create policy "noti_own" on public.notifications for all to authenticated
   using (user_id = auth.uid()) with check (user_id = auth.uid());
 drop policy if exists "noti_staff" on public.notifications;
 create policy "noti_staff" on public.notifications for select to authenticated
-  using (public.current_role() = 'staff');
+  using (public.is_staff());
 
 drop policy if exists "fav_own" on public.favorites;
 create policy "fav_own" on public.favorites for all to authenticated
@@ -271,7 +287,7 @@ begin
 exception when duplicate_object then null;
 end $$;
 
--- Seed marketplace for vendr@test.runr.com (created above)
+-- Seed marketplace for vendr@test.portr.com (created above)
 insert into public.businesses (
   id, owner_id, name, cuisine, category, rating, review_count,
   lat, lng, address, city, zip, delivery_radius_miles, operating_hours,

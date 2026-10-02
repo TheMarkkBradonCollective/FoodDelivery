@@ -16,6 +16,7 @@ import type {
 } from "../../types/index";
 import { getSupabaseClient } from "./client";
 import { isSupabaseConfigured } from "./config";
+import { staffTitleFromValue } from "./user";
 
 export interface MarketplaceSnapshot {
   businesses: Business[];
@@ -281,7 +282,8 @@ export async function fetchMarketplace(userId?: string): Promise<MarketplaceSnap
         id: String(rec.id),
         name: String(rec.name ?? rec.email ?? "User"),
         email: String(rec.email ?? ""),
-        role: rec.role as User["role"],
+        role: staffTitleFromValue(rec.role) ? "staff" : (rec.role as User["role"]),
+        staffTitle: staffTitleFromValue(rec.role),
         avatarUrl: rec.avatar_url ? String(rec.avatar_url) : undefined,
       };
     }),

@@ -23,7 +23,7 @@ export function SiteHeader() {
             P
           </div>
           <div>
-            <p className="text-sm font-bold tracking-tight">Porter</p>
+            <p className="text-sm font-bold tracking-tight">Portr</p>
             <p className="text-[10px] text-[var(--muted)]">Marketplace</p>
           </div>
         </Link>
@@ -43,7 +43,7 @@ export function SiteHeader() {
               href="/staff"
               className="text-sm font-medium text-[var(--muted)] hover:text-[var(--foreground)]"
             >
-              Porter Command Portal
+              Portr Command Portal
             </Link>
           )}
         </nav>

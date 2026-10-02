@@ -14,7 +14,7 @@ export default function BusinessOrdersPage() {
 
   return (
     <div className="px-5 pb-8 pt-4">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">Porter Vendor</p>
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">Portr Vendor</p>
       <h1 className="mt-0.5 text-[1.375rem] font-extrabold">Orders</h1>
       <JobLoop app="vendr" className="mt-1" />
       <p className="mt-1 text-sm text-[var(--muted)]">
@@ -24,7 +24,7 @@ export default function BusinessOrdersPage() {
         {visible.length === 0 ? (
           <EmptyState
             title="No orders yet"
-            description="Porter orders from the marketplace show up here in real time."
+            description="Portr orders from the marketplace show up here in real time."
           />
         ) : (
           visible.map((order) => (
