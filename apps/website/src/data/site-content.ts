@@ -12,11 +12,13 @@ export interface AppDownload {
   colorClass: string;
   storeUrl: string;
   apkUrl: string;
+  exeUrl?: string;
   version: string;
 }
 
 const MBC_STORE = "https://themarkkbradoncollective.github.io/main/download";
-const MBC_APKS = "https://themarkkbradoncollective.github.io/main/apks";
+const RELEASE = "0.3.5";
+const GH_RELEASE = `https://github.com/TheMarkkBradonCollective/FoodDelivery/releases/download/v${RELEASE}`;
 const BRAND_PURPLE = "#7048F8";
 const BRAND_PLUM = "#2A1478";
 
@@ -34,8 +36,8 @@ export const apps: AppDownload[] = [
     color: BRAND_PURPLE,
     colorClass: "bg-brand",
     storeUrl: `${MBC_STORE}/#download-porter`,
-    apkUrl: `${MBC_APKS}/porter/porter-v0.3.4.apk`,
-    version: "0.3.4",
+    apkUrl: `${GH_RELEASE}/porter-v${RELEASE}.apk`,
+    version: RELEASE,
   },
   {
     id: "runr",
@@ -48,8 +50,8 @@ export const apps: AppDownload[] = [
     color: BRAND_PURPLE,
     colorClass: "bg-brand",
     storeUrl: `${MBC_STORE}/#download-runr`,
-    apkUrl: `${MBC_APKS}/runr/runr-v0.3.4.apk`,
-    version: "0.3.4",
+    apkUrl: `${GH_RELEASE}/runr-v${RELEASE}.apk`,
+    version: RELEASE,
   },
   {
     id: "vendr",
@@ -62,8 +64,8 @@ export const apps: AppDownload[] = [
     color: BRAND_PURPLE,
     colorClass: "bg-brand",
     storeUrl: `${MBC_STORE}/#download-vendr`,
-    apkUrl: `${MBC_APKS}/vendr/vendr-v0.3.4.apk`,
-    version: "0.3.4",
+    apkUrl: `${GH_RELEASE}/vendr-v${RELEASE}.apk`,
+    version: RELEASE,
   },
   {
     id: "staff",
@@ -76,8 +78,9 @@ export const apps: AppDownload[] = [
     color: BRAND_PLUM,
     colorClass: "bg-brand-deep",
     storeUrl: `${MBC_STORE}/#download-staff`,
-    apkUrl: `${MBC_APKS}/staff/staff-v0.3.4.apk`,
-    version: "0.3.4",
+    apkUrl: `${GH_RELEASE}/staff-v${RELEASE}.apk`,
+    exeUrl: `${GH_RELEASE}/PortrCommand-v${RELEASE}.exe`,
+    version: RELEASE,
   },
 ];
 

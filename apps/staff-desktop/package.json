@@ -1,0 +1,44 @@
+{
+  "name": "portr-command",
+  "productName": "Portr Command",
+  "version": "0.3.5",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win portable --x64"
+  },
+  "devDependencies": {
+    "electron": "33.4.11",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "electronVersion": "33.4.11",
+    "appId": "com.porter.command.desktop",
+    "productName": "Portr Command",
+    "directories": {
+      "output": "../../release/desktop"
+    },
+    "files": [
+      "main.js"
+    ],
+    "extraResources": [
+      {
+        "from": "../staff/out",
+        "to": "app"
+      }
+    ],
+    "win": {
+      "signAndEditExecutable": false,
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "PortrCommand.exe"
+    }
+  }
+}

@@ -52,8 +52,20 @@ export function DownloadCard({ app }: { app: AppDownload }) {
         Direct APK download
       </a>
 
+      {app.exeUrl ? (
+        <a
+          href={app.exeUrl}
+          download
+          className="mt-2 inline-flex items-center justify-center gap-2 text-xs font-semibold text-[#A0F878] hover:text-white"
+        >
+          Windows app (.exe)
+        </a>
+      ) : null}
+
       <p className="mt-2 text-center text-[10px] text-[var(--muted)]">
-        Android only · Install from the MBC App Store or sideload the APK
+        {app.exeUrl
+          ? "Android APK or Windows Portr Command"
+          : "Android only · Install from the MBC App Store or sideload the APK"}
       </p>
     </div>
   );

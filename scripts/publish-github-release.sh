@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Publish Porter platform APKs to GitHub Releases (one tag per app version).
+# Publish Portr platform APKs and the Portr Command Windows app to GitHub Releases.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-REPO="TheMarkkBradonCollective/Runr"
+REPO="TheMarkkBradonCollective/FoodDelivery"
 ROOT="$PWD"
 
 apk_path() {
@@ -34,10 +34,10 @@ publish_app() {
   local title
   case "$app" in
     fastfood) title="FastFood v${version}" ;;
-    porter) title="Porter v${version}" ;;
-    runr) title="Porter Runner v${version}" ;;
-    vendr) title="Porter Vendor v${version}" ;;
-    staff) title="Porter Command v${version}" ;;
+    porter) title="Portr v${version}" ;;
+    runr) title="Portr Runner v${version}" ;;
+    vendr) title="Portr Vendor v${version}" ;;
+    staff) title="Portr Command v${version}" ;;
     *) title="${app} v${version}" ;;
   esac
 
@@ -72,13 +72,18 @@ fi
 
 gh release create "$platform_tag" \
   --repo "$REPO" \
-  --title "Porter v${platform_version}" \
-  --notes "Porter v${platform_version} — signed Capacitor APKs for Porter, Porter Runner, Porter Vendor, Porter Command, and FastFood." \
+  --title "Portr v${platform_version}" \
+  --notes "Portr v${platform_version} — signed Android APKs for Portr, Portr Runner, Portr Vendor, Portr Command, and FastFood, plus the Portr Command Windows app." \
   "$(apk_path fastfood)#fastfood-v${platform_version}.apk" \
   "$(apk_path porter)#porter-v${platform_version}.apk" \
   "$(apk_path runr)#runr-v${platform_version}.apk" \
   "$(apk_path vendr)#vendr-v${platform_version}.apk" \
   "$(apk_path staff)#staff-v${platform_version}.apk"
+
+exe_path="${ROOT}/release/latest/PortrCommand.exe"
+if [[ -f "$exe_path" ]]; then
+  gh release upload "$platform_tag" --repo "$REPO" "$exe_path#PortrCommand-v${platform_version}.exe" --clobber
+fi
 
 zip_path="${ROOT}/release/latest/porter-platform-apks.zip"
 rm -f "$zip_path"

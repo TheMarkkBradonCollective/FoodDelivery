@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Build signed release APKs for Porter, Porter Runner, and Porter Vendor.
+ * Build signed release APKs for Portr, Portr Runner, Portr Vendor, Portr Command, and FastFood.
  * Bundles the Next.js static export inside the Capacitor shell (no remote URL).
  */
 import { spawnSync } from 'node:child_process';
@@ -23,10 +23,10 @@ const javaHome =
 
 const apps = [
   { id: 'fastfood', workspace: '@porter/fastfood', packageId: 'com.porter.fastfood', name: 'FastFood' },
-  { id: 'porter', workspace: '@porter/porter', packageId: 'com.porter.porter', name: 'Porter' },
-  { id: 'runr', workspace: '@porter/runner', packageId: 'com.porter.runner', name: 'Porter Runner' },
-  { id: 'vendr', workspace: '@porter/vendr', packageId: 'com.porter.vendor', name: 'Porter Vendor' },
-  { id: 'staff', workspace: '@porter/staff', packageId: 'com.porter.command', name: 'Porter Command' },
+  { id: 'porter', workspace: '@porter/porter', packageId: 'com.porter.porter', name: 'Portr' },
+  { id: 'runr', workspace: '@porter/runner', packageId: 'com.porter.runner', name: 'Portr Runner' },
+  { id: 'vendr', workspace: '@porter/vendr', packageId: 'com.porter.vendor', name: 'Portr Vendor' },
+  { id: 'staff', workspace: '@porter/staff', packageId: 'com.porter.command', name: 'Portr Command' },
 ];
 
 function env() {
@@ -75,6 +75,10 @@ async function ensureSdk() {
     await mkdir(path.join(sdkRoot, 'cmdline-tools'), { recursive: true });
     run('mv', [path.join(extract, 'cmdline-tools'), path.join(sdkRoot, 'cmdline-tools', 'latest')]);
   }
+  run('bash', [
+    '-c',
+    `yes | "${sdkmanager}" --sdk_root="${sdkRoot}" --licenses >/tmp/sdk-licenses.log || true`,
+  ]);
   run(sdkmanager, [
     '--sdk_root=' + sdkRoot,
     'platform-tools',
@@ -82,7 +86,6 @@ async function ensureSdk() {
     'build-tools;35.0.0',
     'build-tools;34.0.0',
   ]);
-  run('bash', ['-c', `yes | ${sdkmanager} --sdk_root=${sdkRoot} --licenses`]);
 }
 
 async function versionForApp(appId) {

@@ -13,8 +13,7 @@ import { latestApkPath, releaseRoot, resolveBuiltApk, versionedApkPath } from '.
 
 const root = join(import.meta.dirname, '..');
 const args = process.argv.slice(2);
-const GITHUB_REPO = 'TheMarkkBradonCollective/Runr';
-const MBC_PUBLIC_BASE = 'https://themarkkbradoncollective.github.io/main/apks';
+const GITHUB_REPO = 'TheMarkkBradonCollective/FoodDelivery';
 
 const apps = [
   {
@@ -25,25 +24,25 @@ const apps = [
   },
   {
     id: 'porter',
-    name: 'Porter',
+    name: 'Portr',
     packageId: 'com.porter.porter',
     tagline: 'Get what you need.',
   },
   {
     id: 'runr',
-    name: 'Porter Runner',
+    name: 'Portr Runner',
     packageId: 'com.porter.runner',
     tagline: 'Pick it up. Run it there.',
   },
   {
     id: 'vendr',
-    name: 'Porter Vendor',
+    name: 'Portr Vendor',
     packageId: 'com.porter.vendor',
     tagline: 'Sell. Manage. Grow.',
   },
   {
     id: 'staff',
-    name: 'Porter Command',
+    name: 'Portr Command',
     packageId: 'com.porter.command',
     tagline: 'Run the marketplace.',
   },
@@ -67,8 +66,7 @@ function versionCodeFromSemver(version) {
 }
 
 function githubReleaseUrl(appId, version) {
-  // Public MBC App Store mirror (works without GitHub auth). Run sync on main after each release.
-  return `${MBC_PUBLIC_BASE}/${appId}/${appId}-v${version}.apk`;
+  return `https://github.com/${GITHUB_REPO}/releases/download/v${version}/${appId}-v${version}.apk`;
 }
 
 function githubReleaseFallbackUrl(appId, version) {
@@ -145,7 +143,7 @@ const archives = published
   }));
 
 const versionJson = {
-  name: 'Porter',
+  name: 'Portr',
   app: primary.name,
   version: primary.version,
   updatedAt: new Date().toISOString(),

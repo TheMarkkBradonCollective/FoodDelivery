@@ -29,9 +29,9 @@ export default function DownloadPage() {
 
             <div className="mx-auto mt-10 max-w-2xl rounded-2xl border border-[#E8E0D4] bg-white p-5 text-sm text-[var(--muted)]">
               <p>
-                <strong className="text-[var(--foreground)]">Android only.</strong> Uninstall any older build first so
-                the new launcher icons appear. Portr Command handles marketplace ops. Customer and vendor accounts use
-                this site for settings.
+                <strong className="text-[var(--foreground)]">Android APKs, plus Portr Command for Windows.</strong> Uninstall
+                any older Android build first so the new launcher name appears. Portr Command handles marketplace ops
+                from the phone or the Windows app. Customer and vendor accounts use this site for settings.
               </p>
             </div>
           </div>

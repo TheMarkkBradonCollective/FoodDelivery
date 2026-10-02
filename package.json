@@ -20,6 +20,7 @@
     "build:runr": "npm run build -w @porter/runner",
     "build:vendr": "npm run build -w @porter/vendr",
     "build:staff": "npm run build -w @porter/staff",
+    "build:staff-exe": "npm run build:staff && npm run build -w portr-command && node scripts/stage-staff-exe.mjs",
     "build:all": "npm run build:website && npm run build:fastfood && npm run build:porter && npm run build:runr && npm run build:vendr && npm run build:staff",
     "copy-apks": "bash scripts/copy-apks.sh",
     "build:apks": "node scripts/build-apks.mjs",
