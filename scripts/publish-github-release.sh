@@ -80,9 +80,9 @@ gh release create "$platform_tag" \
   "$(apk_path vendr)#vendr-v${platform_version}.apk" \
   "$(apk_path staff)#staff-v${platform_version}.apk"
 
-exe_path="${ROOT}/release/latest/PortrCommand.exe"
-if [[ -f "$exe_path" ]]; then
-  gh release upload "$platform_tag" --repo "$REPO" "$exe_path#PortrCommand-v${platform_version}.exe" --clobber
+exe_named="${ROOT}/release/desktop/PortrCommand-v${platform_version}.exe"
+if [[ -f "$exe_named" ]]; then
+  gh release upload "$platform_tag" --repo "$REPO" "$exe_named" --clobber
 fi
 
 zip_path="${ROOT}/release/latest/porter-platform-apks.zip"
