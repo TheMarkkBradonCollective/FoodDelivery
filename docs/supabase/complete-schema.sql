@@ -1,14 +1,14 @@
 -- =============================================================================
--- RUNR / Porter — complete Supabase schema (idempotent)
+-- Porter — complete Supabase schema (idempotent)
 -- =============================================================================
--- Safe to re-run in Supabase → SQL Editor whenever the app schema changes.
--- Updates tables, policies, triggers, staff, founder accounts, and dev test accounts.
+-- Run this in Supabase → SQL Editor for https://food-deliverytest.vercel.app/
+-- Safe to re-run. Creates tables, policies, triggers, staff, and dev test accounts.
 --
--- Prefer docs/supabase/complete-schema.sql, then docs/supabase/founders.sql.
--- This file still does both so an existing one-shot run keeps working.
+-- Staff is included here (role, is_staff(), Porter Command policies, staff chat,
+-- and the staff@runr.com test account). Founders are not created in this file.
+-- After this succeeds, run docs/supabase/founders.sql to add the founders.
 --
--- Requires: Supabase project with Email auth enabled (Authentication → Providers).
--- Site: https://food-deliverytest.vercel.app/
+-- Requires: Email auth enabled (Authentication → Providers).
 -- =============================================================================
 
 begin;
@@ -262,23 +262,8 @@ delete from auth.users where id in (
   'b1000000-0000-4000-8000-000000000008'
 );
 
--- Founders — staff already exists above. Same accounts as docs/supabase/founders.sql.
--- Password: RunrTest2026!  Sign in with the personal Gmail.
-select public.upsert_runr_founder(
-  'f0000000-0000-4000-8000-000000000001',
-  'Markeith White',
-  'RunrTest2026!',
-  'markkisstickz96@gmail.com',
-  'markeith@runr.com'
-);
-
-select public.upsert_runr_founder(
-  'f0000000-0000-4000-8000-000000000002',
-  'Emmanuel Cury',
-  'RunrTest2026!',
-  'immanuelcurry@gmail.com',
-  'emmanuel@runr.com'
-);
+-- Founder accounts are a separate snippet: docs/supabase/founders.sql
+-- Staff role, policies, and staff chat are already created above.
 
 -- ---------------------------------------------------------------------------
 -- Dev test accounts (optional — remove this block before production launch)

@@ -2,30 +2,25 @@
 
 ## Database setup
 
-Run **`schema.sql`** in the Supabase SQL Editor whenever you need to create or refresh the database. The script is **idempotent** — safe to re-run after schema changes.
+For [food-deliverytest.vercel.app](https://food-deliverytest.vercel.app/), run these in the Supabase SQL Editor, in order:
 
-It creates:
+1. **`complete-schema.sql`** — tables, policies, marketplace seed, and staff (role, Porter Command access, staff chat, `staff@runr.com`). Idempotent.
+2. **`founders.sql`** — adds Markeith White and Emmanuel Cury as founders. Staff already exists; this only creates their accounts with `role = 'staff'` and `is_founder = true`.
 
-- Auth profiles + founder/test accounts
-- Marketplace: businesses, menus, coverage rules, orders, RUNs, deliveries, earnings, notifications, favorites, staff ops chat
-- Seed vendors owned by `vendr@test.runr.com` (Tony's Pizza, Golden Gate Burgers, Mission Tacos)
+`schema.sql` is the older one-shot script (schema + founders together).
 
 If you already ran an older schema, you can also run **`marketplace.sql`**, **`staff-chat.sql`**, and **`staff-rls.sql`** by themselves.
 
 ## Founder accounts (permanent)
 
-Run **`founders.sql`** to create founder accounts only (self-contained — includes the function).
-
-Or run the full **`schema.sql`** for everything (founders + dev test accounts).
-
-One staff account per founder. **Sign in with your personal Gmail** until `@runr.com` mail is set up. Both emails live on the same profile.
+One staff account per founder. **Sign in with the personal Gmail** on the Porter Command Portal until `@runr.com` mail is set up. Both emails live on the same profile. Password until you change it: **`RunrTest2026!`**
 
 | Name | Login (personal) | Company |
 |------|------------------|---------|
-| Markeith White | `Markkisstickz96@gmail.com` | `markeith@runr.com` |
-| Immanuel Curry | `Immanuelcurry@gmail.com` | `immanuel@runr.com` |
+| Markeith White | `markkisstickz96@gmail.com` | `markeith@runr.com` |
+| Emmanuel Cury | `immanuelcurry@gmail.com` | `emmanuel@runr.com` |
 
-Set your password in `schema.sql` (`upsert_runr_founder` calls) before first run. Change it in Supabase → Authentication after sign-in.
+Change the password in Supabase → Authentication after sign-in.
 
 When `@runr.com` inboxes are ready, switch the auth email to your company address in Supabase → Authentication → Users.
 

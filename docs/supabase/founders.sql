@@ -1,12 +1,24 @@
 -- =============================================================================
--- RUNR founders only — run this block in Supabase SQL Editor
--- Creates upsert_runr_founder + both founder accounts (self-contained).
+-- Add Porter founders (run after complete-schema.sql)
+-- =============================================================================
+-- Staff is already established by complete-schema.sql: role 'staff', is_staff(),
+-- Porter Command policies, and staff chat. This snippet only adds the two
+-- founders as staff accounts (is_founder = true).
+--
+-- Sign in at https://food-deliverytest.vercel.app/login/ with the personal
+-- Gmail and password RunrTest2026! Use Porter Command Portal (not App Users).
+-- Change the password in Supabase → Authentication after the first sign-in.
 -- =============================================================================
 
 create extension if not exists pgcrypto;
 
 alter table public.profiles add column if not exists personal_email text;
 alter table public.profiles add column if not exists company_email text;
+alter table public.profiles add column if not exists is_founder boolean not null default false;
+
+alter table public.profiles drop constraint if exists profiles_founder_is_staff;
+alter table public.profiles add constraint profiles_founder_is_staff
+  check (not is_founder or role = 'staff');
 
 create or replace function public.upsert_runr_founder(
   p_id uuid,
@@ -45,10 +57,10 @@ begin
     recovery_token
   ) values (
     p_id,
-    '00000000-0000-0000-0000-000000000000'::uuid,
+    '00000000-0000-0000-0000-000000000000',
     'authenticated',
     'authenticated',
-    p_personal_email,
+    lower(p_personal_email),
     crypt(p_password, gen_salt('bf')),
     now(),
     now(),
@@ -61,8 +73,9 @@ begin
     jsonb_build_object(
       'name', p_name,
       'role', 'staff',
-      'personal_email', p_personal_email,
-      'company_email', p_company_email
+      'is_founder', 'true',
+      'personal_email', lower(p_personal_email),
+      'company_email', lower(p_company_email)
     ),
     now(),
     now(),
@@ -87,7 +100,7 @@ begin
     p_id::text,
     jsonb_build_object(
       'sub', p_id::text,
-      'email', p_personal_email,
+      'email', lower(p_personal_email),
       'email_verified', true,
       'phone_verified', false
     ),
@@ -97,50 +110,41 @@ begin
     now()
   );
 
-  insert into public.profiles (id, email, personal_email, company_email, name, role)
-  values (p_id, p_personal_email, p_personal_email, p_company_email, p_name, 'staff')
+  insert into public.profiles (id, email, personal_email, company_email, name, role, is_founder)
+  values (
+    p_id,
+    lower(p_personal_email),
+    lower(p_personal_email),
+    lower(p_company_email),
+    p_name,
+    'staff',
+    true
+  )
   on conflict (id) do update
     set email = excluded.email,
         personal_email = excluded.personal_email,
         company_email = excluded.company_email,
         name = excluded.name,
-        role = excluded.role,
+        role = 'staff',
+        is_founder = true,
         updated_at = now();
 end;
 $$;
 
--- Remove old duplicate founder rows if they exist
-delete from auth.identities where user_id in (
-  'b1000000-0000-4000-8000-000000000005'::uuid,
-  'b1000000-0000-4000-8000-000000000006'::uuid,
-  'b1000000-0000-4000-8000-000000000007'::uuid,
-  'b1000000-0000-4000-8000-000000000008'::uuid
-);
-delete from public.profiles where id in (
-  'b1000000-0000-4000-8000-000000000005'::uuid,
-  'b1000000-0000-4000-8000-000000000006'::uuid,
-  'b1000000-0000-4000-8000-000000000007'::uuid,
-  'b1000000-0000-4000-8000-000000000008'::uuid
-);
-delete from auth.users where id in (
-  'b1000000-0000-4000-8000-000000000005'::uuid,
-  'b1000000-0000-4000-8000-000000000006'::uuid,
-  'b1000000-0000-4000-8000-000000000007'::uuid,
-  'b1000000-0000-4000-8000-000000000008'::uuid
-);
-
+-- Markeith White — founder, staff
 select public.upsert_runr_founder(
   'f0000000-0000-4000-8000-000000000001'::uuid,
   'Markeith White'::text,
   'RunrTest2026!'::text,
-  'Markkisstickz96@gmail.com'::text,
+  'markkisstickz96@gmail.com'::text,
   'markeith@runr.com'::text
 );
 
+-- Emmanuel Cury — founder, staff
 select public.upsert_runr_founder(
   'f0000000-0000-4000-8000-000000000002'::uuid,
-  'Immanuel Curry'::text,
+  'Emmanuel Cury'::text,
   'RunrTest2026!'::text,
-  'Immanuelcurry@gmail.com'::text,
-  'immanuel@runr.com'::text
+  'immanuelcurry@gmail.com'::text,
+  'emmanuel@runr.com'::text
 );

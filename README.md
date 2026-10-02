@@ -32,7 +32,7 @@ The marketing site includes APK download links, ecosystem overview, company info
 | `/account` | Billing, profile, preferences, and ratings for Porter / Porter Runner / Porter Vendor |
 | `/staff` | Porter Command marketplace ops (also in the Porter Command app) |
 
-Sign-in uses Supabase. The website and apps default to the Porter project (`https://gonsvtgsocjaykrmtmpz.supabase.co`); set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to point a build at another project. Run `docs/supabase/schema.sql` in the SQL Editor to create profiles, marketplace tables, and seed restaurants. After that, Porter, Porter Runner, Porter Vendor, and Porter Command load live data (orders, runs, coverage, menus).
+Sign-in uses Supabase. The website and apps default to the Porter project (`https://gonsvtgsocjaykrmtmpz.supabase.co`); set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to point a build at another project. Run `docs/supabase/complete-schema.sql` in the SQL Editor, then `docs/supabase/founders.sql`, to create profiles, staff, marketplace tables, and the founder accounts. After that, Porter, Porter Runner, Porter Vendor, and Porter Command load live data (orders, runs, coverage, menus).
 
 ## The Porter app family
 

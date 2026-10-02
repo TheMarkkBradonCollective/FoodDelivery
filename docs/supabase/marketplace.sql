@@ -13,19 +13,6 @@ as $$
   select role from public.profiles where id = auth.uid()
 $$;
 
-create or replace function public.owns_business(p_id uuid)
-returns boolean
-language sql
-stable
-security definer
-set search_path = public
-as $$
-  select exists (
-    select 1 from public.businesses b
-    where b.id = p_id and b.owner_id = auth.uid()
-  )
-$$;
-
 create table if not exists public.businesses (
   id uuid primary key default gen_random_uuid(),
   owner_id uuid not null references auth.users (id) on delete cascade,
@@ -63,6 +50,19 @@ alter table public.businesses add column if not exists operating_hours text not 
 alter table public.businesses add column if not exists delivery_fee numeric not null default 2.99;
 alter table public.businesses add column if not exists eta_minutes integer not null default 28;
 alter table public.businesses add column if not exists demand_level text not null default 'moderate';
+
+create or replace function public.owns_business(p_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.businesses b
+    where b.id = p_id and b.owner_id = auth.uid()
+  )
+$$;
 
 create table if not exists public.menu_items (
   id uuid primary key default gen_random_uuid(),
