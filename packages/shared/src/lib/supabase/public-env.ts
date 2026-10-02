@@ -1,4 +1,4 @@
-/** Live Porter Supabase project. Env vars override these for another project. */
+/** Live Portr Supabase project. Env vars override these for another project. */
 export const DEFAULT_SUPABASE_URL = "https://gonsvtgsocjaykrmtmpz.supabase.co";
 
 export const DEFAULT_SUPABASE_PUBLISHABLE_KEY =

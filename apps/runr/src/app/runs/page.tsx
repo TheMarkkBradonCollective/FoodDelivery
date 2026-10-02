@@ -38,10 +38,10 @@ export default function RunrRunsPage() {
   return (
     <div>
       <div className="px-5 pt-4">
-        <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">Porter Runner</p>
+        <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-purple">Portr Runner</p>
         <h1 className="mt-0.5 text-[1.375rem] font-extrabold text-[var(--foreground)]">RUNs</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">
-          Cover a Porter Vendor from a time you pick. Porter orders match to that window.
+          Cover a Portr Vendor from a time you pick. Portr orders match to that window.
         </p>
       </div>
       <div className="px-5 pb-8 pt-3">

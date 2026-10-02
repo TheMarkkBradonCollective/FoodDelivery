@@ -74,7 +74,7 @@ export function SignInPrompt({ role }: { role: UserRole }) {
     role === "customer"
       ? skin.shortName
       : role === "staff"
-        ? "Porter Command Portal"
+        ? "Portr Command Portal"
         : getAppForRole(role);
   const copy =
     role === "customer"
@@ -229,8 +229,8 @@ export function SignInPrompt({ role }: { role: UserRole }) {
                 <p className="signin-title">Sign in to continue</p>
                 <p className="signin-copy">
                   {skin.id === "fastfood"
-                    ? "Same customer login as Porter — one account, two apps."
-                    : "Use your Porter account. Marketplace data loads after sign-in."}
+                    ? "Same customer login as Portr — one account, two apps."
+                    : "Use your Portr account. Marketplace data loads after sign-in."}
                 </p>
                 <form onSubmit={handleSignIn} className="signin-form">
                   <label className="field-label" htmlFor="auth-email">

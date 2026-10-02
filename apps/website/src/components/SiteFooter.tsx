@@ -10,7 +10,7 @@ export function SiteFooter() {
               <div className="flex h-8 w-8 items-center justify-center rounded-2xl bg-[#7048F8] text-xs font-black text-white">
                 P
               </div>
-              <span className="font-bold">Porter</span>
+              <span className="font-bold">Portr</span>
             </div>
             <p className="mt-3 text-sm text-[var(--muted)]">
               Pick Your Place. Run Your Time.
@@ -26,9 +26,9 @@ export function SiteFooter() {
             </p>
             <ul className="mt-3 space-y-2 text-sm">
               <li><Link href="/download" className="hover:text-[#7048F8]">Download apps</Link></li>
-              <li><Link href="/download" className="hover:text-[#7048F8]">Porter — Customer</Link></li>
-              <li><Link href="/download" className="hover:text-[#7048F8]">Porter Runner — Delivery</Link></li>
-              <li><Link href="/download" className="hover:text-[#7048F8]">Porter Vendor — Business</Link></li>
+              <li><Link href="/download" className="hover:text-[#7048F8]">Portr — Customer</Link></li>
+              <li><Link href="/download" className="hover:text-[#7048F8]">Portr Runner — Delivery</Link></li>
+              <li><Link href="/download" className="hover:text-[#7048F8]">Portr Vendor — Business</Link></li>
             </ul>
           </div>
 
@@ -42,7 +42,7 @@ export function SiteFooter() {
               <li><a href="#company">About</a></li>
               <li><Link href="/login" className="hover:text-[#7048F8]">Sign In</Link></li>
               <li><Link href="/account" className="hover:text-[#7048F8]">My Account</Link></li>
-              <li><Link href="/staff" className="hover:text-[#7048F8]">Porter Command Portal</Link></li>
+              <li><Link href="/staff" className="hover:text-[#7048F8]">Portr Command Portal</Link></li>
               <li>
                 <a href="mailto:themarkkbrandoncollective@gmail.com">Contact</a>
               </li>

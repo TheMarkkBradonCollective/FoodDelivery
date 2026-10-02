@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Porter</string>
-    <string name="title_activity_main">Porter</string>
+    <string name="app_name">Portr</string>
+    <string name="title_activity_main">Portr</string>
     <string name="package_name">com.porter.porter</string>
     <string name="custom_url_scheme">com.porter.porter</string>
 </resources>

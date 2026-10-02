@@ -26,7 +26,7 @@ export default function StaffStatusPage() {
 
   return (
     <div className="px-5 pb-8 pt-4 lg:p-8">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-porter-accent-bright">Porter Command</p>
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-porter-accent-bright">Portr Command</p>
       <h1 className="mt-0.5 text-[1.375rem] font-extrabold">Status</h1>
       <p className="mt-1 text-sm text-[var(--muted)]">Live marketplace — work from this phone</p>
 
@@ -88,7 +88,7 @@ export default function StaffStatusPage() {
 
       <ConfirmDialog
         open={confirmOut}
-        title="Sign out of Porter Command?"
+        title="Sign out of Portr Command?"
         description="You will need your staff email and password to get back in."
         confirmLabel="Sign out"
         destructive

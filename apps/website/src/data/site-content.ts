@@ -12,11 +12,13 @@ export interface AppDownload {
   colorClass: string;
   storeUrl: string;
   apkUrl: string;
+  exeUrl?: string;
   version: string;
 }
 
 const MBC_STORE = "https://themarkkbradoncollective.github.io/main/download";
-const MBC_APKS = "https://themarkkbradoncollective.github.io/main/apks";
+const RELEASE = "0.3.5";
+const GH_RELEASE = `https://github.com/TheMarkkBradonCollective/FoodDelivery/releases/download/v${RELEASE}`;
 const BRAND_PURPLE = "#7048F8";
 const BRAND_PLUM = "#2A1478";
 
@@ -34,8 +36,8 @@ export const apps: AppDownload[] = [
     color: BRAND_PURPLE,
     colorClass: "bg-brand",
     storeUrl: `${MBC_STORE}/#download-porter`,
-    apkUrl: `${MBC_APKS}/porter/porter-v0.3.4.apk`,
-    version: "0.3.4",
+    apkUrl: `${GH_RELEASE}/porter-v${RELEASE}.apk`,
+    version: RELEASE,
   },
   {
     id: "runr",
@@ -48,8 +50,8 @@ export const apps: AppDownload[] = [
     color: BRAND_PURPLE,
     colorClass: "bg-brand",
     storeUrl: `${MBC_STORE}/#download-runr`,
-    apkUrl: `${MBC_APKS}/runr/runr-v0.3.4.apk`,
-    version: "0.3.4",
+    apkUrl: `${GH_RELEASE}/runr-v${RELEASE}.apk`,
+    version: RELEASE,
   },
   {
     id: "vendr",
@@ -62,8 +64,8 @@ export const apps: AppDownload[] = [
     color: BRAND_PURPLE,
     colorClass: "bg-brand",
     storeUrl: `${MBC_STORE}/#download-vendr`,
-    apkUrl: `${MBC_APKS}/vendr/vendr-v0.3.4.apk`,
-    version: "0.3.4",
+    apkUrl: `${GH_RELEASE}/vendr-v${RELEASE}.apk`,
+    version: RELEASE,
   },
   {
     id: "staff",
@@ -76,19 +78,20 @@ export const apps: AppDownload[] = [
     color: BRAND_PLUM,
     colorClass: "bg-brand-deep",
     storeUrl: `${MBC_STORE}/#download-staff`,
-    apkUrl: `${MBC_APKS}/staff/staff-v0.3.4.apk`,
-    version: "0.3.4",
+    apkUrl: `${GH_RELEASE}/staff-v${RELEASE}.apk`,
+    exeUrl: `${GH_RELEASE}/PortrCommand-v${RELEASE}.exe`,
+    version: RELEASE,
   },
 ];
 
 export const howItWorks = [
   {
     title: "Coverage-driven, not order-driven",
-    body: "Traditional platforms send drivers hunting for random orders. Porter lets businesses define how many delivery workers they need — and lets Runners choose where and when they work.",
+    body: "Traditional platforms send drivers hunting for random orders. Portr lets businesses define how many delivery workers they need — and lets Runners choose where and when they work.",
   },
   {
     title: "Businesses set capacity",
-    body: 'Through Porter Vendor, businesses say "I need 6 Runners between 5–8 PM" — not "send me a driver." Coverage gaps appear in real time on the map.',
+    body: 'Through Portr Vendor, businesses say "I need 6 Runners between 5–8 PM" — not "send me a driver." Coverage gaps appear in real time on the map.',
   },
   {
     title: "Runners choose their RUN",
@@ -96,7 +99,7 @@ export const howItWorks = [
   },
   {
     title: "Customers order normally",
-    body: "Porter works like the delivery apps you know: discover, browse menus, order, pay, and track — with live Runner location on the map.",
+    body: "Portr works like the delivery apps you know: discover, browse menus, order, pay, and track — with live Runner location on the map.",
   },
 ];
 
@@ -115,6 +118,6 @@ export const companyValues = [
   },
   {
     title: "One network",
-    body: "Porter, Porter Runner, and Porter Vendor connect to the same marketplace. Orders, coverage, and deliveries stay in sync.",
+    body: "Portr, Portr Runner, and Portr Vendor connect to the same marketplace. Orders, coverage, and deliveries stay in sync.",
   },
 ];

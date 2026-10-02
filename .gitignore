@@ -1,5 +1,6 @@
 # dependencies
 /node_modules
+apps/*/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -56,3 +57,10 @@ next-env.d.ts
 !release/latest/
 !release/latest/*.apk
 !release/latest/*.zip
+!release/latest/*.exe
+!release/desktop/
+!release/desktop/*.exe
+release/desktop/win-unpacked/
+release/desktop/*.blockmap
+release/desktop/*.yml
+release/desktop/*.yaml

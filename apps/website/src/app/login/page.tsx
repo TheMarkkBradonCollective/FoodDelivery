@@ -59,10 +59,10 @@ export default function LoginPage() {
     <div className="min-h-[80vh] bg-[var(--surface)] py-16">
       <div className="mx-auto max-w-md px-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">Sign in to Porter</h1>
+          <h1 className="text-2xl font-bold">Sign in to Portr</h1>
           <p className="mt-2 text-sm text-[var(--muted)]">
             Customers, Runners, and businesses sign in for billing, profile, preferences, and
-            ratings. Only Porter Command users can work the marketplace from this site — or from Porter Command.
+            ratings. Only Portr Command users can work the marketplace from this site — or from Portr Command.
           </p>
         </div>
 
@@ -85,14 +85,14 @@ export default function LoginPage() {
             }`}
           >
             <Shield className="h-4 w-4" />
-            Porter Command Portal
+            Portr Command Portal
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--surface-elevated)] p-6">
           {mode === "staff" && (
             <p className="rounded-lg bg-zinc-100 px-3 py-2 text-xs text-zinc-600">
-              Porter Command sign in to manage orders, coverage, and users here or in Porter Command.
+              Portr Command sign in to manage orders, coverage, and users here or in Portr Command.
             </p>
           )}
 
@@ -106,7 +106,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm outline-none focus:border-[#7048F8]"
-              placeholder={mode === "staff" ? "staff@runr.com" : "you@example.com"}
+              placeholder={mode === "staff" ? "staff@portr.com" : "you@example.com"}
             />
           </div>
 

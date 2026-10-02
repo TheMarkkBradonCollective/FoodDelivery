@@ -20,14 +20,14 @@ export default function BusinessCoveragePage() {
   if (!business) {
     return (
       <div className="px-5 py-8">
-        <EmptyState title="No business connected" description="Sign in with your Porter Vendor account." />
+        <EmptyState title="No business connected" description="Sign in with your Portr Vendor account." />
       </div>
     );
   }
 
   return (
     <div className="px-5 pb-8 pt-4">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">Porter Vendor</p>
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple">Portr Vendor</p>
       <h1 className="mt-0.5 text-[1.375rem] font-extrabold">Coverage</h1>
       <p className="mt-1 text-sm text-[var(--muted)]">
         Slide Needed per window. Covered updates as Runners book.

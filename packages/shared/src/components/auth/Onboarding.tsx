@@ -18,8 +18,8 @@ const STEPS: Record<AppId, { title: string; body: string; visual: string }[]> = 
       visual: "📍",
     },
     {
-      title: "Receive on the Porter marketplace.",
-      body: "Tip, rate, keep receipts, and reorder. Porter Vendor prepares it. Porter Runner moves it.",
+      title: "Receive on the Portr marketplace.",
+      body: "Tip, rate, keep receipts, and reorder. Portr Vendor prepares it. Portr Runner moves it.",
       visual: "📦",
     },
   ],
@@ -42,7 +42,7 @@ const STEPS: Record<AppId, { title: string; body: string; visual: string }[]> = 
   ],
   vendr: [
     {
-      title: "Sell on Porter.",
+      title: "Sell on Portr.",
       body: "Your catalog, hours, and location are what customers discover. Orders land here to accept and prepare.",
       visual: "🏪",
     },
@@ -65,7 +65,7 @@ const STEPS: Record<AppId, { title: string; body: string; visual: string }[]> = 
     },
     {
       title: "Same marketplace",
-      body: "Chat, alerts, and ops write to the live network. Desktop Porter Command Portal stays in sync.",
+      body: "Chat, alerts, and ops write to the live network. Desktop Portr Command Portal stays in sync.",
       visual: "💬",
     },
     {

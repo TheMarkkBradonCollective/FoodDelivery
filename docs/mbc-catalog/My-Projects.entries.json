@@ -2,7 +2,7 @@
   {
     "slug": "porter",
     "theme": "porter",
-    "name": "Porter",
+    "name": "Portr",
     "tagline": "Get what you need.",
     "url": "https://raw.githubusercontent.com/TheMarkkBradonCollective/Runr/main",
     "section": "marketplace",
@@ -10,7 +10,7 @@
     "status": "live",
     "statusLabel": "Active \u00b7 Free",
     "heroLine": "Discover. Order. Track. Receive.",
-    "description": "Customer app for the Porter marketplace \u2014 discover businesses, order, pay, and track deliveries live on the map.",
+    "description": "Customer app for the Portr marketplace \u2014 discover businesses, order, pay, and track deliveries live on the map.",
     "features": [
       {
         "title": "Map-first marketplace",
@@ -19,7 +19,7 @@
       },
       {
         "title": "Role-specific app",
-        "blurb": "Built for customer orders on the Porter network.",
+        "blurb": "Built for customer orders on the Portr network.",
         "shot": 1
       },
       {
@@ -30,7 +30,7 @@
     ],
     "steps": [
       {
-        "title": "Get Porter",
+        "title": "Get Portr",
         "blurb": "Download from the MBC App Store."
       },
       {
@@ -39,7 +39,7 @@
       },
       {
         "title": "Sign in",
-        "blurb": "Use your Porter platform account."
+        "blurb": "Use your Portr platform account."
       }
     ],
     "github": "https://github.com/TheMarkkBradonCollective/Runr",
@@ -53,8 +53,8 @@
       "phone"
     ],
     "readDetails": [
-      "Porter is part of the Porter coverage-driven delivery marketplace \u2014 Get what you need.",
-      "Porter creates demand, Porter Vendor fulfills the business side, and Porter Runner moves it.",
+      "Portr is part of the Portr coverage-driven delivery marketplace \u2014 Get what you need.",
+      "Portr creates demand, Portr Vendor fulfills the business side, and Portr Runner moves it.",
       "Install from The MBC App Store. Updates ship through the same catalog as every other Collective app."
     ],
     "highlights": [
@@ -66,7 +66,7 @@
   {
     "slug": "runr",
     "theme": "runr",
-    "name": "Porter Runner",
+    "name": "Portr Runner",
     "tagline": "Pick it up. Run it there.",
     "url": "https://raw.githubusercontent.com/TheMarkkBradonCollective/Runr/main",
     "section": "marketplace",
@@ -83,7 +83,7 @@
       },
       {
         "title": "Role-specific app",
-        "blurb": "Built for Runners on the Porter network.",
+        "blurb": "Built for Runners on the Portr network.",
         "shot": 1
       },
       {
@@ -103,7 +103,7 @@
       },
       {
         "title": "Sign in",
-        "blurb": "Use your Porter platform account."
+        "blurb": "Use your Portr platform account."
       }
     ],
     "github": "https://github.com/TheMarkkBradonCollective/Runr",
@@ -117,8 +117,8 @@
       "phone"
     ],
     "readDetails": [
-      "Porter Runner is part of the Porter coverage-driven delivery marketplace \u2014 Pick it up. Run it there.",
-      "Porter creates demand, Porter Vendor fulfills the business side, and Porter Runner moves it.",
+      "Portr Runner is part of the Portr coverage-driven delivery marketplace \u2014 Pick it up. Run it there.",
+      "Portr creates demand, Portr Vendor fulfills the business side, and Portr Runner moves it.",
       "Install from The MBC App Store. Updates ship through the same catalog as every other Collective app."
     ],
     "highlights": [
@@ -130,7 +130,7 @@
   {
     "slug": "vendr",
     "theme": "vendr",
-    "name": "Porter Vendor",
+    "name": "Portr Vendor",
     "tagline": "Sell. Manage. Grow.",
     "url": "https://raw.githubusercontent.com/TheMarkkBradonCollective/Runr/main",
     "section": "marketplace",
@@ -138,7 +138,7 @@
     "status": "live",
     "statusLabel": "Active \u00b7 Free",
     "heroLine": "Sell. Prepare. Dispatch. Grow.",
-    "description": "Business app for merchants on the Porter marketplace \u2014 manage orders, set Runner coverage, and monitor live deliveries.",
+    "description": "Business app for merchants on the Portr marketplace \u2014 manage orders, set Runner coverage, and monitor live deliveries.",
     "features": [
       {
         "title": "Map-first marketplace",
@@ -147,7 +147,7 @@
       },
       {
         "title": "Role-specific app",
-        "blurb": "Built for merchants on the Porter network.",
+        "blurb": "Built for merchants on the Portr network.",
         "shot": 1
       },
       {
@@ -158,7 +158,7 @@
     ],
     "steps": [
       {
-        "title": "Get Porter Vendor",
+        "title": "Get Portr Vendor",
         "blurb": "Download from the MBC App Store."
       },
       {
@@ -167,7 +167,7 @@
       },
       {
         "title": "Sign in",
-        "blurb": "Use your Porter platform account."
+        "blurb": "Use your Portr platform account."
       }
     ],
     "github": "https://github.com/TheMarkkBradonCollective/Runr",
@@ -181,8 +181,8 @@
       "phone"
     ],
     "readDetails": [
-      "Porter Vendor is part of the Porter coverage-driven delivery marketplace \u2014 Sell. Manage. Grow.",
-      "Porter creates demand, Porter Vendor fulfills the business side, and Porter Runner moves it.",
+      "Portr Vendor is part of the Portr coverage-driven delivery marketplace \u2014 Sell. Manage. Grow.",
+      "Portr creates demand, Portr Vendor fulfills the business side, and Portr Runner moves it.",
       "Install from The MBC App Store. Updates ship through the same catalog as every other Collective app."
     ],
     "highlights": [

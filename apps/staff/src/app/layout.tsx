@@ -8,9 +8,9 @@ import { StaffLayoutClient } from "./StaffLayoutClient";
 const font = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Porter Command — Platform Management",
-  description: "Porter platform staff console for founders and operations.",
-  applicationName: "Porter Command",
+  title: "Portr Command — Platform Management",
+  description: "Portr platform staff console for founders and operations.",
+  applicationName: "Portr Command",
 };
 
 export const viewport: Viewport = {

@@ -3,7 +3,7 @@ import type { UserRole } from "../types/index";
 export type AppId = "porter" | "runr" | "vendr" | "staff";
 
 /** Parent brand (website, account, release catalog). */
-export const PLATFORM_NAME = "Porter";
+export const PLATFORM_NAME = "Portr";
 
 /** Original marketplace signature — names changed, wording did not. */
 export const PORTER_BRAND = {
@@ -11,7 +11,7 @@ export const PORTER_BRAND = {
   descriptor: "Coverage-Driven Delivery Marketplace",
   headline: ["Pick Your Place.", "Run Your Time."] as const,
   promise:
-    "Porter creates the demand. Porter Vendor fulfills the business side. Porter Runner moves it. One coverage-driven marketplace — not three disconnected apps.",
+    "Portr creates the demand. Portr Vendor fulfills the business side. Portr Runner moves it. One coverage-driven marketplace — not three disconnected apps.",
   footerLine: "Pick Your Place. Run Your Time.",
 } as const;
 
@@ -29,36 +29,36 @@ export const APP_COPY: Record<
   }
 > = {
   porter: {
-    shortName: "Porter",
+    shortName: "Portr",
     role: "Customer",
     tagline: "Get what you need.",
     greeting: "Discover nearby businesses, order, and track your Runner.",
     flow: ["Discover", "Order", "Track", "Receive"],
-    job: "Porter creates the demand.",
+    job: "Portr creates the demand.",
   },
   runr: {
-    shortName: "Porter Runner",
+    shortName: "Portr Runner",
     role: "Delivery",
     tagline: "Pick it up. Run it there.",
     greeting: "Choose a business and a window. The marketplace matches the rest.",
     flow: ["Choose", "RUN", "Deliver", "Earn"],
-    job: "Porter Runner moves it.",
+    job: "Portr Runner moves it.",
   },
   vendr: {
-    shortName: "Porter Vendor",
+    shortName: "Portr Vendor",
     role: "Business",
     tagline: "Sell. Manage. Grow.",
-    greeting: "Sell on Porter. Set how many Runners you need.",
+    greeting: "Sell on Portr. Set how many Runners you need.",
     flow: ["Sell", "Prepare", "Dispatch", "Fulfill", "Grow"],
-    job: "Porter Vendor fulfills the business side.",
+    job: "Portr Vendor fulfills the business side.",
   },
   staff: {
-    shortName: "Porter Command",
+    shortName: "Portr Command",
     role: "Ops",
     tagline: "Run the marketplace.",
     greeting: "Advance orders, coverage, and users from this phone — same tools as desktop.",
     flow: ["Status", "Orders", "Coverage", "Users"],
-    job: "Porter Command runs the network.",
+    job: "Portr Command runs the network.",
   },
 };
 
@@ -81,7 +81,7 @@ export function appDisplayName(appId: AppId): string {
   return APP_COPY[appId].shortName;
 }
 
-/** Skip names that are just the product (e.g. "Porter Tester"). */
+/** Skip names that are just the product (e.g. "Portr Tester"). */
 export function displayFirstName(name: string | undefined, appName: string) {
   const first = name?.split(/\s+/)[0]?.trim() ?? "";
   if (!first || first.toUpperCase() === appName.toUpperCase()) return "there";

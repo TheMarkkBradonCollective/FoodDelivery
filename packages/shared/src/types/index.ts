@@ -1,5 +1,17 @@
 export type UserRole = "customer" | "runr" | "business" | "staff";
 
+/** Positions inside Portr Command. Stored on the profile; the app still treats them as staff. */
+export const STAFF_TITLES = [
+  "support",
+  "moderator",
+  "administrator",
+  "manager",
+  "director",
+  "founder",
+] as const;
+
+export type StaffTitle = (typeof STAFF_TITLES)[number];
+
 export type CoverageStatus = "full" | "low" | "gap" | "over_capacity";
 
 export type RunStatus =
@@ -43,6 +55,8 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
+  /** support, moderator, administrator, manager, director, or founder */
+  staffTitle?: StaffTitle;
   avatarUrl?: string;
 }
 

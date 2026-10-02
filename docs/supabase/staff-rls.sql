@@ -10,7 +10,10 @@ stable
 as $$
   select exists (
     select 1 from public.profiles p
-    where p.id = auth.uid() and p.role = 'staff'
+    where p.id = auth.uid()
+      and p.role in (
+        'staff', 'support', 'moderator', 'administrator', 'manager', 'director', 'founder'
+      )
   );
 $$;
 

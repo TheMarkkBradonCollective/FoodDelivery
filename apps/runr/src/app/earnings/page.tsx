@@ -16,7 +16,7 @@ export default function RunrEarningsPage() {
   return (
     <div>
       <ScreenHeader
-        eyebrow="Porter Runner"
+        eyebrow="Portr Runner"
         title="Earnings"
         subtitle="Per-delivery pay — base, distance, and tips. Not hourly."
       />

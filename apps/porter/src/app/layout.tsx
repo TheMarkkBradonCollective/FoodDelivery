@@ -3,15 +3,15 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import "@/store";
 import { AppShell } from "@porter/shared/components/layout/AppShell";
-import { PorterLayoutClient } from "./PorterLayoutClient";
+import { PortrLayoutClient } from "./PortrLayoutClient";
 
 const font = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Porter — Get what you need.",
+  title: "Portr — Get what you need.",
   description:
-    "Discover, order, track, and receive from nearby businesses on the Porter marketplace.",
-  applicationName: "Porter",
+    "Discover, order, track, and receive from nearby businesses on the Portr marketplace.",
+  applicationName: "Portr",
 };
 
 export const viewport: Viewport = {
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={`${font.variable} antialiased`}>
         <AppShell role="customer" customerSkin="porter">
-          <PorterLayoutClient>{children}</PorterLayoutClient>
+          <PortrLayoutClient>{children}</PortrLayoutClient>
         </AppShell>
       </body>
     </html>

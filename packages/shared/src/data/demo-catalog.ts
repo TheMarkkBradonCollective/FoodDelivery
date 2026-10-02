@@ -191,7 +191,7 @@ export const DEMO_DELIVERIES: Delivery[] = [
     tip: 3,
     totalEarnings: 9.35,
     estimatedMinutes: 18,
-    customerName: "Porter Tester",
+    customerName: "Portr Tester",
   },
   {
     id: "l1000000-0000-4000-8000-000000000002",
@@ -206,7 +206,7 @@ export const DEMO_DELIVERIES: Delivery[] = [
     tip: 5,
     totalEarnings: 11.35,
     estimatedMinutes: 22,
-    customerName: "Porter Tester",
+    customerName: "Portr Tester",
   },
 ];
 
