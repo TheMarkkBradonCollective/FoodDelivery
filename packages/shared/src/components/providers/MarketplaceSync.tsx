@@ -23,9 +23,10 @@ export function MarketplaceSync() {
     }
 
     const userId = user.id;
+    const accessPreference = user.accessPreference;
 
     async function load() {
-      const snapshot = await fetchMarketplace(userId);
+      const snapshot = await fetchMarketplace(userId, accessPreference);
       if (cancelled) return;
       const hasLiveCatalog = snapshot.businesses.some((b) => (b.menu?.length ?? 0) > 0);
       if (hasLiveCatalog) {
@@ -33,7 +34,10 @@ export function MarketplaceSync() {
         return;
       }
       const { buildPreviewSnapshot } = await import("../../data/demo-catalog");
-      hydrateMarketplace(buildPreviewSnapshot(user ?? undefined), true);
+      hydrateMarketplace(
+        buildPreviewSnapshot(user ? { id: user.id, role: user.role, accessPreference } : undefined),
+        true,
+      );
     }
 
     void load();

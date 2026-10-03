@@ -2,19 +2,22 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Bike, DollarSign, List, LogOut, Map, Moon, ShieldCheck, Sun } from "lucide-react";
+import { Bike, Building2, DollarSign, List, LogOut, Map, Moon, ShieldCheck, Sun } from "lucide-react";
 import { SettingsRow, ToggleSwitch } from "@porter/shared/components/ui/SettingsRow";
 import { ConfirmDialog } from "@porter/shared/components/ui/ConfirmDialog";
 import { BottomSheet } from "@porter/shared/components/ui/BottomSheet";
 import { JobLoop } from "@porter/shared/components/ui/JobLoop";
 import { SegmentedControl } from "@porter/shared/components/ui/SegmentedControl";
 import { useAppStore } from "@/store";
+import { AccessPreferencePicker } from "@porter/shared/components/ui/BuildingAccessPicker";
+import { runnerAccessLabel } from "@porter/shared/lib/delivery-access";
 
 export default function RunrProfilePage() {
-  const { user, theme, toggleTheme, logout, earnings, runHistory, showToast } = useAppStore();
+  const { user, theme, toggleTheme, logout, earnings, runHistory, showToast, setAccessPreference } =
+    useAppStore();
   const router = useRouter();
   const [confirmOut, setConfirmOut] = useState(false);
-  const [sheet, setSheet] = useState<"vehicle" | "payout" | null>(null);
+  const [sheet, setSheet] = useState<"vehicle" | "payout" | "access" | null>(null);
   const [vehicle, setVehicle] = useState<"Bike" | "Scooter" | "Car">("Bike");
   const [payoutEmail, setPayoutEmail] = useState(user?.email ?? "");
 
@@ -75,6 +78,12 @@ export default function RunrProfilePage() {
           onClick={() => router.push("/earnings")}
         />
         <SettingsRow
+          icon={<Building2 size={18} />}
+          title="Access preferences"
+          subtitle={user?.accessPreference ? runnerAccessLabel(user.accessPreference) : "Choose elevators, stairs, or both"}
+          onClick={() => setSheet("access")}
+        />
+        <SettingsRow
           icon={<Bike size={18} />}
           title="Vehicle"
           subtitle={vehicle}
@@ -97,6 +106,16 @@ export default function RunrProfilePage() {
           trailing={<ToggleSwitch on={theme === "dark"} onChange={() => toggleTheme()} label="Dark mode" />}
         />
       </div>
+
+      <BottomSheet open={sheet === "access"} onClose={() => setSheet(null)} title="Access preferences">
+        <AccessPreferencePicker
+          value={user?.accessPreference ?? null}
+          onChange={(preference) => {
+            setAccessPreference(preference);
+            setSheet(null);
+          }}
+        />
+      </BottomSheet>
 
       <BottomSheet open={sheet === "vehicle"} onClose={() => setSheet(null)} title="Vehicle">
         <p className="text-sm text-[var(--muted)]">Used when you navigate to pickup and drop-off.</p>

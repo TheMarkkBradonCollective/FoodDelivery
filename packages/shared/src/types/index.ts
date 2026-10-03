@@ -45,6 +45,26 @@ export type OrderStatus =
 
 export type DemandLevel = "low" | "moderate" | "high" | "busy";
 
+/** What the customer says about getting to the door. */
+export type BuildingAccess =
+  | "elevator"
+  | "stairs"
+  | "both"
+  | "ground"
+  | "requires_stairs"
+  | "requires_elevator";
+
+/** What a Runner is willing to use. No medical detail — access only. */
+export type RunnerAccessPreference =
+  | "elevators"
+  | "stairs"
+  | "both"
+  | "no_elevators"
+  | "no_stairs";
+
+/** Soft match: the drop can still be assigned, and the customer should be told. */
+export type AccessNotice = "stairs_may_be_required" | "elevator_may_be_required";
+
 export interface Coordinates {
   lat: number;
   lng: number;
@@ -58,6 +78,8 @@ export interface User {
   /** support, moderator, administrator, manager, director, or founder */
   staffTitle?: StaffTitle;
   avatarUrl?: string;
+  /** Runner only. Elevators, stairs, both, or a refusal. */
+  accessPreference?: RunnerAccessPreference;
 }
 
 export interface CoverageRule {
@@ -147,6 +169,9 @@ export interface Order {
   deliveryAddress?: string;
   fulfillment?: "delivery" | "pickup";
   scheduledFor?: string;
+  buildingAccess?: BuildingAccess;
+  accessNote?: string;
+  accessNotice?: AccessNotice | null;
 }
 
 export interface Delivery {
@@ -165,6 +190,9 @@ export interface Delivery {
   estimatedMinutes: number;
   instructions?: string;
   customerName: string;
+  buildingAccess?: BuildingAccess;
+  accessNote?: string;
+  accessNotice?: AccessNotice | null;
 }
 
 export interface EarningRecord {

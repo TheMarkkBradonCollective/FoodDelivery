@@ -1,6 +1,7 @@
 "use client";
 
 import type {
+  AccessNotice,
   Business,
   CartItem,
   CoverageRule,
@@ -11,13 +12,21 @@ import type {
   Order,
   OrderStatus,
   Run,
+  RunnerAccessPreference,
   StaffMessage,
   User,
 } from "../../types/index";
 import { getSupabaseClient } from "./client";
 import { isSupabaseConfigured } from "./config";
 import { staffTitleFromValue } from "./user";
-
+import {
+  offersForRunner,
+  parseAccessNotice,
+  parseBuildingAccess,
+  parseRunnerAccess,
+  trimAccessNote,
+  type AccessHold,
+} from "../delivery-access";
 export interface MarketplaceSnapshot {
   businesses: Business[];
   orders: Order[];
@@ -31,6 +40,7 @@ export interface MarketplaceSnapshot {
   favoriteBusinessIds: string[];
   profiles: User[];
   staffMessages: StaffMessage[];
+  accessHold: AccessHold | null;
 }
 
 function asNumber(value: unknown, fallback = 0) {
@@ -98,6 +108,10 @@ function mapOrder(row: Record<string, unknown>): Order {
     runrId: row.runr_id ? String(row.runr_id) : undefined,
     createdAt: String(row.created_at),
     deliveryAddress: row.delivery_address ? String(row.delivery_address) : undefined,
+    fulfillment: row.fulfillment === "pickup" || row.fulfillment === "delivery" ? row.fulfillment : undefined,
+    buildingAccess: parseBuildingAccess(row.building_access),
+    accessNote: row.access_note ? String(row.access_note) : undefined,
+    accessNotice: parseAccessNotice(row.access_notice) ?? null,
   };
 }
 
@@ -117,10 +131,17 @@ function mapDelivery(row: Record<string, unknown>): Delivery {
     totalEarnings: asNumber(row.total_earnings, 11.3),
     estimatedMinutes: asNumber(row.estimated_minutes, 18),
     customerName: String(row.customer_name ?? "Customer"),
+    instructions: row.instructions ? String(row.instructions) : undefined,
+    buildingAccess: parseBuildingAccess(row.building_access),
+    accessNote: row.access_note ? String(row.access_note) : undefined,
+    accessNotice: parseAccessNotice(row.access_notice) ?? null,
   };
 }
 
-export async function fetchMarketplace(userId?: string): Promise<MarketplaceSnapshot> {
+export async function fetchMarketplace(
+  userId?: string,
+  accessPreference?: RunnerAccessPreference,
+): Promise<MarketplaceSnapshot> {
   const empty: MarketplaceSnapshot = {
     businesses: [],
     orders: [],
@@ -134,6 +155,7 @@ export async function fetchMarketplace(userId?: string): Promise<MarketplaceSnap
     favoriteBusinessIds: [],
     profiles: [],
     staffMessages: [],
+    accessHold: null,
   };
 
   if (!isSupabaseConfigured()) return empty;
@@ -208,6 +230,7 @@ export async function fetchMarketplace(userId?: string): Promise<MarketplaceSnap
   const deliveries = (deliveriesRes.data ?? []).map((row) =>
     mapDelivery(row as Record<string, unknown>)
   );
+  const orders = (ordersRes.data ?? []).map((row) => mapOrder(row as Record<string, unknown>));
 
   const myRuns = userId ? runs.filter((r) => r.runrId === userId) : runs;
   const activeRun =
@@ -215,12 +238,8 @@ export async function fetchMarketplace(userId?: string): Promise<MarketplaceSnap
   const scheduledRuns = myRuns.filter((r) => r.status === "scheduled");
   const runHistory = myRuns.filter((r) => r.status === "completed" || r.status === "cancelled");
 
-  const pendingDelivery =
-    deliveries.find(
-      (d) =>
-        (d.status === "offered" || d.status === "pending") &&
-        (!d.runrId || d.runrId === userId)
-    ) ?? null;
+  const offerMatch = offersForRunner(deliveries, orders, accessPreference, userId);
+  const pendingDelivery = offerMatch.pending;
   const activeDelivery =
     deliveries.find(
       (d) =>
@@ -231,7 +250,7 @@ export async function fetchMarketplace(userId?: string): Promise<MarketplaceSnap
 
   return {
     businesses,
-    orders: (ordersRes.data ?? []).map((row) => mapOrder(row as Record<string, unknown>)),
+    orders,
     scheduledRuns,
     runHistory,
     activeRun,
@@ -285,15 +304,21 @@ export async function fetchMarketplace(userId?: string): Promise<MarketplaceSnap
         role: staffTitleFromValue(rec.role) ? "staff" : (rec.role as User["role"]),
         staffTitle: staffTitleFromValue(rec.role),
         avatarUrl: rec.avatar_url ? String(rec.avatar_url) : undefined,
+        accessPreference: parseRunnerAccess(rec.access_preference),
       };
     }),
+    accessHold: offerMatch.hold,
   };
+}
+
+function missingColumn(message: string) {
+  return /column|schema cache|PGRST204/i.test(message);
 }
 
 export async function persistOrder(order: Order) {
   if (!isSupabaseConfigured()) return;
   const supabase = getSupabaseClient();
-  const { error } = await supabase.from("orders").upsert({
+  const base = {
     id: order.id,
     customer_id: order.customerId,
     business_id: order.businessId,
@@ -308,7 +333,19 @@ export async function persistOrder(order: Order) {
     status: order.status,
     created_at: order.createdAt,
     delivery_address: order.deliveryAddress ?? null,
-  });
+  };
+  const withAccess = {
+    ...base,
+    building_access: order.buildingAccess ?? null,
+    access_note: trimAccessNote(order.accessNote) ?? null,
+    access_notice: order.accessNotice ?? null,
+  };
+  const { error } = await supabase.from("orders").upsert(withAccess);
+  if (error && missingColumn(error.message)) {
+    const retry = await supabase.from("orders").upsert(base);
+    if (retry.error) console.warn("persistOrder", retry.error.message);
+    return;
+  }
   if (error) console.warn("persistOrder", error.message);
 }
 
@@ -335,12 +372,22 @@ export async function persistCoverage(ruleId: string, maxRunrs: number) {
   await supabase.from("coverage_rules").update({ max_runrs: maxRunrs }).eq("id", ruleId);
 }
 
-export async function persistOrderStatus(orderId: string, status: OrderStatus, runrId?: string) {
+export async function persistOrderStatus(
+  orderId: string,
+  status: OrderStatus,
+  runrId?: string,
+  accessNotice?: AccessNotice | null,
+) {
   if (!isSupabaseConfigured()) return;
   const supabase = getSupabaseClient();
   const patch: Record<string, unknown> = { status };
   if (runrId) patch.runr_id = runrId;
-  await supabase.from("orders").update(patch).eq("id", orderId);
+  if (accessNotice) patch.access_notice = accessNotice;
+  const { error } = await supabase.from("orders").update(patch).eq("id", orderId);
+  if (error && accessNotice && missingColumn(error.message)) {
+    delete patch.access_notice;
+    await supabase.from("orders").update(patch).eq("id", orderId);
+  }
 }
 
 export async function persistFavorite(userId: string, businessId: string, liked: boolean) {
@@ -356,7 +403,7 @@ export async function persistFavorite(userId: string, businessId: string, liked:
 export async function persistDelivery(delivery: Delivery) {
   if (!isSupabaseConfigured()) return;
   const supabase = getSupabaseClient();
-  await supabase.from("deliveries").upsert({
+  const base = {
     id: delivery.id,
     order_id: delivery.orderId,
     business_id: delivery.businessId,
@@ -373,7 +420,27 @@ export async function persistDelivery(delivery: Delivery) {
     total_earnings: delivery.totalEarnings,
     estimated_minutes: delivery.estimatedMinutes,
     customer_name: delivery.customerName,
-  });
+  };
+  const withAccess = {
+    ...base,
+    building_access: delivery.buildingAccess ?? null,
+    access_note: trimAccessNote(delivery.accessNote) ?? null,
+    access_notice: delivery.accessNotice ?? null,
+  };
+  const { error } = await supabase.from("deliveries").upsert(withAccess);
+  if (error && missingColumn(error.message)) {
+    await supabase.from("deliveries").upsert(base);
+  }
+}
+
+export async function persistAccessPreference(userId: string, preference: RunnerAccessPreference) {
+  if (!isSupabaseConfigured()) return;
+  const supabase = getSupabaseClient();
+  const { error } = await supabase
+    .from("profiles")
+    .update({ access_preference: preference })
+    .eq("id", userId);
+  if (error) console.warn("access preference", error.message);
 }
 
 export async function persistEarning(record: EarningRecord) {
@@ -432,6 +499,9 @@ export async function offerDeliveryForOrder(order: Order, business: Business, cu
     totalEarnings: 4.5 + 1.85 + order.tip,
     estimatedMinutes: business.etaMinutes,
     customerName,
+    buildingAccess: order.buildingAccess,
+    accessNote: trimAccessNote(order.accessNote),
+    accessNotice: order.accessNotice ?? null,
   };
   await persistDelivery(delivery);
   return delivery;

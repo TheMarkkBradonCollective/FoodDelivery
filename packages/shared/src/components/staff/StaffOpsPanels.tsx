@@ -6,6 +6,7 @@ import { getBusinessCoverageSummary } from "../../lib/coverage-engine";
 import { APP_COPY, type AppId } from "../../lib/apps";
 import { formatCurrency } from "../../lib/utils";
 import type { Order } from "../../types/index";
+import { buildingAccessLabel } from "../../lib/delivery-access";
 
 export const NEXT_ORDER_STATUS: Partial<Record<Order["status"], Order["status"]>> = {
   new: "accepted",
@@ -49,7 +50,9 @@ export function StaffOrdersPanel() {
               <p className="text-xs text-[var(--muted)]">
                 {order.items.length} items · {formatCurrency(order.total)} ·{" "}
                 {order.status.replace(/_/g, " ")}
+                {order.buildingAccess ? ` · ${buildingAccessLabel(order.buildingAccess)}` : ""}
               </p>
+              {order.accessNote ? <p className="text-xs text-[var(--muted)]">{order.accessNote}</p> : null}
             </div>
             {!closed && (
               <div className="flex flex-wrap gap-2">

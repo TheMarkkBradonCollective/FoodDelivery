@@ -6,6 +6,7 @@ For [food-deliverytest.vercel.app](https://food-deliverytest.vercel.app/), run t
 
 1. **`complete-schema.sql`** — tables, policies, marketplace seed, and staff. Idempotent.
 2. **`founders.sql`** — adds Markeith White and Emmanuel Cury as founders (`role = founder`).
+3. **`delivery-access.sql`** — only if an older database is missing building access. `complete-schema.sql` already includes these columns.
 
 Staff positions are `support`, `moderator`, `administrator`, `manager`, `director`, and `founder`. Any of those, plus generic `staff`, can open Portr Command.
 

@@ -12,6 +12,8 @@ import { formatCurrency } from "@porter/shared/lib/utils";
 import { SegmentedControl } from "@porter/shared/components/ui/SegmentedControl";
 import { PROMO_CODES } from "@porter/shared/data/constants";
 import { CustomerEyebrow } from "@porter/shared/components/ui/CustomerEyebrow";
+import { BuildingAccessPicker } from "@porter/shared/components/ui/BuildingAccessPicker";
+import type { BuildingAccess } from "@porter/shared/types";
 
 export default function CartPage() {
   const {
@@ -31,6 +33,8 @@ export default function CartPage() {
   const [fulfillment, setFulfillment] = useState<"delivery" | "pickup">("delivery");
   const [when, setWhen] = useState<"now" | "schedule">("now");
   const [scheduledFor, setScheduledFor] = useState("18:00");
+  const [buildingAccess, setBuildingAccess] = useState<BuildingAccess | null>(null);
+  const [accessNote, setAccessNote] = useState("");
   const [placing, setPlacing] = useState(false);
 
   const business = businesses.find((b) => b.id === cartBusinessId);
@@ -58,7 +62,7 @@ export default function CartPage() {
   }
 
   function handlePlaceOrder() {
-    if (fulfillment === "delivery" && !deliveryAddress.trim()) return;
+    if (fulfillment === "delivery" && (!deliveryAddress.trim() || !buildingAccess)) return;
     setPlacing(true);
     const order = placeOrder({
       tip,
@@ -66,6 +70,8 @@ export default function CartPage() {
       discount,
       fulfillment,
       scheduledFor: when === "schedule" ? scheduledFor : undefined,
+      buildingAccess: buildingAccess ?? undefined,
+      accessNote,
     });
     setPlacing(false);
     if (order) router.push(`/track/?id=${order.id}`);
@@ -180,6 +186,12 @@ export default function CartPage() {
               placeholder="Street address"
               autoComplete="street-address"
             />
+            <BuildingAccessPicker
+              value={buildingAccess}
+              note={accessNote}
+              onChange={setBuildingAccess}
+              onNoteChange={setAccessNote}
+            />
           </>
         ) : null}
 
@@ -225,7 +237,10 @@ export default function CartPage() {
         <button
           type="button"
           onClick={handlePlaceOrder}
-          disabled={placing || (fulfillment === "delivery" && !deliveryAddress.trim())}
+          disabled={
+            placing ||
+            (fulfillment === "delivery" && (!deliveryAddress.trim() || !buildingAccess))
+          }
           className="h-11 w-full rounded-full bg-purple text-sm font-extrabold text-white disabled:opacity-50"
         >
           {placing ? "Placing order…" : "Place order"}

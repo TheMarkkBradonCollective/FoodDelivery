@@ -1,7 +1,13 @@
 "use client";
 
 import { cn, formatCurrency } from "../../lib/utils";
+import {
+  buildingAccessLabel,
+  matchDeliveryAccess,
+  runnerAccessNotice,
+} from "../../lib/delivery-access";
 import type { Delivery } from "../../types/index";
+import { useAppStore } from "../../store/create-app-store";
 import { SlideToConfirm } from "./SlideToConfirm";
 
 interface DeliveryCardProps {
@@ -25,6 +31,11 @@ export function DeliveryCard({
   variant = "offer",
   className,
 }: DeliveryCardProps) {
+  const preference = useAppStore((state) => state.user?.accessPreference);
+  const decision = matchDeliveryAccess(delivery.buildingAccess, preference);
+  const notice = decision.assign ? decision.notice : null;
+  const showAccess = variant === "offer" || variant === "dropoff" || variant === "pickup";
+
   return (
     <div
       className={cn(
@@ -50,6 +61,19 @@ export function DeliveryCard({
         </span>
       </p>
 
+      {showAccess && delivery.buildingAccess ? (
+        <p className="mt-2 text-sm font-semibold text-[var(--foreground)]">
+          {buildingAccessLabel(delivery.buildingAccess)}
+        </p>
+      ) : null}
+      {showAccess && delivery.accessNote ? (
+        <p className="mt-1 text-sm text-[var(--muted)]">{delivery.accessNote}</p>
+      ) : null}
+      {showAccess && notice ? (
+        <p className="mt-2 rounded-xl bg-[var(--background)] px-3 py-2 text-sm font-semibold text-[var(--foreground)]">
+          {runnerAccessNotice(notice)}
+        </p>
+      ) : null}
       {delivery.instructions && variant === "dropoff" && (
         <p className="mt-2 rounded-porter-md bg-[var(--background)] px-3 py-2 text-sm">
           {delivery.instructions}
