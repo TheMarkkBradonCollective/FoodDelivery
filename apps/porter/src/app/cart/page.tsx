@@ -241,10 +241,15 @@ export default function CartPage() {
             placing ||
             (fulfillment === "delivery" && (!deliveryAddress.trim() || !buildingAccess))
           }
-          className="h-11 w-full rounded-full bg-purple text-sm font-extrabold text-white disabled:opacity-50"
+          className="h-11 w-full rounded-full bg-purple text-sm font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-40"
         >
           {placing ? "Placing order…" : "Place order"}
         </button>
+        {fulfillment === "delivery" && !buildingAccess ? (
+          <p className="mt-2 text-center text-xs font-semibold text-[var(--muted)]">
+            Choose building access to place this delivery.
+          </p>
+        ) : null}
       </div>
     </div>
   );

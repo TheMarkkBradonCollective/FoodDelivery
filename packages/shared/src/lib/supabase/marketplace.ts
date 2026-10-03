@@ -21,10 +21,12 @@ import { isSupabaseConfigured } from "./config";
 import { staffTitleFromValue } from "./user";
 import {
   offersForRunner,
+  packDeliveryAddress,
   parseAccessNotice,
   parseBuildingAccess,
   parseRunnerAccess,
   trimAccessNote,
+  unpackDeliveryAddress,
   type AccessHold,
 } from "../delivery-access";
 export interface MarketplaceSnapshot {
@@ -107,11 +109,18 @@ function mapOrder(row: Record<string, unknown>): Order {
     status: row.status as OrderStatus,
     runrId: row.runr_id ? String(row.runr_id) : undefined,
     createdAt: String(row.created_at),
-    deliveryAddress: row.delivery_address ? String(row.delivery_address) : undefined,
     fulfillment: row.fulfillment === "pickup" || row.fulfillment === "delivery" ? row.fulfillment : undefined,
-    buildingAccess: parseBuildingAccess(row.building_access),
-    accessNote: row.access_note ? String(row.access_note) : undefined,
-    accessNotice: parseAccessNotice(row.access_notice) ?? null,
+    ...accessFromOrderRow(row),
+  };
+}
+
+function accessFromOrderRow(row: Record<string, unknown>) {
+  const packed = unpackDeliveryAddress(row.delivery_address ? String(row.delivery_address) : undefined);
+  return {
+    deliveryAddress: packed.address,
+    buildingAccess: parseBuildingAccess(row.building_access) ?? packed.buildingAccess,
+    accessNote: row.access_note ? String(row.access_note) : packed.accessNote,
+    accessNotice: parseAccessNotice(row.access_notice) ?? packed.accessNotice ?? null,
   };
 }
 
@@ -227,10 +236,18 @@ export async function fetchMarketplace(
     );
   });
 
-  const deliveries = (deliveriesRes.data ?? []).map((row) =>
-    mapDelivery(row as Record<string, unknown>)
-  );
   const orders = (ordersRes.data ?? []).map((row) => mapOrder(row as Record<string, unknown>));
+  const deliveries = (deliveriesRes.data ?? []).map((row) => {
+    const delivery = mapDelivery(row as Record<string, unknown>);
+    const order = orders.find((item) => item.id === delivery.orderId);
+    if (!order) return delivery;
+    return {
+      ...delivery,
+      buildingAccess: delivery.buildingAccess ?? order.buildingAccess,
+      accessNote: delivery.accessNote ?? order.accessNote,
+      accessNotice: delivery.accessNotice ?? order.accessNotice,
+    };
+  });
 
   const myRuns = userId ? runs.filter((r) => r.runrId === userId) : runs;
   const activeRun =
@@ -340,9 +357,18 @@ export async function persistOrder(order: Order) {
     access_note: trimAccessNote(order.accessNote) ?? null,
     access_notice: order.accessNotice ?? null,
   };
+  const packed = {
+    ...base,
+    delivery_address: packDeliveryAddress(
+      order.deliveryAddress,
+      order.buildingAccess,
+      order.accessNote,
+      order.accessNotice,
+    ),
+  };
   const { error } = await supabase.from("orders").upsert(withAccess);
   if (error && missingColumn(error.message)) {
-    const retry = await supabase.from("orders").upsert(base);
+    const retry = await supabase.from("orders").upsert(packed);
     if (retry.error) console.warn("persistOrder", retry.error.message);
     return;
   }
@@ -386,7 +412,18 @@ export async function persistOrderStatus(
   const { error } = await supabase.from("orders").update(patch).eq("id", orderId);
   if (error && accessNotice && missingColumn(error.message)) {
     delete patch.access_notice;
-    await supabase.from("orders").update(patch).eq("id", orderId);
+    const current = await supabase.from("orders").select("delivery_address").eq("id", orderId).maybeSingle();
+    const unpacked = unpackDeliveryAddress(
+      current.data?.delivery_address ? String(current.data.delivery_address) : undefined,
+    );
+    patch.delivery_address = packDeliveryAddress(
+      unpacked.address,
+      unpacked.buildingAccess,
+      unpacked.accessNote,
+      accessNotice,
+    );
+    const retry = await supabase.from("orders").update(patch).eq("id", orderId);
+    if (retry.error) console.warn("persistOrderStatus", retry.error.message);
   }
 }
 
@@ -429,8 +466,11 @@ export async function persistDelivery(delivery: Delivery) {
   };
   const { error } = await supabase.from("deliveries").upsert(withAccess);
   if (error && missingColumn(error.message)) {
-    await supabase.from("deliveries").upsert(base);
+    const retry = await supabase.from("deliveries").upsert(base);
+    if (retry.error) console.warn("persistDelivery", retry.error.message);
+    return;
   }
+  if (error) console.warn("persistDelivery", error.message);
 }
 
 export async function persistAccessPreference(userId: string, preference: RunnerAccessPreference) {
@@ -440,7 +480,11 @@ export async function persistAccessPreference(userId: string, preference: Runner
     .from("profiles")
     .update({ access_preference: preference })
     .eq("id", userId);
-  if (error) console.warn("access preference", error.message);
+  if (error && !missingColumn(error.message)) console.warn("access preference", error.message);
+  const { error: metaError } = await supabase.auth.updateUser({
+    data: { access_preference: preference },
+  });
+  if (metaError) console.warn("access preference metadata", metaError.message);
 }
 
 export async function persistEarning(record: EarningRecord) {

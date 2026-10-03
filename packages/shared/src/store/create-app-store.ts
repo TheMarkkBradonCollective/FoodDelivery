@@ -528,11 +528,13 @@ function buildStore(
       }));
 
       if (!get().catalogPreview) {
-        void persistOrder(order);
-        void persistNotification(user.id, note);
-        if (kitchen && fulfillment === "delivery") {
-          void offerDeliveryForOrder(order, kitchen, user.name);
-        }
+        void (async () => {
+          await persistOrder(order);
+          await persistNotification(user.id, note);
+          if (kitchen && fulfillment === "delivery") {
+            await offerDeliveryForOrder(order, kitchen, user.name);
+          }
+        })();
       } else if (kitchen && fulfillment === "delivery" && !get().pendingDelivery && !get().activeDelivery) {
         set({ pendingDelivery: previewOfferForOrder(order, kitchen, user.name) });
       }

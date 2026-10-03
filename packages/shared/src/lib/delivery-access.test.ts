@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { Delivery, Order } from "../types/index";
-import { matchDeliveryAccess, offersForRunner } from "./delivery-access";
+import { matchDeliveryAccess, offersForRunner, packDeliveryAddress, unpackDeliveryAddress } from "./delivery-access";
 
 test("stairs required and no stairs is not assigned", () => {
   const decision = matchDeliveryAccess("requires_stairs", "no_stairs");
@@ -46,6 +46,20 @@ test("a Runner who takes both can take a required stair or elevator drop", () =>
 test("missing access does not block", () => {
   assert.deepEqual(matchDeliveryAccess(undefined, "no_stairs"), { assign: true, notice: null });
   assert.deepEqual(matchDeliveryAccess("requires_stairs", undefined), { assign: true, notice: null });
+});
+
+test("address packing round-trips access without changing the street line", () => {
+  const packed = packDeliveryAddress(
+    "1 Market St, San Francisco",
+    "elevator",
+    "Elevator is around the back of the building.",
+    null,
+  );
+  const unpacked = unpackDeliveryAddress(packed ?? undefined);
+  assert.equal(unpacked.address, "1 Market St, San Francisco");
+  assert.equal(unpacked.buildingAccess, "elevator");
+  assert.equal(unpacked.accessNote, "Elevator is around the back of the building.");
+  assert.equal(unpackDeliveryAddress("1 Market St").address, "1 Market St");
 });
 
 test("offers skip a stair-only drop for a Runner who takes no stairs", () => {

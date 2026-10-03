@@ -208,3 +208,46 @@ export function trimAccessNote(note: string | undefined): string | undefined {
   if (!trimmed) return undefined;
   return trimmed.slice(0, ACCESS_NOTE_MAX);
 }
+
+const ACCESS_PACK = /\n\[\[portr-access:(.*)\]\]\s*$/;
+
+/** Keep access on delivery_address when the dedicated columns are not in the database yet. */
+export function packDeliveryAddress(
+  address: string | undefined,
+  building?: BuildingAccess,
+  note?: string,
+  notice?: AccessNotice | null,
+): string | null {
+  const base = address?.replace(ACCESS_PACK, "").trim() ?? "";
+  const trimmedNote = trimAccessNote(note);
+  if (!building && !trimmedNote && !notice) return base || null;
+  const payload = JSON.stringify({
+    building: building ?? null,
+    note: trimmedNote ?? null,
+    notice: notice ?? null,
+  });
+  return `${base}\n[[portr-access:${payload}]]`;
+}
+
+export function unpackDeliveryAddress(raw: string | undefined): {
+  address?: string;
+  buildingAccess?: BuildingAccess;
+  accessNote?: string;
+  accessNotice?: AccessNotice;
+} {
+  if (!raw) return {};
+  const match = raw.match(ACCESS_PACK);
+  if (!match) return { address: raw };
+  const address = raw.slice(0, match.index).trim() || undefined;
+  try {
+    const data = JSON.parse(match[1]) as { building?: unknown; note?: unknown; notice?: unknown };
+    return {
+      address,
+      buildingAccess: parseBuildingAccess(data.building),
+      accessNote: typeof data.note === "string" && data.note.trim() ? data.note : undefined,
+      accessNotice: parseAccessNotice(data.notice),
+    };
+  } catch {
+    return { address };
+  }
+}
