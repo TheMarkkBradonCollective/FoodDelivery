@@ -366,3 +366,12 @@ insert into public.coverage_rules (id, business_id, start_time, end_time, max_ru
   ('e1000000-0000-4000-8000-000000000003', 'c1000000-0000-4000-8000-000000000002', '10:00', '15:00', 3),
   ('e1000000-0000-4000-8000-000000000004', 'c1000000-0000-4000-8000-000000000002', '17:00', '21:00', 5),
   ('e1000000-0000-4000-8000-000000000005', 'c1000000-0000-4000-8000-000000000003', '11:00', '23:00', 5);
+
+alter table public.profiles add column if not exists access_preference text;
+alter table public.orders add column if not exists delivery_address text;
+alter table public.orders add column if not exists building_access text;
+alter table public.orders add column if not exists access_note text;
+alter table public.orders add column if not exists access_notice text;
+alter table public.deliveries add column if not exists building_access text;
+alter table public.deliveries add column if not exists access_note text;
+alter table public.deliveries add column if not exists access_notice text;

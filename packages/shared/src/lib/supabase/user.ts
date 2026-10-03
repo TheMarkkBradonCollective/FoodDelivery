@@ -1,5 +1,6 @@
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { STAFF_TITLES, type StaffTitle, type User, type UserRole } from "../../types/index";
+import { parseRunnerAccess } from "../delivery-access";
 import { getSupabaseClient } from "./client";
 
 const VALID_ROLES: UserRole[] = ["customer", "runr", "business", "staff"];
@@ -44,6 +45,7 @@ export async function resolveAppUser(user: SupabaseUser): Promise<User> {
     typeof user.user_metadata?.avatar_url === "string"
       ? user.user_metadata.avatar_url
       : undefined;
+  let accessPreference = parseRunnerAccess(user.user_metadata?.access_preference);
 
   try {
     const supabase = getSupabaseClient();
@@ -63,6 +65,15 @@ export async function resolveAppUser(user: SupabaseUser): Promise<User> {
         avatarUrl = profile.avatar_url;
       }
     }
+
+    const { data: accessRow, error: accessError } = await supabase
+      .from("profiles")
+      .select("access_preference")
+      .eq("id", user.id)
+      .maybeSingle();
+    if (!accessError) {
+      accessPreference = parseRunnerAccess(accessRow?.access_preference) ?? accessPreference;
+    }
   } catch {
     // profiles table may not exist yet — metadata is enough for auth
   }
@@ -74,5 +85,6 @@ export async function resolveAppUser(user: SupabaseUser): Promise<User> {
     role: role ?? "customer",
     staffTitle,
     avatarUrl,
+    accessPreference,
   };
 }

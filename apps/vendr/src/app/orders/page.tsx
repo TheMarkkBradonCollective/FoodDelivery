@@ -6,6 +6,7 @@ import { EmptyState } from "@porter/shared/components/ui/EmptyState";
 import { selectVendorBusiness } from "@porter/shared/lib/utils";
 import { SlideToConfirm } from "@porter/shared/components/ui/SlideToConfirm";
 import { JobLoop } from "@porter/shared/components/ui/JobLoop";
+import { buildingAccessLabel, customerAccessNotice } from "@porter/shared/lib/delivery-access";
 
 export default function BusinessOrdersPage() {
   const { orders, businesses, user, updateOrderStatus } = useAppStore();
@@ -40,6 +41,13 @@ export default function BusinessOrdersPage() {
                     {order.items.map((i) => `${i.quantity}× ${i.name}`).join(", ")} · $
                     {order.total.toFixed(2)}
                   </p>
+                  {order.buildingAccess ? (
+                    <p className="mt-1 text-sm font-semibold">{buildingAccessLabel(order.buildingAccess)}</p>
+                  ) : null}
+                  {order.accessNote ? <p className="text-sm text-[var(--muted)]">{order.accessNote}</p> : null}
+                  {order.accessNotice ? (
+                    <p className="mt-1 text-xs font-semibold text-purple">{customerAccessNotice(order.accessNotice)}</p>
+                  ) : null}
                 </div>
                 <StatusBadge label={order.status.replace("_", " ")} variant="primary" />
               </div>

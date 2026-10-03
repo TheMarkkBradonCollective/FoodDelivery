@@ -8,6 +8,7 @@ import { StatusBadge } from "@porter/shared/components/ui/StatusBadge";
 import { IconButton } from "@porter/shared/components/ui/IconButton";
 import { EmptyState } from "@porter/shared/components/ui/EmptyState";
 import { ArrowLeft } from "lucide-react";
+import { buildingAccessLabel, customerAccessNotice } from "@porter/shared/lib/delivery-access";
 
 const deliverySteps = [
   { key: "new", label: "Order placed" },
@@ -105,6 +106,19 @@ export function OrderTrackingClient({ orderId }: { orderId: string }) {
                 <p className="mt-1 text-sm text-[var(--muted)]">Pickup at {business.address}</p>
               ) : order.deliveryAddress ? (
                 <p className="mt-1 text-sm text-[var(--muted)]">Deliver to {order.deliveryAddress}</p>
+              ) : null}
+              {order.buildingAccess ? (
+                <p className="mt-1 text-sm font-semibold text-[var(--foreground)]">
+                  {buildingAccessLabel(order.buildingAccess)}
+                </p>
+              ) : null}
+              {order.accessNote ? (
+                <p className="mt-1 text-sm text-[var(--muted)]">{order.accessNote}</p>
+              ) : null}
+              {order.accessNotice ? (
+                <p className="mt-2 rounded-xl bg-[var(--background)] px-3 py-2 text-sm font-semibold text-[var(--foreground)]">
+                  {customerAccessNotice(order.accessNotice)}
+                </p>
               ) : null}
               {order.scheduledFor ? (
                 <p className="mt-1 text-sm text-[var(--muted)]">Scheduled for {order.scheduledFor}</p>

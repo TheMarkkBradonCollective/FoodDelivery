@@ -3,6 +3,7 @@
 import { create, type StoreApi, type UseBoundStore } from "zustand";
 import { persist } from "zustand/middleware";
 import type {
+  BuildingAccess,
   Business,
   CartItem,
   Delivery,
@@ -10,15 +11,19 @@ import type {
   Notification,
   Order,
   Run,
+  RunnerAccessPreference,
   StaffMessage,
   User,
 } from "../types/index";
+import { customerAccessNotice, matchDeliveryAccess, trimAccessNote } from "../lib/delivery-access";
+import type { AccessHold } from "../lib/delivery-access";
 import { canScheduleRun } from "../lib/coverage-engine";
 import { DEFAULT_LOCATION } from "../data/constants";
 import { signOut } from "../lib/supabase/auth";
 import type { MarketplaceSnapshot } from "../lib/supabase/marketplace";
 import {
   offerDeliveryForOrder,
+  persistAccessPreference,
   persistCoverage,
   persistDelivery,
   persistEarning,
@@ -49,6 +54,9 @@ function previewOfferForOrder(order: Order, kitchen: Business, customerName: str
     totalEarnings: 4.5 + 1.85 + order.tip,
     estimatedMinutes: kitchen.etaMinutes,
     customerName,
+    buildingAccess: order.buildingAccess,
+    accessNote: trimAccessNote(order.accessNote),
+    accessNotice: order.accessNotice ?? null,
   };
 }
 
@@ -70,6 +78,9 @@ export interface AppState {
   earnings: EarningRecord[];
   marketplaceUsers: User[];
   staffMessages: StaffMessage[];
+  accessPreference: RunnerAccessPreference | null;
+  accessPreferenceUserId: string | null;
+  accessHold: AccessHold | null;
   searchQuery: string;
   mapFilter: "all" | "open" | "gap" | "high_demand";
   catalogPreview: boolean;
@@ -80,6 +91,7 @@ export interface AppState {
   toast: { message: string; tone: "ok" | "err" } | null;
 
   setUser: (user: User | null) => void;
+  setAccessPreference: (preference: RunnerAccessPreference) => void;
   logout: () => void;
   toggleTheme: () => void;
   setLocation: (location: { lat: number; lng: number }) => void;
@@ -102,6 +114,8 @@ export interface AppState {
     discount?: number;
     fulfillment?: "delivery" | "pickup";
     scheduledFor?: string;
+    buildingAccess?: BuildingAccess;
+    accessNote?: string;
   }) => Order | null;
   updateOrderStatus: (orderId: string, status: Order["status"]) => void;
   hydrateMarketplace: (snapshot: MarketplaceSnapshot, preview?: boolean) => void;
@@ -140,6 +154,9 @@ function buildStore(
     earnings: [] as EarningRecord[],
     marketplaceUsers: [] as User[],
     staffMessages: [] as StaffMessage[],
+    accessPreference: null as RunnerAccessPreference | null,
+    accessPreferenceUserId: null as string | null,
+    accessHold: null as AccessHold | null,
     searchQuery: "",
     mapFilter: "all" as const,
     catalogPreview: false,
@@ -149,7 +166,38 @@ function buildStore(
     deliveryAddress: "1 Market St, San Francisco",
     toast: null as { message: string; tone: "ok" | "err" } | null,
 
-    setUser: (user: User | null) => set({ user }),
+    setUser: (user: User | null) => {
+      if (!user) {
+        set({ user: null });
+        return;
+      }
+      const local =
+        get().accessPreferenceUserId === user.id ? get().accessPreference : null;
+      const preference = user.accessPreference ?? local ?? undefined;
+      set({
+        user: preference ? { ...user, accessPreference: preference } : user,
+        accessPreference: preference ?? null,
+        accessPreferenceUserId: user.id,
+      });
+    },
+    setAccessPreference: (preference: RunnerAccessPreference) => {
+      const user = get().user;
+      const pending = get().pendingDelivery;
+      const order = pending
+        ? get().orders.find((item) => item.id === pending.orderId)
+        : undefined;
+      const decision = pending
+        ? matchDeliveryAccess(order?.buildingAccess ?? pending.buildingAccess, preference)
+        : null;
+      set({
+        accessPreference: preference,
+        accessPreferenceUserId: user?.id ?? get().accessPreferenceUserId,
+        user: user ? { ...user, accessPreference: preference } : user,
+        pendingDelivery: decision && !decision.assign ? null : pending,
+      });
+      if (user && !get().catalogPreview) void persistAccessPreference(user.id, preference);
+      get().showToast("Access preferences saved");
+    },
     logout: () => {
       void signOut();
       set({
@@ -168,6 +216,7 @@ function buildStore(
         earnings: [],
         marketplaceUsers: [],
         staffMessages: [],
+        accessHold: null,
         catalogPreview: false,
         marketplaceReady: false,
         searchQuery: "",
@@ -280,22 +329,64 @@ function buildStore(
       }),
 
     acceptDelivery: () => {
-      const { pendingDelivery, user } = get();
+      const { pendingDelivery, user, orders } = get();
       if (!pendingDelivery || !user) return;
 
+      const order = orders.find((item) => item.id === pendingDelivery.orderId);
+      const decision = matchDeliveryAccess(
+        order?.buildingAccess ?? pendingDelivery.buildingAccess,
+        user.accessPreference,
+      );
+      if (!decision.assign) {
+        set({ pendingDelivery: null });
+        get().showToast(
+          decision.reason === "stairs_required"
+            ? "This delivery requires stairs, so it stays unassigned."
+            : "This delivery requires an elevator, so it stays unassigned.",
+          "err",
+        );
+        return;
+      }
+
+      const notice = decision.notice;
+      const accepted: Delivery = {
+        ...pendingDelivery,
+        runrId: user.id,
+        status: "accepted",
+        accessNotice: notice,
+      };
       set({
-        activeDelivery: {
-          ...pendingDelivery,
-          runrId: user.id,
-          status: "accepted",
-        },
+        activeDelivery: accepted,
         pendingDelivery: null,
+        orders: orders.map((item) =>
+          item.id === pendingDelivery.orderId
+            ? {
+                ...item,
+                status: "runr_assigned",
+                runrId: user.id,
+                accessNotice: notice ?? item.accessNotice,
+              }
+            : item,
+        ),
       });
       if (!get().catalogPreview) {
-        void persistDelivery({ ...pendingDelivery, runrId: user.id, status: "accepted" });
-        void persistOrderStatus(pendingDelivery.orderId, "runr_assigned", user.id);
+        void persistDelivery(accepted);
+        void persistOrderStatus(pendingDelivery.orderId, "runr_assigned", user.id, notice);
+        if (notice && order) {
+          const note: Notification = {
+            id: crypto.randomUUID(),
+            title: "Access on this delivery",
+            body: customerAccessNotice(notice),
+            type: "delivery",
+            read: false,
+            createdAt: new Date().toISOString(),
+          };
+          void persistNotification(order.customerId, note);
+        }
       }
-      get().showToast("RUN accepted");
+      get().showToast(
+        notice ? `RUN accepted. ${customerAccessNotice(notice)}` : "RUN accepted",
+      );
     },
 
     completeDelivery: () => {
@@ -384,6 +475,8 @@ function buildStore(
       discount?: number;
       fulfillment?: "delivery" | "pickup";
       scheduledFor?: string;
+      buildingAccess?: BuildingAccess;
+      accessNote?: string;
     }) => {
       const { cart, cartBusinessId, user, businesses } = get();
       if (!cart.length || !cartBusinessId || !user) return null;
@@ -414,6 +507,8 @@ function buildStore(
         deliveryAddress: fulfillment === "pickup" ? kitchen?.address : options?.address,
         fulfillment,
         scheduledFor: options?.scheduledFor,
+        buildingAccess: fulfillment === "delivery" ? options?.buildingAccess : undefined,
+        accessNote: fulfillment === "delivery" ? trimAccessNote(options?.accessNote) : undefined,
       };
 
       const note: Notification = {
@@ -433,11 +528,13 @@ function buildStore(
       }));
 
       if (!get().catalogPreview) {
-        void persistOrder(order);
-        void persistNotification(user.id, note);
-        if (kitchen && fulfillment === "delivery") {
-          void offerDeliveryForOrder(order, kitchen, user.name);
-        }
+        void (async () => {
+          await persistOrder(order);
+          await persistNotification(user.id, note);
+          if (kitchen && fulfillment === "delivery") {
+            await offerDeliveryForOrder(order, kitchen, user.name);
+          }
+        })();
       } else if (kitchen && fulfillment === "delivery" && !get().pendingDelivery && !get().activeDelivery) {
         set({ pendingDelivery: previewOfferForOrder(order, kitchen, user.name) });
       }
@@ -499,6 +596,8 @@ function buildStore(
           return {
             businesses: s.businesses,
             catalogPreview: true,
+            pendingDelivery: s.activeDelivery ? s.pendingDelivery : snapshot.pendingDelivery,
+            accessHold: snapshot.accessHold,
           };
         }
         return {
@@ -510,6 +609,7 @@ function buildStore(
           activeRun: snapshot.activeRun,
           pendingDelivery: snapshot.pendingDelivery,
           activeDelivery: snapshot.activeDelivery,
+          accessHold: snapshot.accessHold,
           earnings: snapshot.earnings,
           notifications: snapshot.notifications,
           favoriteBusinessIds: snapshot.favoriteBusinessIds,
@@ -607,6 +707,8 @@ function initStore(storageKey: string): AppStoreHook {
         cartBusinessId: state.cartBusinessId,
         onboardingSeen: state.onboardingSeen,
         deliveryAddress: state.deliveryAddress,
+        accessPreference: state.accessPreference,
+        accessPreferenceUserId: state.accessPreferenceUserId,
       }),
     })
   );

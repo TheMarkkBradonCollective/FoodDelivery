@@ -8,6 +8,7 @@ import { EmptyState } from "@porter/shared/components/ui/EmptyState";
 import { ScreenHeader } from "@porter/shared/components/layout/ScreenHeader";
 import { useCustomerSkin } from "@porter/shared/components/providers/CustomerSkinProvider";
 import { CuisinePlate } from "@porter/shared/components/ui/CuisinePlate";
+import { customerAccessNotice } from "@porter/shared/lib/delivery-access";
 
 export default function CustomerOrdersPage() {
   const skin = useCustomerSkin();
@@ -42,6 +43,9 @@ export default function CustomerOrdersPage() {
                   <p className="text-sm text-[var(--muted)]">
                     {order.fulfillment === "pickup" ? "Pickup" : "Delivery"} · {order.items.length} items · {formatCurrency(order.total)}
                   </p>
+                  {order.accessNotice ? (
+                    <p className="mt-0.5 text-xs font-semibold text-purple">{customerAccessNotice(order.accessNotice)}</p>
+                  ) : null}
                 </div>
                 <StatusBadge label={order.status.replace(/_/g, " ")} variant="primary" />
               </Link>

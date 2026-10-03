@@ -26,6 +26,7 @@ import {
 import { Star } from "lucide-react";
 import { EmptyState } from "@porter/shared/components/ui/EmptyState";
 import { CatalogPreviewBanner } from "@porter/shared/components/ui/CatalogPreviewBanner";
+import { accessHoldMessage } from "@porter/shared/lib/delivery-access";
 
 export default function RunrMapPage() {
   const {
@@ -47,6 +48,7 @@ export default function RunrMapPage() {
     completeDelivery,
     theme,
     showToast,
+    accessHold,
   } = useAppStore();
 
   const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(null);
@@ -132,6 +134,7 @@ export default function RunrMapPage() {
     : null;
 
   const totalEarnings = earnings.reduce((s, e) => s + e.total, 0);
+  const holdText = accessHoldMessage(accessHold);
 
   function handleCheckCoverage() {
     if (!selectedBusiness) return;
@@ -208,18 +211,25 @@ export default function RunrMapPage() {
       )}
 
       {/* Pending delivery */}
-      {pendingDelivery && !activeDelivery && (
-        <div className="map-dock">
-          <DeliveryCard
-            delivery={pendingDelivery}
-            businessName={
-              businesses.find((b) => b.id === pendingDelivery.businessId)?.name ?? ""
-            }
-            variant="offer"
-            onAccept={acceptDelivery}
-          />
+      {(pendingDelivery && !activeDelivery) || holdText ? (
+        <div className="map-dock space-y-2">
+          {holdText ? (
+            <p className="rounded-2xl bg-[var(--surface-elevated)] px-3.5 py-3 text-sm font-semibold text-[var(--foreground)] ring-1 ring-[var(--border)]">
+              {holdText}
+            </p>
+          ) : null}
+          {pendingDelivery && !activeDelivery ? (
+            <DeliveryCard
+              delivery={pendingDelivery}
+              businessName={
+                businesses.find((b) => b.id === pendingDelivery.businessId)?.name ?? ""
+              }
+              variant="offer"
+              onAccept={acceptDelivery}
+            />
+          ) : null}
         </div>
-      )}
+      ) : null}
 
       {/* Active delivery */}
       {activeDelivery && (

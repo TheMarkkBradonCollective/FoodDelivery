@@ -1,5 +1,7 @@
 import type { Business, Delivery, Notification, Order, Run } from "../types/index";
 import type { MarketplaceSnapshot } from "../lib/supabase/marketplace";
+import { offersForRunner } from "../lib/delivery-access";
+import type { RunnerAccessPreference } from "../types/index";
 
 const TONY = "c1000000-0000-4000-8000-000000000001";
 const BURGERS = "c1000000-0000-4000-8000-000000000002";
@@ -142,6 +144,8 @@ export const DEMO_ORDERS: Order[] = [
     status: "preparing",
     createdAt: now(),
     deliveryAddress: "1 Market St, San Francisco",
+    buildingAccess: "requires_stairs",
+    accessNote: "4th floor — stairs required.",
   },
   {
     id: "o1000000-0000-4000-8000-000000000002",
@@ -158,6 +162,8 @@ export const DEMO_ORDERS: Order[] = [
     runrId: RUNR_ID,
     createdAt: now(),
     deliveryAddress: "1 Market St, San Francisco",
+    buildingAccess: "elevator",
+    accessNote: "Elevator is around the back of the building.",
   },
   {
     id: "o1000000-0000-4000-8000-000000000003",
@@ -192,6 +198,8 @@ export const DEMO_DELIVERIES: Delivery[] = [
     totalEarnings: 9.35,
     estimatedMinutes: 18,
     customerName: "Portr Tester",
+    buildingAccess: "elevator",
+    accessNote: "Elevator is around the back of the building.",
   },
   {
     id: "l1000000-0000-4000-8000-000000000002",
@@ -207,6 +215,8 @@ export const DEMO_DELIVERIES: Delivery[] = [
     totalEarnings: 11.35,
     estimatedMinutes: 22,
     customerName: "Portr Tester",
+    buildingAccess: "requires_stairs",
+    accessNote: "4th floor — stairs required.",
   },
 ];
 
@@ -229,7 +239,11 @@ export const DEMO_NOTIFICATIONS: Notification[] = [
   },
 ];
 
-export function buildPreviewSnapshot(user?: { id: string; role: string }): MarketplaceSnapshot {
+export function buildPreviewSnapshot(user?: {
+  id: string;
+  role: string;
+  accessPreference?: RunnerAccessPreference;
+}): MarketplaceSnapshot {
   const userId = user?.id;
   const role = user?.role;
 
@@ -264,7 +278,11 @@ export function buildPreviewSnapshot(user?: { id: string; role: string }): Marke
     role === "runr" && myRuns[0]
       ? { ...myRuns[0], status: "checked_in" as const }
       : null;
-  const pendingDelivery = role === "runr" ? (deliveries.find((d) => d.status === "offered") ?? null) : null;
+  const offerMatch =
+    role === "runr"
+      ? offersForRunner(deliveries, orders, user?.accessPreference, userId)
+      : { pending: null, hold: { count: 0, stairs: 0, elevators: 0 } };
+  const pendingDelivery = offerMatch.pending;
 
   return {
     businesses,
@@ -278,6 +296,7 @@ export function buildPreviewSnapshot(user?: { id: string; role: string }): Marke
     notifications: DEMO_NOTIFICATIONS,
     favoriteBusinessIds: [],
     profiles: [],
+    accessHold: role === "runr" ? offerMatch.hold : null,
     staffMessages: [
       {
         id: "m1000000-0000-4000-8000-000000000001",
