@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { isSupabaseConfigured } from "../../lib/supabase/config";
+import { isDemoMode, isSupabaseConfigured } from "../../lib/supabase/config";
 import { getSupabaseClient } from "../../lib/supabase/client";
 import { fetchMarketplace } from "../../lib/supabase/marketplace";
 import { ensureStore, useAppStore } from "../../store/create-app-store";
@@ -12,6 +12,26 @@ export function MarketplaceSync() {
   const setMarketplaceReady = useAppStore((s) => s.setMarketplaceReady);
 
   useEffect(() => {
+    if (isDemoMode()) {
+      if (!user) {
+        setMarketplaceReady(true);
+        return;
+      }
+      const state = ensureStore().getState();
+      // Keep locally persisted demo state; seed only on first sign-in.
+      if (!(state.catalogPreview && state.businesses.length > 0)) {
+        void import("../../data/demo-catalog").then(({ buildPreviewSnapshot }) => {
+          hydrateMarketplace(
+            buildPreviewSnapshot({ id: user.id, role: user.role, accessPreference: user.accessPreference }),
+            true,
+          );
+          setMarketplaceReady(true);
+        });
+      } else {
+        setMarketplaceReady(true);
+      }
+      return;
+    }
     if (!isSupabaseConfigured() || !user) {
       setMarketplaceReady(Boolean(!user));
       return;

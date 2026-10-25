@@ -20,6 +20,7 @@ import type { AccessHold } from "../lib/delivery-access";
 import { canScheduleRun } from "../lib/coverage-engine";
 import { DEFAULT_LOCATION } from "../data/constants";
 import { signOut } from "../lib/supabase/auth";
+import { isDemoMode } from "../lib/supabase/config";
 import type { MarketplaceSnapshot } from "../lib/supabase/marketplace";
 import {
   offerDeliveryForOrder,
@@ -709,6 +710,24 @@ function initStore(storageKey: string): AppStoreHook {
         deliveryAddress: state.deliveryAddress,
         accessPreference: state.accessPreference,
         accessPreferenceUserId: state.accessPreferenceUserId,
+        // Demo/offline mode keeps the whole marketplace on-device.
+        ...(isDemoMode()
+          ? {
+              user: state.user,
+              catalogPreview: state.catalogPreview,
+              businesses: state.businesses,
+              orders: state.orders,
+              scheduledRuns: state.scheduledRuns,
+              runHistory: state.runHistory,
+              activeRun: state.activeRun,
+              activeDelivery: state.activeDelivery,
+              pendingDelivery: state.pendingDelivery,
+              favoriteBusinessIds: state.favoriteBusinessIds,
+              notifications: state.notifications,
+              earnings: state.earnings,
+              staffMessages: state.staffMessages,
+            }
+          : {}),
       }),
     })
   );

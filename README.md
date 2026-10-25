@@ -34,6 +34,17 @@ The marketing site includes APK download links, ecosystem overview, company info
 
 Sign-in uses Supabase. The website and apps default to the Portr project (`https://gonsvtgsocjaykrmtmpz.supabase.co`); set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to point a build at another project. Run `docs/supabase/complete-schema.sql` in the SQL Editor, then `docs/supabase/founders.sql`, to create profiles, staff, marketplace tables, and the founder accounts. After that, Portr, Portr Runner, Portr Vendor, and Portr Command load live data (orders, runs, coverage, menus).
 
+## Demo / offline mode
+
+If no Supabase env is set at build time (`NEXT_PUBLIC_SUPABASE_URL` unset), the apps build in **demo mode**:
+- Any email and password signs you in as a demo user for that app (customer, runner, vendor, staff).
+- The bundled seed catalog (`packages/shared/src/data/demo-catalog.ts`) loads, with no network calls.
+- Orders, runs, deliveries, and messages persist on-device in localStorage.
+
+Force a mode with `NEXT_PUBLIC_PORTR_MODE=demo` or `NEXT_PUBLIC_PORTR_MODE=live`. `npm run build:apks` (signed release) defaults to `live`.
+
+Debug demo APK for one app: `cd apps/<app> && npx next build && npx cap sync android && cd android && ./gradlew assembleDebug`.
+
 ## The Portr app family
 
 | App | Role | Tagline |

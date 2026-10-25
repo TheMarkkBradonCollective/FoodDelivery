@@ -5,7 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import type { UserRole } from "../../types/index";
 import { authenticate, getAppForRole, registerAccount, sendPasswordReset } from "../../lib/auth";
 import { signOut } from "../../lib/supabase/auth";
-import { isSupabaseConfigured } from "../../lib/supabase/config";
+import { isDemoMode, isSupabaseConfigured } from "../../lib/supabase/config";
 import { useAppStore } from "../../store/create-app-store";
 import { APP_COPY } from "../../lib/apps";
 import { useCustomerSkin } from "../providers/CustomerSkinProvider";
@@ -103,7 +103,7 @@ export function SignInPrompt({ role }: { role: UserRole }) {
     setError("");
     setInfo("");
     setLoading(true);
-    const result = await authenticate(email, password);
+    const result = await authenticate(email, password, role);
     setLoading(false);
     if (!result.success) {
       setError(friendlyAuthError(result.error));
@@ -187,7 +187,12 @@ export function SignInPrompt({ role }: { role: UserRole }) {
       </div>
 
       <div className="signin-sheet">
-        {!isSupabaseConfigured() ? (
+        {isDemoMode() && (
+          <p className="signin-copy">
+            Demo mode: runs offline on sample data. Any email and password signs you in.
+          </p>
+        )}
+        {!isDemoMode() && !isSupabaseConfigured() ? (
           <p className="signin-copy">
             Supabase is not configured for this build. Add your project URL and publishable key.
           </p>
