@@ -22,11 +22,11 @@ const javaHome =
     : undefined);
 
 const apps = [
-  { id: 'fastfood', workspace: '@porter/fastfood', packageId: 'com.porter.fastfood', name: 'FastFood' },
-  { id: 'porter', workspace: '@porter/porter', packageId: 'com.porter.porter', name: 'Portr' },
-  { id: 'runr', workspace: '@porter/runner', packageId: 'com.porter.runner', name: 'Portr Runner' },
-  { id: 'vendr', workspace: '@porter/vendr', packageId: 'com.porter.vendor', name: 'Portr Vendor' },
-  { id: 'staff', workspace: '@porter/staff', packageId: 'com.porter.command', name: 'Portr Command' },
+  { id: 'fastfood', workspace: '@porter/fastfood', packageId: 'com.tmbcworks.portr.fastfood', name: 'FastFood' },
+  { id: 'porter', workspace: '@porter/porter', packageId: 'com.tmbcworks.portr.porter', name: 'Portr' },
+  { id: 'runr', workspace: '@porter/runner', packageId: 'com.tmbcworks.portr.runner', name: 'Portr Runner' },
+  { id: 'vendr', workspace: '@porter/vendr', packageId: 'com.tmbcworks.portr.vendor', name: 'Portr Vendor' },
+  { id: 'staff', workspace: '@porter/staff', packageId: 'com.tmbcworks.portr.command', name: 'Portr Command' },
 ];
 
 function env() {

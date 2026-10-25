@@ -47,7 +47,7 @@ export default function DownloadPage() {
               <p className="mt-3 text-sm leading-relaxed text-[#78350F]">
                 Portr with a red &amp; yellow color change. Same screens, same customer login, same marketplace.
               </p>
-              <p className="mt-4 font-mono text-xs text-[#92400E]">com.porter.fastfood</p>
+              <p className="mt-4 font-mono text-xs text-[#92400E]">com.tmbcworks.portr.fastfood</p>
               <Link
                 href="/download#fastfood"
                 className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-[#E31837] px-4 py-3 text-sm font-bold text-white hover:bg-[#C41230]"

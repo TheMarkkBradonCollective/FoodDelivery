@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "com.porter.porter",
+  appId: "com.tmbcworks.portr.porter",
   appName: "Portr",
   webDir: "out",
   server: { androidScheme: "https" },

@@ -14,7 +14,7 @@
   },
   "build": {
     "electronVersion": "33.4.11",
-    "appId": "com.porter.command.desktop",
+    "appId": "com.tmbcworks.portr.command.desktop",
     "productName": "Portr Command",
     "directories": {
       "output": "../../release/desktop"

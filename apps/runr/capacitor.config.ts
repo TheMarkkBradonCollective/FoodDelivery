@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "com.porter.runner",
+  appId: "com.tmbcworks.portr.runner",
   appName: "Portr Runner",
   webDir: "out",
   server: { androidScheme: "https" },

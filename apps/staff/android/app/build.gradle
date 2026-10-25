@@ -9,10 +9,10 @@ android {
             keyPassword 'mbcstaff'
         }
     }
-    namespace "com.porter.command"
+    namespace "com.tmbcworks.portr.command"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.porter.command"
+        applicationId "com.tmbcworks.portr.command"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 305

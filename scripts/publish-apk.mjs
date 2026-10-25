@@ -19,31 +19,31 @@ const apps = [
   {
     id: 'fastfood',
     name: 'FastFood',
-    packageId: 'com.porter.fastfood',
+    packageId: 'com.tmbcworks.portr.fastfood',
     tagline: 'Get what you need.',
   },
   {
     id: 'porter',
     name: 'Portr',
-    packageId: 'com.porter.porter',
+    packageId: 'com.tmbcworks.portr.porter',
     tagline: 'Get what you need.',
   },
   {
     id: 'runr',
     name: 'Portr Runner',
-    packageId: 'com.porter.runner',
+    packageId: 'com.tmbcworks.portr.runner',
     tagline: 'Pick it up. Run it there.',
   },
   {
     id: 'vendr',
     name: 'Portr Vendor',
-    packageId: 'com.porter.vendor',
+    packageId: 'com.tmbcworks.portr.vendor',
     tagline: 'Sell. Manage. Grow.',
   },
   {
     id: 'staff',
     name: 'Portr Command',
-    packageId: 'com.porter.command',
+    packageId: 'com.tmbcworks.portr.command',
     tagline: 'Run the marketplace.',
   },
 ];

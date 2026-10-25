@@ -9,10 +9,10 @@ android {
             keyPassword 'mbcfastfood'
         }
     }
-    namespace "com.porter.fastfood"
+    namespace "com.tmbcworks.portr.fastfood"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.porter.fastfood"
+        applicationId "com.tmbcworks.portr.fastfood"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 305
