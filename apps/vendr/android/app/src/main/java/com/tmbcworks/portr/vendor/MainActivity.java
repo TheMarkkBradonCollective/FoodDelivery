@@ -1,4 +1,4 @@
-package com.porter.porter;
+package com.tmbcworks.portr.vendor;
 
 import android.os.Bundle;
 import androidx.core.view.WindowCompat;

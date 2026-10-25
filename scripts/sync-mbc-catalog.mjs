@@ -18,11 +18,11 @@ const MAIN_REPO = 'TheMarkkBradonCollective/main';
 const MBC_PUBLIC_BASE = 'https://themarkkbradoncollective.github.io/main/apks';
 
 const apps = [
-  { id: 'fastfood', name: 'FastFood', tagline: 'Get what you need.', packageId: 'com.porter.fastfood' },
-  { id: 'porter', name: 'Portr', tagline: 'Get what you need.', packageId: 'com.porter.porter' },
-  { id: 'runr', name: 'Portr Runner', tagline: 'Pick it up. Run it there.', packageId: 'com.porter.runner' },
-  { id: 'vendr', name: 'Portr Vendor', tagline: 'Sell. Manage. Grow.', packageId: 'com.porter.vendor' },
-  { id: 'staff', name: 'Portr Command', tagline: 'Run the marketplace.', packageId: 'com.porter.command' },
+  { id: 'fastfood', name: 'FastFood', tagline: 'Get what you need.', packageId: 'com.tmbcworks.portr.fastfood' },
+  { id: 'porter', name: 'Portr', tagline: 'Get what you need.', packageId: 'com.tmbcworks.portr.porter' },
+  { id: 'runr', name: 'Portr Runner', tagline: 'Pick it up. Run it there.', packageId: 'com.tmbcworks.portr.runner' },
+  { id: 'vendr', name: 'Portr Vendor', tagline: 'Sell. Manage. Grow.', packageId: 'com.tmbcworks.portr.vendor' },
+  { id: 'staff', name: 'Portr Command', tagline: 'Run the marketplace.', packageId: 'com.tmbcworks.portr.command' },
 ];
 
 function sha256File(filePath) {

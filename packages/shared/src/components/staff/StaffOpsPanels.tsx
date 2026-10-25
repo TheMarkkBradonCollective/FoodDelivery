@@ -19,10 +19,10 @@ export const NEXT_ORDER_STATUS: Partial<Record<Order["status"], Order["status"]>
 };
 
 const APP_PACKAGES: Record<AppId, string> = {
-  porter: "com.porter.porter",
-  runr: "com.porter.runner",
-  vendr: "com.porter.vendor",
-  staff: "com.porter.command",
+  porter: "com.tmbcworks.portr.porter",
+  runr: "com.tmbcworks.portr.runner",
+  vendr: "com.tmbcworks.portr.vendor",
+  staff: "com.tmbcworks.portr.command",
 };
 
 export function StaffOrdersPanel() {
