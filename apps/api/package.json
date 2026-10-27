@@ -1,0 +1,28 @@
+{
+  "name": "@porter/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 4000",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "sheets:setup": "node scripts/setup-sheet.mjs",
+    "sheets:seed": "node scripts/seed.mjs",
+    "drive:token": "node scripts/drive-token.mjs"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "googleapis": "^144.0.0",
+    "jose": "^5.9.6",
+    "next": "^15.2.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "typescript": "^5"
+  }
+}

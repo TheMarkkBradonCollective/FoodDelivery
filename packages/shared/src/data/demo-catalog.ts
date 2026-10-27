@@ -1,5 +1,5 @@
 import type { Business, Delivery, Notification, Order, Run } from "../types/index";
-import type { MarketplaceSnapshot } from "../lib/supabase/marketplace";
+import type { MarketplaceSnapshot } from "../lib/api/marketplace";
 import { offersForRunner } from "../lib/delivery-access";
 import type { RunnerAccessPreference } from "../types/index";
 

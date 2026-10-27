@@ -16,12 +16,11 @@ import type {
   StaffMessage,
   User,
 } from "../../types/index";
-import { getSupabaseClient } from "./client";
-import { isSupabaseConfigured } from "./config";
+import { api, db } from "./client";
+import { isApiConfigured } from "./config";
 import { staffTitleFromValue } from "./user";
 import {
   offersForRunner,
-  packDeliveryAddress,
   parseAccessNotice,
   parseBuildingAccess,
   parseRunnerAccess,
@@ -167,42 +166,28 @@ export async function fetchMarketplace(
     accessHold: null,
   };
 
-  if (!isSupabaseConfigured()) return empty;
+  if (!isApiConfigured()) return empty;
 
-  const supabase = getSupabaseClient();
-
-  const [
-    businessesRes,
-    menusRes,
-    rulesRes,
-    runsRes,
-    ordersRes,
-    deliveriesRes,
-    earningsRes,
-    notificationsRes,
-    favoritesRes,
-    profilesRes,
-    messagesRes,
-  ] = await Promise.all([
-    supabase.from("businesses").select("*"),
-    supabase.from("menu_items").select("*"),
-    supabase.from("coverage_rules").select("*"),
-    supabase.from("runs").select("*"),
-    supabase.from("orders").select("*").order("created_at", { ascending: false }),
-    supabase.from("deliveries").select("*"),
-    supabase.from("earnings").select("*").order("completed_at", { ascending: false }),
-    supabase.from("notifications").select("*").order("created_at", { ascending: false }),
-    userId
-      ? supabase.from("favorites").select("business_id").eq("user_id", userId)
-      : Promise.resolve({ data: [] as { business_id: string }[], error: null }),
-    supabase.from("profiles").select("id, name, email, role, avatar_url"),
-    supabase.from("staff_messages").select("*").order("created_at", { ascending: true }).limit(200),
-  ]);
-
-  if (businessesRes.error) {
-    console.warn("marketplace businesses", businessesRes.error.message);
+  let res: { changed: boolean; serverTime: string; tables?: Record<string, Record<string, unknown>[]> };
+  try {
+    res = await api("/api/marketplace");
+  } catch (e) {
+    console.warn("marketplace", e instanceof Error ? e.message : e);
     return empty;
   }
+  const t = res.tables ?? {};
+  const tab = (name: string) => ({ data: t[name] ?? [], error: null as null | { message: string } });
+  const businessesRes = tab("businesses");
+  const menusRes = tab("menu_items");
+  const rulesRes = tab("coverage_rules");
+  const runsRes = tab("runs");
+  const ordersRes = tab("orders");
+  const deliveriesRes = tab("deliveries");
+  const earningsRes = tab("earnings");
+  const notificationsRes = tab("notifications");
+  const favoritesRes = { data: (t.favorites ?? []).filter((f) => !userId || String(f.user_id) === userId), error: null };
+  const profilesRes = tab("profiles");
+  const messagesRes = tab("staff_messages");
 
   const runs = (runsRes.data ?? []).map((row) => mapRun(row as Record<string, unknown>));
   const menus = (menusRes.data ?? []) as Record<string, unknown>[];
@@ -328,74 +313,64 @@ export async function fetchMarketplace(
   };
 }
 
-function missingColumn(message: string) {
-  return /column|schema cache|PGRST204/i.test(message);
+/** Cheap poll: true when the Sheet changed after `since` (ISO). */
+export async function marketplaceChangedSince(since: string | null): Promise<{ changed: boolean; serverTime: string }> {
+  if (!isApiConfigured()) return { changed: false, serverTime: new Date().toISOString() };
+  const q = since ? `?updated_since=${encodeURIComponent(since)}` : "";
+  const res = await api<{ changed: boolean; serverTime: string }>(`/api/marketplace${q}`);
+  return { changed: res.changed, serverTime: res.serverTime };
+}
+
+function warn(label: string) {
+  return (e: unknown) => console.warn(label, e instanceof Error ? e.message : e);
 }
 
 export async function persistOrder(order: Order) {
-  if (!isSupabaseConfigured()) return;
-  const supabase = getSupabaseClient();
-  const base = {
-    id: order.id,
-    customer_id: order.customerId,
-    business_id: order.businessId,
-    runr_id: order.runrId ?? null,
-    items: order.items,
-    subtotal: order.subtotal,
-    delivery_fee: order.deliveryFee,
-    service_fee: order.serviceFee,
-    tax: order.tax,
-    tip: order.tip,
-    total: order.total,
-    status: order.status,
-    created_at: order.createdAt,
-    delivery_address: order.deliveryAddress ?? null,
-  };
-  const withAccess = {
-    ...base,
-    building_access: order.buildingAccess ?? null,
-    access_note: trimAccessNote(order.accessNote) ?? null,
-    access_notice: order.accessNotice ?? null,
-  };
-  const packed = {
-    ...base,
-    delivery_address: packDeliveryAddress(
-      order.deliveryAddress,
-      order.buildingAccess,
-      order.accessNote,
-      order.accessNotice,
-    ),
-  };
-  const { error } = await supabase.from("orders").upsert(withAccess);
-  if (error && missingColumn(error.message)) {
-    const retry = await supabase.from("orders").upsert(packed);
-    if (retry.error) console.warn("persistOrder", retry.error.message);
-    return;
-  }
-  if (error) console.warn("persistOrder", error.message);
+  if (!isApiConfigured()) return;
+  await db
+    .upsert("orders", {
+      id: order.id,
+      customer_id: order.customerId,
+      business_id: order.businessId,
+      runr_id: order.runrId ?? null,
+      items: order.items,
+      subtotal: order.subtotal,
+      delivery_fee: order.deliveryFee,
+      service_fee: order.serviceFee,
+      tax: order.tax,
+      tip: order.tip,
+      total: order.total,
+      status: order.status,
+      created_at: order.createdAt,
+      delivery_address: order.deliveryAddress ?? null,
+      building_access: order.buildingAccess ?? null,
+      access_note: trimAccessNote(order.accessNote) ?? null,
+      access_notice: order.accessNotice ?? null,
+    })
+    .catch(warn("persistOrder"));
 }
 
 export async function persistRun(run: Run) {
-  if (!isSupabaseConfigured()) return;
-  const supabase = getSupabaseClient();
-  await supabase.from("runs").upsert({
-    id: run.id,
-    runr_id: run.runrId,
-    business_id: run.businessId,
-    start_time: run.startTime,
-    end_time: run.endTime,
-    status: run.status,
-    check_in_time: run.checkInTime ?? null,
-    check_out_time: run.checkOutTime ?? null,
-    delivery_count: run.deliveryCount ?? 0,
-    earnings: run.earnings ?? 0,
-  });
+  if (!isApiConfigured()) return;
+  await db
+    .upsert("runs", {
+      id: run.id,
+      runr_id: run.runrId,
+      business_id: run.businessId,
+      start_time: run.startTime,
+      end_time: run.endTime,
+      status: run.status,
+      check_in_time: run.checkInTime ?? null,
+      check_out_time: run.checkOutTime ?? null,
+      delivery_count: run.deliveryCount ?? 0,
+      earnings: run.earnings ?? 0,
+    })
+    .catch(warn("persistRun"));
 }
 
 export async function persistCoverage(ruleId: string, maxRunrs: number) {
-  if (!isSupabaseConfigured()) return;
-  const supabase = getSupabaseClient();
-  await supabase.from("coverage_rules").update({ max_runrs: maxRunrs }).eq("id", ruleId);
+  if (!isApiConfigured()) return;
+  await db.update("coverage_rules", { id: ruleId }, { max_runrs: maxRunrs }).catch(warn("persistCoverage"));
 }
 
 export async function persistOrderStatus(
@@ -404,125 +379,102 @@ export async function persistOrderStatus(
   runrId?: string,
   accessNotice?: AccessNotice | null,
 ) {
-  if (!isSupabaseConfigured()) return;
-  const supabase = getSupabaseClient();
+  if (!isApiConfigured()) return;
   const patch: Record<string, unknown> = { status };
   if (runrId) patch.runr_id = runrId;
   if (accessNotice) patch.access_notice = accessNotice;
-  const { error } = await supabase.from("orders").update(patch).eq("id", orderId);
-  if (error && accessNotice && missingColumn(error.message)) {
-    delete patch.access_notice;
-    const current = await supabase.from("orders").select("delivery_address").eq("id", orderId).maybeSingle();
-    const unpacked = unpackDeliveryAddress(
-      current.data?.delivery_address ? String(current.data.delivery_address) : undefined,
-    );
-    patch.delivery_address = packDeliveryAddress(
-      unpacked.address,
-      unpacked.buildingAccess,
-      unpacked.accessNote,
-      accessNotice,
-    );
-    const retry = await supabase.from("orders").update(patch).eq("id", orderId);
-    if (retry.error) console.warn("persistOrderStatus", retry.error.message);
-  }
+  await db.update("orders", { id: orderId }, patch).catch(warn("persistOrderStatus"));
 }
 
 export async function persistFavorite(userId: string, businessId: string, liked: boolean) {
-  if (!isSupabaseConfigured()) return;
-  const supabase = getSupabaseClient();
-  if (liked) {
-    await supabase.from("favorites").upsert({ user_id: userId, business_id: businessId });
-  } else {
-    await supabase.from("favorites").delete().eq("user_id", userId).eq("business_id", businessId);
-  }
+  if (!isApiConfigured()) return;
+  const row = { user_id: userId, business_id: businessId };
+  await (liked ? db.upsert("favorites", row) : db.remove("favorites", row)).catch(warn("persistFavorite"));
 }
 
 export async function persistDelivery(delivery: Delivery) {
-  if (!isSupabaseConfigured()) return;
-  const supabase = getSupabaseClient();
-  const base = {
-    id: delivery.id,
-    order_id: delivery.orderId,
-    business_id: delivery.businessId,
-    runr_id: delivery.runrId ?? null,
-    pickup_lat: delivery.pickup.lat,
-    pickup_lng: delivery.pickup.lng,
-    dropoff_lat: delivery.dropoff.lat,
-    dropoff_lng: delivery.dropoff.lng,
-    distance_miles: delivery.distanceMiles,
-    status: delivery.status,
-    base_pay: delivery.basePay,
-    distance_pay: delivery.distancePay,
-    tip: delivery.tip,
-    total_earnings: delivery.totalEarnings,
-    estimated_minutes: delivery.estimatedMinutes,
-    customer_name: delivery.customerName,
-  };
-  const withAccess = {
-    ...base,
-    building_access: delivery.buildingAccess ?? null,
-    access_note: trimAccessNote(delivery.accessNote) ?? null,
-    access_notice: delivery.accessNotice ?? null,
-  };
-  const { error } = await supabase.from("deliveries").upsert(withAccess);
-  if (error && missingColumn(error.message)) {
-    const retry = await supabase.from("deliveries").upsert(base);
-    if (retry.error) console.warn("persistDelivery", retry.error.message);
-    return;
+  if (!isApiConfigured()) return;
+  await db
+    .upsert("deliveries", {
+      id: delivery.id,
+      order_id: delivery.orderId,
+      business_id: delivery.businessId,
+      runr_id: delivery.runrId ?? null,
+      pickup_lat: delivery.pickup.lat,
+      pickup_lng: delivery.pickup.lng,
+      dropoff_lat: delivery.dropoff.lat,
+      dropoff_lng: delivery.dropoff.lng,
+      distance_miles: delivery.distanceMiles,
+      status: delivery.status,
+      base_pay: delivery.basePay,
+      distance_pay: delivery.distancePay,
+      tip: delivery.tip,
+      total_earnings: delivery.totalEarnings,
+      estimated_minutes: delivery.estimatedMinutes,
+      customer_name: delivery.customerName,
+      building_access: delivery.buildingAccess ?? null,
+      access_note: trimAccessNote(delivery.accessNote) ?? null,
+      access_notice: delivery.accessNotice ?? null,
+    })
+    .catch(warn("persistDelivery"));
+}
+
+/**
+ * Server-checked claim of an offered delivery (check-then-write in /api/deliveries/accept).
+ * Resolves false when another runner already holds it.
+ */
+export async function claimDelivery(deliveryId: string, accessNotice?: AccessNotice | null): Promise<boolean> {
+  if (!isApiConfigured()) return true;
+  try {
+    await api("/api/deliveries/accept", { body: { deliveryId, accessNotice: accessNotice ?? null } });
+    return true;
+  } catch (e) {
+    warn("claimDelivery")(e);
+    return false;
   }
-  if (error) console.warn("persistDelivery", error.message);
 }
 
 export async function persistAccessPreference(userId: string, preference: RunnerAccessPreference) {
-  if (!isSupabaseConfigured()) return;
-  const supabase = getSupabaseClient();
-  const { error } = await supabase
-    .from("profiles")
-    .update({ access_preference: preference })
-    .eq("id", userId);
-  if (error && !missingColumn(error.message)) console.warn("access preference", error.message);
-  const { error: metaError } = await supabase.auth.updateUser({
-    data: { access_preference: preference },
-  });
-  if (metaError) console.warn("access preference metadata", metaError.message);
+  if (!isApiConfigured()) return;
+  await db.update("profiles", { id: userId }, { access_preference: preference }).catch(warn("access preference"));
 }
 
 export async function persistEarning(record: EarningRecord) {
-  if (!isSupabaseConfigured()) return;
-  const supabase = getSupabaseClient();
-  await supabase.from("earnings").upsert({
-    id: record.id,
-    runr_id: record.runrId,
-    business_id: record.businessId,
-    business_name: record.businessName,
-    delivery_id: record.deliveryId,
-    base_pay: record.basePay,
-    distance_pay: record.distancePay,
-    tip: record.tip,
-    total: record.total,
-    completed_at: record.completedAt,
-  });
+  if (!isApiConfigured()) return;
+  await db
+    .upsert("earnings", {
+      id: record.id,
+      runr_id: record.runrId,
+      business_id: record.businessId,
+      business_name: record.businessName,
+      delivery_id: record.deliveryId,
+      base_pay: record.basePay,
+      distance_pay: record.distancePay,
+      tip: record.tip,
+      total: record.total,
+      completed_at: record.completedAt,
+    })
+    .catch(warn("persistEarning"));
 }
 
 export async function persistNotification(userId: string, note: Notification) {
-  if (!isSupabaseConfigured()) return;
-  const supabase = getSupabaseClient();
-  await supabase.from("notifications").upsert({
-    id: note.id,
-    user_id: userId,
-    title: note.title,
-    body: note.body,
-    type: note.type,
-    read: note.read,
-    created_at: note.createdAt,
-  });
+  if (!isApiConfigured()) return;
+  await db
+    .upsert("notifications", {
+      id: note.id,
+      user_id: userId,
+      title: note.title,
+      body: note.body,
+      type: note.type,
+      read: note.read,
+      created_at: note.createdAt,
+    })
+    .catch(warn("persistNotification"));
 }
 
 export async function persistNotificationRead(id: string) {
-  if (!isSupabaseConfigured()) return;
-  const supabase = getSupabaseClient();
-  const { error } = await supabase.from("notifications").update({ read: true }).eq("id", id);
-  if (error) console.warn("notifications read", error.message);
+  if (!isApiConfigured()) return;
+  await db.update("notifications", { id }, { read: true }).catch(warn("notifications read"));
 }
 
 export async function offerDeliveryForOrder(order: Order, business: Business, customerName: string) {
@@ -552,14 +504,14 @@ export async function offerDeliveryForOrder(order: Order, business: Business, cu
 }
 
 export async function persistStaffMessage(message: StaffMessage) {
-  if (!isSupabaseConfigured()) return;
-  const supabase = getSupabaseClient();
-  const { error } = await supabase.from("staff_messages").insert({
-    id: message.id,
-    author_id: message.authorId,
-    author_name: message.authorName,
-    body: message.body,
-    created_at: message.createdAt,
-  });
-  if (error) console.warn("staff_messages", error.message);
+  if (!isApiConfigured()) return;
+  await db
+    .upsert("staff_messages", {
+      id: message.id,
+      author_id: message.authorId,
+      author_name: message.authorName,
+      body: message.body,
+      created_at: message.createdAt,
+    })
+    .catch(warn("staff_messages"));
 }

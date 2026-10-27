@@ -10,13 +10,11 @@ import {
 } from "react";
 import type { AuthSession } from "@porter/shared/lib/auth";
 import { authenticate } from "@porter/shared/lib/auth";
-import { getSupabaseClient } from "@porter/shared/lib/supabase/client";
-import { isSupabaseConfigured } from "@porter/shared/lib/supabase/config";
+import { isApiConfigured } from "@porter/shared/lib/api/config";
 import {
   getCurrentAuthSession,
-  sessionToAuthSession,
-  signOut as supabaseSignOut,
-} from "@porter/shared/lib/supabase/auth";
+  signOut as apiSignOut,
+} from "@porter/shared/lib/api/auth";
 import type { User } from "@porter/shared/types";
 import { useAppStore } from "@/store";
 
@@ -38,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
 
     async function loadSession() {
-      if (!isSupabaseConfigured()) {
+      if (!isApiConfigured()) {
         setIsLoading(false);
         return;
       }
@@ -53,32 +51,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     void loadSession();
 
-    if (!isSupabaseConfigured()) {
-      return () => {
-        cancelled = true;
-      };
-    }
-
-    const supabase = getSupabaseClient();
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, nextSession) => {
-      if (cancelled) return;
-
-      if (!nextSession) {
-        setSession(null);
-        setUser(null);
-        return;
-      }
-
-      const authSession = await sessionToAuthSession(nextSession);
-      setSession(authSession);
-      setUser(authSession.user);
-    });
-
     return () => {
       cancelled = true;
-      subscription.unsubscribe();
     };
   }, [setUser]);
 
@@ -96,7 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const logout = useCallback(async () => {
-    await supabaseSignOut();
+    await apiSignOut();
     setSession(null);
     setUser(null);
   }, [setUser]);

@@ -1,8 +1,8 @@
 import type { User, UserRole } from "../types/index";
 import { APP_COPY, roleToApp } from "./apps";
-import { isDemoMode } from "./supabase/config";
+import { isDemoMode } from "./api/config";
 import { demoSession } from "./demo-auth";
-import { signInWithEmail as supabaseSignIn, signUpWithEmail, requestPasswordReset } from "./supabase/auth";
+import { signInWithEmail as apiSignIn, signUpWithEmail, requestPasswordReset } from "./api/auth";
 
 export interface AuthSession {
   user: User;
@@ -16,7 +16,7 @@ export async function authenticate(
   role: UserRole = "customer"
 ): Promise<{ success: true; session: AuthSession } | { success: false; error: string }> {
   if (isDemoMode()) return { success: true, session: demoSession(role, email) };
-  return supabaseSignIn(email, password);
+  return apiSignIn(email, password);
 }
 
 export async function registerAccount(

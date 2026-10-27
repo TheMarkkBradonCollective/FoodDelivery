@@ -19,11 +19,12 @@ import { customerAccessNotice, matchDeliveryAccess, trimAccessNote } from "../li
 import type { AccessHold } from "../lib/delivery-access";
 import { canScheduleRun } from "../lib/coverage-engine";
 import { DEFAULT_LOCATION } from "../data/constants";
-import { signOut } from "../lib/supabase/auth";
-import { isDemoMode } from "../lib/supabase/config";
-import type { MarketplaceSnapshot } from "../lib/supabase/marketplace";
+import { signOut } from "../lib/api/auth";
+import { isDemoMode } from "../lib/api/config";
+import type { MarketplaceSnapshot } from "../lib/api/marketplace";
 import {
   offerDeliveryForOrder,
+  claimDelivery,
   persistAccessPreference,
   persistCoverage,
   persistDelivery,
@@ -35,7 +36,7 @@ import {
   persistRun,
   persistStaffMessage,
   persistNotificationRead,
-} from "../lib/supabase/marketplace";
+} from "../lib/api/marketplace";
 
 function previewOfferForOrder(order: Order, kitchen: Business, customerName: string): Delivery {
   return {
@@ -371,8 +372,14 @@ function buildStore(
         ),
       });
       if (!get().catalogPreview) {
-        void persistDelivery(accepted);
-        void persistOrderStatus(pendingDelivery.orderId, "runr_assigned", user.id, notice);
+        void claimDelivery(accepted.id, notice).then((won) => {
+          if (won) return;
+          set((s) => ({
+            activeDelivery: s.activeDelivery?.id === accepted.id ? null : s.activeDelivery,
+            orders: s.orders.map((item) => (item.id === accepted.orderId ? { ...item, status: "ready", runrId: undefined } : item)),
+          }));
+          get().showToast("Another runner already took this delivery.", "err");
+        });
         if (notice && order) {
           const note: Notification = {
             id: crypto.randomUUID(),

@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import type { UserRole } from "../../types/index";
 import { authenticate, getAppForRole, registerAccount, sendPasswordReset } from "../../lib/auth";
-import { signOut } from "../../lib/supabase/auth";
-import { isDemoMode, isSupabaseConfigured } from "../../lib/supabase/config";
+import { signOut } from "../../lib/api/auth";
+import { isDemoMode, isApiConfigured } from "../../lib/api/config";
 import { useAppStore } from "../../store/create-app-store";
 import { APP_COPY } from "../../lib/apps";
 import { useCustomerSkin } from "../providers/CustomerSkinProvider";
@@ -192,9 +192,9 @@ export function SignInPrompt({ role }: { role: UserRole }) {
             Demo mode: runs offline on sample data. Any email and password signs you in.
           </p>
         )}
-        {!isDemoMode() && !isSupabaseConfigured() ? (
+        {!isDemoMode() && !isApiConfigured() ? (
           <p className="signin-copy">
-            Supabase is not configured for this build. Add your project URL and publishable key.
+            The Portr API is not configured for this build. Set NEXT_PUBLIC_API_URL.
           </p>
         ) : (
           <>

@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { isDemoMode, isSupabaseConfigured } from "../../lib/supabase/config";
-import { getSupabaseClient } from "../../lib/supabase/client";
-import { fetchMarketplace } from "../../lib/supabase/marketplace";
+import { isDemoMode, isApiConfigured } from "../../lib/api/config";
+import { fetchMarketplace, marketplaceChangedSince } from "../../lib/api/marketplace";
 import { ensureStore, useAppStore } from "../../store/create-app-store";
 
 export function MarketplaceSync() {
@@ -32,7 +31,7 @@ export function MarketplaceSync() {
       }
       return;
     }
-    if (!isSupabaseConfigured() || !user) {
+    if (!isApiConfigured() || !user) {
       setMarketplaceReady(Boolean(!user));
       return;
     }
@@ -62,29 +61,22 @@ export function MarketplaceSync() {
 
     void load();
 
-    const supabase = getSupabaseClient();
-    const channel = supabase
-      .channel("porter-marketplace")
-      .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, () => {
-        void load();
-      })
-      .on("postgres_changes", { event: "*", schema: "public", table: "runs" }, () => {
-        void load();
-      })
-      .on("postgres_changes", { event: "*", schema: "public", table: "deliveries" }, () => {
-        void load();
-      })
-      .on("postgres_changes", { event: "*", schema: "public", table: "businesses" }, () => {
-        void load();
-      })
-      .on("postgres_changes", { event: "*", schema: "public", table: "staff_messages" }, () => {
-        void load();
-      })
-      .subscribe();
+    // Polling replaces Supabase realtime: cheap "changed since" check every 12s while visible.
+    let since: string | null = new Date().toISOString();
+    const timer = window.setInterval(async () => {
+      if (document.visibilityState !== "visible") return;
+      try {
+        const res = await marketplaceChangedSince(since);
+        if (res.changed) await load();
+        since = res.serverTime;
+      } catch {
+        // offline or API down; try again next tick
+      }
+    }, 12000);
 
     return () => {
       cancelled = true;
-      void supabase.removeChannel(channel);
+      window.clearInterval(timer);
     };
   }, [user, hydrateMarketplace, setMarketplaceReady]);
 

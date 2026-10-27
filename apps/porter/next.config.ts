@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import { supabasePublicEnv } from "../../packages/shared/src/lib/supabase/public-env";
+import { apiPublicEnv } from "../../packages/shared/src/lib/api/public-env";
 
 const nextConfig: NextConfig = {
   output: "export",
@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   // (Vite equivalent: base: './')
   images: { unoptimized: true },
   transpilePackages: ["@porter/shared"],
-  env: supabasePublicEnv,
+  env: apiPublicEnv,
 };
 
 export default nextConfig;
