@@ -12,6 +12,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { pipeline } from 'node:stream/promises';
 
+// Signed release APKs talk to the Portr API (set NEXT_PUBLIC_API_URL). Unset/demo builds run offline.
+process.env.NEXT_PUBLIC_PORTR_MODE ||= 'live';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 const sdkRoot = process.env.ANDROID_HOME || path.join(os.homedir(), 'android-sdk');

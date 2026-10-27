@@ -1,6 +1,8 @@
 import type { User, UserRole } from "../types/index";
 import { APP_COPY, roleToApp } from "./apps";
-import { signInWithEmail as supabaseSignIn, signUpWithEmail, requestPasswordReset } from "./supabase/auth";
+import { isDemoMode } from "./api/config";
+import { demoSession } from "./demo-auth";
+import { signInWithEmail as apiSignIn, signUpWithEmail, requestPasswordReset } from "./api/auth";
 
 export interface AuthSession {
   user: User;
@@ -10,9 +12,11 @@ export interface AuthSession {
 
 export async function authenticate(
   email: string,
-  password: string
+  password: string,
+  role: UserRole = "customer"
 ): Promise<{ success: true; session: AuthSession } | { success: false; error: string }> {
-  return supabaseSignIn(email, password);
+  if (isDemoMode()) return { success: true, session: demoSession(role, email) };
+  return apiSignIn(email, password);
 }
 
 export async function registerAccount(
@@ -21,10 +25,12 @@ export async function registerAccount(
   name: string,
   role: UserRole
 ) {
+  if (isDemoMode()) return { success: true as const, session: demoSession(role, email, name) };
   return signUpWithEmail(email, password, name, role);
 }
 
 export async function sendPasswordReset(email: string) {
+  if (isDemoMode()) return { success: true as const };
   return requestPasswordReset(email);
 }
 

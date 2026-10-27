@@ -143,7 +143,7 @@ export function StaffUsersPanel() {
 
   if (marketplaceUsers.length === 0) {
     return (
-      <p className="text-sm text-[var(--muted)]">No profiles yet. Run schema.sql in Supabase.</p>
+      <p className="text-sm text-[var(--muted)]">No profiles yet. Run npm run sheets:seed -w apps/api.</p>
     );
   }
 
