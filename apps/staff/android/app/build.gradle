@@ -3,10 +3,13 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         release {
-            storeFile file('../staff-release.keystore')
-            storePassword 'mbcstaff'
-            keyAlias 'staff'
-            keyPassword 'mbcstaff'
+            // Supplied at build time via env (never committed): PORTR_STORE_FILE, PORTR_STORE_PASSWORD, PORTR_KEY_ALIAS, PORTR_KEY_PASSWORD
+            if (System.getenv('PORTR_STORE_FILE')) {
+                storeFile file(System.getenv('PORTR_STORE_FILE'))
+                storePassword System.getenv('PORTR_STORE_PASSWORD')
+                keyAlias System.getenv('PORTR_KEY_ALIAS')
+                keyPassword System.getenv('PORTR_KEY_PASSWORD')
+            }
         }
     }
     namespace "com.tmbcworks.portr.command"
@@ -15,8 +18,8 @@ android {
         applicationId "com.tmbcworks.portr.command"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 305
-        versionName "0.3.5"
+        versionCode 400
+        versionName "0.4.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'

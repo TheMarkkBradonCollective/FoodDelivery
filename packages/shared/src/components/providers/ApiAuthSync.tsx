@@ -7,7 +7,7 @@ import { getCurrentAuthSession } from "../../lib/api/auth";
 import { useAppStore } from "../../store/create-app-store";
 
 /** Keeps the zustand user in sync with the API session for mobile apps. */
-export function SupabaseAuthSync({ role }: { role: UserRole }) {
+export function ApiAuthSync({ role }: { role: UserRole }) {
   const setUser = useAppStore((s) => s.setUser);
   const setAuthReady = useAppStore((s) => s.setAuthReady);
 

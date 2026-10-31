@@ -17,7 +17,7 @@ export interface AppDownload {
 }
 
 const MBC_STORE = "https://themarkkbradoncollective.github.io/main/download";
-const RELEASE = "0.3.5";
+const RELEASE = "0.4.0";
 const GH_RELEASE = `https://github.com/TheMarkkBradonCollective/FoodDelivery/releases/download/v${RELEASE}`;
 const BRAND_PURPLE = "#7048F8";
 const BRAND_PLUM = "#2A1478";

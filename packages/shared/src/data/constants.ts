@@ -1,4 +1,4 @@
-/** Shared constants. Marketplace entities load from Supabase. */
+/** Shared constants. Marketplace entities load from the Portr API. */
 
 export const DEFAULT_LOCATION = { lat: 37.7749, lng: -122.4194 };
 
