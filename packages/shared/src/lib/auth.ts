@@ -1,6 +1,6 @@
 import type { User, UserRole } from "../types/index";
 import { APP_COPY, roleToApp } from "./apps";
-import { signInWithEmail as supabaseSignIn, signUpWithEmail, requestPasswordReset } from "./supabase/auth";
+import { signInWithEmail as apiSignIn, signUpWithEmail, requestPasswordReset } from "./api/auth";
 
 export interface AuthSession {
   user: User;
@@ -12,7 +12,7 @@ export async function authenticate(
   email: string,
   password: string
 ): Promise<{ success: true; session: AuthSession } | { success: false; error: string }> {
-  return supabaseSignIn(email, password);
+  return apiSignIn(email, password);
 }
 
 export async function registerAccount(

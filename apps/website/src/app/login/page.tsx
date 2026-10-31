@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
-import { getCurrentAuthSession, signOut } from "@porter/shared/lib/supabase/auth";
+import { getCurrentAuthSession, signOut } from "@porter/shared/lib/api/auth";
 import { sendPasswordReset } from "@porter/shared/lib/auth";
 import { Eye, EyeOff, LogIn, Shield, Smartphone } from "lucide-react";
 
