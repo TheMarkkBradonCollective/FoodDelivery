@@ -124,7 +124,7 @@ try {
         downloadName: app.apkName,
         fileSize: app.fileSize,
         sha256: app.sha256,
-        releaseNotes: `${app.name} v${app.version} — Porter blue branding, Supabase auth, unified logos.`,
+        releaseNotes: `${app.name} v${app.version} — Neon + Cloudflare backend, live Portr API.`,
         packageId: app.packageId,
         source: 'github-mirror',
         archives: [],

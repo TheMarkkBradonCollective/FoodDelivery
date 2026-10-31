@@ -147,7 +147,7 @@ export function StaffConsole() {
 
           {tab === "users" && (
             <Panel title="Marketplace users">
-              <p className="mb-4 text-sm text-zinc-400">Directory for support. Role changes stay in Supabase for now.</p>
+              <p className="mb-4 text-sm text-zinc-400">Directory for support. Role changes are managed through the Portr API.</p>
               <StaffUsersPanel />
             </Panel>
           )}

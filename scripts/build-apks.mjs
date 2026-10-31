@@ -102,68 +102,6 @@ function versionCodeFromSemver(version) {
   return major * 10000 + minor * 100 + patch;
 }
 
-async function ensureSigning(appId) {
-  const androidRoot = path.join(root, 'apps', appId, 'android');
-  const keystore = path.join(androidRoot, `${appId}-release.keystore`);
-  const buildGradle = path.join(androidRoot, 'app/build.gradle');
-
-  if (!existsSync(keystore)) {
-    run('keytool', [
-      '-genkeypair',
-      '-v',
-      '-keystore',
-      keystore,
-      '-alias',
-      appId,
-      '-keyalg',
-      'RSA',
-      '-keysize',
-      '2048',
-      '-validity',
-      '10000',
-      '-storepass',
-      `mbc${appId}`,
-      '-keypass',
-      `mbc${appId}`,
-      '-dname',
-      `CN=${appId}, OU=MBC, O=The Markk Brandon Collective, L=Sacramento, ST=CA, C=US`,
-    ]);
-  }
-
-  let gradle = await readFile(buildGradle, 'utf8');
-  const expectedStore = `../${appId}-release.keystore`;
-  if (gradle.includes('signingConfigs')) {
-    gradle = gradle.replace(
-      /storeFile file\('\.\.\/[^']+'\)/,
-      `storeFile file('${expectedStore}')`,
-    );
-    gradle = gradle.replace(/storePassword '[^']+'/, `storePassword 'mbc${appId}'`);
-    gradle = gradle.replace(/keyAlias '[^']+'/, `keyAlias '${appId}'`);
-    gradle = gradle.replace(/keyPassword '[^']+'/, `keyPassword 'mbc${appId}'`);
-  } else if (!gradle.includes('signingConfigs')) {
-    gradle = gradle.replace(
-      'android {',
-      `android {
-    signingConfigs {
-        release {
-            storeFile file('../${appId}-release.keystore')
-            storePassword 'mbc${appId}'
-            keyAlias '${appId}'
-            keyPassword 'mbc${appId}'
-        }
-    }`
-    );
-    gradle = gradle.replace(
-      /buildTypes \{\s*release \{/,
-      `buildTypes {
-        release {
-            signingConfig signingConfigs.release`
-    );
-  }
-
-  await writeFile(buildGradle, gradle);
-}
-
 async function patchVersion(appId, version) {
   const buildGradle = path.join(root, 'apps', appId, 'android/app/build.gradle');
   let gradle = await readFile(buildGradle, 'utf8');
@@ -176,7 +114,7 @@ async function patchVersion(appId, version) {
 async function buildApp(app) {
   const version = await versionForApp(app.id);
   await patchVersion(app.id, version);
-  await ensureSigning(app.id);
+  if (!process.env.PORTR_STORE_FILE) throw new Error('Set PORTR_STORE_FILE/PORTR_STORE_PASSWORD/PORTR_KEY_ALIAS/PORTR_KEY_PASSWORD to sign');
   run('npm', ['run', 'cap:sync', '-w', app.workspace], { cwd: root });
 
   const gradlew = path.join(root, 'apps', app.id, 'android/gradlew');
@@ -195,7 +133,8 @@ async function buildApp(app) {
 
 await ensureSdk();
 const built = [];
-for (const app of apps) {
+const only = process.argv[2];
+for (const app of apps.filter((a) => !only || a.id === only)) {
   console.log(`\n=== Building ${app.name} (signed release) ===`);
   built.push(await buildApp(app));
 }

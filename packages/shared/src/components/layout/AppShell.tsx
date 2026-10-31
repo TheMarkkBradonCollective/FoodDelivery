@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { ThemeProvider } from "../providers/ThemeProvider";
 import { NativeSafeArea } from "../providers/NativeSafeArea";
-import { SupabaseAuthSync } from "../providers/SupabaseAuthSync";
+import { ApiAuthSync } from "../providers/ApiAuthSync";
 import { MarketplaceSync } from "../providers/MarketplaceSync";
 import { ensureStore, useAppStore } from "../../store/create-app-store";
 import { SignInPrompt } from "./SignInPrompt";
@@ -101,7 +101,7 @@ export function AppShell({
   const shell = (
     <ThemeProvider forceDark={role === "staff"}>
       <NativeSafeArea darkChrome={role === "staff"}>
-        <SupabaseAuthSync role={role} />
+        <ApiAuthSync role={role} />
         <MarketplaceSync />
         {body}
         <ToastHost />

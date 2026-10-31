@@ -32,16 +32,15 @@ The marketing site includes APK download links, ecosystem overview, company info
 | `/account` | Billing, profile, preferences, and ratings for Portr / Portr Runner / Portr Vendor |
 | `/staff` | Portr Command marketplace ops (also in the Portr Command app) |
 
-Sign-in uses the Portr API (`NEXT_PUBLIC_API_URL`). When that variable is unset, apps run in **demo mode** with local preview catalog data. Set `NEXT_PUBLIC_API_URL` to your Cloudflare Worker URL for live orders, runs, coverage, and menus.
+Sign-in uses the Portr API on Cloudflare Workers. Builds default to the live API at `https://portr-api.themarkkbrandoncollective-2d9.workers.dev` (override with `NEXT_PUBLIC_API_URL`). Set `NEXT_PUBLIC_APP_MODE=demo` to build with bundled local preview data and no backend.
 
 ## Neon Postgres + Cloudflare backend
 
 | Component | Path | Purpose |
 |-----------|------|---------|
 | **Schema** | `db/schema.sql` | Matches live Neon project **Portr** (`divine-sound-61675218`): plain `uuid` user columns, `profiles.password_hash`, unique `lower(email)` index, demo seed (3 businesses / 12 menu items / 5 coverage rules). No RLS — authorization is in the Worker. |
-| **Migration** | `db/migrate-from-supabase.mjs` | Copy data from Supabase (`SUPABASE_DB_URL` → `DATABASE_URL`) |
 | **API** | `apps/api` | Cloudflare Worker (Hono + Neon + R2) |
-| **Website** | `apps/website/out` | Static export → Cloudflare Pages |
+| **Website** | `apps/website/out` | Static export → Cloudflare (live at https://portr-web.themarkkbrandoncollective-2d9.workers.dev) |
 
 ### Environment variables
 
@@ -51,8 +50,8 @@ See `.env.example`. Never commit secrets.
 |----------|--------|
 | `DATABASE_URL` | Neon — API Worker secret (`wrangler secret put DATABASE_URL`) |
 | `JWT_SECRET` | API Worker secret |
-| `NEXT_PUBLIC_API_URL` | Website + Capacitor/Next apps (public API base URL) |
-| `SUPABASE_DB_URL` | One-time migration only |
+| `NEXT_PUBLIC_API_URL` | Website + Capacitor/Next apps (public API base URL; defaults to the live Worker) |
+| `NEXT_PUBLIC_APP_MODE` | `live` (default) or `demo` |
 | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` | GitHub Actions preview deploy |
 
 ### Local setup
@@ -80,18 +79,11 @@ Repository secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`. Optional `P
 
 Create R2 bucket `portr-files` and bind `FILES` (see `apps/api/wrangler.toml`).
 
-### Migrate from Supabase
+### Data
 
-```bash
-cd db && npm install
-SUPABASE_DB_URL=... DATABASE_URL=... npm run migrate-from-supabase
-```
+The Neon database starts from scratch with `db/schema.sql` (demo seed only). No legacy data is migrated.
 
-Copies all public tables and merges bcrypt hashes from `auth.users` into `profiles.password_hash` when readable.
-
----
-
-Sign-in previously used Supabase; production cutover uses the API above. Run `docs/supabase/*.sql` only for legacy Supabase projects.
+> Migration note: Portr previously ran on a hosted Postgres/auth provider and a separate web host. As of v0.4.0 it runs only on Neon Postgres + Cloudflare Workers/R2; that legacy code and config was removed.
 
 ## The Portr app family
 
@@ -106,7 +98,7 @@ Sign-in previously used Supabase; production cutover uses the API above. Run `do
 
 ## Build & distribute APKs
 
-All four apps ship as **signed Capacitor APKs** with the Next.js UI bundled inside the APK (`assetPrefix: './'`). No Vercel or external website is required to run the apps.
+All four apps ship as **signed Capacitor APKs** with the Next.js UI bundled inside the APK (`assetPrefix: './'`). No external website is required to run the apps.
 
 ```bash
 npm run build:apks       # Build signed release APKs

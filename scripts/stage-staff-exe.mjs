@@ -9,7 +9,7 @@ if (!existsSync(built)) {
   process.exit(1);
 }
 
-const version = "0.3.5";
+const version = "0.4.0";
 const latestDir = join(root, "release/latest");
 mkdirSync(latestDir, { recursive: true });
 const latest = join(latestDir, "PortrCommand.exe");
