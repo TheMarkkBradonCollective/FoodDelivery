@@ -19,8 +19,8 @@ import { customerAccessNotice, matchDeliveryAccess, trimAccessNote } from "../li
 import type { AccessHold } from "../lib/delivery-access";
 import { canScheduleRun } from "../lib/coverage-engine";
 import { DEFAULT_LOCATION } from "../data/constants";
-import { signOut } from "../lib/supabase/auth";
-import type { MarketplaceSnapshot } from "../lib/supabase/marketplace";
+import { signOut } from "../lib/api/auth";
+import type { MarketplaceSnapshot } from "../lib/api/marketplace";
 import {
   offerDeliveryForOrder,
   persistAccessPreference,
@@ -34,7 +34,7 @@ import {
   persistRun,
   persistStaffMessage,
   persistNotificationRead,
-} from "../lib/supabase/marketplace";
+} from "../lib/api/marketplace";
 
 function previewOfferForOrder(order: Order, kitchen: Business, customerName: string): Delivery {
   return {

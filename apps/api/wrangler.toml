@@ -1,0 +1,21 @@
+name = "portr-api"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[r2_buckets]]
+binding = "FILES"
+bucket_name = "portr-files"
+
+[vars]
+PAGES_URL = "https://portr.pages.dev"
+
+[env.preview]
+name = "portr-api-preview"
+
+[[env.preview.r2_buckets]]
+binding = "FILES"
+bucket_name = "portr-files"
+
+[env.preview.vars]
+PAGES_URL = "https://preview.portr.pages.dev"

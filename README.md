@@ -32,7 +32,66 @@ The marketing site includes APK download links, ecosystem overview, company info
 | `/account` | Billing, profile, preferences, and ratings for Portr / Portr Runner / Portr Vendor |
 | `/staff` | Portr Command marketplace ops (also in the Portr Command app) |
 
-Sign-in uses Supabase. The website and apps default to the Portr project (`https://gonsvtgsocjaykrmtmpz.supabase.co`); set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to point a build at another project. Run `docs/supabase/complete-schema.sql` in the SQL Editor, then `docs/supabase/founders.sql`, to create profiles, staff, marketplace tables, and the founder accounts. After that, Portr, Portr Runner, Portr Vendor, and Portr Command load live data (orders, runs, coverage, menus).
+Sign-in uses the Portr API (`NEXT_PUBLIC_API_URL`). When that variable is unset, apps run in **demo mode** with local preview catalog data. Set `NEXT_PUBLIC_API_URL` to your Cloudflare Worker URL for live orders, runs, coverage, and menus.
+
+## Neon Postgres + Cloudflare backend
+
+| Component | Path | Purpose |
+|-----------|------|---------|
+| **Schema** | `db/schema.sql` | Matches live Neon project **Portr** (`divine-sound-61675218`): plain `uuid` user columns, `profiles.password_hash`, unique `lower(email)` index, demo seed (3 businesses / 12 menu items / 5 coverage rules). No RLS — authorization is in the Worker. |
+| **Migration** | `db/migrate-from-supabase.mjs` | Copy data from Supabase (`SUPABASE_DB_URL` → `DATABASE_URL`) |
+| **API** | `apps/api` | Cloudflare Worker (Hono + Neon + R2) |
+| **Website** | `apps/website/out` | Static export → Cloudflare Pages |
+
+### Environment variables
+
+See `.env.example`. Never commit secrets.
+
+| Variable | Where |
+|----------|--------|
+| `DATABASE_URL` | Neon — API Worker secret (`wrangler secret put DATABASE_URL`) |
+| `JWT_SECRET` | API Worker secret |
+| `NEXT_PUBLIC_API_URL` | Website + Capacitor/Next apps (public API base URL) |
+| `SUPABASE_DB_URL` | One-time migration only |
+| `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` | GitHub Actions preview deploy |
+
+### Local setup
+
+```bash
+# Apply schema on Neon
+psql "$DATABASE_URL" -f db/schema.sql
+
+# API (requires .dev.vars with DATABASE_URL and JWT_SECRET — gitignored)
+npm install
+npm run dev -w @porter/api
+
+# Website pointed at local wrangler dev (default port 8787)
+NEXT_PUBLIC_API_URL=http://127.0.0.1:8787 npm run dev:website
+```
+
+### Preview deploy (GitHub Actions)
+
+Workflow: `.github/workflows/deploy-cloudflare.yml` on branch `neon-cloudflare`.
+
+- Worker: `wrangler deploy --env preview` (not production)
+- Pages: `wrangler pages deploy out --branch preview`
+
+Repository secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`. Optional `PREVIEW_API_URL` for the website build. Set Worker secrets in Cloudflare: `DATABASE_URL`, `JWT_SECRET`.
+
+Create R2 bucket `portr-files` and bind `FILES` (see `apps/api/wrangler.toml`).
+
+### Migrate from Supabase
+
+```bash
+cd db && npm install
+SUPABASE_DB_URL=... DATABASE_URL=... npm run migrate-from-supabase
+```
+
+Copies all public tables and merges bcrypt hashes from `auth.users` into `profiles.password_hash` when readable.
+
+---
+
+Sign-in previously used Supabase; production cutover uses the API above. Run `docs/supabase/*.sql` only for legacy Supabase projects.
 
 ## The Portr app family
 

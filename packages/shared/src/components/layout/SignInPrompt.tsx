@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import type { UserRole } from "../../types/index";
 import { authenticate, getAppForRole, registerAccount, sendPasswordReset } from "../../lib/auth";
-import { signOut } from "../../lib/supabase/auth";
-import { isSupabaseConfigured } from "../../lib/supabase/config";
+import { signOut } from "../../lib/api/auth";
+import { isApiConfigured } from "../../lib/api/config";
 import { useAppStore } from "../../store/create-app-store";
 import { APP_COPY } from "../../lib/apps";
 import { useCustomerSkin } from "../providers/CustomerSkinProvider";
@@ -187,9 +187,9 @@ export function SignInPrompt({ role }: { role: UserRole }) {
       </div>
 
       <div className="signin-sheet">
-        {!isSupabaseConfigured() ? (
+        {!isApiConfigured() ? (
           <p className="signin-copy">
-            Supabase is not configured for this build. Add your project URL and publishable key.
+            Live API is not configured for this build. Set NEXT_PUBLIC_API_URL or use demo mode.
           </p>
         ) : (
           <>
