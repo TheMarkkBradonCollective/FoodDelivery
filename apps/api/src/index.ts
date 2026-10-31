@@ -5,8 +5,10 @@ import {
   bearerToken,
   hashPassword,
   loadProfile,
+  signPasswordResetToken,
   signToken,
   verifyPassword,
+  verifyPasswordResetToken,
   verifyToken,
 } from "./auth";
 import { buildMarketplaceSnapshot, hasUpdatesSince } from "./snapshot";
@@ -135,14 +137,14 @@ app.post("/auth/reset-request", async (c) => {
   const email = body.email?.trim().toLowerCase();
   if (!email) return c.json({ error: "Email required" }, 400);
   const sql = getSql(c.env.DATABASE_URL);
-  const token = crypto.randomUUID();
-  const expires = new Date(Date.now() + 3600_000).toISOString();
-  await sql`
-    update profiles
-    set password_reset_token = ${token}, password_reset_expires = ${expires}::timestamptz
-    where lower(email) = ${email}
-  `;
-  return c.json({ ok: true, resetToken: token });
+  const found = rows<{ id: string }>(
+    await sql`select id from profiles where lower(email) = ${email} limit 1`,
+  );
+  if (found.length) {
+    const resetToken = await signPasswordResetToken(String(found[0].id), c.env.JWT_SECRET);
+    return c.json({ ok: true, resetToken });
+  }
+  return c.json({ ok: true });
 });
 
 app.post("/auth/reset", async (c) => {
@@ -152,23 +154,14 @@ app.post("/auth/reset", async (c) => {
   if (!token || password.length < 8) {
     return c.json({ error: "Token and new password (8+ chars) required" }, 400);
   }
+  const verified = await verifyPasswordResetToken(token, c.env.JWT_SECRET);
+  if (!verified) return c.json({ error: "Invalid or expired reset token" }, 400);
   const sql = getSql(c.env.DATABASE_URL);
-  const resetRows = rows<{ id: string }>(await sql`
-    select id from profiles
-    where password_reset_token = ${token}
-      and password_reset_expires > now()
-    limit 1
-  `);
-  if (!resetRows.length) return c.json({ error: "Invalid or expired reset token" }, 400);
-  const userId = String(resetRows[0].id);
   const passwordHash = await hashPassword(password);
   await sql`
     update profiles
-    set password_hash = ${passwordHash},
-        password_reset_token = null,
-        password_reset_expires = null,
-        updated_at = now()
-    where id = ${userId}::uuid
+    set password_hash = ${passwordHash}, updated_at = now()
+    where id = ${verified.userId}::uuid
   `;
   return c.json({ ok: true });
 });
@@ -205,7 +198,7 @@ app.put("/orders/:id", async (c) => {
     insert into orders (
       id, customer_id, business_id, runr_id, items, subtotal, delivery_fee,
       service_fee, tax, tip, total, status, created_at, delivery_address,
-      building_access, access_note, access_notice, fulfillment
+      building_access, access_note, access_notice
     ) values (
       ${String(order.id ?? c.req.param("id"))}::uuid,
       ${String(order.customer_id ?? profile.id)}::uuid,
@@ -223,8 +216,7 @@ app.put("/orders/:id", async (c) => {
       ${order.delivery_address ? String(order.delivery_address) : null},
       ${order.building_access ? String(order.building_access) : null},
       ${order.access_note ? String(order.access_note) : null},
-      ${order.access_notice ? String(order.access_notice) : null},
-      ${order.fulfillment ? String(order.fulfillment) : null}
+      ${order.access_notice ? String(order.access_notice) : null}
     )
     on conflict (id) do update set
       runr_id = excluded.runr_id,
@@ -239,8 +231,7 @@ app.put("/orders/:id", async (c) => {
       delivery_address = excluded.delivery_address,
       building_access = excluded.building_access,
       access_note = excluded.access_note,
-      access_notice = excluded.access_notice,
-      fulfillment = excluded.fulfillment
+      access_notice = excluded.access_notice
   `;
   return c.json({ ok: true });
 });

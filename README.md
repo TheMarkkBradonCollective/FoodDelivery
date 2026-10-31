@@ -38,7 +38,7 @@ Sign-in uses the Portr API (`NEXT_PUBLIC_API_URL`). When that variable is unset,
 
 | Component | Path | Purpose |
 |-----------|------|---------|
-| **Schema** | `db/schema.sql` | Plain Postgres tables (profiles include `password_hash`) |
+| **Schema** | `db/schema.sql` | Matches live Neon project **Portr** (`divine-sound-61675218`): plain `uuid` user columns, `profiles.password_hash`, unique `lower(email)` index, demo seed (3 businesses / 12 menu items / 5 coverage rules). No RLS — authorization is in the Worker. |
 | **Migration** | `db/migrate-from-supabase.mjs` | Copy data from Supabase (`SUPABASE_DB_URL` → `DATABASE_URL`) |
 | **API** | `apps/api` | Cloudflare Worker (Hono + Neon + R2) |
 | **Website** | `apps/website/out` | Static export → Cloudflare Pages |

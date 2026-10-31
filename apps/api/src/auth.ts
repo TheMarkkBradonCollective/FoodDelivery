@@ -65,3 +65,28 @@ export function bearerToken(header: string | undefined): string | null {
   if (!header?.startsWith("Bearer ")) return null;
   return header.slice(7).trim() || null;
 }
+
+export async function signPasswordResetToken(userId: string, secret: string): Promise<string> {
+  const key = new TextEncoder().encode(secret);
+  return new SignJWT({ sub: userId, purpose: "password-reset" })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("1h")
+    .sign(key);
+}
+
+export async function verifyPasswordResetToken(
+  token: string,
+  secret: string,
+): Promise<{ userId: string } | null> {
+  try {
+    const key = new TextEncoder().encode(secret);
+    const { payload } = await jwtVerify(token, key);
+    if (payload.purpose !== "password-reset") return null;
+    const sub = payload.sub;
+    if (typeof sub !== "string") return null;
+    return { userId: sub };
+  } catch {
+    return null;
+  }
+}

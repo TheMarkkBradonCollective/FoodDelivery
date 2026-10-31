@@ -1,262 +1,63 @@
--- Portr — plain Postgres schema (Neon). No Supabase auth, RLS, or realtime.
--- Apply: psql "$DATABASE_URL" -f db/schema.sql
-
-begin;
+-- Portr — Neon Postgres schema (matches live project "Portr", divine-sound-61675218)
+-- No RLS; access control is enforced in apps/api Worker.
+-- User ids are plain uuid columns (no auth.users FKs). profiles.password_hash + unique lower(email).
+-- Apply on a fresh database: psql "$DATABASE_URL" -f db/schema.sql
 
 create extension if not exists pgcrypto;
 
-create or replace function public.set_updated_at()
-returns trigger
-language plpgsql
-as $$
-begin
-  new.updated_at = now();
-  return new;
-end;
-$$;
-
 create table if not exists public.profiles (
   id uuid primary key default gen_random_uuid(),
-  email text,
-  personal_email text,
-  company_email text,
-  name text,
-  password_hash text,
-  password_reset_token text,
-  password_reset_expires timestamptz,
-  role text not null default 'customer'
-    check (role in (
-      'customer', 'runr', 'business',
-      'staff', 'support', 'moderator', 'administrator', 'manager', 'director', 'founder'
-    )),
+  email text, personal_email text, company_email text, name text,
+  role text not null default 'customer',
   is_founder boolean not null default false,
-  avatar_url text,
-  access_preference text
-    check (
-      access_preference is null
-      or access_preference in ('elevators', 'stairs', 'both', 'no_elevators', 'no_stairs')
-    ),
+  avatar_url text, access_preference text, password_hash text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  constraint profiles_founder_is_staff check (is_founder = (role = 'founder'))
+  constraint profiles_role_check check (role in ('customer','runr','business','staff','support','moderator','administrator','manager','director','founder')),
+  constraint profiles_founder_is_staff check (is_founder = (role = 'founder')),
+  constraint profiles_access_preference_check check (access_preference is null or access_preference in ('elevators','stairs','both','no_elevators','no_stairs'))
 );
 
-drop trigger if exists profiles_set_updated_at on public.profiles;
-create trigger profiles_set_updated_at
-  before update on public.profiles
-  for each row execute procedure public.set_updated_at();
+create unique index if not exists profiles_email_lower_idx on public.profiles (lower(email));
+
+create or replace function public.set_updated_at() returns trigger language plpgsql as $f$ begin new.updated_at = now(); return new; end; $f$;
+
+create trigger profiles_set_updated_at before update on public.profiles for each row execute procedure public.set_updated_at();
 
 create table if not exists public.businesses (
-  id uuid primary key default gen_random_uuid(),
-  owner_id uuid not null references public.profiles (id) on delete cascade,
-  name text not null,
-  cuisine text not null default '',
-  category text not null default 'Restaurant',
-  rating numeric not null default 4.8,
-  review_count integer not null default 24,
-  lat double precision not null,
-  lng double precision not null,
-  address text not null default '',
-  city text not null default 'San Francisco',
-  zip text not null default '94103',
-  delivery_radius_miles numeric not null default 5,
-  operating_hours text not null default '10:00 AM – 10:00 PM',
-  delivery_fee numeric not null default 2.99,
-  eta_minutes integer not null default 28,
+  id uuid primary key default gen_random_uuid(), owner_id uuid not null, name text not null,
+  cuisine text not null default '', category text not null default 'Restaurant',
+  rating numeric not null default 4.8, review_count integer not null default 24,
+  lat double precision not null, lng double precision not null,
+  address text not null default '', city text not null default 'San Francisco', zip text not null default '94103',
+  delivery_radius_miles numeric not null default 5, operating_hours text not null default '10:00 AM – 10:00 PM',
+  delivery_fee numeric not null default 2.99, eta_minutes integer not null default 28,
   demand_level text not null default 'moderate',
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
+  created_at timestamptz not null default now(), updated_at timestamptz not null default now());
 
-drop trigger if exists businesses_set_updated_at on public.businesses;
-create trigger businesses_set_updated_at
-  before update on public.businesses
-  for each row execute procedure public.set_updated_at();
+create trigger businesses_set_updated_at before update on public.businesses for each row execute procedure public.set_updated_at();
 
-create table if not exists public.menu_items (
-  id uuid primary key default gen_random_uuid(),
-  business_id uuid not null references public.businesses (id) on delete cascade,
-  name text not null,
-  description text not null default '',
-  price numeric not null,
-  category text not null default 'Mains',
-  popular boolean not null default false
-);
+create table if not exists public.menu_items (id uuid primary key default gen_random_uuid(), business_id uuid not null references public.businesses(id) on delete cascade, name text not null, description text not null default '', price numeric not null, category text not null default 'Mains', popular boolean not null default false);
 
-create table if not exists public.coverage_rules (
-  id uuid primary key default gen_random_uuid(),
-  business_id uuid not null references public.businesses (id) on delete cascade,
-  start_time text not null,
-  end_time text not null,
-  max_runrs integer not null default 4
-);
+create table if not exists public.coverage_rules (id uuid primary key default gen_random_uuid(), business_id uuid not null references public.businesses(id) on delete cascade, start_time text not null, end_time text not null, max_runrs integer not null default 4);
 
-create table if not exists public.orders (
-  id uuid primary key default gen_random_uuid(),
-  customer_id uuid not null references public.profiles (id) on delete cascade,
-  business_id uuid not null references public.businesses (id) on delete cascade,
-  runr_id uuid references public.profiles (id) on delete set null,
-  items jsonb not null default '[]'::jsonb,
-  subtotal numeric not null default 0,
-  delivery_fee numeric not null default 0,
-  service_fee numeric not null default 0,
-  tax numeric not null default 0,
-  tip numeric not null default 0,
-  total numeric not null default 0,
-  status text not null default 'new',
-  fulfillment text,
-  delivery_address text,
-  building_access text
-    check (
-      building_access is null
-      or building_access in (
-        'elevator', 'stairs', 'both', 'ground', 'requires_stairs', 'requires_elevator'
-      )
-    ),
-  access_note text,
-  access_notice text
-    check (
-      access_notice is null
-      or access_notice in ('stairs_may_be_required', 'elevator_may_be_required')
-    ),
-  created_at timestamptz not null default now()
-);
+create table if not exists public.orders (id uuid primary key default gen_random_uuid(), customer_id uuid not null, business_id uuid not null references public.businesses(id) on delete cascade, runr_id uuid, items jsonb not null default '[]'::jsonb, subtotal numeric not null default 0, delivery_fee numeric not null default 0, service_fee numeric not null default 0, tax numeric not null default 0, tip numeric not null default 0, total numeric not null default 0, status text not null default 'new', created_at timestamptz not null default now(), delivery_address text, building_access text, access_note text, access_notice text,
+  constraint orders_building_access_check check (building_access is null or building_access in ('elevator','stairs','both','ground','requires_stairs','requires_elevator')),
+  constraint orders_access_notice_check check (access_notice is null or access_notice in ('stairs_may_be_required','elevator_may_be_required')));
 
-create table if not exists public.runs (
-  id uuid primary key default gen_random_uuid(),
-  runr_id uuid not null references public.profiles (id) on delete cascade,
-  business_id uuid not null references public.businesses (id) on delete cascade,
-  start_time text not null,
-  end_time text not null,
-  status text not null default 'scheduled',
-  check_in_time timestamptz,
-  check_out_time timestamptz,
-  delivery_count integer not null default 0,
-  earnings numeric not null default 0,
-  created_at timestamptz not null default now()
-);
+create table if not exists public.runs (id uuid primary key default gen_random_uuid(), runr_id uuid not null, business_id uuid not null references public.businesses(id) on delete cascade, start_time text not null, end_time text not null, status text not null default 'scheduled', check_in_time timestamptz, check_out_time timestamptz, delivery_count integer not null default 0, earnings numeric not null default 0, created_at timestamptz not null default now());
 
-create table if not exists public.deliveries (
-  id uuid primary key default gen_random_uuid(),
-  order_id uuid not null references public.orders (id) on delete cascade,
-  business_id uuid not null references public.businesses (id) on delete cascade,
-  runr_id uuid references public.profiles (id) on delete set null,
-  pickup_lat double precision not null,
-  pickup_lng double precision not null,
-  dropoff_lat double precision not null,
-  dropoff_lng double precision not null,
-  distance_miles numeric not null default 1.2,
-  status text not null default 'offered',
-  base_pay numeric not null default 4.5,
-  distance_pay numeric not null default 1.8,
-  tip numeric not null default 5,
-  total_earnings numeric not null default 11.3,
-  estimated_minutes integer not null default 18,
-  customer_name text not null default 'Customer',
-  building_access text
-    check (
-      building_access is null
-      or building_access in (
-        'elevator', 'stairs', 'both', 'ground', 'requires_stairs', 'requires_elevator'
-      )
-    ),
-  access_note text,
-  access_notice text
-    check (
-      access_notice is null
-      or access_notice in ('stairs_may_be_required', 'elevator_may_be_required')
-    ),
-  created_at timestamptz not null default now()
-);
+create table if not exists public.deliveries (id uuid primary key default gen_random_uuid(), order_id uuid not null references public.orders(id) on delete cascade, business_id uuid not null references public.businesses(id) on delete cascade, runr_id uuid, pickup_lat double precision not null, pickup_lng double precision not null, dropoff_lat double precision not null, dropoff_lng double precision not null, distance_miles numeric not null default 1.2, status text not null default 'offered', base_pay numeric not null default 4.5, distance_pay numeric not null default 1.8, tip numeric not null default 5, total_earnings numeric not null default 11.3, estimated_minutes integer not null default 18, customer_name text not null default 'Customer', created_at timestamptz not null default now(), building_access text, access_note text, access_notice text,
+  constraint deliveries_building_access_check check (building_access is null or building_access in ('elevator','stairs','both','ground','requires_stairs','requires_elevator')),
+  constraint deliveries_access_notice_check check (access_notice is null or access_notice in ('stairs_may_be_required','elevator_may_be_required')));
 
-create table if not exists public.earnings (
-  id uuid primary key default gen_random_uuid(),
-  runr_id uuid not null references public.profiles (id) on delete cascade,
-  business_id uuid not null references public.businesses (id) on delete cascade,
-  business_name text not null default '',
-  delivery_id uuid references public.deliveries (id) on delete set null,
-  base_pay numeric not null default 0,
-  distance_pay numeric not null default 0,
-  tip numeric not null default 0,
-  total numeric not null default 0,
-  completed_at timestamptz not null default now()
-);
+create table if not exists public.earnings (id uuid primary key default gen_random_uuid(), runr_id uuid not null, business_id uuid not null references public.businesses(id) on delete cascade, business_name text not null default '', delivery_id uuid references public.deliveries(id) on delete set null, base_pay numeric not null default 0, distance_pay numeric not null default 0, tip numeric not null default 0, total numeric not null default 0, completed_at timestamptz not null default now());
 
-create table if not exists public.notifications (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references public.profiles (id) on delete cascade,
-  title text not null,
-  body text not null default '',
-  type text not null default 'order',
-  read boolean not null default false,
-  created_at timestamptz not null default now()
-);
+create table if not exists public.notifications (id uuid primary key default gen_random_uuid(), user_id uuid not null, title text not null, body text not null default '', type text not null default 'order', read boolean not null default false, created_at timestamptz not null default now());
 
-create table if not exists public.favorites (
-  user_id uuid not null references public.profiles (id) on delete cascade,
-  business_id uuid not null references public.businesses (id) on delete cascade,
-  primary key (user_id, business_id)
-);
+create table if not exists public.favorites (user_id uuid not null, business_id uuid not null references public.businesses(id) on delete cascade, primary key (user_id, business_id));
 
-create table if not exists public.staff_messages (
-  id uuid primary key default gen_random_uuid(),
-  author_id uuid references public.profiles (id) on delete set null,
-  author_name text not null default 'Staff',
-  body text not null,
-  created_at timestamptz not null default now()
-);
-
-create index if not exists idx_orders_created_at on public.orders (created_at desc);
-create index if not exists idx_deliveries_runr on public.deliveries (runr_id);
-create index if not exists idx_notifications_user on public.notifications (user_id, created_at desc);
-
--- Dev test accounts (password: RunrTest2026!)
-insert into public.profiles (
-  id, email, personal_email, name, role, is_founder, password_hash
-) values
-  (
-    'b1000000-0000-4000-8000-000000000001',
-    'porter@test.portr.com',
-    'porter@test.portr.com',
-    'Portr Tester',
-    'customer',
-    false,
-    crypt('RunrTest2026!', gen_salt('bf'))
-  ),
-  (
-    'b1000000-0000-4000-8000-000000000002',
-    'runr@test.portr.com',
-    'runr@test.portr.com',
-    'RUNR Tester',
-    'runr',
-    false,
-    crypt('RunrTest2026!', gen_salt('bf'))
-  ),
-  (
-    'b1000000-0000-4000-8000-000000000003',
-    'vendr@test.portr.com',
-    'vendr@test.portr.com',
-    'VENDR Tester',
-    'business',
-    false,
-    crypt('RunrTest2026!', gen_salt('bf'))
-  ),
-  (
-    'b1000000-0000-4000-8000-000000000004',
-    'staff@portr.com',
-    'staff@portr.com',
-    'Staff Tester',
-    'staff',
-    false,
-    crypt('RunrTest2026!', gen_salt('bf'))
-  )
-on conflict (id) do update set
-  email = excluded.email,
-  personal_email = excluded.personal_email,
-  name = excluded.name,
-  role = excluded.role,
-  password_hash = excluded.password_hash,
-  updated_at = now();
+create table if not exists public.staff_messages (id uuid primary key default gen_random_uuid(), author_id uuid, author_name text not null default 'Staff', body text not null, created_at timestamptz not null default now());
 
 insert into public.businesses (
   id, owner_id, name, cuisine, category, rating, review_count,
@@ -304,12 +105,6 @@ on conflict (id) do update set
   demand_level = excluded.demand_level,
   updated_at = now();
 
-delete from public.menu_items where business_id in (
-  'c1000000-0000-4000-8000-000000000001',
-  'c1000000-0000-4000-8000-000000000002',
-  'c1000000-0000-4000-8000-000000000003'
-);
-
 insert into public.menu_items (id, business_id, name, description, price, category, popular) values
   ('d1000000-0000-4000-8000-000000000001', 'c1000000-0000-4000-8000-000000000001', 'Margherita Pizza', 'San Marzano tomato, mozzarella, basil', 16.50, 'Pizza', true),
   ('d1000000-0000-4000-8000-000000000002', 'c1000000-0000-4000-8000-000000000001', 'Pepperoni Pizza', 'Cup-and-char pepperoni, mozzarella', 18.00, 'Pizza', true),
@@ -329,7 +124,4 @@ insert into public.coverage_rules (id, business_id, start_time, end_time, max_ru
   ('e1000000-0000-4000-8000-000000000002', 'c1000000-0000-4000-8000-000000000001', '17:00', '22:00', 6),
   ('e1000000-0000-4000-8000-000000000003', 'c1000000-0000-4000-8000-000000000002', '10:00', '15:00', 3),
   ('e1000000-0000-4000-8000-000000000004', 'c1000000-0000-4000-8000-000000000002', '17:00', '21:00', 5),
-  ('e1000000-0000-4000-8000-000000000005', 'c1000000-0000-4000-8000-000000000003', '11:00', '23:00', 5)
-on conflict (id) do nothing;
-
-commit;
+  ('e1000000-0000-4000-8000-000000000005', 'c1000000-0000-4000-8000-000000000003', '11:00', '23:00', 5);
