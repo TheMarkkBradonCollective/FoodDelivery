@@ -4,10 +4,11 @@ import { useState } from "react";
 import { AppFrame } from "@porter/shared/components/layout/AppFrame";
 import { ConfirmDialog } from "@porter/shared/components/ui/ConfirmDialog";
 import { useAppStore } from "@/store";
-import { Building2, LayoutDashboard, LogOut, MessageSquare, Package, Users } from "lucide-react";
+import { Building2, LayoutDashboard, LogOut, MessageSquare, Package, Users, Megaphone } from "lucide-react";
 
 export const staffNav = [
   { href: "/", label: "Status", icon: LayoutDashboard },
+  { href: "/campaigns", label: "Campaigns", icon: Megaphone },
   { href: "/orders", label: "Orders", icon: Package },
   { href: "/coverage", label: "Coverage", icon: Building2 },
   { href: "/users", label: "Users", icon: Users },
