@@ -92,7 +92,7 @@ campaigns.post("/", async (c) => {
   }
   const schedule = (body.operating_schedule ?? { mode: "always", days: {} }) as Schedule;
   const fundingAmount = Number(body.funding_amount ?? 0);
-  const refundableAmount = Number(body.refundable_amount ?? body.funding_amount ?? 0);
+  const refundableAmount = fundingAmount;
   const startDate = new Date(startsAt), endDate = new Date(endsAt), deadlineDate = new Date(deadline);
   if (![startDate,endDate,deadlineDate].every(date=>Number.isFinite(date.getTime()))) {
     return c.json({ error: "Campaign dates must be valid." }, 400);
