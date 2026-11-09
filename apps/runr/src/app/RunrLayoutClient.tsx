@@ -1,10 +1,11 @@
 "use client";
 
 import { AppFrame } from "@porter/shared/components/layout/AppFrame";
-import { Activity, DollarSign, List, Map, User } from "lucide-react";
+import { Activity, DollarSign, List, Map, User, Megaphone } from "lucide-react";
 
 export const runrNav = [
   { href: "/", label: "Map", icon: Map },
+  { href: "/campaigns", label: "Campaigns", icon: Megaphone },
   { href: "/runs", label: "RUNs", icon: List },
   { href: "/earnings", label: "Earnings", icon: DollarSign },
   { href: "/activity", label: "Activity", icon: Activity },
