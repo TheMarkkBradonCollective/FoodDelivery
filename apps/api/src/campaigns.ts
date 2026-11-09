@@ -455,4 +455,46 @@ export async function runCampaignLifecycle(databaseUrl: string) {
   return { processed: changed.length, launched: changed.filter(x=>x.status==="live").length, voided: changed.filter(x=>x.status==="void").length };
 }
 
+
+export async function processPendingCampaignRefunds(databaseUrl: string, stripeSecret?: string) {
+  if(!stripeSecret) return {processed:0,reason:"stripe_not_configured"};
+  const sql=getSql(databaseUrl);
+  const pending=rows<{id:string;campaign_id:string;amount:string;payment_reference:string|null}>(await sql`
+    select l.id,l.campaign_id,l.amount,l.payment_reference
+    from campaign_refund_ledger l
+    join campaigns c on c.id=l.campaign_id
+    where l.status='pending' and c.funding_status='refund_pending'
+      and l.payment_reference like 'pi_%'
+    order by l.created_at asc limit 20
+  `);
+  let processed=0;
+  for(const refund of pending){
+    const claimed=rows(await sql`
+      update campaign_refund_ledger set status='processing'
+      where id=${refund.id}::uuid and status='pending' returning id
+    `);
+    if(!claimed.length) continue;
+    const form=new URLSearchParams({payment_intent:refund.payment_reference!,amount:String(Math.round(Number(refund.amount)*100))});
+    let response:Response;
+    try{
+      response=await fetch("https://api.stripe.com/v1/refunds",{method:"POST",headers:{Authorization:"Bearer "+stripeSecret,"Content-Type":"application/x-www-form-urlencoded","Idempotency-Key":"portr-campaign-refund-"+refund.id},body:form});
+    }catch{
+      await sql`update campaign_refund_ledger set status='pending' where id=${refund.id}::uuid`;
+      continue;
+    }
+    const payload=await response.json() as {id?:string;status?:string};
+    if(!response.ok){
+      await sql`update campaign_refund_ledger set status='failed' where id=${refund.id}::uuid`;
+      await sql`update campaigns set refund_status='failed',funding_status='payment_failed',updated_at=now() where id=${refund.campaign_id}::uuid`;
+      continue;
+    }
+    const completed=payload.status==="succeeded",failed=payload.status==="failed"||payload.status==="canceled";
+    const status=completed?"refunded":failed?"failed":"processing";
+    await sql`update campaign_refund_ledger set status=${status},refund_reference=${payload.id??null},processed_at=case when ${completed||failed} then now() else null end where id=${refund.id}::uuid`;
+    await sql`update campaigns set refund_status=${status},funding_status=${completed?"refunded":failed?"payment_failed":"refund_pending"},refund_reference=${payload.id??null},updated_at=now() where id=${refund.campaign_id}::uuid`;
+    processed++;
+  }
+  return {processed};
+}
+
 export default campaigns;
