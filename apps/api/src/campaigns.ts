@@ -341,20 +341,24 @@ campaigns.post("/stripe/webhook", async (c) => {
   const amountTotal=Number(session.amount_total);
   if(!campaignId || !paymentIntent || !sessionId) return c.json({error:"Checkout session is missing campaign/payment metadata."},400);
   const sql=getSql(c.env.DATABASE_URL);
-  const matched=rows<{id:string}>(await sql`
-    update campaigns set funding_status='paid',payment_reference=${paymentIntent},checkout_session_id=${sessionId},funding_paid_at=now(),refund_status='not_due',updated_at=now()
+  const prior=rows(await sql`select event_id from campaign_stripe_events where event_id=${event.id}`);
+  if(prior.length) return c.json({received:true,duplicate:true});
+  const matched=rows<{id:string;status:string;funding_status:string;refundable_amount:string}>(await sql`
+    update campaigns set
+      funding_status=case when status='void' then 'refund_pending' else 'paid' end,
+      payment_reference=${paymentIntent},checkout_session_id=${sessionId},funding_paid_at=now(),
+      refund_status=case when status='void' then 'pending' else 'not_due' end,updated_at=now()
     where id=${campaignId}::uuid and checkout_session_id=${sessionId}
       and round(funding_amount*100)=${amountTotal}
       and funding_status='checkout_open'
-    returning id
+    returning id,status,funding_status,refundable_amount
   `);
-  if(!matched.length) {
-    const prior=rows(await sql`select id from campaign_stripe_events where event_id=${event.id}`);
-    if(prior.length) return c.json({received:true,duplicate:true});
-    return c.json({error:"Campaign, Checkout session, amount, or funding state did not match."},409);
+  if(!matched.length) return c.json({error:"Campaign, Checkout session, amount, or funding state did not match."},409);
+  if(matched[0].status==="void" && matched[0].funding_status==="refund_pending") {
+    await sql`insert into campaign_refund_ledger(campaign_id,amount,payment_reference,status) values (${campaignId}::uuid,${Number(matched[0].refundable_amount)},${paymentIntent},'pending')`;
   }
   await sql`insert into campaign_stripe_events(event_id,event_type) values (${event.id},${event.type}) on conflict do nothing`;
-  return c.json({received:true,paid:true});
+  return c.json({received:true,paid:true,refund_pending:matched[0].funding_status==="refund_pending"});
 });
 
 campaigns.post("/:id/refund", async (c) => {
