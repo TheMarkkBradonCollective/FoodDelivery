@@ -20,7 +20,7 @@ export default function NewPartnershipCampaignPage() {
       const schedule=form.schedule_mode==="always"
         ? {mode:"always",timezone:form.timezone,days:{}}
         : {mode:"custom",timezone:form.timezone,days:Object.fromEntries(weekdays.map(day=>[day,{enabled:days[day].enabled,intervals:days[day].enabled?[{start:days[day].start,end:days[day].end}]:[]}]))};
-      const result=await apiFetch<{id:string}>("/campaigns",{method:"POST",body:JSON.stringify({...form,member_capacity:Number(form.member_capacity),minimum_members:Number(form.minimum_members),max_active_runrs:Number(form.max_active_runrs),funding_amount:Number(form.funding_amount),refundable_amount:Number(form.refundable_amount),operating_schedule:schedule,status:"draft"})});
+      const result=await apiFetch<{id:string}>("/campaigns",{method:"POST",body:JSON.stringify({...form,starts_at:new Date(form.starts_at).toISOString(),ends_at:new Date(form.ends_at).toISOString(),enrollment_deadline:new Date(form.enrollment_deadline).toISOString(),member_capacity:Number(form.member_capacity),minimum_members:Number(form.minimum_members),max_active_runrs:Number(form.max_active_runrs),funding_amount:Number(form.funding_amount),refundable_amount:Number(form.refundable_amount),operating_schedule:schedule,status:"draft"})});
       setMessage(`Campaign proposal created (${result.id}). Portr will review it before launch.`);
     } catch(err){setMessage(err instanceof Error?err.message:"Unable to submit campaign.");}
     finally{setBusy(false);}
