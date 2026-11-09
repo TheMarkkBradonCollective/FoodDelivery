@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { getSql, rows, type ProfileRow } from "./db";
 import { bearerToken, loadProfile, verifyToken } from "./auth";
-import { isStaff, isCampaignManager, ownsBusiness } from "./roles";
+import { isCampaignManager, ownsBusiness } from "./roles";
 
 type CampaignEnv = { DATABASE_URL: string; JWT_SECRET: string; FILES: R2Bucket; PAGES_URL?: string; STRIPE_SECRET_KEY?: string; STRIPE_WEBHOOK_SECRET?: string };
 type CampaignVars = { profile: ProfileRow; userId: string };
@@ -86,6 +86,42 @@ campaigns.get("/management", async (c) => {
   return c.json({ campaigns: result });
 });
 
+
+campaigns.put("/:id/allocations", async (c) => {
+  const err = await auth(c); if (err) return err;
+  if (!isCampaignManager(c.get("profile"))) return c.json({ error: "Campaign management access required." }, 403);
+  const body = await c.req.json<Record<string, unknown>>();
+  const runnerBudget = Number(body.runner_compensation_budget);
+  const platformBudget = Number(body.platform_fee_budget);
+  if (![runnerBudget, platformBudget].every(Number.isFinite) || runnerBudget < 0 || platformBudget < 0) {
+    return c.json({ error: "Runner and platform allocations must be non-negative amounts." }, 400);
+  }
+  const sql = getSql(c.env.DATABASE_URL);
+  const updated = rows(await sql`
+    with campaign as (
+      select id, funding_amount from campaigns where id=${c.req.param("id")}::uuid for update
+    ), allocation as (
+      insert into campaign_funding_allocations
+        (campaign_id, combined_funding, runner_compensation_budget, platform_fee_budget, available_balance, refund_liability, updated_at)
+      select id, funding_amount, ${runnerBudget}, ${platformBudget},
+        funding_amount - ${runnerBudget} - ${platformBudget}, refundable_amount, now()
+      from campaigns where id=${c.req.param("id")}::uuid
+        and funding_amount >= ${runnerBudget} + ${platformBudget}
+      on conflict (campaign_id) do update set
+        combined_funding=excluded.combined_funding,
+        runner_compensation_budget=excluded.runner_compensation_budget,
+        platform_fee_budget=excluded.platform_fee_budget,
+        available_balance=excluded.available_balance,
+        refund_liability=excluded.refund_liability,
+        updated_at=now()
+      returning *
+    )
+    select * from allocation
+  `);
+  if (!updated.length) return c.json({ error: "Campaign not found, or allocations exceed the combined funded amount." }, 409);
+  return c.json({ ok: true, allocation: updated[0] });
+});
+
 campaigns.put("/:id/pay-policy", async (c) => {
   const err = await auth(c); if (err) return err;
   if (!isCampaignManager(c.get("profile"))) return c.json({ error: "Campaign management access required." }, 403);
@@ -119,7 +155,7 @@ campaigns.get("/", async (c) => {
       exists(select 1 from campaign_members mine where mine.campaign_id=c.id and mine.runr_id=${profile.id}::uuid and mine.status='joined') as is_member,
       exists(select 1 from campaign_presence here where here.campaign_id=c.id and here.runr_id=${profile.id}::uuid and here.went_offline_at is null) as is_online
     from campaigns c
-    where c.status not in ('draft','cancelled') or ${isStaff(profile)} or c.created_by=${profile.id}::uuid or exists(select 1 from businesses b where b.id=c.company_business_id and b.owner_id=${profile.id}::uuid)
+    where c.status not in ('draft','cancelled') or ${isCampaignManager(profile)} or c.created_by=${profile.id}::uuid or exists(select 1 from businesses b where b.id=c.company_business_id and b.owner_id=${profile.id}::uuid)
     order by c.starts_at asc
   `);
   return c.json({ campaigns: result });
@@ -131,7 +167,7 @@ campaigns.post("/", async (c) => {
   const body = await c.req.json<Record<string, unknown>>();
   const companyId = String(body.company_business_id ?? "");
   const sql = getSql(c.env.DATABASE_URL);
-  if (!isStaff(profile) && (!companyId || !(await ownsBusiness(sql, profile.id, companyId)))) {
+  if (!isCampaignManager(profile) && (!companyId || !(await ownsBusiness(sql, profile.id, companyId)))) {
     return c.json({ error: "Only Portr staff or the owning company can create a campaign." }, 403);
   }
   const name = String(body.name ?? "").trim();
@@ -190,7 +226,7 @@ campaigns.post("/", async (c) => {
 campaigns.post("/:id/join", async (c) => {
   const err = await auth(c); if (err) return err;
   const profile = c.get("profile");
-  if (profile.role !== "runr" && !isStaff(profile)) return c.json({ error: "Runner account required." }, 403);
+  if (profile.role !== "runr" && !isCampaignManager(profile)) return c.json({ error: "Runner account required." }, 403);
   const id = c.req.param("id");
   const sql = getSql(c.env.DATABASE_URL);
   const existing = rows<{ status: string }>(await sql`
@@ -227,7 +263,7 @@ campaigns.post("/:id/join", async (c) => {
 campaigns.post("/:id/online", async (c) => {
   const err = await auth(c); if (err) return err;
   const profile = c.get("profile");
-  if (profile.role !== "runr" && !isStaff(profile)) return c.json({ error: "Runner account required." }, 403);
+  if (profile.role !== "runr" && !isCampaignManager(profile)) return c.json({ error: "Runner account required." }, 403);
   const id = c.req.param("id");
   const sql = getSql(c.env.DATABASE_URL);
   const membership = rows(await sql`
@@ -278,7 +314,7 @@ campaigns.post("/:id/offline", async (c) => {
 
 campaigns.post("/:id/void", async (c) => {
   const err = await auth(c); if (err) return err;
-  if (!isStaff(c.get("profile"))) return c.json({ error: "Portr staff approval required." }, 403);
+  if (!isCampaignManager(c.get("profile"))) return c.json({ error: "Portr staff approval required." }, 403);
   const id=c.req.param("id"),sql=getSql(c.env.DATABASE_URL);
   const voided=rows<{id:string;refundable_amount:string;payment_reference:string|null;funding_status:string}>(await sql`
     update campaigns c
@@ -303,7 +339,7 @@ campaigns.post("/:id/void", async (c) => {
 campaigns.post("/:id/open-enrollment", async (c) => {
   const err = await auth(c); if (err) return err;
   const profile = c.get("profile");
-  if (!isStaff(profile)) return c.json({ error: "Portr staff approval required." }, 403);
+  if (!isCampaignManager(profile)) return c.json({ error: "Portr staff approval required." }, 403);
   const id=c.req.param("id"), sql=getSql(c.env.DATABASE_URL);
   const opened=rows(await sql`
     update campaigns set status='recruiting',updated_at=now()
@@ -317,7 +353,7 @@ campaigns.post("/:id/open-enrollment", async (c) => {
 // Staff launch control: enrollment must have closed and the campaign start time must have arrived.
 campaigns.post("/:id/launch", async (c) => {
   const err = await auth(c); if (err) return err;
-  if (!isStaff(c.get("profile"))) return c.json({ error: "Portr staff approval required." }, 403);
+  if (!isCampaignManager(c.get("profile"))) return c.json({ error: "Portr staff approval required." }, 403);
   await runCampaignLifecycle(c.env.DATABASE_URL);
   const id=c.req.param("id"),sql=getSql(c.env.DATABASE_URL);
   const current=rows<{status:string;joined_members:number}>(await sql`
@@ -358,7 +394,7 @@ campaigns.post("/:id/fund", async (c) => {
   `);
   if(!campaign.length) return c.json({error:"Campaign not found."},404);
   const item=campaign[0];
-  if(!isStaff(profile) && (!item.company_business_id || !(await ownsBusiness(sql,profile.id,item.company_business_id)))) return c.json({error:"Only the campaign's business owner or Portr staff can fund it."},403);
+  if(!isCampaignManager(profile) && (!item.company_business_id || !(await ownsBusiness(sql,profile.id,item.company_business_id)))) return c.json({error:"Only the campaign's business owner or Portr staff can fund it."},403);
   if(!["draft","recruiting","upcoming"].includes(item.status) || Number(item.funding_amount)<=0) return c.json({error:"Only an unfunded campaign with a positive proposed funding amount can be funded."},409);
   if(item.funding_status==="paid") return c.json({error:"Campaign funding has already been paid."},409);
   if(item.funding_status==="checkout_open") return c.json({error:"A Checkout session has already been created for this campaign. Complete or expire that session before creating another."},409);
@@ -417,7 +453,7 @@ campaigns.post("/stripe/webhook", async (c) => {
 
 campaigns.post("/:id/refund", async (c) => {
   const err = await auth(c); if (err) return err;
-  if (!isStaff(c.get("profile"))) return c.json({error:"Portr staff approval required."},403);
+  if (!isCampaignManager(c.get("profile"))) return c.json({error:"Portr staff approval required."},403);
   if (!c.env.STRIPE_SECRET_KEY) return c.json({error:"Stripe refund processing is not configured. Add STRIPE_SECRET_KEY to the Worker environment."},503);
   const id=c.req.param("id"), sql=getSql(c.env.DATABASE_URL);
   const pending=rows<{id:string;amount:string;payment_reference:string|null}>(await sql`
@@ -460,7 +496,7 @@ campaigns.post("/:id/refund", async (c) => {
 
 campaigns.post("/:id/refund/reconcile", async (c) => {
   const err = await auth(c); if (err) return err;
-  if (!isStaff(c.get("profile"))) return c.json({error:"Portr staff approval required."},403);
+  if (!isCampaignManager(c.get("profile"))) return c.json({error:"Portr staff approval required."},403);
   if (!c.env.STRIPE_SECRET_KEY) return c.json({error:"Stripe refund processing is not configured."},503);
   const id=c.req.param("id"),sql=getSql(c.env.DATABASE_URL);
   const records=rows<{id:string;refund_reference:string|null}>(await sql`
