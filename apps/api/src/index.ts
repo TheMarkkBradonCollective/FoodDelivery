@@ -29,7 +29,6 @@ type Variables = {
 };
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
-app.route("/", campaignRoutes);
 
 function corsOrigins(pagesUrl?: string) {
   const origins = ["capacitor://localhost", "https://localhost", "http://localhost:3000"];
@@ -52,6 +51,8 @@ app.use("*", async (c, next) => {
   });
   return middleware(c, next);
 });
+
+app.route("/", campaignRoutes);
 
 app.get("/health", (c) => c.json({ ok: true }));
 
