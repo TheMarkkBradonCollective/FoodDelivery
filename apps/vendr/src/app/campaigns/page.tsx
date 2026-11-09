@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback,useEffect,useState } from "react";
-import Link from "next/link";
 import { apiFetch } from "@porter/shared/lib/api/client";
 
 type Campaign={id:string;name:string;description:string;city:string;status:string;starts_at:string;ends_at:string;enrollment_deadline:string;member_capacity:number;joined_members:number;minimum_members:number;max_active_runrs:number;active_runrs_count:number;funding_amount:string;refund_status:string};
@@ -11,7 +10,7 @@ export default function VendorCampaignsPage(){
  useEffect(()=>{void refresh();},[refresh]);
  return <main className="space-y-5 px-5 pb-10 pt-5">
   <header><p className="text-xs font-bold uppercase tracking-widest text-purple">Portr Vendor</p><h1 className="text-2xl font-extrabold">Brand campaigns</h1><p className="mt-1 text-sm text-[var(--muted)]">View your campaign proposals, Runner enrollment and live coverage capacity.</p></header>
-  <Link href="/partnerships" className="inline-flex rounded-full bg-purple px-4 py-2.5 text-sm font-bold text-white">Propose a campaign</Link>
+  <a href="https://portr.pages.dev/partnerships" className="inline-flex rounded-full bg-purple px-4 py-2.5 text-sm font-bold text-white">Propose a campaign</a>
   {error&&<p role="alert" className="rounded-xl bg-red-500/10 p-3 text-sm text-red-500">{error}</p>}
   {items.length===0&&!error&&<p className="rounded-2xl border border-[var(--border)] p-5 text-sm text-[var(--muted)]">No campaigns are associated with this account yet.</p>}
   <div className="space-y-3">{items.map(c=><article key={c.id} className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4">
