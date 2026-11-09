@@ -3,7 +3,7 @@ import { getSql, rows, type ProfileRow } from "./db";
 import { bearerToken, loadProfile, verifyToken } from "./auth";
 import { isStaff, ownsBusiness } from "./roles";
 
-type CampaignEnv = { DATABASE_URL: string; JWT_SECRET: string };
+type CampaignEnv = { DATABASE_URL: string; JWT_SECRET: string; FILES: R2Bucket; PAGES_URL?: string };
 type CampaignVars = { profile: ProfileRow; userId: string };
 const campaigns = new Hono<{ Bindings: CampaignEnv; Variables: CampaignVars }>();
 
