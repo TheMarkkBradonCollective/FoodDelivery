@@ -9,7 +9,7 @@ type Day = { enabled: boolean; start: string; end: string };
 const initialDays: Record<string,Day> = Object.fromEntries(weekdays.map(day=>[day,{enabled:day!=="sunday",start:"09:00",end:"17:00"}]));
 
 export default function NewPartnershipCampaignPage() {
-  const [form,setForm]=useState({company_business_id:"",name:"",description:"",campaign_type:"brand",city:"",service_area:"",starts_at:"",ends_at:"",enrollment_deadline:"",member_capacity:"50",minimum_members:"20",max_active_runrs:"12",funding_amount:"0",refundable_amount:"0",schedule_mode:"always",timezone:"America/Los_Angeles"});
+  const [form,setForm]=useState({company_business_id:"",name:"",description:"",campaign_type:"brand",city:"",service_area:"",starts_at:"",ends_at:"",enrollment_deadline:"",member_capacity:"50",minimum_members:"20",max_active_runrs:"12",funding_amount:"0",schedule_mode:"always",timezone:"America/Los_Angeles"});
   const [days,setDays]=useState<Record<string,Day>>(initialDays);
   const [message,setMessage]=useState(""); const [busy,setBusy]=useState(false);
   function change(key:string,value:string){setForm(old=>({...old,[key]:value}));}
@@ -20,7 +20,7 @@ export default function NewPartnershipCampaignPage() {
       const schedule=form.schedule_mode==="always"
         ? {mode:"always",timezone:form.timezone,days:{}}
         : {mode:"custom",timezone:form.timezone,days:Object.fromEntries(weekdays.map(day=>[day,{enabled:days[day].enabled,intervals:days[day].enabled?[{start:days[day].start,end:days[day].end}]:[]}]))};
-      const result=await apiFetch<{id:string}>("/campaigns",{method:"POST",body:JSON.stringify({...form,starts_at:new Date(form.starts_at).toISOString(),ends_at:new Date(form.ends_at).toISOString(),enrollment_deadline:new Date(form.enrollment_deadline).toISOString(),member_capacity:Number(form.member_capacity),minimum_members:Number(form.minimum_members),max_active_runrs:Number(form.max_active_runrs),funding_amount:Number(form.funding_amount),refundable_amount:Number(form.refundable_amount),operating_schedule:schedule,status:"draft"})});
+      const result=await apiFetch<{id:string}>("/campaigns",{method:"POST",body:JSON.stringify({...form,starts_at:new Date(form.starts_at).toISOString(),ends_at:new Date(form.ends_at).toISOString(),enrollment_deadline:new Date(form.enrollment_deadline).toISOString(),member_capacity:Number(form.member_capacity),minimum_members:Number(form.minimum_members),max_active_runrs:Number(form.max_active_runrs),funding_amount:Number(form.funding_amount),refundable_amount:Number(form.funding_amount),operating_schedule:schedule,status:"draft"})});
       setMessage(`Campaign proposal created (${result.id}). Portr will review it before launch.`);
     } catch(err){setMessage(err instanceof Error?err.message:"Unable to submit campaign.");}
     finally{setBusy(false);}
@@ -53,8 +53,8 @@ export default function NewPartnershipCampaignPage() {
         </div>)}
       </div>}
       <h2 className="font-bold">Proposed funding</h2>
-      <div className="grid gap-4 md:grid-cols-2">{field("funding_amount","Campaign funding amount (USD)","number")}{field("refundable_amount","Refundable amount (USD)","number")}</div>
-      <p className="text-xs text-[var(--muted)]">Funding figures are proposal details only. Payment collection and holding are not activated by this proposal. Refund processing requires a real Stripe PaymentIntent reference and configured Stripe credentials.</p>
+      {field("funding_amount","Campaign funding amount (USD)","number")}<p className="text-xs text-[var(--muted)]">If the campaign is voided for insufficient Runner enrollment, 100% of collected campaign funding is returned to the client.</p>
+      <p className="text-xs text-[var(--muted)]">Funding is collected through Stripe Checkout. If the minimum enrollment is not reached by launch, the full collected campaign funding is automatically refunded to the client.</p>
       <button disabled={busy} className="w-full rounded-full bg-[#7048F8] px-6 py-3.5 text-sm font-bold text-white disabled:opacity-50">{busy?"Submitting…":"Submit campaign proposal"}</button>
       {message&&<p role="status" className="rounded-xl bg-[var(--surface)] p-3 text-sm">{message}</p>}
     </form>
