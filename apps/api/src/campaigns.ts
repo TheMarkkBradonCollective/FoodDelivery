@@ -392,7 +392,7 @@ campaigns.post("/:id/refund", async (c) => {
     where id=${refund.id}::uuid
   `;
   await sql`
-    update campaigns set refund_status=${completed?"refunded":failed?"failed":"processing"},refund_reference=${payload.id ?? null},updated_at=now()
+    update campaigns set refund_status=${completed?"refunded":failed?"failed":"processing"},funding_status=${completed?"refunded":failed?"payment_failed":"refund_pending"},refund_reference=${payload.id ?? null},updated_at=now()
     where id=${id}::uuid
   `;
   return c.json({ok:true,status:payload.status,refund_reference:payload.id});
@@ -417,7 +417,7 @@ campaigns.post("/:id/refund/reconcile", async (c) => {
   if(!response.ok) return c.json({error:payload.error?.message || "Unable to retrieve Stripe refund status."},502);
   const status=payload.status==="succeeded"?"refunded":payload.status==="failed"||payload.status==="canceled"?"failed":"processing";
   await sql`update campaign_refund_ledger set status=${status},processed_at=case when ${status!=="processing"} then now() else null end where id=${record.id}::uuid`;
-  await sql`update campaigns set refund_status=${status},updated_at=now() where id=${id}::uuid`;
+  await sql`update campaigns set refund_status=${status},funding_status=${status==="refunded"?"refunded":status==="failed"?"payment_failed":"refund_pending"},updated_at=now() where id=${id}::uuid`;
   return c.json({ok:true,status:payload.status});
 });
 
@@ -434,9 +434,10 @@ export async function runCampaignLifecycle(databaseUrl: string) {
     ), updated as (
       update campaigns c
       set status=case when d.joined_members>=d.minimum_members then 'live' else 'void' end,
-          refund_status=case when d.joined_members<d.minimum_members and c.refundable_amount>0 then 'pending'
+          refund_status=case when d.joined_members<d.minimum_members and c.funding_status='paid' and c.refundable_amount>0 then 'pending'
                              when d.joined_members<d.minimum_members then 'not_required'
                              else c.refund_status end,
+          funding_status=case when d.joined_members<d.minimum_members and c.funding_status='paid' and c.refundable_amount>0 then 'refund_pending' else c.funding_status end,
           updated_at=now()
       from due d where c.id=d.id
       returning c.id,c.status,c.refundable_amount,c.payment_reference,c.funding_status
