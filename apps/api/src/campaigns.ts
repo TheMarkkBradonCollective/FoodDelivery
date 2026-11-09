@@ -107,6 +107,33 @@ campaigns.get("/management", async (c) => {
 });
 
 
+
+campaigns.get("/:id/ledger", async (c) => {
+  const err = await auth(c); if (err) return err;
+  if (!isCampaignManager(c.get("profile"))) return c.json({ error: "Campaign management access required." }, 403);
+  const id = c.req.param("id"), sql = getSql(c.env.DATABASE_URL);
+  const campaign = rows(await sql`select id from campaigns where id=${id}::uuid`);
+  if (!campaign.length) return c.json({ error: "Campaign not found." }, 404);
+  const deliveries = rows(await sql`
+    select l.id,l.delivery_id,l.runr_id,p.name as runner_name,l.distance_miles,l.base_pay,
+      l.mileage_pay,l.tip_amount,l.platform_fee_amount,l.runner_total,l.status,
+      l.created_at,l.earned_at,l.paid_at,l.policy_snapshot,d.status as delivery_status
+    from campaign_delivery_ledger l
+    left join profiles p on p.id=l.runr_id
+    left join deliveries d on d.id=l.delivery_id
+    where l.campaign_id=${id}::uuid
+    order by l.created_at desc
+  `);
+  const entries = rows(await sql`
+    select l.id,l.delivery_id,l.runr_id,p.name as runner_name,l.entry_type,l.amount,l.details,l.created_at
+    from campaign_financial_ledger l
+    left join profiles p on p.id=l.runr_id
+    where l.campaign_id=${id}::uuid
+    order by l.created_at desc
+  `);
+  return c.json({ deliveries, entries });
+});
+
 campaigns.put("/:id/allocations", async (c) => {
   const err = await auth(c); if (err) return err;
   if (!isCampaignManager(c.get("profile"))) return c.json({ error: "Campaign management access required." }, 403);
