@@ -13,13 +13,14 @@ import {
 } from "./auth";
 import { buildMarketplaceSnapshot, hasUpdatesSince } from "./snapshot";
 import { canReadOrder, isStaff, ownsBusiness } from "./roles";
-import campaignRoutes from "./campaigns";
+import campaignRoutes, { runCampaignLifecycle } from "./campaigns";
 
 export type Env = {
   DATABASE_URL: string;
   JWT_SECRET: string;
   FILES: R2Bucket;
   PAGES_URL?: string;
+  STRIPE_SECRET_KEY?: string;
 };
 
 type Variables = {
@@ -575,4 +576,9 @@ app.get("/files/*", async (c) => {
   return new Response(object.body, { headers });
 });
 
-export default app;
+export default {
+  fetch: (request: Request, env: Env, ctx: ExecutionContext) => app.fetch(request, env, ctx),
+  async scheduled(_controller: ScheduledController, env: Env, _ctx: ExecutionContext) {
+    await runCampaignLifecycle(env.DATABASE_URL);
+  },
+};
