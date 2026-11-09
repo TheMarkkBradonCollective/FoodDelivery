@@ -8,6 +8,7 @@ type Campaign = {
   starts_at: string; ends_at: string; enrollment_deadline: string; status: string;
   member_capacity: number; joined_members: number; member_slots_available: number;
   max_active_runrs: number; active_runrs_count: number; is_member: boolean; is_online: boolean;
+  runner_minimum_pay: number | string; runner_maximum_pay: number | string;
   operating_schedule: { mode?: string; days?: Record<string, unknown> };
 };
 
@@ -43,7 +44,9 @@ export default function RunnerCampaignsPage() {
           <div><p className="text-xs text-[var(--muted)]">Membership</p><strong>{c.joined_members}/{c.member_capacity} joined</strong></div>
           <div><p className="text-xs text-[var(--muted)]">Working now</p><strong>{c.active_runrs_count}/{c.max_active_runrs}</strong></div>
           <div><p className="text-xs text-[var(--muted)]">Open live capacity</p><strong>{Math.max(0,available)} positions</strong></div>
+          <div><p className="text-xs text-[var(--muted)]">Mileage-based Runner pay</p><strong>${Number(c.runner_minimum_pay).toFixed(2)}–${Number(c.runner_maximum_pay).toFixed(2)} per delivery</strong></div>
         </div>
+        <p className="mt-3 text-xs text-[var(--muted)]">Runner compensation is mileage-based; the exact offer is calculated from the delivery distance. 100% of customer tips go to the Runner and are not reduced by Portr.</p>
         <p className="mt-3 text-xs text-[var(--muted)]">Operating schedule: {c.operating_schedule?.mode === "always" ? "24/7" : "Campaign-specific daily hours"}. Membership does not reserve an active working position. You can join multiple campaigns.</p>
         <div className="mt-4 flex flex-wrap gap-2">
           {!c.is_member && <button disabled={busy===c.id || live || c.member_slots_available<=0} onClick={()=>void act(c.id,"join")} className="rounded-full bg-violet-600 px-4 py-2.5 text-sm font-bold text-white disabled:opacity-40">{busy===c.id?"Please wait":"Join campaign"}</button>}
