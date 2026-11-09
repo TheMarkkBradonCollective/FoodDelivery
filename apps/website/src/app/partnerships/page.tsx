@@ -17,7 +17,7 @@ export default function PartnershipsPage() {
         <li>• Minimum enrollment and under-enrollment void review</li><li>• Funding and refund reconciliation visibility</li>
       </ul>
       <p className="mt-6 text-sm text-white/70">Companies can work with Portr to scope a campaign, confirm participating locations, and agree on funding and operating terms before launch.</p>
-      <Link href="/login" className="mt-7 inline-flex rounded-full bg-white px-6 py-3 text-sm font-bold text-[#21105F]">Sign in to your business account</Link>
+      <div className="mt-7 flex flex-wrap gap-3"><Link href="/partnerships/new" className="inline-flex rounded-full bg-white px-6 py-3 text-sm font-bold text-[#21105F]">Propose a campaign</Link><Link href="/login" className="inline-flex rounded-full border border-white/30 px-6 py-3 text-sm font-bold text-white">Sign in</Link></div>
     </section>
   </main>;
 }
