@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { getSql, rows, type ProfileRow } from "./db";
 import { bearerToken, loadProfile, verifyToken } from "./auth";
-import { isStaff, ownsBusiness } from "./roles";
+import { isStaff, isCampaignManager, ownsBusiness } from "./roles";
 
 type CampaignEnv = { DATABASE_URL: string; JWT_SECRET: string; FILES: R2Bucket; PAGES_URL?: string; STRIPE_SECRET_KEY?: string; STRIPE_WEBHOOK_SECRET?: string };
 type CampaignVars = { profile: ProfileRow; userId: string };
@@ -52,6 +52,60 @@ async function auth(c: import("hono").Context<{ Bindings: CampaignEnv; Variables
   c.set("userId", profile.id);
   return null;
 }
+
+
+campaigns.get("/management", async (c) => {
+  const err = await auth(c); if (err) return err;
+  if (!isCampaignManager(c.get("profile"))) return c.json({ error: "Campaign management access required." }, 403);
+  const sql = getSql(c.env.DATABASE_URL);
+  const result = rows(await sql`
+    select c.*,
+      (select count(*)::int from campaign_members m where m.campaign_id=c.id and m.status='joined') as joined_members,
+      (select count(*)::int from campaign_presence p where p.campaign_id=c.id and p.went_offline_at is null) as active_runrs_count,
+      coalesce(a.combined_funding, c.funding_amount, 0) as combined_funding,
+      coalesce(a.runner_compensation_budget, 0) as runner_compensation_budget,
+      coalesce(a.platform_fee_budget, 0) as platform_fee_budget,
+      coalesce(a.available_balance, c.funding_amount, 0) as available_balance,
+      coalesce(a.refund_liability, c.refundable_amount, 0) as refund_liability,
+      coalesce(f.runner_payout_total, 0) as runner_payout_total,
+      coalesce(f.platform_fee_total, 0) as platform_fee_total,
+      coalesce(f.tip_pass_through_total, 0) as tip_pass_through_total,
+      coalesce(f.refund_total, 0) as refund_total
+    from campaigns c
+    left join campaign_funding_allocations a on a.campaign_id=c.id
+    left join lateral (
+      select
+        sum(case when entry_type='runner_compensation' then amount else 0 end) as runner_payout_total,
+        sum(case when entry_type='platform_fee' then amount else 0 end) as platform_fee_total,
+        sum(case when entry_type='tip_pass_through' then amount else 0 end) as tip_pass_through_total,
+        sum(case when entry_type='refund' then amount else 0 end) as refund_total
+      from campaign_financial_ledger l where l.campaign_id=c.id
+    ) f on true
+    order by c.starts_at asc
+  `);
+  return c.json({ campaigns: result });
+});
+
+campaigns.put("/:id/pay-policy", async (c) => {
+  const err = await auth(c); if (err) return err;
+  if (!isCampaignManager(c.get("profile"))) return c.json({ error: "Campaign management access required." }, 403);
+  const body = await c.req.json<Record<string, unknown>>();
+  const basePay = Number(body.base_pay), perMilePay = Number(body.per_mile_pay);
+  const minimumPay = Number(body.minimum_pay), maximumPay = Number(body.maximum_pay);
+  if (![basePay, perMilePay, minimumPay, maximumPay].every(Number.isFinite) ||
+      basePay < 0 || perMilePay < 0 || minimumPay < 0 || maximumPay < minimumPay) {
+    return c.json({ error: "Provide valid non-negative base, per-mile, minimum, and maximum payout values." }, 400);
+  }
+  const sql = getSql(c.env.DATABASE_URL);
+  const updated = rows(await sql`
+    update campaigns set runner_base_pay=${basePay}, runner_per_mile_pay=${perMilePay},
+      runner_minimum_pay=${minimumPay}, runner_maximum_pay=${maximumPay}, updated_at=now()
+    where id=${c.req.param("id")}::uuid
+    returning id, runner_base_pay, runner_per_mile_pay, runner_minimum_pay, runner_maximum_pay
+  `);
+  if (!updated.length) return c.json({ error: "Campaign not found." }, 404);
+  return c.json({ ok: true, policy: updated[0] });
+});
 
 campaigns.get("/", async (c) => {
   const err = await auth(c); if (err) return err;
