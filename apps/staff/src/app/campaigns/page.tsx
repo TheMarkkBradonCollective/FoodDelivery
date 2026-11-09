@@ -4,11 +4,16 @@ import { useCallback, useEffect, useState } from "react";
 import { apiFetch } from "@porter/shared/lib/api/client";
 
 type Campaign = {id:string;name:string;city:string;status:string;starts_at:string;ends_at:string;enrollment_deadline:string;member_capacity:number;minimum_members:number;joined_members:number;max_active_runrs:number;active_runrs_count:number;funding_amount:string;refundable_amount:string;refund_status:string;combined_funding:string;runner_compensation_budget:string;platform_fee_budget:string;available_balance:string;refund_liability:string;runner_payout_total:string;platform_fee_total:string;tip_pass_through_total:string;refund_total:string;runner_base_pay:string;runner_per_mile_pay:string;runner_minimum_pay:string;runner_maximum_pay:string};
+type CampaignLedger = {
+  deliveries: Array<{delivery_id:string;runner_name:string|null;distance_miles:string|number;base_pay:string|number;mileage_pay:string|number;tip_amount:string|number;runner_total:string|number;status:string;delivery_status:string|null;created_at:string}>;
+  entries: Array<{entry_type:string;amount:string|number;runner_name:string|null;created_at:string;delivery_id:string|null}>;
+};
+
 export default function CampaignCommandPage() {
   const [items,setItems]=useState<Campaign[]>([]); const [error,setError]=useState(""); const [busy,setBusy]=useState<string|null>(null);
   const [policies,setPolicies]=useState<Record<string,{base:string;perMile:string;minimum:string;maximum:string}>>({});
   const [allocations,setAllocations]=useState<Record<string,{runner:string;platform:string}>>({});
-  const [ledger,setLedger]=useState<Record<string,{deliveries:Array<{delivery_id:string;runner_name:string|null;distance_miles:string|number;base_pay:string|number;mileage_pay:string|number;tip_amount:string|number;runner_total:string|number;status:string;delivery_status:string|null;created_at:string}>;entries:Array<{entry_type:string;amount:string|number;runner_name:string|null;created_at:string;delivery_id:string|null}>}>>({});
+  const [ledger,setLedger]=useState<Record<string,CampaignLedger>>({});
   const [ledgerOpen,setLedgerOpen]=useState<string|null>(null);
   const refresh=useCallback(async()=>{try{const r=await apiFetch<{campaigns:Campaign[]}>("/campaigns/management");setItems(r.campaigns);
       setPolicies(current=>{const next={...current};for(const c of r.campaigns)next[c.id]??={base:String(c.runner_base_pay??3),perMile:String(c.runner_per_mile_pay??1.5),minimum:String(c.runner_minimum_pay??3),maximum:String(c.runner_maximum_pay??7.5)};return next;});
@@ -22,7 +27,7 @@ export default function CampaignCommandPage() {
   async function reconcileRefund(id:string){setBusy(id);try{await apiFetch(`/campaigns/${id}/refund/reconcile`,{method:"POST",body:JSON.stringify({})});await refresh();}catch(e){setError(e instanceof Error?e.message:"Unable to reconcile Stripe refund.");}finally{setBusy(null);}}
   async function savePolicy(id:string){const p=policies[id];if(!p)return;setBusy(id);try{await apiFetch(`/campaigns/${id}/pay-policy`,{method:"PUT",body:JSON.stringify({base_pay:Number(p.base),per_mile_pay:Number(p.perMile),minimum_pay:Number(p.minimum),maximum_pay:Number(p.maximum)})});await refresh();}catch(e){setError(e instanceof Error?e.message:"Unable to save Runner pay policy.");}finally{setBusy(null);}}
   async function saveAllocations(id:string){const a=allocations[id];if(!a)return;setBusy(id);try{await apiFetch(`/campaigns/${id}/allocations`,{method:"PUT",body:JSON.stringify({runner_compensation_budget:Number(a.runner),platform_fee_budget:Number(a.platform)})});await refresh();}catch(e){setError(e instanceof Error?e.message:"Unable to save campaign allocations.");}finally{setBusy(null);}}
-  async function toggleLedger(id:string){if(ledgerOpen===id){setLedgerOpen(null);return;}setLedgerOpen(id);if(ledger[id])return;setBusy(id);try{const data=await apiFetch<{deliveries:typeof ledger[string]["deliveries"];entries:typeof ledger[string]["entries"]}>(`/campaigns/${id}/ledger`);setLedger(v=>({...v,[id]:data}));}catch(e){setError(e instanceof Error?e.message:"Unable to load campaign payout ledger.");}finally{setBusy(null);}}
+  async function toggleLedger(id:string){if(ledgerOpen===id){setLedgerOpen(null);return;}setLedgerOpen(id);if(ledger[id])return;setBusy(id);try{const data=await apiFetch<CampaignLedger>(`/campaigns/${id}/ledger`);setLedger(v=>({...v,[id]:data}));}catch(e){setError(e instanceof Error?e.message:"Unable to load campaign payout ledger.");}finally{setBusy(null);}}
   return <main className="space-y-5 px-4 pb-10 pt-5 lg:p-8">
     <header><p className="text-xs font-bold uppercase tracking-widest text-porter-accent-bright">Portr Command</p><h1 className="text-2xl font-extrabold">Campaign control</h1><p className="mt-1 text-sm text-[var(--muted)]">Partnership campaigns, Runner enrollment, live capacity and funding status.</p></header>
     {error&&<p role="alert" className="rounded-xl bg-red-500/10 p-3 text-sm text-red-500">{error}</p>}
