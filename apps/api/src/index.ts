@@ -438,12 +438,12 @@ app.put("/deliveries/:id", async (c) => {
       await sql`
         insert into campaign_financial_ledger(campaign_id,delivery_id,runr_id,entry_type,amount,details)
         values (${entry.campaign_id}::uuid,${id}::uuid,${entry.runr_id}::uuid,'runner_compensation',${compensation},'{"source":"completed_delivery"}'::jsonb)
-        on conflict do nothing
+        on conflict (delivery_id,entry_type) where delivery_id is not null do nothing
       `;
       if (tip > 0) await sql`
         insert into campaign_financial_ledger(campaign_id,delivery_id,runr_id,entry_type,amount,details)
         values (${entry.campaign_id}::uuid,${id}::uuid,${entry.runr_id}::uuid,'tip_pass_through',${tip},'{"source":"customer_tip","pass_through_percent":100}'::jsonb)
-        on conflict do nothing
+        on conflict (delivery_id,entry_type) where delivery_id is not null do nothing
       `;
     }
   }
