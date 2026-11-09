@@ -319,7 +319,7 @@ campaigns.post("/:id/fund", async (c) => {
   form.set("line_items[0][price_data][product_data][name]","Portr campaign funding: "+item.name);
   form.set("metadata[campaign_id]",id);
   form.set("payment_intent_data[metadata][campaign_id]",id);
-  const response=await fetch("https://api.stripe.com/v1/checkout/sessions",{method:"POST",headers:{Authorization:"Bearer "+c.env.STRIPE_SECRET_KEY,"Content-Type":"application/x-www-form-urlencoded"},body:form});
+  const response=await fetch("https://api.stripe.com/v1/checkout/sessions",{method:"POST",headers:{Authorization:"Bearer "+c.env.STRIPE_SECRET_KEY,"Content-Type":"application/x-www-form-urlencoded","Idempotency-Key":"portr-campaign-checkout-"+id},body:form});
   const payload=await response.json() as {id?:string;url?:string;error?:{message?:string}};
   if(!response.ok || !payload.id || !payload.url) return c.json({error:payload.error?.message || "Unable to create Stripe Checkout session."},502);
   await sql`update campaigns set checkout_session_id=${payload.id},funding_status='checkout_open',updated_at=now() where id=${id}::uuid and funding_status='unfunded'`;
