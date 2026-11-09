@@ -330,4 +330,38 @@ campaigns.post("/:id/refund", async (c) => {
   return c.json({ok:true,status:payload.status,refund_reference:payload.id});
 });
 
+
+export async function runCampaignLifecycle(databaseUrl: string) {
+  const sql = getSql(databaseUrl);
+  const changed = rows<{id:string;status:string;refundable_amount:string;payment_reference:string|null}>(await sql`
+    with due as (
+      select c.id,c.minimum_members,c.refundable_amount,c.payment_reference,
+        (select count(*)::int from campaign_members m where m.campaign_id=c.id and m.status='joined') as joined_members
+      from campaigns c
+      where c.status in ('recruiting','upcoming')
+        and c.enrollment_deadline <= now() and c.starts_at <= now()
+      for update skip locked
+    ), updated as (
+      update campaigns c
+      set status=case when d.joined_members>=d.minimum_members then 'live' else 'void' end,
+          refund_status=case when d.joined_members<d.minimum_members and c.refundable_amount>0 then 'pending'
+                             when d.joined_members<d.minimum_members then 'not_required'
+                             else c.refund_status end,
+          updated_at=now()
+      from due d where c.id=d.id
+      returning c.id,c.status,c.refundable_amount,c.payment_reference
+    )
+    select * from updated
+  `);
+  for (const campaign of changed) {
+    if (campaign.status === "void" && Number(campaign.refundable_amount) > 0) {
+      await sql`
+        insert into campaign_refund_ledger(campaign_id,amount,payment_reference,status)
+        values (${campaign.id}::uuid,${Number(campaign.refundable_amount)},${campaign.payment_reference},'pending')
+      `;
+    }
+  }
+  return { processed: changed.length, launched: changed.filter(x=>x.status==="live").length, voided: changed.filter(x=>x.status==="void").length };
+}
+
 export default campaigns;
