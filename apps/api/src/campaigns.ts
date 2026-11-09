@@ -3,7 +3,7 @@ import { getSql, rows, type ProfileRow } from "./db";
 import { bearerToken, loadProfile, verifyToken } from "./auth";
 import { isStaff, ownsBusiness } from "./roles";
 
-type CampaignEnv = { DATABASE_URL: string; JWT_SECRET: string; FILES: R2Bucket; PAGES_URL?: string; STRIPE_SECRET_KEY?: string };
+type CampaignEnv = { DATABASE_URL: string; JWT_SECRET: string; FILES: R2Bucket; PAGES_URL?: string; STRIPE_SECRET_KEY?: string; STRIPE_WEBHOOK_SECRET?: string };
 type CampaignVars = { profile: ProfileRow; userId: string };
 const campaigns = new Hono<{ Bindings: CampaignEnv; Variables: CampaignVars }>();
 
@@ -275,6 +275,87 @@ campaigns.post("/:id/launch", async (c) => {
 });
 
 // Stripe refunds are only finalized after Stripe confirms success.
+
+function constantTimeEqual(a: string, b: string) {
+  if (a.length !== b.length) return false;
+  let mismatch=0;
+  for(let i=0;i<a.length;i++) mismatch |= a.charCodeAt(i)^b.charCodeAt(i);
+  return mismatch===0;
+}
+
+async function verifyStripeSignature(rawBody: string, signature: string, secret: string) {
+  const parts=signature.split(",").map(x=>x.split("="));
+  const timestamp=parts.find(x=>x[0]==="t")?.[1];
+  const signatures=parts.filter(x=>x[0]==="v1").map(x=>x[1]);
+  if(!timestamp || Math.abs(Date.now()/1000-Number(timestamp))>300 || !signatures.length) return false;
+  const key=await crypto.subtle.importKey("raw",new TextEncoder().encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]);
+  const digest=await crypto.subtle.sign("HMAC",key,new TextEncoder().encode(timestamp+"."+rawBody));
+  const hex=Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,"0")).join("");
+  return signatures.some(sig=>constantTimeEqual(sig,hex));
+}
+
+campaigns.post("/:id/fund", async (c) => {
+  const err=await auth(c); if(err) return err;
+  const profile=c.get("profile"),id=c.req.param("id"),sql=getSql(c.env.DATABASE_URL);
+  if(!c.env.STRIPE_SECRET_KEY) return c.json({error:"Stripe Checkout is not configured."},503);
+  const campaign=rows<{id:string;name:string;company_business_id:string|null;funding_amount:string;funding_status:string;status:string;checkout_session_id:string|null}>(await sql`
+    select id,name,company_business_id,funding_amount,funding_status,status,checkout_session_id from campaigns where id=${id}::uuid
+  `);
+  if(!campaign.length) return c.json({error:"Campaign not found."},404);
+  const item=campaign[0];
+  if(!isStaff(profile) && (!item.company_business_id || !(await ownsBusiness(sql,profile.id,item.company_business_id)))) return c.json({error:"Only the campaign's business owner or Portr staff can fund it."},403);
+  if(!["draft","recruiting","upcoming"].includes(item.status) || Number(item.funding_amount)<=0) return c.json({error:"Only an unfunded campaign with a positive proposed funding amount can be funded."},409);
+  if(item.funding_status==="paid") return c.json({error:"Campaign funding has already been paid."},409);
+  if(item.funding_status==="checkout_open") return c.json({error:"A Checkout session has already been created for this campaign. Complete or expire that session before creating another."},409);
+  const origin=(c.env.PAGES_URL || "https://portr.pages.dev").replace(/\/$/,"");
+  const form=new URLSearchParams();
+  form.set("mode","payment");
+  form.set("success_url",origin+"/partnerships?campaign_funded=1&session_id={CHECKOUT_SESSION_ID}");
+  form.set("cancel_url",origin+"/partnerships?campaign_funded=0");
+  form.set("line_items[0][quantity]","1");
+  form.set("line_items[0][price_data][currency]","usd");
+  form.set("line_items[0][price_data][unit_amount]",String(Math.round(Number(item.funding_amount)*100)));
+  form.set("line_items[0][price_data][product_data][name]","Portr campaign funding: "+item.name);
+  form.set("metadata[campaign_id]",id);
+  form.set("payment_intent_data[metadata][campaign_id]",id);
+  const response=await fetch("https://api.stripe.com/v1/checkout/sessions",{method:"POST",headers:{Authorization:"Bearer "+c.env.STRIPE_SECRET_KEY,"Content-Type":"application/x-www-form-urlencoded"},body:form});
+  const payload=await response.json() as {id?:string;url?:string;error?:{message?:string}};
+  if(!response.ok || !payload.id || !payload.url) return c.json({error:payload.error?.message || "Unable to create Stripe Checkout session."},502);
+  await sql`update campaigns set checkout_session_id=${payload.id},funding_status='checkout_open',updated_at=now() where id=${id}::uuid and funding_status='unfunded'`;
+  return c.json({ok:true,checkout_url:payload.url});
+});
+
+campaigns.post("/stripe/webhook", async (c) => {
+  if(!c.env.STRIPE_WEBHOOK_SECRET) return c.json({error:"Stripe webhook secret is not configured."},503);
+  const raw=await c.req.text(),signature=c.req.header("Stripe-Signature") || "";
+  if(!await verifyStripeSignature(raw,signature,c.env.STRIPE_WEBHOOK_SECRET)) return c.json({error:"Invalid Stripe signature."},400);
+  const event=JSON.parse(raw) as {id:string;type:string;data:{object:Record<string,unknown>}};
+  if(!["checkout.session.completed","checkout.session.async_payment_succeeded"].includes(event.type)) return c.json({received:true});
+  const session=event.data.object;
+  if(session.payment_status!=="paid") return c.json({received:true,payment_status:session.payment_status});
+  const metadata=session.metadata as Record<string,string>|undefined;
+  const campaignId=metadata?.campaign_id;
+  const paymentIntent=typeof session.payment_intent==="string"?session.payment_intent:null;
+  const sessionId=typeof session.id==="string"?session.id:null;
+  const amountTotal=Number(session.amount_total);
+  if(!campaignId || !paymentIntent || !sessionId) return c.json({error:"Checkout session is missing campaign/payment metadata."},400);
+  const sql=getSql(c.env.DATABASE_URL);
+  const matched=rows<{id:string}>(await sql`
+    update campaigns set funding_status='paid',payment_reference=${paymentIntent},checkout_session_id=${sessionId},funding_paid_at=now(),refund_status='not_due',updated_at=now()
+    where id=${campaignId}::uuid and checkout_session_id=${sessionId}
+      and round(funding_amount*100)=${amountTotal}
+      and funding_status='checkout_open'
+    returning id
+  `);
+  if(!matched.length) {
+    const prior=rows(await sql`select id from campaign_stripe_events where event_id=${event.id}`);
+    if(prior.length) return c.json({received:true,duplicate:true});
+    return c.json({error:"Campaign, Checkout session, amount, or funding state did not match."},409);
+  }
+  await sql`insert into campaign_stripe_events(event_id,event_type) values (${event.id},${event.type}) on conflict do nothing`;
+  return c.json({received:true,paid:true});
+});
+
 campaigns.post("/:id/refund", async (c) => {
   const err = await auth(c); if (err) return err;
   if (!isStaff(c.get("profile"))) return c.json({error:"Portr staff approval required."},403);
