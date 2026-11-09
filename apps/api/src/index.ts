@@ -13,7 +13,7 @@ import {
 } from "./auth";
 import { buildMarketplaceSnapshot, hasUpdatesSince } from "./snapshot";
 import { canReadOrder, isStaff, ownsBusiness } from "./roles";
-import campaignRoutes, { runCampaignLifecycle } from "./campaigns";
+import campaignRoutes, { processPendingCampaignRefunds, runCampaignLifecycle } from "./campaigns";
 
 export type Env = {
   DATABASE_URL: string;
@@ -21,6 +21,7 @@ export type Env = {
   FILES: R2Bucket;
   PAGES_URL?: string;
   STRIPE_SECRET_KEY?: string;
+  STRIPE_WEBHOOK_SECRET?: string;
 };
 
 type Variables = {
@@ -581,5 +582,6 @@ export default {
   fetch: (request: Request, env: Env, ctx: ExecutionContext) => app.fetch(request, env, ctx),
   async scheduled(_controller: ScheduledController, env: Env, _ctx: ExecutionContext) {
     await runCampaignLifecycle(env.DATABASE_URL);
+    await processPendingCampaignRefunds(env.DATABASE_URL, env.STRIPE_SECRET_KEY);
   },
 };
