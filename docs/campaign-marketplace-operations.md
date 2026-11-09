@@ -58,3 +58,16 @@ A refund is not marked complete until Stripe reports `succeeded`. Missing secret
 5. Run a full test-mode flow: fund a campaign, complete enrollment, verify automatic launch; then test an under-enrolled campaign and verify the full refund in Stripe.
 
 The proposal page defaults the campaign's refundable amount to 100% of proposed funding. Campaign funding is returned in full when the minimum Runner enrollment is not met.
+
+
+## Campaign Runner payout and financial controls
+
+The campaign finance follow-up migration is `db/migrations/20261113_campaign_financial_ledger.sql`. Run it only after the consolidated campaign setup migration (`20261112_campaign_setup_all_in_one.sql`).
+
+Campaign financial data and controls are management-only: administrator, manager, director, founder, or a profile with the founder flag. Support and moderator roles do not receive campaign finance access.
+
+The migration creates combined-funding allocations, a campaign financial ledger, and per-delivery payout snapshots. Management assigns the Runner compensation and platform fee portions of the combined funding; the unallocated remainder stays available. Runner compensation defaults to a $3.00 base plus $1.50 per mile, bounded between $3.00 and $7.50, and can be changed per campaign by management.
+
+A campaign-linked delivery can be accepted only by a Runner who is enrolled and currently online in that live, funded campaign. Acceptance reserves the calculated base-plus-mileage amount from the campaign's Runner budget. The customer's order tip is read from the order record and is added to the Runner total at 100%; it is not taken from the campaign Runner compensation budget. Completion writes the earned compensation and tip pass-through entries. Cancelling an uncompleted campaign delivery releases the reserved Runner budget.
+
+The ledger records earnings and allocations; it does not itself send a bank payout. Actual payout settlement, hourly platform-fee accrual, reconciliation UI, and production deployment remain separate steps.

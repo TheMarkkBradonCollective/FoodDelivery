@@ -306,32 +306,124 @@ app.put("/deliveries/:id", async (c) => {
   const delivery = await c.req.json<Record<string, unknown>>();
   const id = String(delivery.id ?? c.req.param("id"));
   const sql = getSql(c.env.DATABASE_URL);
-  const accepting =
-    delivery.status === "accepted" &&
-    delivery.runr_id &&
-    String(delivery.runr_id) === profile.id;
+  const accepting = delivery.status === "accepted" && delivery.runr_id && String(delivery.runr_id) === profile.id;
 
   if (accepting) {
-    const updated = rows(await sql`
-      update deliveries set
-        runr_id = ${profile.id}::uuid,
-        status = 'accepted'
-      where id = ${id}::uuid and runr_id is null
-      returning id
+    // Persist the offered delivery if this is its first server-side write.
+    await sql`
+      insert into deliveries (
+        id,order_id,business_id,campaign_id,runr_id,pickup_lat,pickup_lng,dropoff_lat,dropoff_lng,
+        distance_miles,status,base_pay,distance_pay,tip,total_earnings,estimated_minutes,customer_name,
+        building_access,access_note,access_notice
+      ) values (
+        ${id}::uuid,${String(delivery.order_id)}::uuid,${String(delivery.business_id)}::uuid,
+        coalesce(${delivery.campaign_id ? String(delivery.campaign_id) : null}::uuid,
+          (select c.id from campaigns c where c.company_business_id=${String(delivery.business_id)}::uuid
+            and c.status='live' and c.funding_status='paid' and now() between c.starts_at and c.ends_at
+            order by c.starts_at desc limit 1)),
+        null,${Number(delivery.pickup_lat ?? 0)},${Number(delivery.pickup_lng ?? 0)},
+        ${Number(delivery.dropoff_lat ?? 0)},${Number(delivery.dropoff_lng ?? 0)},
+        ${Number(delivery.distance_miles ?? 1.2)},'offered',${Number(delivery.base_pay ?? 4.5)},
+        ${Number(delivery.distance_pay ?? 1.8)},${Number(delivery.tip ?? 0)},
+        ${Number(delivery.total_earnings ?? 0)},${Number(delivery.estimated_minutes ?? 18)},
+        ${String(delivery.customer_name ?? "Customer")},
+        ${delivery.building_access ? String(delivery.building_access) : null},
+        ${delivery.access_note ? String(delivery.access_note) : null},
+        ${delivery.access_notice ? String(delivery.access_notice) : null}
+      )
+      on conflict (id) do nothing
+    `;
+    const linked = rows<{
+      campaign_id: string | null; distance_miles: string | number; order_tip: string | number;
+      runner_base_pay: string | number; runner_per_mile_pay: string | number;
+      runner_minimum_pay: string | number; runner_maximum_pay: string | number;
+    }>(await sql`
+      select d.campaign_id, d.distance_miles, o.tip as order_tip,
+        c.runner_base_pay, c.runner_per_mile_pay, c.runner_minimum_pay, c.runner_maximum_pay
+      from deliveries d
+      join orders o on o.id=d.order_id
+      left join campaigns c on c.id=d.campaign_id
+      where d.id=${id}::uuid and d.runr_id is null
+        and (d.campaign_id is null or (
+          c.status='live' and c.funding_status='paid'
+          and exists(select 1 from campaign_members m where m.campaign_id=c.id and m.runr_id=${profile.id}::uuid and m.status='joined')
+          and exists(select 1 from campaign_presence p where p.campaign_id=c.id and p.runr_id=${profile.id}::uuid and p.went_offline_at is null)
+        ))
+      limit 1
     `);
-    if (!updated.length) return c.json({ error: "Delivery already claimed" }, 409);
-    return c.json({ ok: true });
+    if (!linked.length) return c.json({ error: "Delivery already claimed, or campaign membership/funding/active status is required." }, 409);
+    const item = linked[0];
+    if (!item.campaign_id) {
+      const updated = rows(await sql`
+        update deliveries set runr_id=${profile.id}::uuid,status='accepted'
+        where id=${id}::uuid and runr_id is null returning id
+      `);
+      if (!updated.length) return c.json({ error: "Delivery already claimed" }, 409);
+      return c.json({ ok: true });
+    }
+
+    const distance = Math.max(0, Number(item.distance_miles));
+    const baseConfigured = Math.max(0, Number(item.runner_base_pay));
+    const perMile = Math.max(0, Number(item.runner_per_mile_pay));
+    const minimum = Math.max(0, Number(item.runner_minimum_pay));
+    const maximum = Math.max(minimum, Number(item.runner_maximum_pay));
+    const gross = Math.min(maximum, Math.max(minimum, baseConfigured + distance * perMile));
+    const compensation = Math.round(gross * 100) / 100;
+    const basePay = Math.min(baseConfigured, compensation);
+    const mileagePay = Math.round((compensation - basePay) * 100) / 100;
+    const tip = Math.max(0, Number(item.order_tip));
+    const reserved = rows(await sql`
+      update campaign_funding_allocations
+      set runner_compensation_budget=runner_compensation_budget-${compensation},updated_at=now()
+      where campaign_id=${item.campaign_id}::uuid and runner_compensation_budget>=${compensation}
+      returning campaign_id
+    `);
+    if (!reserved.length) return c.json({ error: "This campaign does not have enough allocated Runner budget for this delivery. New offers are paused until management adds funds." }, 409);
+
+    const claimed = rows(await sql`
+      update deliveries set runr_id=${profile.id}::uuid,status='accepted',
+        base_pay=${basePay},distance_pay=${mileagePay},tip=${tip},
+        total_earnings=${compensation + tip}
+      where id=${id}::uuid and runr_id is null returning id
+    `);
+    if (!claimed.length) {
+      await sql`update campaign_funding_allocations set runner_compensation_budget=runner_compensation_budget+${compensation},updated_at=now() where campaign_id=${item.campaign_id}::uuid`;
+      return c.json({ error: "Delivery already claimed" }, 409);
+    }
+
+    try {
+      const ledger = rows(await sql`
+        insert into campaign_delivery_ledger
+          (campaign_id,delivery_id,runr_id,distance_miles,base_pay,mileage_pay,tip_amount,platform_fee_amount,runner_total,status,policy_snapshot)
+        values (
+          ${item.campaign_id}::uuid,${id}::uuid,${profile.id}::uuid,${distance},
+          ${basePay},${mileagePay},${tip},0,${compensation + tip},'estimated',
+          ${JSON.stringify({base_pay:baseConfigured,per_mile_pay:perMile,minimum_pay:minimum,maximum_pay:maximum})}::jsonb
+        )
+        on conflict (delivery_id) do nothing returning id
+      `);
+      if (!ledger.length) throw new Error("A payout ledger record already exists for this delivery.");
+    } catch (e) {
+      await sql`update deliveries set runr_id=null,status='offered' where id=${id}::uuid and runr_id=${profile.id}::uuid`;
+      await sql`update campaign_funding_allocations set runner_compensation_budget=runner_compensation_budget+${compensation},updated_at=now() where campaign_id=${item.campaign_id}::uuid`;
+      throw e;
+    }
+    return c.json({ ok: true, campaign_payout: { base_pay: basePay, mileage_pay: mileagePay, tip, runner_total: compensation + tip } });
   }
 
   await sql`
     insert into deliveries (
-      id, order_id, business_id, runr_id, pickup_lat, pickup_lng, dropoff_lat, dropoff_lng,
+      id, order_id, business_id, campaign_id, runr_id, pickup_lat, pickup_lng, dropoff_lat, dropoff_lng,
       distance_miles, status, base_pay, distance_pay, tip, total_earnings, estimated_minutes,
       customer_name, building_access, access_note, access_notice
     ) values (
       ${id}::uuid,
       ${String(delivery.order_id)}::uuid,
       ${String(delivery.business_id)}::uuid,
+      coalesce(${delivery.campaign_id ? String(delivery.campaign_id) : null}::uuid,
+        (select c.id from campaigns c where c.company_business_id=${String(delivery.business_id)}::uuid
+          and c.status='live' and c.funding_status='paid' and now() between c.starts_at and c.ends_at
+          order by c.starts_at desc limit 1)),
       ${delivery.runr_id ? String(delivery.runr_id) : null}::uuid,
       ${Number(delivery.pickup_lat ?? 0)},
       ${Number(delivery.pickup_lng ?? 0)},
@@ -350,12 +442,48 @@ app.put("/deliveries/:id", async (c) => {
       ${delivery.access_notice ? String(delivery.access_notice) : null}
     )
     on conflict (id) do update set
-      runr_id = excluded.runr_id,
-      status = excluded.status,
-      building_access = excluded.building_access,
-      access_note = excluded.access_note,
-      access_notice = excluded.access_notice
+      campaign_id=coalesce(deliveries.campaign_id,excluded.campaign_id),
+      runr_id=excluded.runr_id,
+      status=excluded.status,
+      building_access=excluded.building_access,
+      access_note=excluded.access_note,
+      access_notice=excluded.access_notice
   `;
+
+  if (delivery.status === "completed") {
+    const earned = rows<{campaign_id:string;runr_id:string;base_pay:string|number;mileage_pay:string|number;tip_amount:string|number}>(await sql`
+      update campaign_delivery_ledger set status='earned',earned_at=coalesce(earned_at,now())
+      where delivery_id=${id}::uuid and runr_id=${profile.id}::uuid and status='estimated'
+      returning campaign_id,runr_id,base_pay,mileage_pay,tip_amount
+    `);
+    for (const entry of earned) {
+      const compensation = Number(entry.base_pay)+Number(entry.mileage_pay);
+      const tip = Number(entry.tip_amount);
+      await sql`
+        insert into campaign_financial_ledger(campaign_id,delivery_id,runr_id,entry_type,amount,details)
+        values (${entry.campaign_id}::uuid,${id}::uuid,${entry.runr_id}::uuid,'runner_compensation',${compensation},'{"source":"completed_delivery"}'::jsonb)
+        on conflict (delivery_id,entry_type) where delivery_id is not null do nothing
+      `;
+      if (tip > 0) await sql`
+        insert into campaign_financial_ledger(campaign_id,delivery_id,runr_id,entry_type,amount,details)
+        values (${entry.campaign_id}::uuid,${id}::uuid,${entry.runr_id}::uuid,'tip_pass_through',${tip},'{"source":"customer_tip","pass_through_percent":100}'::jsonb)
+        on conflict (delivery_id,entry_type) where delivery_id is not null do nothing
+      `;
+    }
+  }
+
+  if (delivery.status === "cancelled") {
+    const voided = rows<{campaign_id:string;runner_compensation:string|number}>(await sql`
+      update campaign_delivery_ledger set status='voided'
+      where delivery_id=${id}::uuid and status='estimated'
+      returning campaign_id,(base_pay+mileage_pay) as runner_compensation
+    `);
+    for (const entry of voided) await sql`
+      update campaign_funding_allocations
+      set runner_compensation_budget=runner_compensation_budget+${Number(entry.runner_compensation)},updated_at=now()
+      where campaign_id=${entry.campaign_id}::uuid
+    `;
+  }
   return c.json({ ok: true });
 });
 
