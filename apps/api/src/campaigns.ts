@@ -287,7 +287,7 @@ function constantTimeEqual(a: string, b: string) {
 async function verifyStripeSignature(rawBody: string, signature: string, secret: string) {
   const parts=signature.split(",").map(x=>x.split("="));
   const timestamp=parts.find(x=>x[0]==="t")?.[1];
-  const signatures=parts.filter(x=>x[0]==="v1").map(x=>x[1]);
+  const signatures=parts.filter(x=>x[0]==="v1").map(x=>x[1]).filter((value): value is string => Boolean(value));
   if(!timestamp || Math.abs(Date.now()/1000-Number(timestamp))>300 || !signatures.length) return false;
   const key=await crypto.subtle.importKey("raw",new TextEncoder().encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]);
   const digest=await crypto.subtle.sign("HMAC",key,new TextEncoder().encode(timestamp+"."+rawBody));
