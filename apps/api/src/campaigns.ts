@@ -115,7 +115,7 @@ campaigns.post("/", async (c) => {
       ${startsAt}::timestamptz, ${endsAt}::timestamptz, ${deadline}::timestamptz,
       ${JSON.stringify(body.operating_schedule ?? { mode: "always", days: {} })}::jsonb,
       ${memberCapacity}, ${minimumMembers}, ${maxActive},
-      ${String(body.status ?? "draft")}, ${Number(body.funding_amount ?? 0)},
+      'draft', ${Number(body.funding_amount ?? 0)},
       ${Number(body.refundable_amount ?? body.funding_amount ?? 0)},
       ${body.payment_reference ? String(body.payment_reference) : null},
       ${JSON.stringify(body.terms ?? {})}::jsonb
@@ -136,20 +136,28 @@ campaigns.post("/:id/join", async (c) => {
   if (existing[0]?.status === "joined") {
     return c.json({ ok: true, alreadyMember: true, message: "Already enrolled. Membership does not reserve a live working slot." });
   }
-  const enrolled = rows(await sql`
+  const enrollment = rows<{ reserved: boolean; enrolled: boolean }>(await sql`
     with capacity as (
       update campaigns set member_count=member_count+1, updated_at=now()
       where id=${id}::uuid and status in ('recruiting','upcoming')
         and now() < enrollment_deadline and starts_at > now()
         and member_count < member_capacity
       returning id
+    ), enrolled as (
+      insert into campaign_members(campaign_id, runr_id, status)
+      select id, ${profile.id}::uuid, 'joined' from capacity
+      on conflict (campaign_id, runr_id) do update
+        set status='joined', joined_at=now()
+        where campaign_members.status <> 'joined'
+      returning id
     )
-    insert into campaign_members(campaign_id, runr_id, status)
-    select id, ${profile.id}::uuid, 'joined' from capacity
-    on conflict (campaign_id, runr_id) do update set status='joined', joined_at=now()
-    returning id
+    select exists(select 1 from capacity) as reserved, exists(select 1 from enrolled) as enrolled
   `);
-  if (!enrolled.length) return c.json({ error: "Enrollment is closed or campaign membership is full." }, 409);
+  if (!enrollment[0]?.reserved) return c.json({ error: "Enrollment is closed or campaign membership is full." }, 409);
+  if (!enrollment[0]?.enrolled) {
+    await sql`update campaigns set member_count=greatest(0,member_count-1),updated_at=now() where id=${id}::uuid`;
+    return c.json({ ok:true, alreadyMember:true, message:"Already enrolled. Membership does not reserve a live working slot." });
+  }
   return c.json({ ok: true, message: "Joined campaign. Membership does not reserve a live working slot." });
 });
 
@@ -236,6 +244,21 @@ campaigns.post("/:id/void", async (c) => {
   });
 });
 
+
+
+campaigns.post("/:id/open-enrollment", async (c) => {
+  const err = await auth(c); if (err) return err;
+  const profile = c.get("profile");
+  if (!isStaff(profile)) return c.json({ error: "Portr staff approval required." }, 403);
+  const id=c.req.param("id"), sql=getSql(c.env.DATABASE_URL);
+  const opened=rows(await sql`
+    update campaigns set status='recruiting',updated_at=now()
+    where id=${id}::uuid and status='draft' and enrollment_deadline>now() and starts_at>now()
+    returning id
+  `);
+  if(!opened.length) return c.json({error:"Only a draft campaign with an upcoming enrollment deadline can be opened."},409);
+  return c.json({ok:true,status:"recruiting"});
+});
 
 // Staff launch control: enrollment must have closed and the campaign start time must have arrived.
 campaigns.post("/:id/launch", async (c) => {
