@@ -59,7 +59,27 @@ campaigns.get("/management", async (c) => {
   if (!isCampaignManager(c.get("profile"))) return c.json({ error: "Campaign management access required." }, 403);
   const sql = getSql(c.env.DATABASE_URL);
   const result = rows(await sql`
-    select c.*,
+    select
+      c.id,c.company_business_id,c.created_by,c.name,c.description,c.campaign_type,c.city,c.service_area,
+      c.starts_at,c.ends_at,c.enrollment_deadline,c.operating_schedule,c.member_capacity,c.minimum_members,
+      c.max_active_runrs,c.active_runrs,c.status,c.terms,c.created_at,c.updated_at,c.member_count,
+      c.runner_minimum_pay,c.runner_maximum_pay,
+      case when ${isCampaignManager(profile)} or exists(
+        select 1 from businesses owner_business
+        where owner_business.id=c.company_business_id and owner_business.owner_id=${profile.id}::uuid
+      ) then c.funding_amount else null end as funding_amount,
+      case when ${isCampaignManager(profile)} or exists(
+        select 1 from businesses owner_business
+        where owner_business.id=c.company_business_id and owner_business.owner_id=${profile.id}::uuid
+      ) then c.refundable_amount else null end as refundable_amount,
+      case when ${isCampaignManager(profile)} or exists(
+        select 1 from businesses owner_business
+        where owner_business.id=c.company_business_id and owner_business.owner_id=${profile.id}::uuid
+      ) then c.funding_status else null end as funding_status,
+      case when ${isCampaignManager(profile)} or exists(
+        select 1 from businesses owner_business
+        where owner_business.id=c.company_business_id and owner_business.owner_id=${profile.id}::uuid
+      ) then c.refund_status else null end as refund_status,
       (select count(*)::int from campaign_members m where m.campaign_id=c.id and m.status='joined') as joined_members,
       (select count(*)::int from campaign_presence p where p.campaign_id=c.id and p.went_offline_at is null) as active_runrs_count,
       coalesce(a.combined_funding, c.funding_amount, 0) as combined_funding,
