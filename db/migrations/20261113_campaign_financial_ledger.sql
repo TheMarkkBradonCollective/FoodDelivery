@@ -58,6 +58,9 @@ create index if not exists campaign_financial_ledger_campaign_idx
   on public.campaign_financial_ledger(campaign_id, created_at desc);
 create index if not exists campaign_financial_ledger_runner_idx
   on public.campaign_financial_ledger(runr_id, created_at desc);
+create unique index if not exists campaign_financial_ledger_delivery_type_idx
+  on public.campaign_financial_ledger(delivery_id, entry_type)
+  where delivery_id is not null;
 
 alter table public.deliveries
   add column if not exists campaign_id uuid references public.campaigns(id) on delete set null;
