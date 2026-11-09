@@ -13,6 +13,7 @@ import {
 } from "./auth";
 import { buildMarketplaceSnapshot, hasUpdatesSince } from "./snapshot";
 import { canReadOrder, isStaff, ownsBusiness } from "./roles";
+import campaignRoutes from "./campaigns";
 
 export type Env = {
   DATABASE_URL: string;
@@ -27,6 +28,7 @@ type Variables = {
 };
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
+app.route("/", campaignRoutes);
 
 function corsOrigins(pagesUrl?: string) {
   const origins = ["capacitor://localhost", "https://localhost", "http://localhost:3000"];
