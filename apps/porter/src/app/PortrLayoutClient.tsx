@@ -1,12 +1,13 @@
 "use client";
 
 import { AppFrame } from "@porter/shared/components/layout/AppFrame";
-import { Heart, Home, List, Activity, User } from "lucide-react";
+import { Heart, Home, List, Activity, User, Megaphone } from "lucide-react";
 
 export const porterNav = [
   { href: "/", label: "Discover", icon: Home },
   { href: "/orders", label: "Orders", icon: List },
   { href: "/favorites", label: "Favorites", icon: Heart },
+  { href: "/campaigns", label: "Campaigns", icon: Megaphone },
   { href: "/activity", label: "Activity", icon: Activity },
   { href: "/profile", label: "Profile", icon: User },
 ];

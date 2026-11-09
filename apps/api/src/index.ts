@@ -13,13 +13,15 @@ import {
 } from "./auth";
 import { buildMarketplaceSnapshot, hasUpdatesSince } from "./snapshot";
 import { canReadOrder, isStaff, ownsBusiness } from "./roles";
-import campaignRoutes from "./campaigns";
+import campaignRoutes, { processPendingCampaignRefunds, runCampaignLifecycle } from "./campaigns";
 
 export type Env = {
   DATABASE_URL: string;
   JWT_SECRET: string;
   FILES: R2Bucket;
   PAGES_URL?: string;
+  STRIPE_SECRET_KEY?: string;
+  STRIPE_WEBHOOK_SECRET?: string;
 };
 
 type Variables = {
@@ -28,7 +30,6 @@ type Variables = {
 };
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
-app.route("/", campaignRoutes);
 
 function corsOrigins(pagesUrl?: string) {
   const origins = ["capacitor://localhost", "https://localhost", "http://localhost:3000"];
@@ -51,6 +52,8 @@ app.use("*", async (c, next) => {
   });
   return middleware(c, next);
 });
+
+app.route("/", campaignRoutes);
 
 app.get("/health", (c) => c.json({ ok: true }));
 
@@ -575,4 +578,10 @@ app.get("/files/*", async (c) => {
   return new Response(object.body, { headers });
 });
 
-export default app;
+export default {
+  fetch: (request: Request, env: Env, ctx: ExecutionContext) => app.fetch(request, env, ctx),
+  async scheduled(_controller: ScheduledController, env: Env, _ctx: ExecutionContext) {
+    await runCampaignLifecycle(env.DATABASE_URL);
+    await processPendingCampaignRefunds(env.DATABASE_URL, env.STRIPE_SECRET_KEY);
+  },
+};
