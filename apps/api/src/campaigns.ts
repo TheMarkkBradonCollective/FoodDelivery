@@ -226,23 +226,24 @@ campaigns.post("/:id/void", async (c) => {
   const err = await auth(c); if (err) return err;
   if (!isStaff(c.get("profile"))) return c.json({ error: "Portr staff approval required." }, 403);
   const id=c.req.param("id"),sql=getSql(c.env.DATABASE_URL);
-  const voided=rows<{id:string;refundable_amount:string;payment_reference:string|null}>(await sql`
+  const voided=rows<{id:string;refundable_amount:string;payment_reference:string|null;funding_status:string}>(await sql`
     update campaigns c
     set status='void',
-        refund_status=case when c.refundable_amount>0 then 'pending' else 'not_required' end,
+        refund_status=case when c.funding_status='paid' and c.refundable_amount>0 then 'pending' else 'not_required' end,
+        funding_status=case when c.funding_status='paid' and c.refundable_amount>0 then 'refund_pending' else c.funding_status end,
         updated_at=now()
     where c.id=${id}::uuid and c.status in ('draft','upcoming','recruiting')
       and c.enrollment_deadline<=now() and c.starts_at<=now()
       and (select count(*) from campaign_members m where m.campaign_id=c.id and m.status='joined') < c.minimum_members
-    returning c.id,c.refundable_amount,c.payment_reference
+    returning c.id,c.refundable_amount,c.payment_reference,c.funding_status
   `);
   if(!voided.length) return c.json({error:"Campaign cannot be voided. Enrollment and start must have passed, and minimum membership must not have been met."},409);
   const campaign=voided[0];
-  if(Number(campaign.refundable_amount)>0) await sql`
+  if(campaign.funding_status==="refund_pending" && Number(campaign.refundable_amount)>0) await sql`
     insert into campaign_refund_ledger(campaign_id,amount,payment_reference,status)
     values (${id}::uuid,${Number(campaign.refundable_amount)},${campaign.payment_reference},'pending')
   `;
-  return c.json({ok:true,status:"void",refund:Number(campaign.refundable_amount)>0?"pending":"not_required"});
+  return c.json({ok:true,status:"void",refund:campaign.funding_status==="refund_pending"?"pending":"not_required"});
 });
 
 campaigns.post("/:id/open-enrollment", async (c) => {
@@ -422,9 +423,9 @@ campaigns.post("/:id/refund/reconcile", async (c) => {
 
 export async function runCampaignLifecycle(databaseUrl: string) {
   const sql = getSql(databaseUrl);
-  const changed = rows<{id:string;status:string;refundable_amount:string;payment_reference:string|null}>(await sql`
+  const changed = rows<{id:string;status:string;refundable_amount:string;payment_reference:string|null;funding_status:string}>(await sql`
     with due as (
-      select c.id,c.minimum_members,c.refundable_amount,c.payment_reference,
+      select c.id,c.minimum_members,c.refundable_amount,c.payment_reference,c.funding_status,
         (select count(*)::int from campaign_members m where m.campaign_id=c.id and m.status='joined') as joined_members
       from campaigns c
       where c.status in ('recruiting','upcoming')
@@ -438,12 +439,12 @@ export async function runCampaignLifecycle(databaseUrl: string) {
                              else c.refund_status end,
           updated_at=now()
       from due d where c.id=d.id
-      returning c.id,c.status,c.refundable_amount,c.payment_reference
+      returning c.id,c.status,c.refundable_amount,c.payment_reference,c.funding_status
     )
     select * from updated
   `);
   for (const campaign of changed) {
-    if (campaign.status === "void" && Number(campaign.refundable_amount) > 0) {
+    if (campaign.status === "void" && campaign.funding_status === "refund_pending" && Number(campaign.refundable_amount) > 0) {
       await sql`
         insert into campaign_refund_ledger(campaign_id,amount,payment_reference,status)
         values (${campaign.id}::uuid,${Number(campaign.refundable_amount)},${campaign.payment_reference},'pending')
