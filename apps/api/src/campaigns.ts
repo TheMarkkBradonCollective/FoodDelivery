@@ -99,14 +99,13 @@ campaigns.put("/:id/allocations", async (c) => {
   const sql = getSql(c.env.DATABASE_URL);
   const updated = rows(await sql`
     with campaign as (
-      select id, funding_amount from campaigns where id=${c.req.param("id")}::uuid for update
+      select id, funding_amount, refundable_amount from campaigns where id=${c.req.param("id")}::uuid for update
     ), allocation as (
       insert into campaign_funding_allocations
         (campaign_id, combined_funding, runner_compensation_budget, platform_fee_budget, available_balance, refund_liability, updated_at)
       select id, funding_amount, ${runnerBudget}, ${platformBudget},
         funding_amount - ${runnerBudget} - ${platformBudget}, refundable_amount, now()
-      from campaigns where id=${c.req.param("id")}::uuid
-        and funding_amount >= ${runnerBudget} + ${platformBudget}
+      from campaign where funding_amount >= ${runnerBudget} + ${platformBudget}
       on conflict (campaign_id) do update set
         combined_funding=excluded.combined_funding,
         runner_compensation_budget=excluded.runner_compensation_budget,
