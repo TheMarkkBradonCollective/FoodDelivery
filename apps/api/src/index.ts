@@ -309,6 +309,30 @@ app.put("/deliveries/:id", async (c) => {
   const accepting = delivery.status === "accepted" && delivery.runr_id && String(delivery.runr_id) === profile.id;
 
   if (accepting) {
+    // Persist the offered delivery if this is its first server-side write.
+    await sql`
+      insert into deliveries (
+        id,order_id,business_id,campaign_id,runr_id,pickup_lat,pickup_lng,dropoff_lat,dropoff_lng,
+        distance_miles,status,base_pay,distance_pay,tip,total_earnings,estimated_minutes,customer_name,
+        building_access,access_note,access_notice
+      ) values (
+        ${id}::uuid,${String(delivery.order_id)}::uuid,${String(delivery.business_id)}::uuid,
+        coalesce(${delivery.campaign_id ? String(delivery.campaign_id) : null}::uuid,
+          (select c.id from campaigns c where c.company_business_id=${String(delivery.business_id)}::uuid
+            and c.status='live' and c.funding_status='paid' and now() between c.starts_at and c.ends_at
+            order by c.starts_at desc limit 1)),
+        null,${Number(delivery.pickup_lat ?? 0)},${Number(delivery.pickup_lng ?? 0)},
+        ${Number(delivery.dropoff_lat ?? 0)},${Number(delivery.dropoff_lng ?? 0)},
+        ${Number(delivery.distance_miles ?? 1.2)},'offered',${Number(delivery.base_pay ?? 4.5)},
+        ${Number(delivery.distance_pay ?? 1.8)},${Number(delivery.tip ?? 0)},
+        ${Number(delivery.total_earnings ?? 0)},${Number(delivery.estimated_minutes ?? 18)},
+        ${String(delivery.customer_name ?? "Customer")},
+        ${delivery.building_access ? String(delivery.building_access) : null},
+        ${delivery.access_note ? String(delivery.access_note) : null},
+        ${delivery.access_notice ? String(delivery.access_notice) : null}
+      )
+      on conflict (id) do nothing
+    `;
     const linked = rows<{
       campaign_id: string | null; distance_miles: string | number; order_tip: string | number;
       runner_base_pay: string | number; runner_per_mile_pay: string | number;
