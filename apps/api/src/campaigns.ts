@@ -318,18 +318,40 @@ campaigns.post("/:id/refund", async (c) => {
     await sql`update campaign_refund_ledger set status='failed' where id=${refund.id}::uuid`;
     return c.json({error:payload.error?.message || "Stripe rejected the refund."},502);
   }
-  const completed=payload.status==="succeeded";
+  const completed=payload.status==="succeeded", failed=payload.status==="failed" || payload.status==="canceled";
   await sql`
-    update campaign_refund_ledger set status=${completed?"refunded":"processing"},refund_reference=${payload.id ?? null},processed_at=case when ${completed} then now() else null end
+    update campaign_refund_ledger set status=${completed?"refunded":failed?"failed":"processing"},refund_reference=${payload.id ?? null},processed_at=case when ${completed || failed} then now() else null end
     where id=${refund.id}::uuid
   `;
   await sql`
-    update campaigns set refund_status=${completed?"refunded":"processing"},refund_reference=${payload.id ?? null},updated_at=now()
+    update campaigns set refund_status=${completed?"refunded":failed?"failed":"processing"},refund_reference=${payload.id ?? null},updated_at=now()
     where id=${id}::uuid
   `;
   return c.json({ok:true,status:payload.status,refund_reference:payload.id});
 });
 
+
+
+campaigns.post("/:id/refund/reconcile", async (c) => {
+  const err = await auth(c); if (err) return err;
+  if (!isStaff(c.get("profile"))) return c.json({error:"Portr staff approval required."},403);
+  if (!c.env.STRIPE_SECRET_KEY) return c.json({error:"Stripe refund processing is not configured."},503);
+  const id=c.req.param("id"),sql=getSql(c.env.DATABASE_URL);
+  const records=rows<{id:string;refund_reference:string|null}>(await sql`
+    select id,refund_reference from campaign_refund_ledger
+    where campaign_id=${id}::uuid and status='processing' and refund_reference is not null
+    order by created_at desc limit 1
+  `);
+  if(!records.length) return c.json({error:"No processing refund is available to reconcile."},409);
+  const record=records[0];
+  const response=await fetch("https://api.stripe.com/v1/refunds/"+encodeURIComponent(record.refund_reference!),{headers:{Authorization:"Bearer "+c.env.STRIPE_SECRET_KEY}});
+  const payload=await response.json() as {status?:string;error?:{message?:string}};
+  if(!response.ok) return c.json({error:payload.error?.message || "Unable to retrieve Stripe refund status."},502);
+  const status=payload.status==="succeeded"?"refunded":payload.status==="failed"||payload.status==="canceled"?"failed":"processing";
+  await sql`update campaign_refund_ledger set status=${status},processed_at=case when ${status!=="processing"} then now() else null end where id=${record.id}::uuid`;
+  await sql`update campaigns set refund_status=${status},updated_at=now() where id=${id}::uuid`;
+  return c.json({ok:true,status:payload.status});
+});
 
 export async function runCampaignLifecycle(databaseUrl: string) {
   const sql = getSql(databaseUrl);
