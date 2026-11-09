@@ -108,7 +108,7 @@ campaigns.post("/", async (c) => {
   catch { return c.json({error:"A valid IANA campaign timezone is required."},400); }
   if (schedule.mode === "custom") {
     const activeDays=Object.values(schedule.days ?? {}).filter(day=>day.enabled);
-    if (!activeDays.length || activeDays.some(day=>!day.intervals?.length || day.intervals.some(interval=>!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(interval.start) || !/^([01]\\d|2[0-3]):[0-5]\\d$/.test(interval.end) || interval.start===interval.end))) {
+    if (!activeDays.length || activeDays.some(day=>!day.intervals?.length || day.intervals.some(interval=>!/^([01]\d|2[0-3]):[0-5]\d$/.test(interval.start) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(interval.end) || interval.start===interval.end))) {
       return c.json({error:"Custom schedules need at least one enabled day with valid, non-identical start and end times."},400);
     }
   }
@@ -224,36 +224,26 @@ campaigns.post("/:id/offline", async (c) => {
 
 campaigns.post("/:id/void", async (c) => {
   const err = await auth(c); if (err) return err;
-  const profile = c.get("profile");
-  if (!isStaff(profile)) return c.json({ error: "Portr staff approval required." }, 403);
-  const id = c.req.param("id");
-  const sql = getSql(c.env.DATABASE_URL);
-  const result = rows<{ id: string; minimum_members: number; joined_members: number; refundable_amount: string; payment_reference: string | null }>(await sql`
-    select c.id, c.minimum_members, c.refundable_amount, c.payment_reference,
-      (select count(*)::int from campaign_members m where m.campaign_id=c.id and m.status='joined') as joined_members
-    from campaigns c where c.id=${id}::uuid and c.status in ('draft','upcoming','recruiting') and c.enrollment_deadline<=now() and c.starts_at<=now()
+  if (!isStaff(c.get("profile"))) return c.json({ error: "Portr staff approval required." }, 403);
+  const id=c.req.param("id"),sql=getSql(c.env.DATABASE_URL);
+  const voided=rows<{id:string;refundable_amount:string;payment_reference:string|null}>(await sql`
+    update campaigns c
+    set status='void',
+        refund_status=case when c.refundable_amount>0 then 'pending' else 'not_required' end,
+        updated_at=now()
+    where c.id=${id}::uuid and c.status in ('draft','upcoming','recruiting')
+      and c.enrollment_deadline<=now() and c.starts_at<=now()
+      and (select count(*) from campaign_members m where m.campaign_id=c.id and m.status='joined') < c.minimum_members
+    returning c.id,c.refundable_amount,c.payment_reference
   `);
-  if (!result.length) return c.json({ error: "Campaign cannot be voided from its current state." }, 409);
-  const campaign = result[0];
-  if (campaign.joined_members >= campaign.minimum_members) return c.json({ error: "Minimum Runner membership was met. Review the campaign instead of voiding it for insufficient enrollment." }, 409);
-  await sql`
-    update campaigns set status='void', refund_status=case when refundable_amount > 0 then 'pending' else 'not_required' end, updated_at=now()
-    where id=${id}::uuid
+  if(!voided.length) return c.json({error:"Campaign cannot be voided. Enrollment and start must have passed, and minimum membership must not have been met."},409);
+  const campaign=voided[0];
+  if(Number(campaign.refundable_amount)>0) await sql`
+    insert into campaign_refund_ledger(campaign_id,amount,payment_reference,status)
+    values (${id}::uuid,${Number(campaign.refundable_amount)},${campaign.payment_reference},'pending')
   `;
-  if (Number(campaign.refundable_amount) > 0) {
-    await sql`
-      insert into campaign_refund_ledger(campaign_id, amount, payment_reference, status)
-      values (${id}::uuid, ${Number(campaign.refundable_amount)}, ${campaign.payment_reference}, 'pending')
-    `;
-  }
-  return c.json({
-    ok: true, status: "void",
-    refund: Number(campaign.refundable_amount) > 0 ? "pending" : "not_required",
-    note: "The refundable balance is recorded for payment-provider reconciliation. A real Stripe refund must be processed and confirmed before marking it refunded."
-  });
+  return c.json({ok:true,status:"void",refund:Number(campaign.refundable_amount)>0?"pending":"not_required"});
 });
-
-
 
 campaigns.post("/:id/open-enrollment", async (c) => {
   const err = await auth(c); if (err) return err;
