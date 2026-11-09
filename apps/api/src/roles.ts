@@ -24,3 +24,8 @@ export async function canReadOrder(
   if (profile.role === "runr") return true;
   return ownsBusiness(sql, profile.id, order.business_id);
 }
+
+// Campaign financial information and controls are restricted to management.
+export function isCampaignManager(profile: ProfileRow): boolean {
+  return profile.is_founder === true || ["administrator", "manager", "director", "founder"].includes(profile.role);
+}
