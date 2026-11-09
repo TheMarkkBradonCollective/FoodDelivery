@@ -53,16 +53,6 @@ async function auth(c: import("hono").Context<{ Bindings: CampaignEnv; Variables
   return null;
 }
 
-const campaignSelect = `
-  select c.*,
-    (select count(*)::int from campaign_members m where m.campaign_id=c.id and m.status='joined') as joined_members,
-    c.member_capacity - (select count(*)::int from campaign_members m where m.campaign_id=c.id and m.status='joined') as member_slots_available,
-    (select count(*)::int from campaign_presence p where p.campaign_id=c.id and p.went_offline_at is null) as active_runrs_count,
-    exists(select 1 from campaign_members mine where mine.campaign_id=c.id and mine.runr_id=$1::uuid and mine.status='joined') as is_member,
-    exists(select 1 from campaign_presence here where here.campaign_id=c.id and here.runr_id=$1::uuid and here.went_offline_at is null) as is_online
-  from campaigns c
-`;
-
 campaigns.get("/", async (c) => {
   const err = await auth(c); if (err) return err;
   const profile = c.get("profile");
@@ -100,8 +90,27 @@ campaigns.post("/", async (c) => {
   if (!name || !startsAt || !endsAt || !deadline || !Number.isInteger(memberCapacity) || !Number.isInteger(maxActive) || memberCapacity < 1 || maxActive < 1 || minimumMembers < 1 || minimumMembers > memberCapacity) {
     return c.json({ error: "Campaign name, dates, enrollment deadline, member capacity, minimum membership, and active Runner limit are required." }, 400);
   }
-  if (!(new Date(endsAt) > new Date(startsAt)) || new Date(deadline) > new Date(startsAt)) {
+  const schedule = (body.operating_schedule ?? { mode: "always", days: {} }) as Schedule;
+  const fundingAmount = Number(body.funding_amount ?? 0);
+  const refundableAmount = Number(body.refundable_amount ?? body.funding_amount ?? 0);
+  const startDate = new Date(startsAt), endDate = new Date(endsAt), deadlineDate = new Date(deadline);
+  if (![startDate,endDate,deadlineDate].every(date=>Number.isFinite(date.getTime()))) {
+    return c.json({ error: "Campaign dates must be valid." }, 400);
+  }
+  if (!(endDate > startDate) || deadlineDate > startDate) {
     return c.json({ error: "End date must follow start date and enrollment must close no later than launch." }, 400);
+  }
+  if (!Number.isFinite(fundingAmount) || !Number.isFinite(refundableAmount) || fundingAmount < 0 || refundableAmount < 0 || refundableAmount > fundingAmount) {
+    return c.json({ error: "Funding and refundable amounts must be non-negative, and the refundable amount cannot exceed proposed funding." }, 400);
+  }
+  if (!["always","custom"].includes(schedule.mode ?? "always")) return c.json({error:"Unsupported operating schedule mode."},400);
+  try { new Intl.DateTimeFormat("en-US",{timeZone:schedule.timezone || "America/Los_Angeles"}).format(new Date()); }
+  catch { return c.json({error:"A valid IANA campaign timezone is required."},400); }
+  if (schedule.mode === "custom") {
+    const activeDays=Object.values(schedule.days ?? {}).filter(day=>day.enabled);
+    if (!activeDays.length || activeDays.some(day=>!day.intervals?.length || day.intervals.some(interval=>!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(interval.start) || !/^([01]\\d|2[0-3]):[0-5]\\d$/.test(interval.end) || interval.start===interval.end))) {
+      return c.json({error:"Custom schedules need at least one enabled day with valid, non-identical start and end times."},400);
+    }
   }
   const created = rows<{ id: string }>(await sql`
     insert into campaigns (
@@ -113,10 +122,10 @@ campaigns.post("/", async (c) => {
       ${String(body.description ?? "")}, ${String(body.campaign_type ?? "brand")},
       ${String(body.city ?? "")}, ${String(body.service_area ?? "")},
       ${startsAt}::timestamptz, ${endsAt}::timestamptz, ${deadline}::timestamptz,
-      ${JSON.stringify(body.operating_schedule ?? { mode: "always", days: {} })}::jsonb,
+      ${JSON.stringify(schedule)}::jsonb,
       ${memberCapacity}, ${minimumMembers}, ${maxActive},
-      'draft', ${Number(body.funding_amount ?? 0)},
-      ${Number(body.refundable_amount ?? body.funding_amount ?? 0)},
+      'draft', ${fundingAmount},
+      ${refundableAmount},
       ${body.payment_reference ? String(body.payment_reference) : null},
       ${JSON.stringify(body.terms ?? {})}::jsonb
     ) returning id
@@ -222,7 +231,7 @@ campaigns.post("/:id/void", async (c) => {
   const result = rows<{ id: string; minimum_members: number; joined_members: number; refundable_amount: string; payment_reference: string | null }>(await sql`
     select c.id, c.minimum_members, c.refundable_amount, c.payment_reference,
       (select count(*)::int from campaign_members m where m.campaign_id=c.id and m.status='joined') as joined_members
-    from campaigns c where c.id=${id}::uuid and c.status in ('draft','upcoming','recruiting')
+    from campaigns c where c.id=${id}::uuid and c.status in ('draft','upcoming','recruiting') and c.enrollment_deadline<=now() and c.starts_at<=now()
   `);
   if (!result.length) return c.json({ error: "Campaign cannot be voided from its current state." }, 409);
   const campaign = result[0];
@@ -263,29 +272,16 @@ campaigns.post("/:id/open-enrollment", async (c) => {
 // Staff launch control: enrollment must have closed and the campaign start time must have arrived.
 campaigns.post("/:id/launch", async (c) => {
   const err = await auth(c); if (err) return err;
-  const profile = c.get("profile");
-  if (!isStaff(profile)) return c.json({ error: "Portr staff approval required." }, 403);
-  const id = c.req.param("id");
-  const sql = getSql(c.env.DATABASE_URL);
-  const result = rows<{ id:string; minimum_members:number; joined_members:number; refundable_amount:string; payment_reference:string|null }>(await sql`
-    select c.id,c.minimum_members,c.refundable_amount,c.payment_reference,
-      (select count(*)::int from campaign_members m where m.campaign_id=c.id and m.status='joined') as joined_members
-    from campaigns c where c.id=${id}::uuid and c.status in ('draft','upcoming','recruiting')
-      and c.enrollment_deadline <= now() and c.starts_at <= now()
+  if (!isStaff(c.get("profile"))) return c.json({ error: "Portr staff approval required." }, 403);
+  await runCampaignLifecycle(c.env.DATABASE_URL);
+  const id=c.req.param("id"),sql=getSql(c.env.DATABASE_URL);
+  const current=rows<{status:string;joined_members:number}>(await sql`
+    select c.status,(select count(*)::int from campaign_members m where m.campaign_id=c.id and m.status='joined') as joined_members
+    from campaigns c where c.id=${id}::uuid
   `);
-  if (!result.length) return c.json({ error: "Campaign is not ready to launch. Enrollment must be closed and its start time must have arrived." }, 409);
-  const item=result[0];
-  if (item.joined_members < item.minimum_members) {
-    await sql`update campaigns set status='void',refund_status=case when refundable_amount>0 then 'pending' else 'not_required' end,updated_at=now() where id=${id}::uuid`;
-    if (Number(item.refundable_amount)>0) await sql`
-      insert into campaign_refund_ledger(campaign_id,amount,payment_reference,status)
-      values (${id}::uuid,${Number(item.refundable_amount)},${item.payment_reference},'pending')
-      on conflict do nothing
-    `;
-    return c.json({ok:true,status:"void",reason:"minimum_members_not_met",refund:"pending"});
-  }
-  await sql`update campaigns set status='live',updated_at=now() where id=${id}::uuid`;
-  return c.json({ok:true,status:"live",joined_members:item.joined_members});
+  if(!current.length) return c.json({error:"Campaign not found."},404);
+  if(!["live","void"].includes(current[0].status)) return c.json({error:"Campaign is not ready to launch. Enrollment deadline and start time must both have passed."},409);
+  return c.json({ok:true,status:current[0].status,joined_members:current[0].joined_members});
 });
 
 // Stripe refunds are only finalized after Stripe confirms success.
