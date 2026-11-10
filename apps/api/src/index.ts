@@ -13,6 +13,7 @@ import {
 } from "./auth";
 import { buildMarketplaceSnapshot, hasUpdatesSince } from "./snapshot";
 import { canReadOrder, isStaff, ownsBusiness } from "./roles";
+import { hasPrivilegedProfileFields, validateSignupBody } from "./signup-role";
 import campaignRoutes, { processPendingCampaignRefunds, runCampaignLifecycle } from "./campaigns";
 
 export type Env = {
@@ -93,11 +94,18 @@ app.post("/auth/signup", async (c) => {
     password?: string;
     name?: string;
     role?: string;
+    staffTitle?: string;
+    is_founder?: boolean;
+    isFounder?: boolean;
   }>();
   const email = body.email?.trim().toLowerCase();
   const password = body.password ?? "";
   const name = body.name?.trim() || email?.split("@")[0] || "User";
-  const role = body.role ?? "customer";
+  const signupRole = validateSignupBody(body);
+  if (!signupRole.ok) {
+    return c.json({ error: signupRole.error }, signupRole.status);
+  }
+  const role = signupRole.role;
   if (!email || password.length < 8) {
     return c.json({ error: "Email and password (8+ chars) required" }, 400);
   }
@@ -529,7 +537,12 @@ app.patch("/profiles/:id/access", async (c) => {
   const profile = c.get("profile");
   const id = c.req.param("id");
   if (id !== profile.id && !isStaff(profile)) return c.json({ error: "Forbidden" }, 403);
-  const { access_preference } = await c.req.json<{ access_preference?: string }>();
+  const patchBody = await c.req.json<Record<string, unknown>>();
+  if (hasPrivilegedProfileFields(patchBody)) {
+    return c.json({ error: "Forbidden" }, 403);
+  }
+  const access_preference =
+    typeof patchBody.access_preference === "string" ? patchBody.access_preference : undefined;
   const sql = getSql(c.env.DATABASE_URL);
   await sql`
     update profiles set access_preference = ${access_preference ?? null}, updated_at = now()

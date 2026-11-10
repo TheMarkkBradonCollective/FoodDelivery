@@ -1,5 +1,6 @@
 -- Portr — Neon Postgres schema (matches live project "Portr", divine-sound-61675218)
 -- No RLS; access control is enforced in apps/api Worker.
+-- Staff/management roles (staff, support, … founder) are not assignable via POST /auth/signup; grant in SQL only.
 -- User ids are plain uuid columns (no auth.users FKs). profiles.password_hash + unique lower(email).
 -- Apply on a fresh database: psql "$DATABASE_URL" -f db/schema.sql
 
