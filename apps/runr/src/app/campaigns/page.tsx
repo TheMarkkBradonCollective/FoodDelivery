@@ -28,7 +28,7 @@ export default function RunnerCampaignsPage() {
     finally { setBusy(null); }
   }
   return <main className="space-y-5 px-4 pb-10 pt-5">
-    <header><p className="text-xs font-bold uppercase tracking-widest text-[var(--muted)]">Portr Runner</p><h1 className="text-2xl font-extrabold">Campaigns</h1><p className="mt-1 text-sm text-[var(--muted)]">Join campaigns ahead of launch, then choose whenever you want to work while they're live.</p></header>
+    <header><p className="text-xs font-bold uppercase tracking-widest text-[var(--muted)]">Portr Runner</p><h1 className="text-2xl font-extrabold">Campaigns</h1><p className="mt-1 text-sm text-[var(--muted)]">Join campaigns ahead of launch, then choose whenever you want to work while they are live.</p></header>
     {error && <p role="alert" className="rounded-xl bg-red-500/10 p-3 text-sm text-red-500">{error}</p>}
     {campaigns.length === 0 && <p className="rounded-2xl border border-[var(--border)] p-5 text-sm text-[var(--muted)]">No campaigns are available right now.</p>}
     <div className="grid gap-3">{campaigns.map(c => {
@@ -52,7 +52,7 @@ export default function RunnerCampaignsPage() {
           {!c.is_member && <button disabled={busy===c.id || live || c.member_slots_available<=0} onClick={()=>void act(c.id,"join")} className="rounded-full bg-violet-600 px-4 py-2.5 text-sm font-bold text-white disabled:opacity-40">{busy===c.id?"Please wait":"Join campaign"}</button>}
           {c.is_member && live && !c.is_online && <button disabled={busy===c.id || available<=0} onClick={()=>void act(c.id,"online")} className="rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white disabled:opacity-40">{available<=0?"At capacity":"Go online"}</button>}
           {c.is_online && <button disabled={busy===c.id} onClick={()=>void act(c.id,"offline")} className="rounded-full border border-[var(--border)] px-4 py-2.5 text-sm font-bold">Go offline</button>}
-          {c.is_member && <span className="self-center text-xs font-semibold text-emerald-600">You're a member</span>}
+          {c.is_member && <span className="self-center text-xs font-semibold text-emerald-600">You are a member</span>}
         </div>
       </article>;
     })}</div>
